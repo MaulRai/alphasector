@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth-context';
 import { 
   Lock, Sparkles, LogIn, UserPlus, Zap, 
   ShieldCheck, ArrowRight, AlertCircle, RefreshCw,
-  CheckCircle2, Swords, Users, Search, Layers
+  CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
 
 interface AuthGateProps {
@@ -24,7 +24,14 @@ export const AuthGate: React.FC<AuthGateProps> = ({
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  
+  // Password visibility states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,12 +69,16 @@ export const AuthGate: React.FC<AuthGateProps> = ({
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password || !fullName) {
-      setError('Harap lengkapi nama, email, dan password.');
+    if (!email || !password || !confirmPassword || !fullName) {
+      setError('Harap lengkapi seluruh kolom pendaftaran.');
       return;
     }
     if (password.length < 6) {
       setError('Password minimal 6 karakter.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Konfirmasi password tidak cocok.');
       return;
     }
     setIsSubmitting(true);
@@ -229,14 +240,28 @@ export const AuthGate: React.FC<AuthGateProps> = ({
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                     Password
                   </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showLoginPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowLoginPassword(!showLoginPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+                      title={showLoginPassword ? 'Sembunyikan password' : 'Lihat password'}
+                    >
+                      {showLoginPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <button
@@ -255,7 +280,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({
                 </button>
               </form>
             ) : (
-              /* Register Form */
+              /* Register Form with 2 Password Fields & Eye Peek */
               <form onSubmit={handleRegister} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -285,19 +310,64 @@ export const AuthGate: React.FC<AuthGateProps> = ({
                   />
                 </div>
 
+                {/* Password Field 1 with Eye Icon */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Password (Min 6 karakter)
                   </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    minLength={6}
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showRegisterPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      minLength={6}
+                      className="w-full px-3.5 py-2 pr-10 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+                      title={showRegisterPassword ? 'Sembunyikan password' : 'Lihat password'}
+                    >
+                      {showRegisterPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Password Field 2 (Konfirmasi Password) with Eye Icon */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Konfirmasi Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      minLength={6}
+                      className="w-full px-3.5 py-2 pr-10 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+                      title={showConfirmPassword ? 'Sembunyikan password' : 'Lihat password'}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <button
