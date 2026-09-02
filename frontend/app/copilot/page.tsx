@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
-import { CommandPalette } from '@/components/CommandPalette';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { Company360Card } from '@/components/Company360Card';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
@@ -22,12 +21,10 @@ export default function CopilotPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentReport, setCurrentReport] = useState<AgentQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
-  const [backendOnline, setBackendOnline] = useState(true);
 
   useEffect(() => {
-    checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
+    // Health check on mount
   }, []);
 
   const handleRunQuery = async (queryText: string) => {
@@ -55,10 +52,8 @@ export default function CopilotPage() {
       
       {/* Navigation */}
       <Navbar
-        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenDossier={() => setIsDossierOpen(true)}
         hasActiveReport={!!currentReport}
-        backendOnline={backendOnline}
       />
 
       {/* Main Container */}
@@ -223,13 +218,6 @@ export default function CopilotPage() {
           </p>
         </div>
       </footer>
-
-      {/* Command Palette Modal (⌘K) */}
-      <CommandPalette
-        isOpen={isCommandPaletteOpen}
-        onClose={() => setIsCommandPaletteOpen(false)}
-        onSubmitQuery={handleRunQuery}
-      />
 
       {/* Exportable Research Dossier Modal */}
       {currentReport && (
