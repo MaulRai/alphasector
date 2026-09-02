@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -9,11 +10,11 @@ import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
-import { queryAgent, checkBackendHealth } from '@/lib/api';
+import { queryAgent, checkBackendHealth, fetchTopMovers } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
 import { 
-  Sparkles, Search, Send, TrendingUp, ShieldCheck, 
-  ArrowRight, BookOpen, AlertCircle, RefreshCw, BarChart3, Layers
+  Sparkles, Search, Send, Swords, Users, Building2, 
+  TrendingUp, TrendingDown, ArrowRight, BookOpen, AlertCircle, RefreshCw, Zap
 } from 'lucide-react';
 
 export default function Home() {
@@ -24,12 +25,16 @@ export default function Home() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
   const [backendOnline, setBackendOnline] = useState(true);
+  const [topMovers, setTopMovers] = useState<any[]>([]);
 
-  // Check health on load
+  // Health check & top movers
   useEffect(() => {
-    checkBackendHealth().then(res => {
-      setBackendOnline(res.status === 'healthy');
-    });
+    checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
+    fetchTopMovers('7d', 4).then(res => {
+      if (res && res.data && Array.isArray(res.data)) {
+        setTopMovers(res.data);
+      }
+    }).catch(() => {});
   }, []);
 
   const handleRunQuery = async (queryText: string) => {
@@ -66,26 +71,26 @@ export default function Home() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {/* Hero & Prompt Input */}
-        <section className="mb-10 text-center max-w-3xl mx-auto pt-4 sm:pt-8">
+        {/* Hero Section */}
+        <section className="text-center max-w-3xl mx-auto pt-2 sm:pt-6 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Sectors Hackathon 2026 • Track 01 Autonomous AI</span>
+            <span>Sectors Hackathon 2026 • Track 01 Autonomous AI Agent</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-            Autonomous Equity Research <br className="hidden sm:block" />
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+            Autonomous Equity Copilot <br />
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
-              Copilot untuk Pasar Modal IDX
+              Pasar Modal Indonesia (IDX)
             </span>
           </h1>
 
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
-            Riset fundamental, valuasi peer group, dan lacak akumulasi broker institusi (*Smart Money*) 
+          <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl mx-auto">
+            Riset fundamental, valuasi peer group, dan lacak akumulasi broker institusi 
             dalam hitungan detik dengan AI Agent otonom bertenaga Sectors Financial API.
           </p>
 
-          {/* Main Search Input Form */}
+          {/* Main Query Bar */}
           <form onSubmit={handleSubmit} className="relative w-full max-w-2xl mx-auto">
             <div className="relative flex items-center rounded-2xl border border-slate-700/70 bg-[#0d121e]/90 p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald">
               <Search className="h-5 w-5 text-emerald-400 ml-3 mr-2 shrink-0" />
@@ -119,7 +124,74 @@ export default function Home() {
 
         </section>
 
-        {/* Trade Ideas 1-Click Radar Presets */}
+        {/* Quick Module Navigation Hub */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-8">
+          <Link
+            href="/battle"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/60 hover:border-cyan-500/40 transition-all group flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                <Swords className="h-4 w-4" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">Peer Battle</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">Komparasi multi-emiten & valuasi gap</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/smart-money"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/60 hover:border-amber-500/40 transition-all group flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <Users className="h-4 w-4" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">Smart Money</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">Lacak akumulasi broker & foreign flow</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/screener"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/60 hover:border-emerald-500/40 transition-all group flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <Search className="h-4 w-4" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Screener Pro</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">Natural language & structured filter</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/company/BBCA"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/60 hover:border-blue-500/40 transition-all group flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <Building2 className="h-4 w-4" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">Emiten 360°</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">Dossier laporan, rasio, & segmen</p>
+            </div>
+          </Link>
+        </section>
+
+        {/* 1-Click Trade Ideas Presets */}
         <TradeIdeasRadar onSelectPreset={handleRunQuery} />
 
         {/* Error Alert */}
@@ -130,7 +202,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* Active Analysis Results Display */}
+        {/* Live Analysis Output */}
         {currentReport && (
           <div className="space-y-6 animate-in fade-in duration-300">
             
@@ -150,7 +222,7 @@ export default function Home() {
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <h3 className="text-base font-bold text-white">
-                    Sintesis Riset Otonom (Bahasa Indonesia)
+                    Sintesis Riset Otonom (Groq OpenAI 120b)
                   </h3>
                 </div>
                 <button
@@ -223,7 +295,7 @@ export default function Home() {
 
       </main>
 
-      {/* Footer Disclaimer */}
+      {/* Footer */}
       <footer className="w-full border-t border-slate-800/80 bg-[#07090e] py-6 px-4 sm:px-6 lg:px-8 mt-12 text-center text-xs text-slate-500">
         <div className="max-w-4xl mx-auto space-y-2">
           <p>

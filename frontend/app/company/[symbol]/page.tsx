@@ -1,0 +1,278 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { Navbar } from '@/components/Navbar';
+import { Company360Card } from '@/components/Company360Card';
+import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
+import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
+import { ResearchDossierModal } from '@/components/ResearchDossierModal';
+import { fetchCompanyReport, fetchCompanySegments, fetchBrokerSummary, queryAgent, checkBackendHealth } from '@/lib/api';
+import { AgentQueryResponse, PeerCompanyMetric } from '@/lib/types';
+import { 
+  Building2, Sparkles, TrendingUp, DollarSign, Layers, 
+  Award, ShieldCheck, Printer, RefreshCw, ArrowLeft, PieChart, ExternalLink 
+} from 'lucide-react';
+
+export default function CompanyDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const rawSymbol = (params?.symbol as string) || 'BBCA';
+  const symbol = rawSymbol.toUpperCase().replace('.JK', '');
+
+  const [reportData, setReportData] = useState<any>(null);
+  const [segmentsData, setSegmentsData] = useState<any>(null);
+  const [brokerData, setBrokerData] = useState<any>(null);
+  const [agentReport, setAgentReport] = useState<AgentQueryResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isDossierOpen, setIsDossierOpen] = useState(false);
+  const [backendOnline, setBackendOnline] = useState(true);
+
+  useEffect(() => {
+    checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
+    loadCompany360(symbol);
+  }, [symbol]);
+
+  const loadCompany360 = async (sym: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // 1. Fetch Company Report
+      const rep = await fetchCompanyReport(sym);
+      setReportData(rep.data);
+
+      // 2. Fetch Segments
+      try {
+        const seg = await fetchCompanySegments(sym);
+        setSegmentsData(seg.data);
+      } catch (e) {
+        setSegmentsData(null);
+      }
+
+      // 3. Fetch Broker summary
+      try {
+        const brk = await fetchBrokerSummary(sym);
+        setBrokerData(brk.data);
+      } catch (e) {
+        setBrokerData(null);
+      }
+
+      // 4. Query Agent for in-depth Indonesian synthesis
+      const aRes = await queryAgent(`Analisis fundamental, valuasi historis, dan peer group untuk ${sym}`);
+      setAgentReport(aRes);
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || `Gagal memuat profil emiten ${sym}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const overview = reportData?.overview || {};
+  const valuation = reportData?.valuation || {};
+  const financials = reportData?.financials || {};
+  const histVal = valuation?.historical_valuation || [];
+  const histFin = financials?.historical_financials || (Array.isArray(financials) ? financials : []);
+
+  // Format metric object for Company360Card
+  const metricData: PeerCompanyMetric | null = reportData ? {
+    symbol: symbol,
+    company_name: reportData.company_name || overview.company_name || symbol,
+    sector: overview.sector || '-',
+    sub_sector: overview.sub_sector || '-',
+    last_close_price: overview.last_close_price || valuation.last_close_price,
+    market_cap: overview.market_cap,
+    pe: histVal.length > 0 ? histVal[histVal.length - 1].pe : valuation.pe,
+    pbv: histVal.length > 0 ? histVal[histVal.length - 1].pb : valuation.pbv,
+    pe_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pe_peer_avg : null,
+    pb_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pb_peer_avg : null,
+    tags: overview.tags || []
+  } : null;
+
+  return (
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-blue-500 selection:text-black">
+      <Navbar 
+        backendOnline={backendOnline}
+        hasActiveReport={!!agentReport}
+        onOpenDossier={() => setIsDossierOpen(true)}
+      />
+
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Kembali ke Screener / Copilot</span>
+          </button>
+
+          {agentReport && (
+            <button
+              onClick={() => setIsDossierOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              <span>Cetak / Export Dossier</span>
+            </button>
+          )}
+        </div>
+
+        {/* Loading Spinner */}
+        {isLoading && (
+          <div className="py-24 text-center space-y-3">
+            <RefreshCw className="h-8 w-8 text-blue-400 animate-spin mx-auto" />
+            <p className="text-sm text-slate-400 font-medium">
+              Memuat data fundamental 360° {symbol} dari Sectors API...
+            </p>
+          </div>
+        )}
+
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Content Body */}
+        {!isLoading && reportData && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            
+            {/* Emiten 360° Hero Card */}
+            {metricData && <Company360Card data={metricData} />}
+
+            {/* AI Autonomous Brief Card */}
+            {agentReport && agentReport.synthesis && (
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 glass-panel glow-cyan">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
+                  <Sparkles className="h-4 w-4 text-cyan-400" />
+                  <h3 className="text-base font-bold text-white">
+                    Sintesis Riset Fundamental Otonom (Bahasa Indonesia)
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-200 leading-relaxed mb-4">
+                  {agentReport.synthesis.executive_summary}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-300">
+                    <strong className="text-cyan-400">Valuasi:</strong> {agentReport.synthesis.valuation_verdict || 'N/A'}
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-300">
+                    <strong className="text-amber-400">Smart Money Flow:</strong> {agentReport.synthesis.smart_money_flow || 'N/A'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Live Agent Reasoning Trace Accordion */}
+            {agentReport && (
+              <AgentThinkingTrace
+                steps={agentReport.reasoning_trace}
+                totalTimeMs={agentReport.total_execution_time_ms}
+                creditsConsumed={agentReport.credits_consumed}
+              />
+            )}
+
+            {/* Historical Valuation Multiples Table */}
+            {histVal.length > 0 && (
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 glass-panel">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-base font-bold text-white">
+                      📊 Valuasi Historis & Peer Comparison (Tahunan)
+                    </h3>
+                    <p className="text-xs text-slate-400">Multiples historis vs rata-rata peers subsektor {overview.sub_sector}</p>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold bg-slate-900/40">
+                        <th className="py-2.5 px-3">Tahun</th>
+                        <th className="py-2.5 px-3">P/E Rasio</th>
+                        <th className="py-2.5 px-3">P/E Peer Avg</th>
+                        <th className="py-2.5 px-3">PBV Rasio</th>
+                        <th className="py-2.5 px-3">PBV Peer Avg</th>
+                        <th className="py-2.5 px-3">P/S</th>
+                        <th className="py-2.5 px-3">PCF</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60 font-medium">
+                      {histVal.map((v: any, idx: number) => (
+                        <tr key={idx} className="hover:bg-slate-800/30">
+                          <td className="py-2.5 px-3 font-bold text-white">{v.year || '-'}</td>
+                          <td className="py-2.5 px-3 text-emerald-400 font-bold">{v.pe ? `${Number(v.pe).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-400">{v.pe_peer_avg ? `${Number(v.pe_peer_avg).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-cyan-400 font-bold">{v.pb ? `${Number(v.pb).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-400">{v.pb_peer_avg ? `${Number(v.pb_peer_avg).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-300">{v.ps ? `${Number(v.ps).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-300">{v.pcf ? `${Number(v.pcf).toFixed(1)}x` : '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Revenue Segments (Sankey Breakdown Data) */}
+            {segmentsData && (
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 glass-panel">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
+                  <PieChart className="h-4 w-4 text-emerald-400" />
+                  <h3 className="text-base font-bold text-white">
+                    🧩 Laporan Segmen Pendapatan & Biaya Operasional
+                  </h3>
+                </div>
+                
+                {Array.isArray(segmentsData) && segmentsData.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {segmentsData.map((seg: any, idx: number) => (
+                      <div key={idx} className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+                        <div className="text-slate-400 font-medium">{seg.name || seg.segment_name || `Segmen ${idx+1}`}</div>
+                        <div className="text-sm font-bold text-emerald-400 mt-1">
+                          {seg.value ? `Rp ${(seg.value / 1e12).toFixed(2)} T` : '-'}
+                        </div>
+                        {seg.percentage && (
+                          <div className="text-[11px] text-slate-500 mt-0.5">
+                            Kontribusi: {seg.percentage}%
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400">
+                    Data rincian segmen bisnis berhasil dikumpulkan untuk analisis mendalam.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Smart Money Broker Flow */}
+            {brokerData && (
+              <BrokerFlowTracker brokerSummary={brokerData} ticker={symbol} />
+            )}
+
+          </div>
+        )}
+
+      </main>
+
+      {/* Exportable Dossier Modal */}
+      {agentReport && (
+        <ResearchDossierModal
+          isOpen={isDossierOpen}
+          onClose={() => setIsDossierOpen(false)}
+          report={agentReport}
+        />
+      )}
+    </div>
+  );
+}

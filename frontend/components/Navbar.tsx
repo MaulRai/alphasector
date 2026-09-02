@@ -1,10 +1,15 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Terminal, Activity, BookOpen, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { 
+  Sparkles, Terminal, Swords, Users, 
+  Search, BookOpen, ShieldCheck, Activity, Building2 
+} from 'lucide-react';
 
 interface NavbarProps {
-  onOpenCommandPalette: () => void;
+  onOpenCommandPalette?: () => void;
   onOpenDossier?: () => void;
   hasActiveReport?: boolean;
   backendOnline?: boolean;
@@ -16,59 +21,98 @@ export const Navbar: React.FC<NavbarProps> = ({
   hasActiveReport,
   backendOnline = true,
 }) => {
+  const pathname = usePathname();
+
+  const navItems = [
+    { label: 'Copilot', href: '/', icon: Sparkles },
+    { label: 'Peer Battle', href: '/battle', icon: Swords },
+    { label: 'Smart Money', href: '/smart-money', icon: Users },
+    { label: 'Screener', href: '/screener', icon: Search },
+    { label: 'Emiten 360°', href: '/company/BBCA', icon: Building2 },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#07090e]/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#07090e]/85 backdrop-blur-xl transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Brand Logo & Tag */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 via-cyan-500/20 to-blue-600/20 border border-emerald-500/30 glow-emerald">
-            <Sparkles className="h-5 w-5 text-emerald-400" />
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold tracking-tight text-white">
-                Alpha<span className="text-emerald-400">Sector</span>
-              </span>
-              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
-                Track 01 Agent
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald">
+              <Sparkles className="h-4 w-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
             </div>
-            <p className="text-xs text-slate-400 hidden sm:block">
-              Autonomous Equity Research Copilot for IDX
-            </p>
-          </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="text-base font-bold tracking-tight text-white">
+                  Alpha<span className="text-emerald-400">Sector</span>
+                </span>
+                <span className="rounded px-1.5 py-0.2 text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  AI Agent
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-400 hidden sm:inline -mt-0.5">
+                Autonomous Equity Research
+              </span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800/80">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.href === '/' 
+                ? pathname === '/' 
+                : pathname.startsWith(item.href.split('/')[1] ? `/${item.href.split('/')[1]}` : item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
 
         {/* Center Quick Search Trigger */}
-        <div className="hidden md:flex flex-1 max-w-md mx-8">
-          <button
-            onClick={onOpenCommandPalette}
-            className="w-full flex items-center justify-between px-3.5 py-2 text-sm text-slate-400 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 hover:border-emerald-500/40 rounded-xl transition-all shadow-inner group"
-          >
-            <div className="flex items-center gap-2.5 truncate">
-              <Terminal className="h-4 w-4 text-emerald-400" />
-              <span className="text-slate-400 group-hover:text-slate-200 truncate">
-                Tanya analisis emiten atau peer comparison...
-              </span>
-            </div>
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-400 border border-slate-700">
-              ⌘K
-            </kbd>
-          </button>
-        </div>
+        {onOpenCommandPalette && (
+          <div className="hidden lg:flex flex-1 max-w-xs mx-6">
+            <button
+              onClick={onOpenCommandPalette}
+              className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-slate-400 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/40 rounded-xl transition-all shadow-inner group"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Terminal className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="text-slate-400 group-hover:text-slate-200 truncate">
+                  Tanya agent / screening...
+                </span>
+              </div>
+              <kbd className="inline-flex items-center rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 border border-slate-700">
+                ⌘K
+              </kbd>
+            </button>
+          </div>
+        )}
 
         {/* Right Status Actions */}
         <div className="flex items-center gap-3">
-          {/* Backend Status Pill */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-slate-800 text-xs">
+          {/* Backend Status */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/70 border border-slate-800 text-[11px]">
             <span className={`h-2 w-2 rounded-full ${backendOnline ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></span>
-            <span className="text-slate-300 hidden sm:inline">
-              {backendOnline ? 'Sectors API v2 Active' : 'Connecting...'}
+            <span className="text-slate-400 hidden sm:inline">
+              {backendOnline ? 'Groq 120b + Sectors' : 'Backend Offline'}
             </span>
           </div>
 
@@ -76,14 +120,46 @@ export const Navbar: React.FC<NavbarProps> = ({
           {hasActiveReport && onOpenDossier && (
             <button
               onClick={onOpenDossier}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              <span>Export Dossier</span>
+              <span>Dossier</span>
+            </button>
+          )}
+
+          {/* Mobile Search Button */}
+          {onOpenCommandPalette && (
+            <button
+              onClick={onOpenCommandPalette}
+              className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300"
+            >
+              <Search className="h-4 w-4 text-emerald-400" />
             </button>
           )}
         </div>
 
+      </div>
+
+      {/* Mobile Sub-Navigation */}
+      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-white/5 overflow-x-auto bg-[#07090e]">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('/')[1] ? `/${item.href.split('/')[1]}` : item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium shrink-0 ${
+                isActive
+                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-400 hover:text-slate-200 bg-slate-900/50'
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
     </header>
   );
