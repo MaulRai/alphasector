@@ -284,13 +284,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({
               <form onSubmit={handleRegister} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Nama Lengkap / Jabatan
+                    Nama Lengkap
                   </label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Budi Pratama (Equity Analyst)"
+                    placeholder="Budi Pratama"
                     required
                     className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
                   />
