@@ -110,7 +110,7 @@ export default function ScreenerPage() {
     <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
       <Navbar backendOnline={backendOnline} />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
         
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-slate-800">

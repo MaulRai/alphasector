@@ -57,7 +57,7 @@ export default function CopilotPage() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
         
         {/* Workspace Header */}
         <section className="max-w-3xl mx-auto pt-2 sm:pt-6 mb-8 text-center">
