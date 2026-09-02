@@ -17,22 +17,36 @@ export default function LandingPage() {
       {/* Navigation */}
       <Navbar />
 
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+      {/* 1. HERO SECTION WITH FADING CITY IDX BACKGROUND */}
+      <section className="relative pt-20 pb-28 md:pt-32 md:pb-40 px-4 sm:px-6 lg:px-8 w-full text-center overflow-hidden">
         
-        {/* Subtle Background Glow Accent */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+        {/* Full Hero Background Image: City with IDX Building */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
+          <Image
+            src="/images/landing/city-with-idx-building.jpg"
+            alt="IDX Jakarta City Background"
+            fill
+            className="object-cover object-top opacity-30 scale-105"
+            priority
+          />
+          {/* Vertical Fading Overlay: Transparent at very top -> Darker in middle -> Fully #07090e at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#07090e]/40 via-[#07090e]/80 to-[#07090e]" />
+          
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-emerald-500/15 blur-[140px] rounded-full" />
+        </div>
 
+        {/* Hero Content on top of the fading background */}
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           
           {/* Track Tag */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs font-medium text-slate-300">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800/80 text-xs font-medium text-slate-300 backdrop-blur-md shadow-lg">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400"></span>
             <span>Sectors Hackathon 2026 • Track 01 AI Agents</span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1]">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
             Autonomous Equity Copilot untuk <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
               Pasar Modal Indonesia
@@ -40,7 +54,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-shadow-sm">
             Bukan sekadar chatbot pembungkus. AlphaSector mengeksekusi multi-step reasoning, 
             kalkulasi deterministik valuasi gap, dan pelacakan aliran dana institusi secara otonom.
           </p>
@@ -49,7 +63,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-4">
             <Link
               href="/copilot"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/15"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20"
             >
               <span>Buka Copilot Workspace</span>
               <ArrowRight className="h-4 w-4" />
@@ -57,66 +71,32 @@ export default function LandingPage() {
 
             <Link
               href="/battle"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold text-sm transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 text-slate-200 font-semibold text-sm transition-all backdrop-blur-md"
             >
               <span>Coba Peer Battle</span>
             </Link>
           </div>
 
-        </div>
-
-        {/* Hero Visual Hub (Central Node Showcase inspired by reference) */}
-        <div className="relative mt-16 max-w-5xl mx-auto">
-          <div className="relative rounded-3xl border border-slate-800 bg-[#0b0f19]/80 p-4 sm:p-8 backdrop-blur-xl shadow-2xl overflow-hidden">
-            
-            {/* Background Banner Image */}
-            <div className="relative h-64 sm:h-96 w-full rounded-2xl overflow-hidden border border-slate-800/80">
-              <Image
-                src="/images/landing/city-with-idx-building.jpg"
-                alt="IDX Financial District"
-                fill
-                className="object-cover object-center opacity-40 hover:scale-105 transition-transform duration-700"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/40 to-transparent" />
-              
-              {/* Floating Core Overlay Nodes */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                <div className="relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl overflow-hidden border border-emerald-500/40 shadow-2xl glow-emerald mb-4">
-                  <Image
-                    src="/images/alphasector-icon.png"
-                    alt="AlphaSector Core"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  Autonomous Multi-Step Pipeline
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-300 max-w-md mt-1">
-                  Menghubungkan 70+ endpoint Sectors Financial API ke dalam mesin penalaran deterministik Groq 120b.
-                </p>
-              </div>
-
-              {/* Floating Node Badges */}
-              <div className="hidden md:flex absolute top-6 left-6 items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-emerald-400 backdrop-blur-md">
-                <Database className="h-3.5 w-3.5" /> 900+ Emiten IDX
-              </div>
-
-              <div className="hidden md:flex absolute top-6 right-6 items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-cyan-400 backdrop-blur-md">
-                <BarChart3 className="h-3.5 w-3.5" /> Deterministik P/E & PBV
-              </div>
-
-              <div className="hidden md:flex absolute bottom-6 left-6 items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-amber-400 backdrop-blur-md">
-                <Users className="h-3.5 w-3.5" /> Smart Money Bandar Flow
-              </div>
-
-              <div className="hidden md:flex absolute bottom-6 right-6 items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-blue-400 backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5" /> Fact-Grounded Synthesis
-              </div>
+          {/* Quick Metrics Ticker Line */}
+          <div className="pt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs text-slate-400 font-medium">
+            <div className="flex items-center gap-2">
+              <Database className="h-4 w-4 text-emerald-400" />
+              <span>900+ Emiten BEI</span>
             </div>
-
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-cyan-400" />
+              <span>Multiples Valuasi & Peer Gap</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-amber-400" />
+              <span>Smart Money & Foreign Flow</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-teal-400" />
+              <span>Groq OpenAI 120b Engine</span>
+            </div>
           </div>
+
         </div>
 
       </section>
@@ -306,7 +286,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. SECTORS API DATA ENGINE (Integration Section inspired by reference) */}
+      {/* 4. SECTORS API DATA ENGINE */}
       <section className="py-20 border-t border-slate-800/80 bg-[#080c14] px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center space-y-12">
           
