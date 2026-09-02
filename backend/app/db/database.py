@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import uuid
 import os
 from pathlib import Path
 from typing import Optional, Dict, Any, List
@@ -33,7 +34,35 @@ def init_db():
         );
     """)
     
-    # 2. Research Reports Table (Owned by user_id)
+    # 2. Chat Sessions Table (Rooms owned by user_id)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS chat_sessions (
+            id TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            primary_ticker TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+    """)
+    
+    # 3. Chat Messages Table (Messages in a room owned by user_id)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL,
+            user_id INTEGER NOT NULL,
+            role TEXT NOT NULL,
+            content TEXT NOT NULL,
+            report_data TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (session_id) REFERENCES chat_sessions (id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+    """)
+    
+    # 4. Research Reports Table (Dossier archives owned by user_id)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS research_reports (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +79,7 @@ def init_db():
         );
     """)
     
-    # 3. User Watchlist / Bookmarks Table (Owned by user_id)
+    # 5. User Watchlist Table (Owned by user_id)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS user_watchlists (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -110,6 +139,133 @@ class UserRepository:
         user_id = cursor.lastrowid
         conn.close()
         return UserRepository.get_by_id(user_id)
+
+
+class ChatRepository:
+    """Database repository for User-Owned Chat Rooms & Message History."""
+
+    @staticmethod
+    def create_session(user_id: int, title: str, primary_ticker: Optional[str] = None, session_id: Optional[str] = None) -> Dict[str, Any]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        s_id = session_id or str(uuid.uuid4())
+        cursor.execute("""
+            INSERT INTO chat_sessions (id, user_id, title, primary_ticker)
+            VALUES (?, ?, ?, ?)
+        """, (s_id, user_id, title[:80], primary_ticker))
+        conn.commit()
+        cursor.execute("SELECT * FROM chat_sessions WHERE id = ?", (s_id,))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row)
+
+    @staticmethod
+    def get_user_sessions(user_id: int, limit: int = 30) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT s.*, 
+                   (SELECT COUNT(*) FROM chat_messages m WHERE m.session_id = s.id) as message_count
+            FROM chat_sessions s
+            WHERE s.user_id = ?
+            ORDER BY s.updated_at DESC
+            LIMIT ?
+        """, (user_id, limit))
+        rows = cursor.fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    def get_session(session_id: str, user_id: int) -> Optional[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM chat_sessions WHERE id = ? AND user_id = ?", (session_id, user_id))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    @staticmethod
+    def update_session(session_id: str, user_id: int, title: Optional[str] = None, primary_ticker: Optional[str] = None) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE chat_sessions
+            SET title = COALESCE(?, title),
+                primary_ticker = COALESCE(?, primary_ticker),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ? AND user_id = ?
+        """, (title, primary_ticker, session_id, user_id))
+        updated = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return updated
+
+    @staticmethod
+    def delete_session(session_id: str, user_id: int) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM chat_sessions WHERE id = ? AND user_id = ?", (session_id, user_id))
+        deleted = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return deleted
+
+    @staticmethod
+    def add_message(session_id: str, user_id: int, role: str, content: str, report_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Ensure session exists or touch updated_at
+        cursor.execute("""
+            UPDATE chat_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?
+        """, (session_id, user_id))
+        
+        cursor.execute("""
+            INSERT INTO chat_messages (session_id, user_id, role, content, report_data)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            session_id,
+            user_id,
+            role,
+            content,
+            json.dumps(report_data, ensure_ascii=False) if report_data else None
+        ))
+        conn.commit()
+        msg_id = cursor.lastrowid
+        cursor.execute("SELECT * FROM chat_messages WHERE id = ?", (msg_id,))
+        row = cursor.fetchone()
+        conn.close()
+        
+        res = dict(row)
+        if res.get("report_data"):
+            try:
+                res["report_data"] = json.loads(res["report_data"])
+            except Exception:
+                pass
+        return res
+
+    @staticmethod
+    def get_session_messages(session_id: str, user_id: int) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM chat_messages 
+            WHERE session_id = ? AND user_id = ?
+            ORDER BY created_at ASC
+        """, (session_id, user_id))
+        rows = cursor.fetchall()
+        conn.close()
+        
+        messages = []
+        for r in rows:
+            m = dict(r)
+            if m.get("report_data"):
+                try:
+                    m["report_data"] = json.loads(m["report_data"])
+                except Exception:
+                    pass
+            messages.append(m)
+        return messages
 
 
 class ResearchReportRepository:

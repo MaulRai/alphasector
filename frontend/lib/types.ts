@@ -82,12 +82,14 @@ export interface SynthesisResult {
   smart_money_flow?: string;
   catalysts: string[];
   risks: string[];
+  suggested_followups?: string[];
   disclaimer: string;
 }
 
 export interface AgentQueryResponse {
   query: string;
   intent: AgentIntent;
+  session_id?: string;
   primary_ticker?: string;
   comparison_tickers: string[];
   reasoning_trace: ReasoningStep[];
@@ -95,8 +97,29 @@ export interface AgentQueryResponse {
   peer_matrix?: PeerCompanyMetric[];
   broker_summary?: BrokerSummaryInfo;
   synthesis: SynthesisResult;
+  suggested_followups?: string[];
   total_execution_time_ms: number;
   credits_consumed: number;
+}
+
+export interface ChatSession {
+  id: string;
+  user_id: number;
+  title: string;
+  primary_ticker?: string | null;
+  message_count?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChatMessage {
+  id: number;
+  session_id: string;
+  user_id: number;
+  role: 'user' | 'assistant';
+  content: string;
+  report_data?: AgentQueryResponse | null;
+  created_at: string;
 }
 
 export interface User {
@@ -104,7 +127,6 @@ export interface User {
   email: string;
   full_name: string;
   role: string;
-  created_at?: string;
 }
 
 export interface AuthResponse {

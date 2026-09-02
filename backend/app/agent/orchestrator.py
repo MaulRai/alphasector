@@ -25,7 +25,7 @@ class AgentOrchestrator:
     4. Bahasa Indonesia Synthesis with Groq (120b)
     """
 
-    async def execute(self, query: str, context_ticker: Optional[str] = None) -> AgentQueryResponse:
+    async def execute(self, query: str, context_ticker: Optional[str] = None, session_id: Optional[str] = None) -> AgentQueryResponse:
         start_time = time.time()
         trace: List[ReasoningStep] = []
         step_counter = 1
@@ -290,6 +290,7 @@ class AgentOrchestrator:
         return AgentQueryResponse(
             query=query,
             intent=intent,
+            session_id=session_id,
             primary_ticker=primary_ticker,
             comparison_tickers=tickers[1:] if len(tickers) > 1 else [],
             reasoning_trace=trace,
@@ -297,6 +298,7 @@ class AgentOrchestrator:
             peer_matrix=peer_matrix if (peer_matrix and len(peer_matrix) > 1) else None,
             broker_summary=broker_info,
             synthesis=synthesis_result,
+            suggested_followups=synthesis_result.suggested_followups if synthesis_result else [],
             total_execution_time_ms=total_ms,
             credits_consumed=credits_used
         )

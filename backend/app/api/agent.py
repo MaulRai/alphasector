@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Header
 from typing import Optional, List, Dict, Any
 from app.schemas.agent import AgentQueryRequest, AgentQueryResponse
 from app.agent.orchestrator import agent_orchestrator
-from app.db.database import ResearchReportRepository
+from app.db.database import ResearchReportRepository, ChatRepository
 from app.core.security import decode_access_token
 
 router = APIRouter(prefix="/agent", tags=["AI Agent"])
@@ -27,17 +27,71 @@ async def execute_agent_query(
 ):
     """
     Execute autonomous multi-step reasoning query across Sectors Financial API.
-    Returns live step-by-step reasoning trace, quantitative metrics, and fact-grounded synthesis.
-    If authenticated, automatically persists report to the user's research history.
+    Returns live step-by-step reasoning trace, quantitative metrics, AI synthesis, and suggested follow-ups.
+    Persists to both chat_sessions/chat_messages and research_reports for the authenticated user.
     """
     try:
+        user_id = get_optional_user_id(authorization)
+        active_session_id = request.session_id
+
+        # If user is authenticated and session_id provided, ensure session exists
+        if user_id and active_session_id:
+            session = ChatRepository.get_session(active_session_id, user_id)
+            if not session:
+                # Create session with given ID
+                session_title = request.query[:45] + ("..." if len(request.query) > 45 else "")
+                ChatRepository.create_session(
+                    user_id=user_id,
+                    title=session_title,
+                    primary_ticker=request.context_ticker,
+                    session_id=active_session_id
+                )
+        elif user_id and not active_session_id:
+            # Auto-create new session
+            session_title = request.query[:45] + ("..." if len(request.query) > 45 else "")
+            new_session = ChatRepository.create_session(
+                user_id=user_id,
+                title=session_title,
+                primary_ticker=request.context_ticker
+            )
+            active_session_id = new_session["id"]
+
+        # If authenticated, save user message
+        if user_id and active_session_id:
+            ChatRepository.add_message(
+                session_id=active_session_id,
+                user_id=user_id,
+                role="user",
+                content=request.query
+            )
+
+        # Execute agent
         response = await agent_orchestrator.execute(
             query=request.query,
-            context_ticker=request.context_ticker
+            context_ticker=request.context_ticker,
+            session_id=active_session_id
         )
-        
-        # If user is authenticated, persist report with user ownership
-        user_id = get_optional_user_id(authorization)
+
+        # If authenticated, persist assistant message and update session primary ticker if identified
+        if user_id and active_session_id:
+            try:
+                ChatRepository.add_message(
+                    session_id=active_session_id,
+                    user_id=user_id,
+                    role="assistant",
+                    content=response.synthesis.executive_summary,
+                    report_data=response.model_dump()
+                )
+                if response.primary_ticker:
+                    ChatRepository.update_session(
+                        session_id=active_session_id,
+                        user_id=user_id,
+                        primary_ticker=response.primary_ticker
+                    )
+            except Exception as chat_err:
+                print(f"[Warning] Failed to save chat message: {chat_err}")
+
+        # Also persist to ResearchReportRepository for history archival
         if user_id:
             try:
                 ResearchReportRepository.create(

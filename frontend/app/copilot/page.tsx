@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -9,36 +9,160 @@ import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
-import { queryAgent, checkBackendHealth } from '@/lib/api';
-import { AgentQueryResponse } from '@/lib/types';
+import { 
+  queryAgent, 
+  fetchUserChatSessions, 
+  fetchChatRoomDetails, 
+  createChatRoom, 
+  deleteChatRoom 
+} from '@/lib/api';
+import { AgentQueryResponse, ChatSession, ChatMessage } from '@/lib/types';
+import { useAuth } from '@/lib/auth-context';
 import { 
   Sparkles, Search, Send, RefreshCw, 
-  BookOpen, AlertCircle, Terminal, Zap, ShieldCheck
+  BookOpen, AlertCircle, Plus, MessageSquare, 
+  Trash2, ChevronRight, CornerDownLeft, Bot, 
+  User as UserIcon, PanelLeftClose, PanelLeft, Clock,
+  ArrowRight, ShieldCheck, TrendingUp
 } from 'lucide-react';
-
 import { AuthGate } from '@/components/AuthGate';
 
 export default function CopilotPage() {
-  const [query, setQuery] = useState('');
+  const { user } = useAuth();
+  
+  // State
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [sessionSearch, setSessionSearch] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentReport, setCurrentReport] = useState<AgentQueryResponse | null>(null);
+  const [isFetchingHistory, setIsFetchingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
 
-  useEffect(() => {
-    // Health check on mount
-  }, []);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleRunQuery = async (queryText: string) => {
-    if (!queryText.trim()) return;
-    setIsLoading(true);
+  // Auto-scroll to bottom of messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  // Load user chat sessions on mount or when user logs in
+  useEffect(() => {
+    if (user) {
+      loadSessions();
+    }
+  }, [user]);
+
+  const loadSessions = async () => {
+    try {
+      const res = await fetchUserChatSessions();
+      setSessions(res.sessions || []);
+      if (res.sessions && res.sessions.length > 0 && !activeSessionId) {
+        // Load the most recent session by default
+        loadSessionDetails(res.sessions[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to load chat sessions:', err);
+    }
+  };
+
+  const loadSessionDetails = async (sessionId: string) => {
+    setIsFetchingHistory(true);
+    setActiveSessionId(sessionId);
     setError(null);
     try {
-      const response = await queryAgent(queryText);
-      setCurrentReport(response);
+      const res = await fetchChatRoomDetails(sessionId);
+      setMessages(res.messages || []);
     } catch (err: any) {
-      console.error('Query error:', err);
-      setError(err.message || 'Gagal mengeksekusi analisis agent. Pastikan backend FastAPI aktif.');
+      console.error('Failed to load session details:', err);
+      setError('Gagal memuat riwayat pesan.');
+    } finally {
+      setIsFetchingHistory(false);
+    }
+  };
+
+  const handleCreateNewSession = () => {
+    setActiveSessionId(null);
+    setMessages([]);
+    setInputQuery('');
+    setError(null);
+    inputRef.current?.focus();
+  };
+
+  const handleDeleteSession = async (e: React.MouseEvent, sessionId: string) => {
+    e.stopPropagation();
+    if (!confirm('Hapus sesi riset ini beserta seluruh riwayatnya?')) return;
+    try {
+      await deleteChatRoom(sessionId);
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      if (activeSessionId === sessionId) {
+        handleCreateNewSession();
+      }
+    } catch (err: any) {
+      alert(err.message || 'Gagal menghapus sesi.');
+    }
+  };
+
+  const handleSendMessage = async (queryText: string) => {
+    const textToSend = queryText.trim();
+    if (!textToSend || isLoading) return;
+
+    setInputQuery('');
+    setError(null);
+    setIsLoading(true);
+
+    // Optimistically append user message to thread
+    const optimisticUserMsg: ChatMessage = {
+      id: Date.now(),
+      session_id: activeSessionId || 'temp',
+      user_id: user?.id || 1,
+      role: 'user',
+      content: textToSend,
+      created_at: new Date().toISOString()
+    };
+    setMessages((prev) => [...prev, optimisticUserMsg]);
+
+    try {
+      const response: AgentQueryResponse = await queryAgent(
+        textToSend,
+        undefined,
+        activeSessionId || undefined
+      );
+
+      // If a new session was created on backend, set it
+      if (response.session_id && response.session_id !== activeSessionId) {
+        setActiveSessionId(response.session_id);
+      }
+
+      // Append assistant message
+      const assistantMsg: ChatMessage = {
+        id: Date.now() + 1,
+        session_id: response.session_id || activeSessionId || 'temp',
+        user_id: user?.id || 1,
+        role: 'assistant',
+        content: response.synthesis.executive_summary,
+        report_data: response,
+        created_at: new Date().toISOString()
+      };
+
+      setMessages((prev) => [...prev, assistantMsg]);
+
+      // Refresh sidebar sessions list
+      const updatedSessions = await fetchUserChatSessions();
+      setSessions(updatedSessions.sessions || []);
+
+    } catch (err: any) {
+      console.error('Query execution error:', err);
+      setError(err.message || 'Gagal mengeksekusi penalaran agent.');
     } finally {
       setIsLoading(false);
     }
@@ -46,194 +170,429 @@ export default function CopilotPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleRunQuery(query);
+    handleSendMessage(inputQuery);
   };
+
+  // Get latest assistant report for dossier
+  const latestReport = [...messages]
+    .reverse()
+    .find((m) => m.role === 'assistant' && m.report_data)?.report_data || null;
+
+  const filteredSessions = sessions.filter((s) =>
+    s.title.toLowerCase().includes(sessionSearch.toLowerCase()) ||
+    (s.primary_ticker && s.primary_ticker.toLowerCase().includes(sessionSearch.toLowerCase()))
+  );
 
   return (
     <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
       
-      {/* Navigation */}
+      {/* Top Navbar */}
       <Navbar
         onOpenDossier={() => setIsDossierOpen(true)}
-        hasActiveReport={!!currentReport}
+        hasActiveReport={!!latestReport}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
+      <AuthGate
+        featureName="Research Copilot Terminal"
+        featureDescription="Akses penalaran AI otonom, multi-turn chat rooms, dan perbandingan emiten interaktif memerlukan autentikasi analis."
+      >
+
+      {/* Main Workspace Layout with Left Sidebar */}
+      <div className="flex-1 flex pt-16 sm:pt-20 h-[calc(100vh-1rem)] overflow-hidden">
         
-        <AuthGate
-          featureName="Research Copilot Terminal"
-          featureDescription="Akses penalaran AI otonom, parallel tool execution Sectors API, dan perbandingan emiten komprehensif memerlukan sesi analis."
+        {/* ============================================================ */}
+        {/* LEFT SIDEBAR: User-Owned Research Sessions History          */}
+        {/* ============================================================ */}
+        <aside
+          className={`${
+            isSidebarOpen ? 'w-72 sm:w-80' : 'w-0'
+          } shrink-0 bg-[#0a0d16] border-r border-slate-800/80 transition-all duration-300 flex flex-col overflow-hidden relative z-20`}
         >
-        
-        {/* Workspace Header */}
-        <section className="max-w-3xl mx-auto pt-2 sm:pt-6 mb-8 text-center">
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 leading-tight">
-            Research Copilot Terminal
-          </h1>
+          {/* Sidebar Header */}
+          <div className="p-3 sm:p-4 border-b border-slate-800/80 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0">
+                <MessageSquare className="h-4 w-4" />
+              </div>
+              <span className="text-xs sm:text-sm font-bold text-white truncate">
+                Riwayat Riset Sesi
+              </span>
+            </div>
+            <button
+              onClick={handleCreateNewSession}
+              title="Mulai Sesi Riset Baru"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition-all shrink-0 active:scale-95 shadow-sm"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Sesi Baru</span>
+            </button>
+          </div>
 
-          <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 max-w-xl mx-auto">
-            Ketik pertanyaan riset pasar modal atau pilih preset radar di bawah untuk mengeksekusi reasoning multi-langkah.
-          </p>
-
-          {/* Main Query Bar */}
-          <form onSubmit={handleSubmit} className="relative w-full max-w-2xl mx-auto">
-            <div className="relative flex items-center rounded-2xl border border-slate-700/70 bg-[#0d121e]/90 p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald">
-              <Search className="h-5 w-5 text-emerald-400 ml-3 mr-2 shrink-0" />
+          {/* Search Filter */}
+          <div className="p-2 sm:p-3 border-b border-slate-800/60">
+            <div className="relative flex items-center rounded-lg bg-slate-900/90 border border-slate-800 px-2.5 py-1.5 text-xs">
+              <Search className="h-3.5 w-3.5 text-slate-500 mr-2 shrink-0" />
               <input
                 type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Tanya emiten (misal: Bandingkan BBRI vs BMRI atau Analisis Valuasi BBCA)..."
+                value={sessionSearch}
+                onChange={(e) => setSessionSearch(e.target.value)}
+                placeholder="Cari sesi atau ticker..."
+                className="w-full bg-transparent text-slate-200 placeholder-slate-500 focus:outline-none text-xs"
+              />
+            </div>
+          </div>
+
+          {/* Sessions List */}
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {filteredSessions.length === 0 ? (
+              <div className="py-8 text-center px-4 text-xs text-slate-500">
+                <MessageSquare className="h-6 w-6 mx-auto mb-2 opacity-30 text-slate-400" />
+                <p>Belum ada sesi riset tersimpan.</p>
+                <p className="text-[11px] text-slate-600 mt-1">Mulai riset baru untuk membuat room.</p>
+              </div>
+            ) : (
+              filteredSessions.map((s) => {
+                const isActive = s.id === activeSessionId;
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => loadSessionDetails(s.id)}
+                    className={`group relative flex items-center justify-between p-2.5 rounded-xl text-xs cursor-pointer transition-all ${
+                      isActive
+                        ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-medium'
+                        : 'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 border border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <div className={`p-1 rounded-md shrink-0 ${isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
+                        <Sparkles className="h-3 w-3" />
+                      </div>
+                      <div className="min-w-0 truncate">
+                        <p className="truncate font-semibold text-slate-200">
+                          {s.title}
+                        </p>
+                        <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
+                          {s.primary_ticker && (
+                            <span className="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-400 font-mono font-bold">
+                              {s.primary_ticker}
+                            </span>
+                          )}
+                          <span>{s.message_count ? `${s.message_count} pesan` : 'Baru'}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => handleDeleteSession(e, s.id)}
+                      title="Hapus Sesi"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Sidebar Footer User Badge */}
+          <div className="p-3 border-t border-slate-800/80 bg-[#080b12] flex items-center justify-between text-[11px] text-slate-400">
+            <div className="flex items-center gap-2 truncate">
+              <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="truncate">{user?.full_name || 'Demo Analyst'}</span>
+            </div>
+            <span className="font-mono text-slate-500">{sessions.length} Sesi</span>
+          </div>
+        </aside>
+
+        {/* ============================================================ */}
+        {/* MAIN CONVERSATIONAL WORKSPACE (CENTER)                       */}
+        {/* ============================================================ */}
+        <section className="flex-1 flex flex-col h-full bg-[#07090e] overflow-hidden relative">
+          
+          {/* Top Session Bar with Sidebar Toggle */}
+          <div className="h-12 border-b border-slate-800/80 bg-[#090d17]/80 backdrop-blur-md px-4 flex items-center justify-between gap-3 shrink-0 z-10">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                title={isSidebarOpen ? 'Tutup Sidebar' : 'Buka Sidebar'}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              >
+                {isSidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
+              </button>
+              
+              <div className="flex items-center gap-2 truncate">
+                <span className="text-xs font-bold text-slate-300 truncate">
+                  {activeSessionId 
+                    ? sessions.find((s) => s.id === activeSessionId)?.title || 'Sesi Riset Aktif'
+                    : 'Sesi Riset Baru'
+                  }
+                </span>
+                {activeSessionId && (
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                    Room Terhubung
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {latestReport && (
+              <button
+                onClick={() => setIsDossierOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-emerald-400 border border-emerald-500/30 transition-all shrink-0"
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Lihat Full Dossier</span>
+              </button>
+            )}
+          </div>
+
+          {/* Scrollable Chat Message Feed */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6">
+            
+            {/* If New / Empty Session: Show Welcome & Radar Presets */}
+            {messages.length === 0 && !isLoading && (
+              <div className="max-w-3xl mx-auto py-8 text-center animate-in fade-in duration-300">
+                <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-4">
+                  <Bot className="h-8 w-8" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
+                  Research Copilot Terminal
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto mb-8">
+                  Ajukan analisis pasar modal IDX, komparasi multi-emiten, pelacakan bandarmology broker, atau pilih salah satu preset di bawah untuk memulai sesi riset otonom.
+                </p>
+
+                {/* Radar Presets */}
+                <div className="text-left">
+                  <TradeIdeasRadar onSelectPreset={(presetQuery) => handleSendMessage(presetQuery)} />
+                </div>
+              </div>
+            )}
+
+            {/* Render Multi-Turn Message Stream */}
+            {messages.map((msg, index) => {
+              const isUser = msg.role === 'user';
+              const report = msg.report_data;
+
+              return (
+                <div
+                  key={msg.id || index}
+                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-4xl mx-auto w-full`}
+                >
+                  {/* Message Sender Header */}
+                  <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
+                    {isUser ? (
+                      <>
+                        <span className="font-semibold text-slate-300">Anda (Analyst)</span>
+                        <div className="p-1 rounded-md bg-slate-800 text-slate-300">
+                          <UserIcon className="h-3 w-3" />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400">
+                          <Bot className="h-3 w-3" />
+                        </div>
+                        <span className="font-semibold text-emerald-400">AlphaSector Agent</span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Message Body Content */}
+                  {isUser ? (
+                    <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed">
+                      {msg.content}
+                    </div>
+                  ) : (
+                    <div className="w-full space-y-5 animate-in fade-in duration-300">
+                      
+                      {/* Live/Completed Thinking Trace Accordion */}
+                      {report?.reasoning_trace && (
+                        <AgentThinkingTrace
+                          steps={report.reasoning_trace}
+                          totalTimeMs={report.total_execution_time_ms}
+                          creditsConsumed={report.credits_consumed}
+                          isLoading={false}
+                        />
+                      )}
+
+                      {/* Executive Narrative Synthesis Card */}
+                      {report?.synthesis && (
+                        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel">
+                          <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                            <div className="flex items-center gap-2">
+                              <Sparkles className="h-4 w-4 text-emerald-400" />
+                              <h3 className="text-sm font-bold text-white">
+                                Sintesis Riset Otonom
+                              </h3>
+                            </div>
+                            <span className="text-[11px] font-mono text-slate-500">
+                              Verified IDX Fact-Grounded
+                            </span>
+                          </div>
+
+                          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                            {report.synthesis.executive_summary}
+                          </p>
+
+                          {/* Key Findings & Multiples */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-800/60 text-xs">
+                            <div>
+                              <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                Key Findings & Highlights
+                              </h4>
+                              <ul className="space-y-1.5 text-slate-300">
+                                {report.synthesis.key_findings.map((f, fi) => (
+                                  <li key={fi} className="flex items-start gap-2">
+                                    <span className="text-emerald-400 mt-0.5">•</span>
+                                    <span>{f}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            <div>
+                              <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                Valuasi & Smart Money Signal
+                              </h4>
+                              <div className="space-y-2">
+                                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
+                                  <strong className="text-cyan-400">Valuasi:</strong> {report.synthesis.valuation_verdict || 'N/A'}
+                                </div>
+                                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
+                                  <strong className="text-amber-400">Smart Money:</strong> {report.synthesis.smart_money_flow || 'N/A'}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Interactive Financial Cards */}
+                      {report?.metrics_summary && (
+                        <Company360Card data={report.metrics_summary} />
+                      )}
+
+                      {report?.peer_matrix && report.peer_matrix.length > 0 && (
+                        <PeerBattleMatrix matrix={report.peer_matrix} />
+                      )}
+
+                      {report?.broker_summary && (
+                        <BrokerFlowTracker
+                          brokerSummary={report.broker_summary}
+                          ticker={report.primary_ticker}
+                        />
+                      )}
+
+                      {/* ============================================================ */}
+                      {/* AI-GENERATED FOLLOW-UP QUESTIONS (SMART PROMPT PILLS)       */}
+                      {/* ============================================================ */}
+                      {report?.suggested_followups && report.suggested_followups.length > 0 && (
+                        <div className="pt-2">
+                          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <Sparkles className="h-3 w-3 text-emerald-400" />
+                            <span>Pertanyaan Lanjutan yang Disarankan AI:</span>
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {report.suggested_followups.map((followup, fIdx) => (
+                              <button
+                                key={fIdx}
+                                onClick={() => handleSendMessage(followup)}
+                                disabled={isLoading}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-300 text-xs text-left transition-all active:scale-95 group shadow-sm"
+                              >
+                                <span className="line-clamp-1">{followup}</span>
+                                <ArrowRight className="h-3 w-3 text-slate-500 group-hover:text-emerald-400 shrink-0 transition-transform group-hover:translate-x-0.5" />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Live Loading State Message */}
+            {isLoading && (
+              <div className="flex flex-col items-start max-w-4xl mx-auto w-full animate-in fade-in duration-200">
+                <div className="flex items-center gap-2 mb-1.5 text-[11px] text-emerald-400 font-semibold">
+                  <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400">
+                    <Bot className="h-3 w-3" />
+                  </div>
+                  <span>AlphaSector Agent sedang bernalar...</span>
+                </div>
+                <div className="p-4 rounded-2xl border border-slate-800 bg-[#0d121e]/90 flex items-center gap-3 text-xs text-slate-300 w-full max-w-md">
+                  <RefreshCw className="h-4 w-4 animate-spin text-emerald-400 shrink-0" />
+                  <span>Mengeksekusi multi-step reasoning DAG & tool calling Sectors API...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Error Alert */}
+            {error && (
+              <div className="max-w-4xl mx-auto w-full p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 shrink-0" />
+                <p>{error}</p>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* ============================================================ */}
+          {/* BOTTOM FIXED CHAT INPUT BAR                                  */}
+          {/* ============================================================ */}
+          <div className="p-3 sm:p-4 border-t border-slate-800/80 bg-[#080b13]/95 backdrop-blur-md shrink-0">
+            <form
+              onSubmit={handleSubmit}
+              className="max-w-4xl mx-auto relative flex items-center rounded-2xl border border-slate-700/80 bg-[#0d121e] p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald"
+            >
+              <Search className="h-4 w-4 text-emerald-400 ml-3 mr-2 shrink-0" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputQuery}
+                onChange={(e) => setInputQuery(e.target.value)}
+                placeholder="Tanyakan analisis emiten (misal: Bandingkan BBCA vs BBRI, atau periksa foreign flow ASII)..."
                 className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1"
                 disabled={isLoading}
               />
               <button
                 type="submit"
-                disabled={isLoading || !query.trim()}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs sm:text-sm font-bold hover:brightness-110 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all shrink-0"
+                disabled={isLoading || !inputQuery.trim()}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0"
               >
                 {isLoading ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                    <span>Menganalisis...</span>
-                  </>
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                 ) : (
                   <>
-                    <span>Riset Sekarang</span>
+                    <span className="hidden sm:inline">Kirim</span>
                     <Send className="h-3.5 w-3.5" />
                   </>
                 )}
               </button>
-            </div>
-          </form>
+            </form>
+            <p className="text-[10px] text-slate-600 text-center mt-2">
+              Sesi terenkripsi dan tersimpan di database lokal Anda • Data resmi Sectors Financial API
+            </p>
+          </div>
 
         </section>
 
-        {/* 1-Click Trade Ideas Presets */}
-        <TradeIdeasRadar onSelectPreset={handleRunQuery} />
+      </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 shrink-0" />
-            <p>{error}</p>
-          </div>
-        )}
-
-        {/* Live Analysis Output */}
-        {currentReport && (
-          <div className="space-y-6 animate-in fade-in duration-300">
-            
-            {/* Live Agent Thinking Trace Accordion */}
-            <AgentThinkingTrace
-              steps={currentReport.reasoning_trace}
-              totalTimeMs={currentReport.total_execution_time_ms}
-              creditsConsumed={currentReport.credits_consumed}
-              isLoading={isLoading}
-            />
-
-            {/* Executive Synthesis Summary Card */}
-            <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 shadow-2xl glass-panel">
-              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
-                    <Sparkles className="h-4 w-4" />
-                  </div>
-                  <h3 className="text-base font-bold text-white">
-                    Sintesis Riset Otonom
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setIsDossierOpen(true)}
-                  className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
-                >
-                  <BookOpen className="h-3.5 w-3.5" />
-                  <span>Lihat Full Dossier</span>
-                </button>
-              </div>
-
-              {/* Summary text */}
-              <p className="text-sm text-slate-200 leading-relaxed mb-4">
-                {currentReport.synthesis.executive_summary}
-              </p>
-
-              {/* Key Findings list */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-800/60">
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                    Key Findings & Highlights
-                  </h4>
-                  <ul className="space-y-1.5 text-xs text-slate-300">
-                    {currentReport.synthesis.key_findings.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-emerald-400 mt-0.5">•</span>
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                    Valuasi & Sinyal Smart Money
-                  </h4>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
-                      <strong className="text-cyan-400">Valuasi:</strong> {currentReport.synthesis.valuation_verdict || 'N/A'}
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
-                      <strong className="text-amber-400">Smart Money:</strong> {currentReport.synthesis.smart_money_flow || 'N/A'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* If Single Ticker: Display Company360Card */}
-            {currentReport.metrics_summary && (
-              <Company360Card data={currentReport.metrics_summary} />
-            )}
-
-            {/* If Peer Battle / Multiple Tickers: Display PeerBattleMatrix */}
-            {currentReport.peer_matrix && currentReport.peer_matrix.length > 0 && (
-              <PeerBattleMatrix matrix={currentReport.peer_matrix} />
-            )}
-
-            {/* If Broker Summary Available: Display BrokerFlowTracker */}
-            {currentReport.broker_summary && (
-              <BrokerFlowTracker
-                brokerSummary={currentReport.broker_summary}
-                ticker={currentReport.primary_ticker}
-              />
-            )}
-
-          </div>
-        )}
-
-        </AuthGate>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="w-full border-t border-slate-800/80 bg-[#07090e] py-6 px-4 sm:px-6 lg:px-8 mt-12 text-center text-xs text-slate-500">
-        <div className="max-w-4xl mx-auto space-y-2">
-          <p>
-            <strong>AlphaSector Copilot</strong> • Track 01 Autonomous AI Agent.
-          </p>
-          <p className="text-[11px] text-slate-600">
-            ⚠️ Disclaimer: Data disajikan untuk kebutuhan edukasi dan analisis riset berbasis Sectors API. Bukan ajakan jual/beli efek.
-          </p>
-        </div>
-      </footer>
+      </AuthGate>
 
       {/* Exportable Research Dossier Modal */}
-      {currentReport && (
+      {latestReport && (
         <ResearchDossierModal
           isOpen={isDossierOpen}
           onClose={() => setIsDossierOpen(false)}
-          report={currentReport}
+          report={latestReport}
         />
       )}
 

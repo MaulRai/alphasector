@@ -77,14 +77,16 @@ class AgentSynthesizer:
             "ATURAN MUTLAK:\n"
             "1. Tulis seluruh analisis dalam Bahasa Indonesia profesional dan lugas.\n"
             "2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON yang diberikan tanpa halusinasi.\n"
-            "3. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
+            "3. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam untuk membantu analis mendalami riset ini lebih lanjut.\n"
+            "4. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
             "{\n"
             '  "executive_summary": "Ringkasan eksekutif 2-3 kalimat mengenai temuan utama riset ini.",\n'
             '  "key_findings": ["Poin kunci 1", "Poin kunci 2", "Poin kunci 3"],\n'
             '  "valuation_verdict": "Penilaian valuasi objektif (apakah terdiskon, wajar, atau premium dibanding peer).",\n'
             '  "smart_money_flow": "Analisis aliran akumulasi broker institusi & foreign flow.",\n'
             '  "catalysts": ["Katalis positif 1", "Katalis positif 2"],\n'
-            '  "risks": ["Faktor risiko 1", "Faktor risiko 2"]\n'
+            '  "risks": ["Faktor risiko 1", "Faktor risiko 2"],\n'
+            '  "suggested_followups": ["Pertanyaan follow up 1", "Pertanyaan follow up 2", "Pertanyaan follow up 3"]\n'
             "}"
         )
 
@@ -109,6 +111,23 @@ class AgentSynthesizer:
             text = text.split("```")[1].split("```")[0].strip()
 
         parsed = json.loads(text)
+        
+        # Ensure default followups if model didn't return any
+        followups = parsed.get("suggested_followups") or []
+        if not followups:
+            if tickers:
+                followups = [
+                    f"Bagaimana pergerakan aliran broker asing {tickers[0]} dalam 1 bulan terakhir?",
+                    f"Bandingkan margin laba bersih {tickers[0]} dengan kompetitor terdekat",
+                    f"Tampilkan rincian segmen pendapatan dan kontribusi bisnis {tickers[0]}"
+                ]
+            else:
+                followups = [
+                    "Tampilkan 5 saham dengan dividend yield tertinggi di IDX",
+                    "Cari saham perbankan dengan valuasi PBV di bawah 1.5x",
+                    "Analisis emiten dengan akumulasi broker asing terbesar pekan ini"
+                ]
+
         return SynthesisResult(
             executive_summary=parsed.get("executive_summary", ""),
             key_findings=parsed.get("key_findings", []),
@@ -116,6 +135,7 @@ class AgentSynthesizer:
             smart_money_flow=parsed.get("smart_money_flow"),
             catalysts=parsed.get("catalysts", []),
             risks=parsed.get("risks", []),
+            suggested_followups=followups[:3],
             disclaimer=cls.MANDATORY_DISCLAIMER
         )
 
@@ -132,12 +152,13 @@ class AgentSynthesizer:
     ) -> SynthesisResult:
         """Deterministic high-quality fallback generator when LLM is unavailable or offline."""
         
+        followups = []
         if peer_matrix and len(peer_matrix) >= 2:
             lowest_pe = next((p for p in peer_matrix if p.get("is_lowest_pe")), peer_matrix[0])
             highest_roe = next((p for p in peer_matrix if p.get("is_highest_roe")), peer_matrix[0])
             
             exec_summary = (
-                f"Analisis komparasi multi-emiten ({', '.join(tickers)}) menunjukkan profil fundamental yang beragam. "
+                f"Analisis komparasi multi-emiten ({', '.join(tickers[:5])}) menunjukkan profil fundamental yang beragam. "
                 f"{lowest_pe['symbol']} menawarkan valuasi paling atraktif dengan PE {lowest_pe.get('pe', '-')}x, "
                 f"sementara {highest_roe['symbol']} mencatatkan profitabilitas modal tertinggi dengan ROE {highest_roe.get('roe', '-')}%. "
                 f"Secara keseluruhan, sektor ini menunjukkan fundamental yang solid dengan pertumbuhan stabil."
@@ -152,6 +173,12 @@ class AgentSynthesizer:
             valuation_verdict = (
                 f"Berdasarkan rasio harga terhadap laba (P/E), {lowest_pe['symbol']} berada pada posisi terdiskon dibanding peers-nya."
             )
+
+            followups = [
+                f"Bagaimana pergerakan akumulasi broker pada {lowest_pe['symbol']}?",
+                f"Bandingkan breakdown segmen laba antara {peer_matrix[0]['symbol']} dan {peer_matrix[1]['symbol'] if len(peer_matrix)>1 else lowest_pe['symbol']}",
+                f"Cek riwayat pembagian dividen dan payout ratio {highest_roe['symbol']}"
+            ]
             
         elif peer_matrix and len(peer_matrix) == 1:
             p = peer_matrix[0]
@@ -170,6 +197,12 @@ class AgentSynthesizer:
             
             valuation_verdict = f"Valuasi {p['symbol']} saat ini tergolong kompetitif di subsektor {p['sub_sector']}."
             
+            followups = [
+                f"Siapa saja 3 broker institusi pembeli terbesar di {p['symbol']}?",
+                f"Bandingkan valuasi {p['symbol']} dengan kompetitor sektor {p['sector']}",
+                f"Bagaimana rincian lini bisnis dan segmen pendapatan {p['symbol']}?"
+            ]
+            
         elif screener_data and "results" in screener_data:
             results = screener_data.get("results", [])
             top_symbols = [x.get("symbol") for x in results[:5]]
@@ -179,10 +212,20 @@ class AgentSynthesizer:
             )
             key_findings = [f"Emiten: {x.get('symbol')} - {x.get('company_name')}" for x in results[:4]]
             valuation_verdict = "Daftar emiten di atas disaring berdasarkan kriteria performa fundamental dan likuiditas terbaik."
+            followups = [
+                f"Bandingkan valuasi langsung antara {top_symbols[0]} vs {top_symbols[1] if len(top_symbols)>1 else ''}",
+                "Analisis aliran dana asing pada emiten dengan kapitalisasi terbesar",
+                "Filter ulang dengan kriteria dividend yield di atas 5%"
+            ]
         else:
             exec_summary = f"Analisis terhadap query '{query}' telah berhasil dieksekusi melalui Sectors Financial API."
             key_findings = ["Data pasar terverifikasi", "Koneksi data real-time aktif"]
             valuation_verdict = "Disarankan melihat perbandingan rasio finansial spesifik pada dashboard."
+            followups = [
+                "Bandingkan 4 saham perbankan terbesar (BBCA, BBRI, BMRI, BBNI)",
+                "Tampilkan saham dengan pertumbuhan laba di atas 20%",
+                "Cek emiten dengan net foreign inflow terbesar hari ini"
+            ]
 
         # Broker sentiment summary
         broker_sentiment = "Netral"
@@ -207,6 +250,7 @@ class AgentSynthesizer:
                 "Volatilitas suku bunga dan fluktuasi nilai tukar rupiah",
                 "Risiko siklus sektoral dan perubahan regulasi industri"
             ],
+            suggested_followups=followups[:3],
             disclaimer=cls.MANDATORY_DISCLAIMER
         )
 

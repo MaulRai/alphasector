@@ -44,13 +44,15 @@ class SynthesisResult(BaseModel):
     key_findings: List[str]
     valuation_verdict: Optional[str] = None
     smart_money_flow: Optional[str] = None
-    catalysts: List[str]
-    risks: List[str]
+    catalysts: List[str] = []
+    risks: List[str] = []
+    suggested_followups: List[str] = []
     disclaimer: str
 
 class AgentQueryResponse(BaseModel):
     query: str
     intent: AgentIntent
+    session_id: Optional[str] = None
     primary_ticker: Optional[str] = None
     comparison_tickers: List[str] = []
     reasoning_trace: List[ReasoningStep]
@@ -58,5 +60,6 @@ class AgentQueryResponse(BaseModel):
     peer_matrix: Optional[List[Dict[str, Any]]] = None
     broker_summary: Optional[Dict[str, Any]] = None
     synthesis: SynthesisResult
+    suggested_followups: List[str] = []
     total_execution_time_ms: int
     credits_consumed: int

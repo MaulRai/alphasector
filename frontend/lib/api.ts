@@ -1,4 +1,4 @@
-import { AgentQueryResponse } from './types';
+import { AgentQueryResponse, ChatSession, ChatMessage } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -7,7 +7,20 @@ function getStoredToken(): string | null {
   return localStorage.getItem('alphasector_auth_token');
 }
 
-export async function queryAgent(query: string, contextTicker?: string): Promise<AgentQueryResponse> {
+export async function checkBackendHealth(): Promise<{ status: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/`);
+    return { status: res.ok ? 'healthy' : 'unhealthy' };
+  } catch {
+    return { status: 'offline' };
+  }
+}
+
+export async function queryAgent(
+  query: string, 
+  contextTicker?: string, 
+  sessionId?: string
+): Promise<AgentQueryResponse> {
   const token = getStoredToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -22,6 +35,7 @@ export async function queryAgent(query: string, contextTicker?: string): Promise
     body: JSON.stringify({
       query,
       context_ticker: contextTicker || null,
+      session_id: sessionId || null,
     }),
   });
 
@@ -115,7 +129,7 @@ export async function fetchTopMovers(periods = '7d', n_stock = 5) {
   return response.json();
 }
 
-export async function fetchTopBrokers(cohort = 'all', metric = 'gross') {
+export async function fetchTopBrokers(cohort = 'institutional', metric = 'gross') {
   const response = await fetch(`${API_BASE_URL}/api/sectors/top-brokers?cohort=${cohort}&metric=${metric}`);
   if (!response.ok) {
     throw new Error(`Failed to fetch top brokers`);
@@ -123,17 +137,7 @@ export async function fetchTopBrokers(cohort = 'all', metric = 'gross') {
   return response.json();
 }
 
-export async function checkBackendHealth() {
-  try {
-    const res = await fetch(`${API_BASE_URL}/health`, { cache: 'no-store' });
-    if (!res.ok) return { status: 'offline' };
-    return res.json();
-  } catch (e) {
-    return { status: 'offline' };
-  }
-}
-
-// --- AUTH API METHODS ---
+// --- AUTHENTICATION API ---
 
 export async function loginUser(email: string, password: string) {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -169,6 +173,54 @@ export async function getMeProfile(token: string) {
     throw new Error('Sesi kedaluwarsa.');
   }
   return response.json();
+}
+
+// --- USER-OWNED CHAT ROOMS & MULTI-TURN SESSIONS ---
+
+export async function fetchUserChatSessions(): Promise<{ sessions: ChatSession[] }> {
+  const token = getStoredToken();
+  if (!token) return { sessions: [] };
+  const res = await fetch(`${API_BASE_URL}/api/chat/sessions`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) return { sessions: [] };
+  return res.json();
+}
+
+export async function createChatRoom(title?: string, primaryTicker?: string): Promise<{ session: ChatSession }> {
+  const token = getStoredToken();
+  if (!token) throw new Error('Autentikasi diperlukan.');
+  const res = await fetch(`${API_BASE_URL}/api/chat/sessions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, primary_ticker: primaryTicker }),
+  });
+  if (!res.ok) throw new Error('Gagal membuat sesi riset baru.');
+  return res.json();
+}
+
+export async function fetchChatRoomDetails(sessionId: string): Promise<{ session: ChatSession; messages: ChatMessage[] }> {
+  const token = getStoredToken();
+  if (!token) throw new Error('Autentikasi diperlukan.');
+  const res = await fetch(`${API_BASE_URL}/api/chat/sessions/${sessionId}`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Gagal memuat detail sesi riset.');
+  return res.json();
+}
+
+export async function deleteChatRoom(sessionId: string): Promise<{ status: string }> {
+  const token = getStoredToken();
+  if (!token) throw new Error('Autentikasi diperlukan.');
+  const res = await fetch(`${API_BASE_URL}/api/chat/sessions/${sessionId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Gagal menghapus sesi riset.');
+  return res.json();
 }
 
 // --- USER-OWNED RESEARCH HISTORY & WATCHLIST ---
@@ -218,4 +270,3 @@ export async function removeFromWatchlist(ticker: string) {
   if (!res.ok) throw new Error('Gagal menghapus dari watchlist.');
   return res.json();
 }
-
