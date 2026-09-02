@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "AlphaSector — Autonomous Equity Research Copilot for IDX",
   description: "Autonomous multi-step AI Agent for Indonesian Stock Market research, peer comparison, valuation, and institutional Smart Money tracking. Powered by Sectors Financial API.",
   keywords: ["IDX", "Sectors API", "AI Agent", "Saham Indonesia", "Stock Research", "Smart Money", "Peer Comparison", "Valuation"],
+  icons: {
+    icon: "/images/alphasector-icon.png",
+    shortcut: "/images/alphasector-icon.png",
+    apple: "/images/alphasector-icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -2,9 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
-  Sparkles, Terminal, Swords, Users, 
+  Terminal, Swords, Users, 
   Search, BookOpen, ShieldCheck, Activity, Building2 
 } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
 
   const navItems = [
-    { label: 'Copilot', href: '/', icon: Sparkles },
+    { label: 'Copilot', href: '/', icon: Activity },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
@@ -38,11 +39,18 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo & Tag */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald">
-              <Sparkles className="h-4 w-4 text-emerald-400 group-hover:scale-110 transition-transform" />
-              <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald shadow-md">
+              <Image 
+                src="/images/alphasector-icon.png"
+                alt="AlphaSector Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                priority
+              />
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
             </div>
             <div className="flex flex-col">
