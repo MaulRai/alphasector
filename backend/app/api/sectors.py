@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from app.sectors.client import sectors_client
+from app.core.config import settings
 
 router = APIRouter(prefix="/sectors", tags=["Sectors Financial API"])
 
@@ -116,16 +117,43 @@ TRADE_IDEAS_MOCK_DATA = {
     ]
 }
 
+PRESET_QUERIES = {
+    "esg-leaders": {"where": "esg_score IS NOT NULL", "order_by": "-esg_score"},
+    "revenue-growth": {"where": "revenue[2024] IS NOT NULL and revenue[2023] IS NOT NULL and revenue[2024] > revenue[2023]", "order_by": "-(revenue[2024]/revenue[2023])"},
+    "large-shareholder": {"where": "executives_shareholdings_share_percentage >= 0.70 OR major_shareholders_share_percentage >= 0.70", "order_by": "-market_cap"},
+    "efficient-operators": {"where": "earnings[2024] IS NOT NULL and employee_num > 50", "order_by": "-(earnings[2024]/employee_num)"}
+}
+
 @router.get("/trade-ideas/{idea_slug}")
 async def get_trade_idea_preset(idea_slug: str):
-    """Execute curated Trade Ideas radar presets with instant high-fidelity mock data."""
-    if idea_slug not in TRADE_IDEAS_MOCK_DATA:
-        raise HTTPException(status_code=400, detail=f"Unknown trade idea slug: {idea_slug}. Choices: {list(TRADE_IDEAS_MOCK_DATA.keys())}")
+    """
+    Execute curated Trade Ideas radar presets.
+    - If USE_MOCK_DATA=true (default in dev/demo): Returns instant, zero-cost curated mock dataset.
+    - If USE_MOCK_DATA=false: Dispatches live dynamic query to Sectors Financial API.
+    """
+    if idea_slug not in TRADE_IDEAS_MOCK_DATA and idea_slug not in PRESET_QUERIES:
+        raise HTTPException(status_code=400, detail=f"Unknown trade idea slug: {idea_slug}.")
         
-    mock_data = TRADE_IDEAS_MOCK_DATA[idea_slug]
-    return {
-        "preset": idea_slug,
-        "data": mock_data,
-        "latency_ms": 1,
-        "is_curated": True
-    }
+    # 1. If mock flag is enabled in .env, return high-fidelity mock data (0 credit consumption)
+    if settings.USE_MOCK_DATA:
+        mock_data = TRADE_IDEAS_MOCK_DATA.get(idea_slug, [])
+        return {
+            "preset": idea_slug,
+            "data": mock_data,
+            "latency_ms": 1,
+            "is_mock": True
+        }
+
+    # 2. Otherwise execute live Sectors API query
+    preset = PRESET_QUERIES.get(idea_slug)
+    if not preset:
+        raise HTTPException(status_code=400, detail=f"No live query defined for {idea_slug}")
+        
+    try:
+        data, ms, status = await sectors_client.screen_companies(where=preset["where"], order_by=preset["order_by"], limit=10)
+        return {"preset": idea_slug, "data": data, "latency_ms": ms, "is_mock": False}
+    except Exception as e:
+        # Fallback to mock data on error so UI never breaks
+        fallback = TRADE_IDEAS_MOCK_DATA.get(idea_slug, [])
+        return {"preset": idea_slug, "data": fallback, "latency_ms": 1, "is_mock": True, "fallback": True}
+

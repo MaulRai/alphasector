@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     
     # Database
     DATABASE_URL: str = Field(default_factory=lambda: os.getenv("DATABASE_URL", ""))
+    
+    # Mock Data Toggle (True = use local high-fidelity mocks to save credits; False = live API calling)
+    USE_MOCK_DATA: bool = Field(default_factory=lambda: os.getenv("USE_MOCK_DATA", "true").lower() in ("true", "1", "yes"))
 
     @property
     def cors_origins_list(self) -> List[str]:
