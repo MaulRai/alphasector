@@ -51,7 +51,7 @@ class SectorsAPIClient:
             except Exception:
                 data = response.text
 
-            if use_cache and response.status_code == 200:
+            if use_cache and response.status_code in (200, 404):
                 cache.set(cache_key, data, ttl_seconds=cache_ttl)
 
             return data, elapsed_ms, response.status_code

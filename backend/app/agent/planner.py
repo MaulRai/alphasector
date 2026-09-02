@@ -11,46 +11,84 @@ BROKER_KEYWORDS = ["broker", "bandar", "bandarmology", "smart money", "akumulasi
 SCREENER_KEYWORDS = ["screen", "cari", "filter", "saham apa", "rekomendasi", "top", "terbaik", "paling tinggi", "tertinggi", "dividend yield", "dividen"]
 COMMODITY_KEYWORDS = ["nikel", "nickel", "emas", "gold", "batubara", "coal", "tembaga", "copper", "timah", "tin", "komoditas", "commodity", "tambang"]
 
+# Comprehensive stopword list of common 4-letter Indonesian and English words that are NOT tickers
+STOPWORDS_4 = {
+    # Indonesian common 4-letter words
+    "CARI", "CEK", "LIAT", "BAGI", "BACA", "MAU", "DENG", "DATA", "INFO", "SKOR",
+    "PEER", "FLOW", "FUND", "BANK", "LABA", "RUGI", "NAIK", "TURU", "JUAL", "BELI",
+    "RISK", "DEBT", "YIEL", "VIEW", "LIST", "HELP", "BEST", "GOOD", "MORE", "LESS",
+    "SHOW", "FIND", "RANK", "GROW", "GAIN", "LOSS", "RATE", "TIME", "DATE", "SEMI",
+    "TEST", "CODE", "TYPE", "TEXT", "FREE", "PAGE", "USER", "CHAT", "AUTO", "TERM",
+    "COST", "DEAL", "SEEK", "FAST", "SLOW", "TRUE", "ELSE", "NULL", "ITEM", "NEWS",
+    "PORT", "DARI", "YANG", "PADA", "BISA", "KITA", "ATAU", "IKUT", "MAKA", "AKAN",
+    "SAAT", "JUGA", "KAMI", "ADAK", "POST", "JSON", "HTTP", "REST", "BEDA", "MANA",
+    "BUAT", "PULA", "SAJA", "POIN", "SATU", "DUAA", "TIGA", "LIMA", "ENAM", "RIBU",
+    "JUTA", "TRIL", "SINI", "SANA", "SITU", "APAL", "AGAR", "BIAR", "SIAP", "PERU",
+    "EMIT", "SEKT", "INDX", "KAYA", "TREN", "POLA", "AWAL", "AKHR", "BLAN", "THUN",
+    "HARI", "MING", "TAHN", "KIRA", "SUDA", "TELH", "LALU", "KEMU", "KINI", "HANY",
+    "CUMA", "LAIN", "BEBR", "TRUS", "DULU", "LGIK", "MASI", "MASA", "SAMA", "SEGI",
+    # English common 4-letter words
+    "WITH", "HAVE", "THIS", "THAT", "FROM", "THEY", "SOME", "WHAT", "WHEN", "WHOM",
+    "MANY", "EACH", "VERY", "MUCH", "BOTH", "SUCH", "LIKE", "OVER", "INTO", "ALSO",
+    "EVEN", "MOST", "ONLY", "SAME", "THAN", "THEN", "JUST", "WELL", "REAL", "FULL",
+    "HIGH", "LAST", "LONG", "NEXT", "OPEN", "PAST", "SURE", "ZERO", "BASE", "BOOK",
+    "CASE", "FACT", "HEAD", "LINE", "NAME", "PART", "PLAN", "SIDE", "SITE", "STEP",
+    "TEAM", "WORK", "AREA", "CITY", "DAYS", "FORM", "HOUR", "LIFE", "MIND", "NOTE",
+    "ROAD", "ROOM", "WEEK", "YEAR", "WORD", "LOOK", "MEAN", "NEED", "PLAY", "READ",
+    "SEEM", "TELL", "TURN", "WAIT", "WANT", "CALL", "FEEL", "GIVE", "HOLD", "KEEP",
+    "MAKE", "MOVE", "PASS", "SAID", "SEND", "TAKE", "TALK", "TOLD", "WALK"
+}
+
 def parse_tickers_from_query(query: str, context_ticker: Optional[str] = None) -> List[str]:
-    """Extract distinct IDX stock tickers mentioned in user query."""
+    """Extract distinct valid IDX stock tickers mentioned in user query."""
+    # Find all 4-letter candidate words
     matches = TICKER_REGEX.findall(query)
     tickers = []
     
-    # Exclude common Indonesian words that happen to be 4 letters in uppercase
-    stopwords = {"DARI", "YANG", "PADA", "BISA", "KITA", "ATAU", "IKUT", "MAKA", "AKAN", "SAAT", "JUGA", "KAMI", "ADAK", "POST", "JSON", "HTTP", "REST"}
-    
     for m in matches:
         ticker = m.upper()
-        if ticker not in stopwords and ticker not in tickers:
+        # Strictly ignore words present in stopwords
+        if ticker in STOPWORDS_4:
+            continue
+        if ticker not in tickers:
             tickers.append(ticker)
             
     if context_ticker:
         clean_ctx = context_ticker.upper().replace(".JK", "")
-        if clean_ctx not in tickers:
+        if clean_ctx not in STOPWORDS_4 and clean_ctx not in tickers:
             tickers.insert(0, clean_ctx)
             
     return tickers
+
+def contains_keyword(text: str, keywords: List[str]) -> bool:
+    """Check if any keyword matches as a distinct word or compound phrase in text."""
+    for kw in keywords:
+        pattern = r'\b' + re.escape(kw) + r'\b' if len(kw) <= 4 else re.escape(kw)
+        if re.search(pattern, text, re.IGNORECASE):
+            return True
+    return False
 
 class AgentPlanner:
     """Plans multi-step execution DAG based on query intent & parameters."""
     
     @staticmethod
     def plan(query: str, context_ticker: Optional[str] = None) -> Tuple[AgentIntent, List[str], List[Dict[str, Any]]]:
-        query_lower = query.lower()
         tickers = parse_tickers_from_query(query, context_ticker)
         
-        # 1. Determine Intent
+        # 1. Determine Intent with robust boundary-aware keyword matching
         intent = AgentIntent.GENERAL_FINANCIAL_QUERY
         
-        if len(tickers) >= 2 or any(k in query_lower for k in PEER_KEYWORDS):
+        if len(tickers) >= 2 or contains_keyword(query, PEER_KEYWORDS):
             intent = AgentIntent.PEER_BATTLE_COMPARISON
-        elif any(k in query_lower for k in BROKER_KEYWORDS):
+        elif contains_keyword(query, BROKER_KEYWORDS):
             intent = AgentIntent.SMART_MONEY_RADAR
-        elif any(k in query_lower for k in COMMODITY_KEYWORDS) and len(tickers) <= 1:
+        elif contains_keyword(query, COMMODITY_KEYWORDS) and len(tickers) <= 1:
             intent = AgentIntent.COMMODITY_MACRO_IMPACT
+        elif contains_keyword(query, SCREENER_KEYWORDS) and len(tickers) == 0:
+            intent = AgentIntent.MARKET_SCREENING_DISCOVERY
         elif len(tickers) == 1:
             intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE
-        elif any(k in query_lower for k in SCREENER_KEYWORDS) or len(tickers) == 0:
+        elif contains_keyword(query, SCREENER_KEYWORDS):
             intent = AgentIntent.MARKET_SCREENING_DISCOVERY
         else:
             intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE if tickers else AgentIntent.GENERAL_FINANCIAL_QUERY
