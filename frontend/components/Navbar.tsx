@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -19,10 +19,19 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenDossier,
   hasActiveReport,
-  backendOnline,
-  onOpenCommandPalette,
 }) => {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24);
+    };
+
+    handleScroll(); // Initial check
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
@@ -34,29 +43,41 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#07090e]/85 backdrop-blur-xl transition-all">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
+        isScrolled
+          ? 'py-3 sm:py-4 px-3 sm:px-6'
+          : 'py-0 px-0'
+      }`}
+    >
+      <div
+        className={`mx-auto flex items-center justify-between transition-all duration-300 ease-out ${
+          isScrolled
+            ? 'h-14 max-w-6xl rounded-2xl border border-white/10 bg-[#07090e]/75 backdrop-blur-2xl shadow-2xl shadow-black/80 px-4 sm:px-6'
+            : 'h-16 max-w-7xl border-b border-white/5 bg-[#07090e]/50 backdrop-blur-md px-4 sm:px-6 lg:px-8'
+        }`}
+      >
         
         {/* Left: Brand Logo & Title */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald shadow-md">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald shadow-md shrink-0">
               <Image 
                 src="/images/alphasector-icon.png"
                 alt="AlphaSector Logo"
-                width={40}
-                height={40}
+                width={36}
+                height={36}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 priority
               />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-base font-bold tracking-tight text-white">
+                <span className="text-sm sm:text-base font-bold tracking-tight text-white">
                   Alpha<span className="text-emerald-400">Sector</span>
                 </span>
               </div>
-              <span className="text-[10px] text-slate-400 hidden sm:inline -mt-0.5">
+              <span className="text-[9px] sm:text-[10px] text-slate-400 hidden sm:inline -mt-0.5">
                 Autonomous Equity Research
               </span>
             </div>
@@ -75,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
@@ -89,14 +110,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Right: Dossier CTA if active */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {hasActiveReport && onOpenDossier && (
             <button
               onClick={onOpenDossier}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              <span>Dossier</span>
+              <span className="hidden sm:inline">Dossier</span>
             </button>
           )}
         </div>
@@ -104,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile Sub-Navigation */}
-      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-white/5 overflow-x-auto bg-[#07090e]">
+      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-white/5 overflow-x-auto bg-[#07090e]/95 backdrop-blur-xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('/')[1] ? `/${item.href.split('/')[1]}` : item.href);
