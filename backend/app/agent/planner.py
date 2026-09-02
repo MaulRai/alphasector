@@ -179,3 +179,7 @@ class AgentPlanner:
             })
 
         return intent, tickers, steps
+
+    classify_and_plan = plan
+
+planner = AgentPlanner()

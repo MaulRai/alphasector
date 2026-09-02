@@ -56,13 +56,19 @@ class AgentSynthesizer:
         broker_summary: Optional[Dict[str, Any]],
         screener_data: Optional[Dict[str, Any]]
     ) -> SynthesisResult:
+        screener_list = []
+        if isinstance(screener_data, dict):
+            screener_list = screener_data.get("companies") or screener_data.get("results") or screener_data.get("data") or []
+        elif isinstance(screener_data, list):
+            screener_list = screener_data
+
         context_data = {
             "query": query,
             "intent": intent.value,
             "tickers": tickers,
             "peer_matrix": peer_matrix,
             "broker_summary": broker_summary,
-            "screener_results": screener_data.get("results")[:5] if screener_data and isinstance(screener_data, dict) else None
+            "screener_results": screener_list[:6] if screener_list else None
         }
 
         system_prompt = (

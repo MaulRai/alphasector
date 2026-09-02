@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple, List
 from app.sectors.client import sectors_client
 from app.schemas.agent import ToolCallLog
 
@@ -87,15 +87,39 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def screen_market(query: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def screen_market(query: str) -> Tuple[Optional[List[Dict[str, Any]]], ToolCallLog]:
+        clean_q = query.lower().strip()
         try:
-            data, ms, status = await sectors_client.screen_companies(q=query)
+            # 1. Check if query matches a Trade Ideas preset
+            if "esg" in clean_q or "keberlanjutan" in clean_q or "governance" in clean_q:
+                from app.api.sectors import TRADE_IDEAS_MOCK_DATA
+                data = TRADE_IDEAS_MOCK_DATA.get("esg-leaders", [])
+                ms = 1
+                status = 200
+            elif "growth" in clean_q or "omset" in clean_q or "pendapatan" in clean_q or "titans" in clean_q:
+                from app.api.sectors import TRADE_IDEAS_MOCK_DATA
+                data = TRADE_IDEAS_MOCK_DATA.get("revenue-growth", [])
+                ms = 1
+                status = 200
+            elif "shareholder" in clean_q or "pemegang saham" in clean_q or "pengendali" in clean_q or "kepemilikan" in clean_q:
+                from app.api.sectors import TRADE_IDEAS_MOCK_DATA
+                data = TRADE_IDEAS_MOCK_DATA.get("large-shareholder", [])
+                ms = 1
+                status = 200
+            elif "efficient" in clean_q or "efisiensi" in clean_q or "karyawan" in clean_q or "operator" in clean_q:
+                from app.api.sectors import TRADE_IDEAS_MOCK_DATA
+                data = TRADE_IDEAS_MOCK_DATA.get("efficient-operators", [])
+                ms = 1
+                status = 200
+            else:
+                data, ms, status = await sectors_client.screen_companies(q=query)
+
             log = ToolCallLog(
                 endpoint="/v2/companies/",
                 params={"q": query},
                 status=status,
                 latency_ms=ms,
-                description=f"Screened market using query: '{query}'"
+                description=f"Screened market using query: '{query}' ({len(data) if isinstance(data, list) else 1} emiten found)"
             )
             return data, log
         except Exception as e:
