@@ -63,6 +63,24 @@ async def screen_companies(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/top-movers")
+async def get_top_movers(periods: str = "7d", n_stock: int = 5):
+    """Get top gainers, losers, and volume movers."""
+    try:
+        data, ms, status = await sectors_client.get_top_movers(periods=periods, n_stock=n_stock)
+        return {"data": data, "latency_ms": ms}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/top-brokers")
+async def get_top_brokers(cohort: str = "all", metric: str = "gross"):
+    """Get top brokers leaderboard."""
+    try:
+        data, ms, status = await sectors_client.get_top_brokers(cohort=cohort, metric=metric)
+        return {"data": data, "latency_ms": ms}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/trade-ideas/{idea_slug}")
 async def get_trade_idea_preset(idea_slug: str):
     """Execute curated Trade Ideas radar presets."""
