@@ -5,10 +5,10 @@ import { Navbar } from '@/components/Navbar';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { fetchBrokerSummary, fetchForeignFlow, fetchTopBrokers, queryAgent, checkBackendHealth } from '@/lib/api';
-import { BrokerSummaryInfo, AgentQueryResponse } from '@/lib/types';
+import { AgentQueryResponse } from '@/lib/types';
 import { 
   Users, TrendingUp, TrendingDown, Search, ArrowUpRight, 
-  ArrowDownRight, RefreshCw, ShieldAlert, Sparkles, Building2 
+  ArrowDownRight, RefreshCw, ShieldAlert, Sparkles, Building2, Play, Zap, Database, Activity 
 } from 'lucide-react';
 
 export default function SmartMoneyPage() {
@@ -16,7 +16,6 @@ export default function SmartMoneyPage() {
   const [inputTicker, setInputTicker] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [brokerSummary, setBrokerSummary] = useState<any>(null);
-  const [foreignFlow, setForeignFlow] = useState<any>(null);
   const [topBrokers, setTopBrokers] = useState<any[]>([]);
   const [agentReport, setAgentReport] = useState<AgentQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +23,6 @@ export default function SmartMoneyPage() {
 
   useEffect(() => {
     checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
-    loadTickerData('TLKM');
     loadTopBrokers();
   }, []);
 
@@ -39,7 +37,7 @@ export default function SmartMoneyPage() {
     }
   };
 
-  const loadTickerData = async (sym: string) => {
+  const executeSmartMoneyAnalysis = async (sym: string = ticker) => {
     const cleanSym = sym.trim().toUpperCase().replace('.JK', '');
     if (!cleanSym) return;
     setIsLoading(true);
@@ -51,15 +49,7 @@ export default function SmartMoneyPage() {
       const bRes = await fetchBrokerSummary(cleanSym);
       setBrokerSummary(bRes.data);
 
-      // 2. Fetch Foreign Flow
-      try {
-        const fRes = await fetchForeignFlow(cleanSym);
-        setForeignFlow(fRes.data);
-      } catch (fe) {
-        setForeignFlow(null);
-      }
-
-      // 3. Query Agent for Smart Money Synthesis
+      // 2. Query Agent for Smart Money Synthesis
       const aRes = await queryAgent(`Analisis smart money dan broker flow ${cleanSym}`);
       setAgentReport(aRes);
 
@@ -74,8 +64,11 @@ export default function SmartMoneyPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputTicker.trim()) return;
-    loadTickerData(inputTicker);
+    const sym = inputTicker.trim().toUpperCase().replace('.JK', '');
+    setTicker(sym);
     setInputTicker('');
+    setBrokerSummary(null);
+    setAgentReport(null);
   };
 
   const popularTickers = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'AMMN', 'BREN', 'ADRO'];
@@ -104,11 +97,15 @@ export default function SmartMoneyPage() {
 
           {/* Quick Popular Ticker Chips */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-slate-500 font-medium mr-1">Populer:</span>
+            <span className="text-xs text-slate-500 font-medium mr-1">Pilih Emiten:</span>
             {popularTickers.map((sym) => (
               <button
                 key={sym}
-                onClick={() => loadTickerData(sym)}
+                onClick={() => {
+                  setTicker(sym);
+                  setBrokerSummary(null);
+                  setAgentReport(null);
+                }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all border ${
                   ticker === sym
                     ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -121,47 +118,115 @@ export default function SmartMoneyPage() {
           </div>
         </div>
 
-        {/* Ticker Search Bar */}
-        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-4 mb-8 glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold text-base">
-              {ticker.slice(0, 2)}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-white">{ticker}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                  Data 14 Hari Terakhir
-                </span>
+        {/* Ticker Search & Execution Bar */}
+        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 mb-8 glass-panel space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold text-lg">
+                {ticker.slice(0, 2)}
               </div>
-              <p className="text-xs text-slate-400">Sectors Broker Summary & Foreign Flow API</p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold text-white">{ticker}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                    Sectors Broker API
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">Pilih kode saham di bawah atau ketik kode baru</p>
+              </div>
             </div>
+
+            <form onSubmit={handleSearch} className="flex items-center gap-2">
+              <input
+                type="text"
+                value={inputTicker}
+                onChange={(e) => setInputTicker(e.target.value)}
+                placeholder="Ganti emiten (misal: BBCA)..."
+                className="px-3.5 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 uppercase w-44"
+                maxLength={6}
+              />
+              <button
+                type="submit"
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all border border-slate-700"
+              >
+                Pilih
+              </button>
+            </form>
           </div>
 
-          <form onSubmit={handleSearch} className="flex items-center gap-2">
-            <input
-              type="text"
-              value={inputTicker}
-              onChange={(e) => setInputTicker(e.target.value)}
-              placeholder="Cari kode saham (misal: BBCA)..."
-              className="px-3.5 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 uppercase w-48"
-              maxLength={6}
-            />
+          {/* Action Trigger Row */}
+          <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <Activity className="h-4 w-4 text-amber-400 shrink-0" />
+              <span>Estimasi: <strong>1 Broker Summary Sectors call</strong> • 1 LLM Flow Synthesis</span>
+            </div>
+
             <button
-              type="submit"
-              disabled={isLoading || !inputTicker.trim()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-all disabled:opacity-50"
+              onClick={() => executeSmartMoneyAnalysis(ticker)}
+              disabled={isLoading || !ticker}
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50"
             >
-              <Search className="h-3.5 w-3.5" />
-              <span>Lacak Flow</span>
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <span>Menganalisis Flow {ticker}...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4 fill-black" />
+                  <span>Jalankan Analisis Smart Money ({ticker})</span>
+                </>
+              )}
             </button>
-          </form>
+          </div>
         </div>
 
         {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
             {error}
+          </div>
+        )}
+
+        {/* Onboarding & Pipeline Explanation (Shown before analysis) */}
+        {!brokerSummary && !isLoading && (
+          <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/70 p-6 glass-panel mb-8">
+            <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+              <Zap className="h-4 w-4 text-amber-400" />
+              Mengapa Melacak Smart Money & Broker Flow?
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+              Di pasar modal Indonesia (IDX), pergerakan harga sering didahului oleh akumulasi tersembunyi dari investor institusi dan asing. Klik <strong>&quot;Jalankan Analisis Smart Money&quot;</strong> di atas untuk memproses:
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-amber-400 mb-1.5">
+                  <Database className="h-4 w-4" /> 1. Top Broker Registry
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Mengambil data agregat transaksi anggota bursa (AB) 14 hari terakhir untuk emiten {ticker}.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-orange-400 mb-1.5">
+                  <TrendingUp className="h-4 w-4" /> 2. Konsentrasi Akumulasi
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Menghitung rasio beli vs jual 3 broker teratas untuk mendeteksi sinyal Strong Accumulation atau Distribution.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-emerald-400 mb-1.5">
+                  <Sparkles className="h-4 w-4" /> 3. Narasi Sintesis AI
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Groq 120b menghasilkan ulasan tajam mengenai sentimen bandar/institusi dalam Bahasa Indonesia yang lugas.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 

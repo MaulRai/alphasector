@@ -11,7 +11,7 @@ import { fetchCompanyReport, fetchCompanySegments, fetchBrokerSummary, queryAgen
 import { AgentQueryResponse, PeerCompanyMetric } from '@/lib/types';
 import { 
   Building2, Sparkles, TrendingUp, DollarSign, Layers, 
-  Award, ShieldCheck, Printer, RefreshCw, ArrowLeft, PieChart, ExternalLink 
+  Award, ShieldCheck, Printer, RefreshCw, ArrowLeft, PieChart, ExternalLink, Play, Zap, Database 
 } from 'lucide-react';
 
 export default function CompanyDetailPage() {
@@ -25,43 +25,23 @@ export default function CompanyDetailPage() {
   const [brokerData, setBrokerData] = useState<any>(null);
   const [agentReport, setAgentReport] = useState<AgentQueryResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
   const [backendOnline, setBackendOnline] = useState(true);
 
   useEffect(() => {
     checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
-    loadCompany360(symbol);
+    loadBasicReport(symbol);
   }, [symbol]);
 
-  const loadCompany360 = async (sym: string) => {
+  // Step 1: Lightweight base report on mount (1 Sectors call)
+  const loadBasicReport = async (sym: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      // 1. Fetch Company Report
       const rep = await fetchCompanyReport(sym);
       setReportData(rep.data);
-
-      // 2. Fetch Segments
-      try {
-        const seg = await fetchCompanySegments(sym);
-        setSegmentsData(seg.data);
-      } catch (e) {
-        setSegmentsData(null);
-      }
-
-      // 3. Fetch Broker summary
-      try {
-        const brk = await fetchBrokerSummary(sym);
-        setBrokerData(brk.data);
-      } catch (e) {
-        setBrokerData(null);
-      }
-
-      // 4. Query Agent for in-depth Indonesian synthesis
-      const aRes = await queryAgent(`Analisis fundamental, valuasi historis, dan peer group untuk ${sym}`);
-      setAgentReport(aRes);
-
     } catch (err: any) {
       console.error(err);
       setError(err.message || `Gagal memuat profil emiten ${sym}`);
@@ -70,11 +50,43 @@ export default function CompanyDetailPage() {
     }
   };
 
+  // Step 2: User-Triggered Deep Dive & AI Synthesis (Deep dive on demand)
+  const executeDeepDiveAnalysis = async () => {
+    setIsGeneratingAI(true);
+    setError(null);
+    try {
+      // 1. Fetch Segments if not loaded
+      if (!segmentsData) {
+        try {
+          const seg = await fetchCompanySegments(symbol);
+          setSegmentsData(seg.data);
+        } catch (e) {}
+      }
+
+      // 2. Fetch Broker summary if not loaded
+      if (!brokerData) {
+        try {
+          const brk = await fetchBrokerSummary(symbol);
+          setBrokerData(brk.data);
+        } catch (e) {}
+      }
+
+      // 3. Query Agent for in-depth Indonesian synthesis
+      const aRes = await queryAgent(`Analisis fundamental, valuasi historis, dan peer group untuk ${symbol}`);
+      setAgentReport(aRes);
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || `Gagal menyintesis riset AI untuk ${symbol}`);
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
   const overview = reportData?.overview || {};
   const valuation = reportData?.valuation || {};
   const financials = reportData?.financials || {};
   const histVal = valuation?.historical_valuation || [];
-  const histFin = financials?.historical_financials || (Array.isArray(financials) ? financials : []);
 
   // Format metric object for Company360Card
   const metricData: PeerCompanyMetric | null = reportData ? {
@@ -122,12 +134,12 @@ export default function CompanyDetailPage() {
           )}
         </div>
 
-        {/* Loading Spinner */}
+        {/* Loading Base Report */}
         {isLoading && (
           <div className="py-24 text-center space-y-3">
             <RefreshCw className="h-8 w-8 text-blue-400 animate-spin mx-auto" />
             <p className="text-sm text-slate-400 font-medium">
-              Memuat data fundamental 360° {symbol} dari Sectors API...
+              Memuat data dasar emiten {symbol} dari Sectors API...
             </p>
           </div>
         )}
@@ -146,7 +158,42 @@ export default function CompanyDetailPage() {
             {/* Emiten 360° Hero Card */}
             {metricData && <Company360Card data={metricData} />}
 
-            {/* AI Autonomous Brief Card */}
+            {/* User-Triggered AI Synthesis Action Banner */}
+            {!agentReport && (
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4 glow-cyan">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="h-4 w-4 text-cyan-400" />
+                    <h3 className="text-sm font-bold text-white">
+                      Ingin Analisis Riset Otonom Lengkap untuk {symbol}?
+                    </h3>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Agent akan memanggil segmen bisnis, aliran broker flow, dan menyintesis narasi riset eksekutif via Groq 120b.
+                  </p>
+                </div>
+
+                <button
+                  onClick={executeDeepDiveAnalysis}
+                  disabled={isGeneratingAI}
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 active:scale-95 text-black font-bold text-xs transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50 shrink-0"
+                >
+                  {isGeneratingAI ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <span>Menyintesis Riset...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3.5 w-3.5 fill-black" />
+                      <span>Generate AI Research Synthesis</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* AI Autonomous Brief Card (Shown after generation) */}
             {agentReport && agentReport.synthesis && (
               <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 glass-panel glow-cyan">
                 <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">

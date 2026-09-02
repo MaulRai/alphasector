@@ -6,7 +6,10 @@ import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
-import { Swords, Sparkles, Send, RefreshCw, Zap, Award, CheckCircle2, Plus, X } from 'lucide-react';
+import { 
+  Swords, Sparkles, Play, RefreshCw, Zap, Award, 
+  CheckCircle2, Plus, X, ArrowRight, ShieldCheck, Database, Layers
+} from 'lucide-react';
 
 export default function PeerBattlePage() {
   const [tickers, setTickers] = useState<string[]>(['BBRI', 'BMRI']);
@@ -18,11 +21,9 @@ export default function PeerBattlePage() {
 
   useEffect(() => {
     checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
-    // Initial run
-    runBattle(['BBRI', 'BMRI']);
   }, []);
 
-  const runBattle = async (selectedTickers: string[]) => {
+  const runBattle = async (selectedTickers: string[] = tickers) => {
     if (selectedTickers.length < 2) {
       setError('Pilih minimal 2 emiten untuk komparasi Peer Battle.');
       return;
@@ -56,7 +57,6 @@ export default function PeerBattlePage() {
     const updated = [...tickers, clean];
     setTickers(updated);
     setNewTicker('');
-    runBattle(updated);
   };
 
   const handleRemoveTicker = (sym: string) => {
@@ -66,7 +66,6 @@ export default function PeerBattlePage() {
     }
     const updated = tickers.filter(t => t !== sym);
     setTickers(updated);
-    runBattle(updated);
   };
 
   const presetBattles = [
@@ -107,7 +106,7 @@ export default function PeerBattlePage() {
                 key={idx}
                 onClick={() => {
                   setTickers(p.symbols);
-                  runBattle(p.symbols);
+                  setReport(null);
                 }}
                 className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 text-slate-300 text-xs font-semibold transition-all"
               >
@@ -117,47 +116,75 @@ export default function PeerBattlePage() {
           </div>
         </div>
 
-        {/* Ticker Management Bar */}
-        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-4 mb-8 glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Ticker Management Bar & Execute Trigger */}
+        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 mb-8 glass-panel space-y-4">
           
-          {/* Active Tickers Chips */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium mr-1">Emiten Dipilih:</span>
-            {tickers.map(sym => (
-              <span
-                key={sym}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
-              >
-                <span>{sym}</span>
-                <button
-                  onClick={() => handleRemoveTicker(sym)}
-                  className="p-0.5 rounded hover:bg-cyan-500/20 text-cyan-400"
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Active Tickers Chips */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-slate-400 font-medium mr-1">Emiten Dipilih:</span>
+              {tickers.map(sym => (
+                <span
+                  key={sym}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
                 >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            ))}
+                  <span>{sym}</span>
+                  <button
+                    onClick={() => handleRemoveTicker(sym)}
+                    className="p-0.5 rounded hover:bg-cyan-500/20 text-cyan-400"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+
+            {/* Add Ticker Input */}
+            <form onSubmit={handleAddTicker} className="flex items-center gap-2">
+              <input
+                type="text"
+                value={newTicker}
+                onChange={(e) => setNewTicker(e.target.value)}
+                placeholder="Tambah kode emiten..."
+                className="px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 uppercase w-40"
+                maxLength={6}
+              />
+              <button
+                type="submit"
+                disabled={isLoading || !newTicker.trim() || tickers.length >= 4}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all disabled:opacity-50 border border-slate-700"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>Tambah</span>
+              </button>
+            </form>
           </div>
 
-          {/* Add Ticker Input */}
-          <form onSubmit={handleAddTicker} className="flex items-center gap-2">
-            <input
-              type="text"
-              value={newTicker}
-              onChange={(e) => setNewTicker(e.target.value)}
-              placeholder="Tambah kode emiten (misal: BBNI)..."
-              className="px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 uppercase"
-              maxLength={6}
-            />
+          {/* Action Trigger Row */}
+          <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <Sparkles className="h-4 w-4 text-cyan-400 shrink-0" />
+              <span>Estimasi: <strong>{tickers.length} data laporan Sectors API</strong> • 1 LLM Synthesis Call</span>
+            </div>
+
             <button
-              type="submit"
-              disabled={isLoading || !newTicker.trim() || tickers.length >= 4}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs transition-all disabled:opacity-50"
+              onClick={() => runBattle(tickers)}
+              disabled={isLoading || tickers.length < 2}
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50"
             >
-              <Plus className="h-3.5 w-3.5" />
-              <span>Tambah</span>
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <span>Memproses Battle...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4 fill-black" />
+                  <span>Jalankan Peer Battle ({tickers.join(' vs ')})</span>
+                </>
+              )}
             </button>
-          </form>
+          </div>
 
         </div>
 
@@ -168,7 +195,49 @@ export default function PeerBattlePage() {
           </div>
         )}
 
-        {/* Loading Spinner */}
+        {/* Onboarding & Pipeline Explanation (Shown before analysis is run) */}
+        {!report && !isLoading && (
+          <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/70 p-6 glass-panel mb-8">
+            <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+              <Zap className="h-4 w-4 text-cyan-400" />
+              Bagaimana Peer Battle Bekerja?
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+              Fitur ini mengomparasikan metrik fundamental beberapa emiten secara objektif tanpa bias. Klik tombol <strong>&quot;Jalankan Peer Battle&quot;</strong> di atas untuk memulai siklus analisis 3-langkah berikut:
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-blue-400 mb-1.5">
+                  <Database className="h-4 w-4" /> 1. Data Fetching
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Mengambil data laporan keuangan resmi, valuasi historis, dan ringkasan overview setiap emiten langsung dari Sectors Financial API.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-cyan-400 mb-1.5">
+                  <Layers className="h-4 w-4" /> 2. Deterministik Matrix
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Menghitung rasio P/E gap, PBV gap, profitabilitas ROE, margin NPM, rasio leverage DER, dan menentukan badge Best-in-Class secara matematis.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="flex items-center gap-2 font-bold text-xs text-emerald-400 mb-1.5">
+                  <Sparkles className="h-4 w-4" /> 3. AI Valuation Verdict
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Model Groq OpenAI 120b menyintesis kesimpulan komparatif, menyaring emiten yang terdiskon, dan mengidentifikasi katalis utama.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading State */}
         {isLoading && (
           <div className="py-16 text-center space-y-3">
             <RefreshCw className="h-8 w-8 text-cyan-400 animate-spin mx-auto" />
