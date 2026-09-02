@@ -25,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 25);
+      setIsScrolled(window.scrollY > 20);
     };
 
     handleScroll();
@@ -43,18 +43,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
-        isScrolled
-          ? 'pointer-events-none py-3 sm:py-4 px-4 sm:px-6 bg-transparent'
-          : 'w-full border-b border-slate-800/40 bg-[#07090e]/60 backdrop-blur-md py-0 px-0'
-      }`}
-    >
+    <header className="fixed top-0 inset-x-0 z-50 pointer-events-none py-3 sm:py-4 px-3 sm:px-6 transition-all duration-300 ease-out">
       <div
-        className={`transition-all duration-300 ease-out ${
+        className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between mx-auto ${
           isScrolled
-            ? 'pointer-events-auto mx-auto flex items-center justify-between h-14 max-w-5xl rounded-2xl border border-slate-800 bg-[#07090e]/90 backdrop-blur-2xl shadow-2xl shadow-black/90 px-4 sm:px-6'
-            : 'w-full max-w-7xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8 border-transparent'
+            ? 'h-14 max-w-5xl rounded-2xl border border-slate-800/80 bg-[#07090e]/90 backdrop-blur-2xl shadow-2xl shadow-black/90 px-4 sm:px-6'
+            : 'h-16 max-w-7xl px-4 sm:px-6 lg:px-8 bg-transparent'
         }`}
       >
         
@@ -85,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center: Main Navigation Bar */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800/80 shadow-inner">
+        <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800/80 shadow-inner backdrop-blur-md">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.href === '/' 
@@ -125,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile Sub-Navigation */}
-      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-slate-800/50 overflow-x-auto bg-[#07090e]/95 backdrop-blur-xl">
+      <div className="md:hidden pointer-events-auto mt-2 flex items-center gap-1 p-2 rounded-xl border border-slate-800/80 overflow-x-auto bg-[#07090e]/95 backdrop-blur-xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('/')[1] ? `/${item.href.split('/')[1]}` : item.href);
