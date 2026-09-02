@@ -167,9 +167,9 @@ export default function PeerBattlePage() {
 
           {/* Action Trigger Row */}
           <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Sparkles className="h-4 w-4 text-cyan-400 shrink-0" />
-              <span>Estimasi: <strong>{tickers.length} data laporan Sectors API</strong> • 1 LLM Synthesis Call</span>
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <Zap className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+              <span>{tickers.length} Sectors API • 1 AI Synthesis</span>
             </div>
 
             <button
