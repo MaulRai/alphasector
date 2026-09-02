@@ -17,10 +17,8 @@ class Settings(BaseSettings):
     SECTORS_API_KEY: str = Field(default_factory=lambda: os.getenv("SECTORS_API_KEY", ""))
     SECTORS_BASE_URL: str = "https://api.sectors.app/v2"
     
-    # LLM Settings
-    GEMINI_API_KEY: str = Field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
-    ANTHROPIC_API_KEY: str = Field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
-    OPENAI_API_KEY: str = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
+    # LLM Settings (Groq with API Key Rotation)
+    GROQ_MODEL: str = Field(default_factory=lambda: os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"))
     
     # Server & CORS
     HOST: str = "0.0.0.0"

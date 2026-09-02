@@ -1,11 +1,15 @@
 import os
 import json
+import logging
 from typing import Dict, Any, List, Optional
 from app.core.config import settings
+from app.core.groq_rotator import groq_rotator
 from app.schemas.agent import SynthesisResult, AgentIntent
 
+logger = logging.getLogger("synthesizer")
+
 class AgentSynthesizer:
-    """Generates structured, fact-grounded equity research synthesis in Bahasa Indonesia."""
+    """Generates structured, fact-grounded equity research synthesis in Bahasa Indonesia using Groq."""
 
     MANDATORY_DISCLAIMER = (
         "⚠️ DISCLAIMER: AlphaSector adalah alat bantu analisis dan riset finansial otonom "
@@ -25,16 +29,16 @@ class AgentSynthesizer:
         broker_summary: Optional[Dict[str, Any]],
         screener_data: Optional[Dict[str, Any]]
     ) -> SynthesisResult:
-        """Synthesizes structured research dossier using LLM or deterministic fallback."""
+        """Synthesizes structured research dossier using Groq (OpenAI 120b) with key rotation or deterministic fallback."""
         
-        # Check if Gemini API key is available
-        if settings.GEMINI_API_KEY:
+        # Check if Groq API keys are available in rotation
+        if groq_rotator.has_keys():
             try:
-                return await cls._synthesize_with_gemini(
+                return await cls._synthesize_with_groq(
                     query, intent, tickers, reports, peer_matrix, broker_summary, screener_data
                 )
             except Exception as e:
-                print(f"Gemini LLM error, using intelligent fallback: {e}")
+                logger.warning(f"Groq LLM synthesis error, using intelligent deterministic fallback: {e}")
                 
         # Deterministic Fact-Grounded Fallback
         return cls._synthesize_fallback(
@@ -42,7 +46,7 @@ class AgentSynthesizer:
         )
 
     @classmethod
-    async def _synthesize_with_gemini(
+    async def _synthesize_with_groq(
         cls,
         query: str,
         intent: AgentIntent,
@@ -52,11 +56,6 @@ class AgentSynthesizer:
         broker_summary: Optional[Dict[str, Any]],
         screener_data: Optional[Dict[str, Any]]
     ) -> SynthesisResult:
-        import google.generativeai as genai
-        
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-1.5-flash")
-
         context_data = {
             "query": query,
             "intent": intent.value,
@@ -66,32 +65,38 @@ class AgentSynthesizer:
             "screener_results": screener_data.get("results")[:5] if screener_data and isinstance(screener_data, dict) else None
         }
 
-        prompt = f"""
-Anda adalah AlphaSector, Senior Autonomous Equity Research Analyst pasar modal Indonesia (IDX).
-Tugas Anda menyintesis data pasar modal resmi berikut ke dalam laporan riset yang tajam, objektif, dan berbasis fakta.
+        system_prompt = (
+            "Anda adalah AlphaSector, Senior Autonomous Equity Research Analyst pasar modal Indonesia (IDX).\n"
+            "Tugas Anda menyintesis data pasar modal resmi dari Sectors API ke dalam laporan riset yang tajam, objektif, dan berbasis fakta.\n\n"
+            "ATURAN MUTLAK:\n"
+            "1. Tulis seluruh analisis dalam Bahasa Indonesia profesional dan lugas.\n"
+            "2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON yang diberikan tanpa halusinasi.\n"
+            "3. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
+            "{\n"
+            '  "executive_summary": "Ringkasan eksekutif 2-3 kalimat mengenai temuan utama riset ini.",\n'
+            '  "key_findings": ["Poin kunci 1", "Poin kunci 2", "Poin kunci 3"],\n'
+            '  "valuation_verdict": "Penilaian valuasi objektif (apakah terdiskon, wajar, atau premium dibanding peer).",\n'
+            '  "smart_money_flow": "Analisis aliran akumulasi broker institusi & foreign flow.",\n'
+            '  "catalysts": ["Katalis positif 1", "Katalis positif 2"],\n'
+            '  "risks": ["Faktor risiko 1", "Faktor risiko 2"]\n'
+            "}"
+        )
 
-DATA TERVERIFIKASI DARI SECTORS API:
-```json
-{json.dumps(context_data, indent=2, ensure_ascii=False)}
-```
+        user_prompt = f"DATA TERVERIFIKASI DARI SECTORS API:\n```json\n{json.dumps(context_data, indent=2, ensure_ascii=False)}\n```\n\nBuat analisis komprehensif sekarang dalam format JSON:"
 
-INSTRUKSI KHUSUS:
-1. Tulis dalam Bahasa Indonesia profesional dan lugas.
-2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON di atas.
-3. Berikan output HANYA dalam format JSON valid yang sesuai dengan skema berikut:
-{{
-  "executive_summary": "Ringkasan eksekutif 2-3 kalimat mengenai temuan utama riset ini.",
-  "key_findings": ["Poin kunci 1", "Poin kunci 2", "Poin kunci 3"],
-  "valuation_verdict": "Penilaian valuasi objektif (apakah terdiskon, wajar, atau premium dibanding peer).",
-  "smart_money_flow": "Analisis aliran akumulasi broker institusi & foreign flow.",
-  "catalysts": ["Katalis positif 1", "Katalis positif 2"],
-  "risks": ["Faktor risiko 1", "Faktor risiko 2"]
-}}
-"""
-        response = await model.generate_content_async(prompt)
-        text = response.text.strip()
-        
-        # Clean json markdown wrapper if any
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        text = await groq_rotator.generate_chat_completion(
+            messages=messages,
+            model=settings.GROQ_MODEL,
+            temperature=0.2,
+            response_format={"type": "json_object"}
+        )
+
+        text = text.strip()
         if "```json" in text:
             text = text.split("```json")[1].split("```")[0].strip()
         elif "```" in text:
@@ -119,10 +124,9 @@ INSTRUKSI KHUSUS:
         broker_summary: Optional[Dict[str, Any]],
         screener_data: Optional[Dict[str, Any]]
     ) -> SynthesisResult:
-        """Deterministic high-quality fallback generator when LLM is unavailable."""
+        """Deterministic high-quality fallback generator when LLM is unavailable or offline."""
         
         if peer_matrix and len(peer_matrix) >= 2:
-            t_names = [f"{p['symbol']} ({p['company_name']})" for p in peer_matrix]
             lowest_pe = next((p for p in peer_matrix if p.get("is_lowest_pe")), peer_matrix[0])
             highest_roe = next((p for p in peer_matrix if p.get("is_highest_roe")), peer_matrix[0])
             
