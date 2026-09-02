@@ -88,9 +88,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Right: Quick Action / Dossier CTA */}
+        {/* Right: Dossier CTA if active */}
         <div className="flex items-center gap-3">
-          {hasActiveReport && onOpenDossier ? (
+          {hasActiveReport && onOpenDossier && (
             <button
               onClick={onOpenDossier}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
@@ -98,14 +98,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <BookOpen className="h-3.5 w-3.5" />
               <span>Dossier</span>
             </button>
-          ) : (
-            <Link
-              href="/copilot"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-white text-xs font-semibold transition-all"
-            >
-              <span>Copilot</span>
-              <ArrowRight className="h-3 w-3 text-emerald-400" />
-            </Link>
           )}
         </div>
 
