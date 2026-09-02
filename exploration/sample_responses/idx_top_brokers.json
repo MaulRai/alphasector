@@ -1,0 +1,542 @@
+{
+  "date": "2026-09-01",
+  "metric": "gross",
+  "origin": "all",
+  "cohort": "all",
+  "results": [
+    {
+      "rank": 1,
+      "broker_code": "XL",
+      "gross": 5604404564800,
+      "net": -254983146800
+    },
+    {
+      "rank": 2,
+      "broker_code": "AK",
+      "gross": 4108536342500,
+      "net": 914689869500
+    },
+    {
+      "rank": 3,
+      "broker_code": "CC",
+      "gross": 4041271352000,
+      "net": -138655628200
+    },
+    {
+      "rank": 4,
+      "broker_code": "YP",
+      "gross": 2238518737900,
+      "net": -177259304900
+    },
+    {
+      "rank": 5,
+      "broker_code": "ZP",
+      "gross": 1815108001700,
+      "net": -52646386100
+    },
+    {
+      "rank": 6,
+      "broker_code": "MG",
+      "gross": 1595488576100,
+      "net": 10210472900
+    },
+    {
+      "rank": 7,
+      "broker_code": "YU",
+      "gross": 1556202971400,
+      "net": -582642200
+    },
+    {
+      "rank": 8,
+      "broker_code": "XC",
+      "gross": 1481859796600,
+      "net": -140106093000
+    },
+    {
+      "rank": 9,
+      "broker_code": "PD",
+      "gross": 1479000078000,
+      "net": -2773300000
+    },
+    {
+      "rank": 10,
+      "broker_code": "BK",
+      "gross": 1336042778000,
+      "net": 528250709600
+    },
+    {
+      "rank": 11,
+      "broker_code": "CP",
+      "gross": 1090891984000,
+      "net": -117714782000
+    },
+    {
+      "rank": 12,
+      "broker_code": "LG",
+      "gross": 1017923318300,
+      "net": -35444299700
+    },
+    {
+      "rank": 13,
+      "broker_code": "SQ",
+      "gross": 817908212100,
+      "net": -158457305500
+    },
+    {
+      "rank": 14,
+      "broker_code": "AZ",
+      "gross": 798160328600,
+      "net": 11376814000
+    },
+    {
+      "rank": 15,
+      "broker_code": "NI",
+      "gross": 775838284700,
+      "net": -43354579300
+    },
+    {
+      "rank": 16,
+      "broker_code": "OD",
+      "gross": 594040071700,
+      "net": 14253048100
+    },
+    {
+      "rank": 17,
+      "broker_code": "KK",
+      "gross": 543303229300,
+      "net": -44896411700
+    },
+    {
+      "rank": 18,
+      "broker_code": "HD",
+      "gross": 466265304800,
+      "net": 21141839800
+    },
+    {
+      "rank": 19,
+      "broker_code": "GR",
+      "gross": 410773791900,
+      "net": -48246009100
+    },
+    {
+      "rank": 20,
+      "broker_code": "BQ",
+      "gross": 389187277700,
+      "net": -55138789500
+    },
+    {
+      "rank": 21,
+      "broker_code": "XA",
+      "gross": 355208644700,
+      "net": -27870812900
+    },
+    {
+      "rank": 22,
+      "broker_code": "BB",
+      "gross": 327787775000,
+      "net": -21170564400
+    },
+    {
+      "rank": 23,
+      "broker_code": "YB",
+      "gross": 317610069200,
+      "net": 16083043000
+    },
+    {
+      "rank": 24,
+      "broker_code": "AI",
+      "gross": 312224034900,
+      "net": -74628238900
+    },
+    {
+      "rank": 25,
+      "broker_code": "KZ",
+      "gross": 309824286800,
+      "net": -66186895000
+    },
+    {
+      "rank": 26,
+      "broker_code": "DR",
+      "gross": 296179435800,
+      "net": -33063743800
+    },
+    {
+      "rank": 27,
+      "broker_code": "RX",
+      "gross": 287563121900,
+      "net": 94014666700
+    },
+    {
+      "rank": 28,
+      "broker_code": "EP",
+      "gross": 280474137500,
+      "net": 7822824700
+    },
+    {
+      "rank": 29,
+      "broker_code": "TP",
+      "gross": 278990738100,
+      "net": 35828437300
+    },
+    {
+      "rank": 30,
+      "broker_code": "YJ",
+      "gross": 242834624300,
+      "net": 17238668900
+    },
+    {
+      "rank": 31,
+      "broker_code": "DH",
+      "gross": 203897897700,
+      "net": -1119225500
+    },
+    {
+      "rank": 32,
+      "broker_code": "AO",
+      "gross": 200933777500,
+      "net": 5460331300
+    },
+    {
+      "rank": 33,
+      "broker_code": "KI",
+      "gross": 200285463100,
+      "net": -58430484500
+    },
+    {
+      "rank": 34,
+      "broker_code": "AG",
+      "gross": 179356348000,
+      "net": -4511555800
+    },
+    {
+      "rank": 35,
+      "broker_code": "HP",
+      "gross": 171822395300,
+      "net": -37299235700
+    },
+    {
+      "rank": 36,
+      "broker_code": "SS",
+      "gross": 169384059800,
+      "net": 62846712200
+    },
+    {
+      "rank": 37,
+      "broker_code": "IF",
+      "gross": 151130088000,
+      "net": -8125524200
+    },
+    {
+      "rank": 38,
+      "broker_code": "DX",
+      "gross": 130198122900,
+      "net": -46994631500
+    },
+    {
+      "rank": 39,
+      "broker_code": "IN",
+      "gross": 108877515600,
+      "net": 10758471800
+    },
+    {
+      "rank": 40,
+      "broker_code": "FZ",
+      "gross": 106196457600,
+      "net": -30093232200
+    },
+    {
+      "rank": 41,
+      "broker_code": "RF",
+      "gross": 102813890200,
+      "net": 20295928600
+    },
+    {
+      "rank": 42,
+      "broker_code": "AT",
+      "gross": 99882724700,
+      "net": -3454200300
+    },
+    {
+      "rank": 43,
+      "broker_code": "ES",
+      "gross": 99080449100,
+      "net": -75405603100
+    },
+    {
+      "rank": 44,
+      "broker_code": "IH",
+      "gross": 71395842200,
+      "net": 18657784200
+    },
+    {
+      "rank": 45,
+      "broker_code": "RO",
+      "gross": 64395283900,
+      "net": -10275149900
+    },
+    {
+      "rank": 46,
+      "broker_code": "LS",
+      "gross": 62453813900,
+      "net": 1392801500
+    },
+    {
+      "rank": 47,
+      "broker_code": "BR",
+      "gross": 56638934000,
+      "net": -7453057200
+    },
+    {
+      "rank": 48,
+      "broker_code": "PO",
+      "gross": 51893586300,
+      "net": 1037542300
+    },
+    {
+      "rank": 49,
+      "broker_code": "DP",
+      "gross": 48861053000,
+      "net": -6915151000
+    },
+    {
+      "rank": 50,
+      "broker_code": "SH",
+      "gross": 46568574700,
+      "net": 4482130100
+    },
+    {
+      "rank": 51,
+      "broker_code": "PC",
+      "gross": 45385354900,
+      "net": -8713116700
+    },
+    {
+      "rank": 52,
+      "broker_code": "CD",
+      "gross": 45224429300,
+      "net": -25775608500
+    },
+    {
+      "rank": 53,
+      "broker_code": "FS",
+      "gross": 43202052000,
+      "net": 3166244800
+    },
+    {
+      "rank": 54,
+      "broker_code": "MU",
+      "gross": 31927037600,
+      "net": -4455710600
+    },
+    {
+      "rank": 55,
+      "broker_code": "IU",
+      "gross": 30682355400,
+      "net": -4112619800
+    },
+    {
+      "rank": 56,
+      "broker_code": "SA",
+      "gross": 29648740500,
+      "net": 1152908300
+    },
+    {
+      "rank": 57,
+      "broker_code": "PG",
+      "gross": 28072838400,
+      "net": -268358800
+    },
+    {
+      "rank": 58,
+      "broker_code": "GA",
+      "gross": 22940154000,
+      "net": -609324000
+    },
+    {
+      "rank": 59,
+      "broker_code": "II",
+      "gross": 22797296800,
+      "net": 16794471800
+    },
+    {
+      "rank": 60,
+      "broker_code": "DU",
+      "gross": 21025939000,
+      "net": 1708906200
+    },
+    {
+      "rank": 61,
+      "broker_code": "TS",
+      "gross": 20879088900,
+      "net": 4580867900
+    },
+    {
+      "rank": 62,
+      "broker_code": "BS",
+      "gross": 18718941300,
+      "net": 9621714100
+    },
+    {
+      "rank": 63,
+      "broker_code": "AH",
+      "gross": 17253630200,
+      "net": 710835200
+    },
+    {
+      "rank": 64,
+      "broker_code": "QA",
+      "gross": 17128506100,
+      "net": -3676272100
+    },
+    {
+      "rank": 65,
+      "broker_code": "MI",
+      "gross": 16425705700,
+      "net": 5802467300
+    },
+    {
+      "rank": 66,
+      "broker_code": "EL",
+      "gross": 15881165500,
+      "net": 2788387500
+    },
+    {
+      "rank": 67,
+      "broker_code": "ZR",
+      "gross": 14331764800,
+      "net": -2559630800
+    },
+    {
+      "rank": 68,
+      "broker_code": "RG",
+      "gross": 12430193200,
+      "net": 675387200
+    },
+    {
+      "rank": 69,
+      "broker_code": "AR",
+      "gross": 12035603300,
+      "net": -3733007700
+    },
+    {
+      "rank": 70,
+      "broker_code": "PI",
+      "gross": 10897804500,
+      "net": 616807700
+    },
+    {
+      "rank": 71,
+      "broker_code": "PF",
+      "gross": 10493677500,
+      "net": -5376611100
+    },
+    {
+      "rank": 72,
+      "broker_code": "GI",
+      "gross": 9678588200,
+      "net": -351665200
+    },
+    {
+      "rank": 73,
+      "broker_code": "ID",
+      "gross": 7041020900,
+      "net": -495741700
+    },
+    {
+      "rank": 74,
+      "broker_code": "OK",
+      "gross": 6022717800,
+      "net": -1301053800
+    },
+    {
+      "rank": 75,
+      "broker_code": "JB",
+      "gross": 5636648500,
+      "net": 1100444900
+    },
+    {
+      "rank": 76,
+      "broker_code": "SF",
+      "gross": 5578002400,
+      "net": -622333800
+    },
+    {
+      "rank": 77,
+      "broker_code": "AF",
+      "gross": 5273184700,
+      "net": -550570500
+    },
+    {
+      "rank": 78,
+      "broker_code": "AD",
+      "gross": 4232653000,
+      "net": 709264400
+    },
+    {
+      "rank": 79,
+      "broker_code": "IC",
+      "gross": 4091373500,
+      "net": -522029500
+    },
+    {
+      "rank": 80,
+      "broker_code": "RB",
+      "gross": 3764986800,
+      "net": -2092605200
+    },
+    {
+      "rank": 81,
+      "broker_code": "RS",
+      "gross": 3088643700,
+      "net": 739428700
+    },
+    {
+      "rank": 82,
+      "broker_code": "BF",
+      "gross": 2965250000,
+      "net": 1170750000
+    },
+    {
+      "rank": 83,
+      "broker_code": "TF",
+      "gross": 2897375100,
+      "net": -210253500
+    },
+    {
+      "rank": 84,
+      "broker_code": "IT",
+      "gross": 2103686500,
+      "net": -202811500
+    },
+    {
+      "rank": 85,
+      "broker_code": "PP",
+      "gross": 1924169000,
+      "net": 1665069000
+    },
+    {
+      "rank": 86,
+      "broker_code": "YO",
+      "gross": 275702000,
+      "net": -11538000
+    },
+    {
+      "rank": 87,
+      "broker_code": "DD",
+      "gross": 183787600,
+      "net": 70020200
+    },
+    {
+      "rank": 88,
+      "broker_code": "FO",
+      "gross": 22485000,
+      "net": -15025000
+    },
+    {
+      "rank": 89,
+      "broker_code": "AP",
+      "gross": 4200000,
+      "net": -4200000
+    }
+  ]
+}

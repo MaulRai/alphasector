@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "symbol": "AADI.JK",
+      "company_name": "PT Adaro Andalan Indonesia Tbk",
+      "query_values": {
+        "industry": "Coal",
+        "revenue[2023]": 91327984112000.0
+      }
+    },
+    {
+      "symbol": "DSSA.JK",
+      "company_name": "Dian Swastatika Sentosa Tbk",
+      "query_values": {
+        "industry": "Coal",
+        "revenue[2023]": 77421335307708.0
+      }
+    },
+    {
+      "symbol": "BYAN.JK",
+      "company_name": "Bayan Resources Tbk",
+      "query_values": {
+        "industry": "Coal",
+        "revenue[2023]": 55292854846917.0
+      }
+    }
+  ],
+  "pagination": {
+    "total_count": 45,
+    "showing": 3,
+    "limit": 3,
+    "offset": 0,
+    "has_next": true,
+    "has_previous": false,
+    "next_offset": 3,
+    "previous_offset": null
+  },
+  "llm_translation": {
+    "natural_query": "top 3 coal mining companies by revenue in 2023",
+    "translated_params": {
+      "where": "industry = 'Coal' and revenue[2023] IS NOT NULL",
+      "order_by": "-revenue[2023]",
+      "limit": 3,
+      "offset": null,
+      "include_query_values": true
+    },
+    "message": null
+  }
+}

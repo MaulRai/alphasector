@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "symbol": "BBCA.JK",
+      "company_name": "PT Bank Central Asia Tbk."
+    },
+    {
+      "symbol": "BBRI.JK",
+      "company_name": "PT Bank Rakyat Indonesia (Persero) Tbk"
+    },
+    {
+      "symbol": "BMRI.JK",
+      "company_name": "PT Bank Mandiri (Persero) Tbk"
+    },
+    {
+      "symbol": "BBNI.JK",
+      "company_name": "PT Bank Negara Indonesia (Persero) Tbk"
+    },
+    {
+      "symbol": "BRIS.JK",
+      "company_name": "PT Bank Syariah Indonesia Tbk"
+    }
+  ],
+  "pagination": {
+    "total_count": 48,
+    "showing": 5,
+    "limit": 5,
+    "offset": 0,
+    "has_next": true,
+    "has_previous": false,
+    "next_offset": 5,
+    "previous_offset": null
+  }
+}

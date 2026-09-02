@@ -1,0 +1,80 @@
+{
+  "top_gainers": {
+    "7d": [
+      {
+        "name": "PT MSIG Life Insurance Indonesia Tbk",
+        "symbol": "LIFE.JK",
+        "price_change": 1.0352422907489,
+        "last_close_price": 11550,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "Bank Sinarmas Tbk",
+        "symbol": "BSIM.JK",
+        "price_change": 0.549295774647887,
+        "last_close_price": 1100,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT Singaraja Putra Tbk",
+        "symbol": "SINI.JK",
+        "price_change": 0.428571428571429,
+        "last_close_price": 12500,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT Golden Flower Tbk",
+        "symbol": "POLU.JK",
+        "price_change": 0.419413919413919,
+        "last_close_price": 19375,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT Abadi Nusantara Hijau Investama Tbk",
+        "symbol": "PACK.JK",
+        "price_change": 0.320754716981132,
+        "last_close_price": 560,
+        "latest_close_date": "2026-09-01"
+      }
+    ]
+  },
+  "top_losers": {
+    "7d": [
+      {
+        "name": "J Resources Asia Pasifik Tbk",
+        "symbol": "PSAB.JK",
+        "price_change": -0.1171875,
+        "last_close_price": 565,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT Archi Indonesia Tbk",
+        "symbol": "ARCI.JK",
+        "price_change": -0.0972222222222222,
+        "last_close_price": 1300,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT Indosat Tbk",
+        "symbol": "ISAT.JK",
+        "price_change": -0.091254752851711,
+        "last_close_price": 2390,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "PT MNC Digital Entertainment Tbk",
+        "symbol": "MSIN.JK",
+        "price_change": -0.0773809523809524,
+        "last_close_price": 310,
+        "latest_close_date": "2026-09-01"
+      },
+      {
+        "name": "Bayan Resources Tbk",
+        "symbol": "BYAN.JK",
+        "price_change": -0.0695364238410596,
+        "last_close_price": 14050,
+        "latest_close_date": "2026-09-01"
+      }
+    ]
+  }
+}

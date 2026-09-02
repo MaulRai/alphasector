@@ -1,0 +1,214 @@
+{
+  "results": [
+    {
+      "symbol": "1A0.SI",
+      "company_name": "Katrina Group Ltd"
+    },
+    {
+      "symbol": "1A1.SI",
+      "company_name": "Wong Fong Industries Ltd"
+    },
+    {
+      "symbol": "1AZ.SI",
+      "company_name": "Audience Analytics Ltd"
+    },
+    {
+      "symbol": "1B1.SI",
+      "company_name": "HC Surgical Specialists Ltd"
+    },
+    {
+      "symbol": "1B6.SI",
+      "company_name": "Ocean Sky International Ltd"
+    },
+    {
+      "symbol": "1C0.SI",
+      "company_name": "Emerging Towns & Cities Singapore Ltd"
+    },
+    {
+      "symbol": "1D0.SI",
+      "company_name": "Kimly Ltd"
+    },
+    {
+      "symbol": "1D1.SI",
+      "company_name": "UnUsUaL Ltd"
+    },
+    {
+      "symbol": "1D4.SI",
+      "company_name": "Aoxin Q & M Dental Group Ltd"
+    },
+    {
+      "symbol": "1D5.SI",
+      "company_name": "Capital World Ltd"
+    },
+    {
+      "symbol": "1E3.SI",
+      "company_name": "Sanli Environmental Ltd"
+    },
+    {
+      "symbol": "1F0.SI",
+      "company_name": "shopper360 Ltd"
+    },
+    {
+      "symbol": "1F1.SI",
+      "company_name": "Y Ventures Group Ltd"
+    },
+    {
+      "symbol": "1F2.SI",
+      "company_name": "Union Gas Holdings Ltd"
+    },
+    {
+      "symbol": "1F3.SI",
+      "company_name": "Aspen (Group) Holdings Ltd"
+    },
+    {
+      "symbol": "1H2.SI",
+      "company_name": "Olive Tree Estates Ltd"
+    },
+    {
+      "symbol": "1H3.SI",
+      "company_name": "Clearbridge Health Ltd"
+    },
+    {
+      "symbol": "1H8.SI",
+      "company_name": "LY Corp Ltd"
+    },
+    {
+      "symbol": "1J4.SI",
+      "company_name": "JEP Holdings Ltd"
+    },
+    {
+      "symbol": "1J5.SI",
+      "company_name": "Hyphens Pharma International Ltd"
+    },
+    {
+      "symbol": "1J7.SI",
+      "company_name": "Jawala Inc"
+    },
+    {
+      "symbol": "1L2.SI",
+      "company_name": "Hiap Seng Industries Ltd"
+    },
+    {
+      "symbol": "1MZ.SI",
+      "company_name": "Nam Cheong Ltd"
+    },
+    {
+      "symbol": "1R6.SI",
+      "company_name": "Avi-Tech Holdings Ltd"
+    },
+    {
+      "symbol": "1U8.SI",
+      "company_name": "1U8"
+    },
+    {
+      "symbol": "1V3.SI",
+      "company_name": "Mooreast Holdings Ltd"
+    },
+    {
+      "symbol": "1Y1.SI",
+      "company_name": "9R Ltd"
+    },
+    {
+      "symbol": "40B.SI",
+      "company_name": "Healthbank Holdings Ltd"
+    },
+    {
+      "symbol": "40N.SI",
+      "company_name": "Versalink Holdings Ltd"
+    },
+    {
+      "symbol": "40T.SI",
+      "company_name": "ISEC Healthcare Ltd"
+    },
+    {
+      "symbol": "40V.SI",
+      "company_name": "Alset International Ltd"
+    },
+    {
+      "symbol": "40W.SI",
+      "company_name": "ZICO Holdings Inc"
+    },
+    {
+      "symbol": "41B.SI",
+      "company_name": "Huationg Global Ltd"
+    },
+    {
+      "symbol": "41F.SI",
+      "company_name": "GSS Energy Ltd"
+    },
+    {
+      "symbol": "41O.SI",
+      "company_name": "LHN Ltd"
+    },
+    {
+      "symbol": "41T.SI",
+      "company_name": "GCCP Resources Ltd"
+    },
+    {
+      "symbol": "42C.SI",
+      "company_name": "iX Biopharma Ltd"
+    },
+    {
+      "symbol": "42E.SI",
+      "company_name": "Choo Chiang Holdings Ltd"
+    },
+    {
+      "symbol": "42F.SI",
+      "company_name": "Totm Technologies Ltd"
+    },
+    {
+      "symbol": "42L.SI",
+      "company_name": "Taka Jewellery Holdings Ltd"
+    },
+    {
+      "symbol": "42N.SI",
+      "company_name": "IPS Securex Holdings Ltd"
+    },
+    {
+      "symbol": "42R.SI",
+      "company_name": "Jumbo Group Ltd"
+    },
+    {
+      "symbol": "42S.SI",
+      "company_name": "Astaka Holdings Ltd"
+    },
+    {
+      "symbol": "42T.SI",
+      "company_name": "The Trendlines Group Ltd"
+    },
+    {
+      "symbol": "42W.SI",
+      "company_name": "Zixin Group Holdings Ltd"
+    },
+    {
+      "symbol": "42Z.SI",
+      "company_name": "Eindec Corp Ltd"
+    },
+    {
+      "symbol": "43A.SI",
+      "company_name": "GS Holdings Ltd"
+    },
+    {
+      "symbol": "43B.SI",
+      "company_name": "Secura Group Ltd"
+    },
+    {
+      "symbol": "43E.SI",
+      "company_name": "VCPlus Ltd"
+    },
+    {
+      "symbol": "43F.SI",
+      "company_name": "AcroMeta Group Ltd"
+    }
+  ],
+  "pagination": {
+    "total_count": 580,
+    "showing": 50,
+    "limit": 50,
+    "offset": 0,
+    "has_next": true,
+    "has_previous": false,
+    "next_offset": 50,
+    "previous_offset": null
+  }
+}

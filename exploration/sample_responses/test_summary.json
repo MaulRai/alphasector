@@ -1,0 +1,143 @@
+[
+  {
+    "name": "IDX Subsectors List",
+    "method": "GET",
+    "endpoint": "/subsectors/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 642,
+    "success": true,
+    "sample_file": "idx_subsectors"
+  },
+  {
+    "name": "IDX Company Screener (Structured Query: Banks ordered by -market_cap)",
+    "method": "GET",
+    "endpoint": "/companies/",
+    "params": {
+      "where": "sub_sector = 'banks'",
+      "order_by": "-market_cap",
+      "limit": 5
+    },
+    "status": 200,
+    "latency_ms": 775,
+    "success": true,
+    "sample_file": "idx_screener_structured_banks"
+  },
+  {
+    "name": "IDX Company Screener (Natural Language Query: top 3 coal mining companies by revenue)",
+    "method": "GET",
+    "endpoint": "/companies/",
+    "params": {
+      "q": "top 3 coal mining companies by revenue in 2023"
+    },
+    "status": 200,
+    "latency_ms": 670,
+    "success": true,
+    "sample_file": "idx_screener_nl_query"
+  },
+  {
+    "name": "IDX Company Report (BBCA)",
+    "method": "GET",
+    "endpoint": "/company/report/BBCA/",
+    "params": {
+      "sections": "overview,valuation,financials,peers"
+    },
+    "status": 200,
+    "latency_ms": 639,
+    "success": true,
+    "sample_file": "idx_company_report_bbca"
+  },
+  {
+    "name": "IDX Broker Registry",
+    "method": "GET",
+    "endpoint": "/brokers/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 422,
+    "success": true,
+    "sample_file": "idx_brokers_registry"
+  },
+  {
+    "name": "IDX Top Brokers Daily Ranking",
+    "method": "GET",
+    "endpoint": "/brokers/top/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 498,
+    "success": true,
+    "sample_file": "idx_top_brokers"
+  },
+  {
+    "name": "IDX Broker Summary Top (BBCA)",
+    "method": "GET",
+    "endpoint": "/broker-summary/BBCA/top/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 637,
+    "success": true,
+    "sample_file": "idx_broker_summary_top_bbca"
+  },
+  {
+    "name": "IDX Top Movers",
+    "method": "GET",
+    "endpoint": "/companies/top-changes/",
+    "params": {
+      "periods": "7d",
+      "n_stock": 5
+    },
+    "status": 200,
+    "latency_ms": 855,
+    "success": true,
+    "sample_file": "idx_top_movers_7d"
+  },
+  {
+    "name": "SGX Companies Screener",
+    "method": "GET",
+    "endpoint": "/sgx/companies/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 1278,
+    "success": true,
+    "sample_file": "sgx_screener"
+  },
+  {
+    "name": "SGX Company Report (D05)",
+    "method": "GET",
+    "endpoint": "/sgx/company/report/D05/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 1816,
+    "success": true,
+    "sample_file": "sgx_report_d05"
+  },
+  {
+    "name": "KLSE Sectors",
+    "method": "GET",
+    "endpoint": "/klse/sectors/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 1548,
+    "success": true,
+    "sample_file": "klse_sectors"
+  },
+  {
+    "name": "Mining Extension: Commodities List",
+    "method": "GET",
+    "endpoint": "/mining/commodities/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 2709,
+    "success": true,
+    "sample_file": "mining_commodities"
+  },
+  {
+    "name": "Mining Extension: Mining Sites",
+    "method": "GET",
+    "endpoint": "/mining/sites/",
+    "params": null,
+    "status": 200,
+    "latency_ms": 945,
+    "success": true,
+    "sample_file": "mining_sites"
+  }
+]
