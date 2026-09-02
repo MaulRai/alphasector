@@ -5,6 +5,7 @@ from app.db.database import init_db
 from app.api.agent import router as agent_router
 from app.api.sectors import router as sectors_router
 from app.api.auth import router as auth_router
+from app.api.watchlist import router as watchlist_router
 
 # Initialize SQLite database and demo accounts
 init_db()
@@ -27,6 +28,7 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(auth_router, prefix=f"{settings.API_V1_PREFIX}/auth", tags=["auth"])
+app.include_router(watchlist_router, prefix=f"{settings.API_V1_PREFIX}/user", tags=["User Watchlist"])
 app.include_router(agent_router, prefix=settings.API_V1_PREFIX)
 app.include_router(sectors_router, prefix=settings.API_V1_PREFIX)
 

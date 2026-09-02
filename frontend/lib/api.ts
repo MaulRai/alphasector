@@ -2,12 +2,23 @@ import { AgentQueryResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+function getStoredToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('alphasector_auth_token');
+}
+
 export async function queryAgent(query: string, contextTicker?: string): Promise<AgentQueryResponse> {
+  const token = getStoredToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_BASE_URL}/api/agent/query`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       query,
       context_ticker: contextTicker || null,
@@ -159,3 +170,52 @@ export async function getMeProfile(token: string) {
   }
   return response.json();
 }
+
+// --- USER-OWNED RESEARCH HISTORY & WATCHLIST ---
+
+export async function fetchUserResearchHistory(limit = 20) {
+  const token = getStoredToken();
+  if (!token) return { history: [] };
+  const res = await fetch(`${API_BASE_URL}/api/agent/history?limit=${limit}`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) return { history: [] };
+  return res.json();
+}
+
+export async function fetchUserWatchlist() {
+  const token = getStoredToken();
+  if (!token) return { watchlist: [] };
+  const res = await fetch(`${API_BASE_URL}/api/user/watchlist`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) return { watchlist: [] };
+  return res.json();
+}
+
+export async function addToWatchlist(ticker: string, notes?: string) {
+  const token = getStoredToken();
+  if (!token) throw new Error('Autentikasi diperlukan.');
+  const res = await fetch(`${API_BASE_URL}/api/user/watchlist`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ ticker, notes }),
+  });
+  if (!res.ok) throw new Error('Gagal menambahkan ke watchlist.');
+  return res.json();
+}
+
+export async function removeFromWatchlist(ticker: string) {
+  const token = getStoredToken();
+  if (!token) throw new Error('Autentikasi diperlukan.');
+  const res = await fetch(`${API_BASE_URL}/api/user/watchlist/${ticker}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Gagal menghapus dari watchlist.');
+  return res.json();
+}
+
