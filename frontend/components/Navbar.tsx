@@ -48,10 +48,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 priority
               />
-              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
