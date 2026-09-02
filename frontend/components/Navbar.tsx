@@ -25,10 +25,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 24);
+      setIsScrolled(window.scrollY > 30);
     };
 
-    handleScroll(); // Initial check
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -46,15 +46,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
         isScrolled
-          ? 'py-3 sm:py-4 px-3 sm:px-6'
-          : 'py-0 px-0'
+          ? 'pointer-events-none py-3 sm:py-4 px-3 sm:px-6'
+          : 'w-full border-b border-white/5 bg-[#07090e]/70 backdrop-blur-md'
       }`}
     >
       <div
-        className={`mx-auto flex items-center justify-between transition-all duration-300 ease-out ${
+        className={`transition-all duration-300 ease-out ${
           isScrolled
-            ? 'h-14 max-w-6xl rounded-2xl border border-white/10 bg-[#07090e]/75 backdrop-blur-2xl shadow-2xl shadow-black/80 px-4 sm:px-6'
-            : 'h-16 max-w-7xl border-b border-white/5 bg-[#07090e]/50 backdrop-blur-md px-4 sm:px-6 lg:px-8'
+            ? 'pointer-events-auto mx-auto flex items-center justify-between h-14 max-w-5xl rounded-2xl border border-white/10 bg-[#07090e]/85 backdrop-blur-2xl shadow-2xl shadow-black/80 px-4 sm:px-6'
+            : 'w-full max-w-7xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8'
         }`}
       >
         
@@ -114,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {hasActiveReport && onOpenDossier && (
             <button
               onClick={onOpenDossier}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
             >
               <BookOpen className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Dossier</span>
