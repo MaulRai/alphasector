@@ -25,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 25);
     };
 
     handleScroll();
@@ -46,15 +46,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
         isScrolled
-          ? 'pointer-events-none py-3 sm:py-4 px-3 sm:px-6'
-          : 'w-full border-b border-white/5 bg-[#07090e]/70 backdrop-blur-md'
+          ? 'pointer-events-none py-3 sm:py-4 px-4 sm:px-6 bg-transparent'
+          : 'w-full border-b border-slate-800/40 bg-[#07090e]/60 backdrop-blur-md py-0 px-0'
       }`}
     >
       <div
         className={`transition-all duration-300 ease-out ${
           isScrolled
-            ? 'pointer-events-auto mx-auto flex items-center justify-between h-14 max-w-5xl rounded-2xl border border-white/10 bg-[#07090e]/85 backdrop-blur-2xl shadow-2xl shadow-black/80 px-4 sm:px-6'
-            : 'w-full max-w-7xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8'
+            ? 'pointer-events-auto mx-auto flex items-center justify-between h-14 max-w-5xl rounded-2xl border border-slate-800 bg-[#07090e]/90 backdrop-blur-2xl shadow-2xl shadow-black/90 px-4 sm:px-6'
+            : 'w-full max-w-7xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8 border-transparent'
         }`}
       >
         
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile Sub-Navigation */}
-      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-white/5 overflow-x-auto bg-[#07090e]/95 backdrop-blur-xl">
+      <div className="md:hidden flex items-center gap-1 px-4 py-2 border-t border-slate-800/50 overflow-x-auto bg-[#07090e]/95 backdrop-blur-xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('/')[1] ? `/${item.href.split('/')[1]}` : item.href);
