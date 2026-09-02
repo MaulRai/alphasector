@@ -36,7 +36,7 @@ class AgentOrchestrator:
         step_counter += 1
 
         # -------------------------------------------------------------
-        # 2. FETCHING PHASE (Custom Tool Execution Pipeline)
+        # 2. FETCHING PHASE (Parallel Tool Execution Pipeline)
         # -------------------------------------------------------------
         reports: List[Dict[str, Any]] = []
         broker_summaries: Dict[str, Any] = {}
@@ -44,136 +44,121 @@ class AgentOrchestrator:
         screener_data: Optional[Dict[str, Any]] = None
         segments_data: Dict[str, Any] = {}
 
-        for step in planned_steps:
+        # Prepare async tasks
+        async def execute_single_step(step: Dict[str, Any]):
             action = step.get("action")
-            
             if action == "FETCH_REPORT":
                 t = step["ticker"]
                 data, log = await tool_executor.fetch_company_report(t)
-                if data:
-                    reports.append(data)
-                credits_used += 1
-                trace.append(ReasoningStep(
-                    id=f"step-{step_counter}",
-                    step_number=step_counter,
-                    phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Company Report ({t})",
-                    detail=f"Retrieved fundamental overview, valuation multiples, and financials for {t} in {log.latency_ms}ms",
-                    tool_call=log,
-                    timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
-                step_counter += 1
-
+                return ("REPORT", t, data, log)
             elif action == "FETCH_BROKER_SUMMARY":
                 t = step["ticker"]
                 data, log = await tool_executor.fetch_broker_summary(t)
-                if data:
-                    broker_summaries[t] = data
-                credits_used += 1
-                trace.append(ReasoningStep(
-                    id=f"step-{step_counter}",
-                    step_number=step_counter,
-                    phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Broker Summary ({t})",
-                    detail=f"Retrieved top accumulating & distributing brokers for {t} in {log.latency_ms}ms",
-                    tool_call=log,
-                    timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
-                step_counter += 1
-
+                return ("BROKER", t, data, log)
             elif action == "FETCH_FOREIGN_FLOW":
                 t = step["ticker"]
                 data, log = await tool_executor.fetch_foreign_flow(t)
-                if data:
-                    foreign_flows[t] = data
-                credits_used += 1
-                trace.append(ReasoningStep(
-                    id=f"step-{step_counter}",
-                    step_number=step_counter,
-                    phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Net Foreign Flow ({t})",
-                    detail=f"Retrieved historical net foreign broker inflow for {t}",
-                    tool_call=log,
-                    timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
-                step_counter += 1
-
+                return ("FOREIGN", t, data, log)
             elif action == "FETCH_SEGMENTS":
                 t = step["ticker"]
                 data, log = await tool_executor.fetch_company_segments(t)
-                if data:
-                    segments_data[t] = data
-                credits_used += 1
-                trace.append(ReasoningStep(
-                    id=f"step-{step_counter}",
-                    step_number=step_counter,
-                    phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Revenue Segments ({t})",
-                    detail=f"Retrieved Sankey-ready revenue & cost streams for {t}",
-                    tool_call=log,
-                    timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
-                step_counter += 1
-
-            elif action == "SCREEN_MARKET":
+                return ("SEGMENTS", t, data, log)
+            elif action == "RUN_SCREENER":
                 q_text = step.get("query", query)
-                data, log = await tool_executor.screen_market(q_text)
-                if data:
-                    screener_data = data
-                credits_used += 3 # Natural language screener
+                data, log = await tool_executor.screen_companies(q=q_text)
+                return ("SCREENER", "SCREENER", data, log)
+            elif action == "FETCH_SUBSECTOR_LIST":
+                data, log = await tool_executor.get_subsectors()
+                return ("SUBSECTORS", "SUBSECTORS", data, log)
+            return (None, None, None, None)
+
+        # Run all planned fetching tasks concurrently for maximum speed
+        results = await asyncio.gather(*[execute_single_step(s) for s in planned_steps])
+
+        for kind, sym, data, log in results:
+            if not kind:
+                continue
+            credits_used += 1
+
+            if kind == "REPORT":
+                if data: reports.append(data)
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title="Screen Market Universe",
-                    detail=f"Executed AI screener query across IDX companies universe in {log.latency_ms}ms",
+                    title=f"Fetch Company Report ({sym})",
+                    detail=f"Retrieved fundamental overview, valuation multiples, and financials for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 ))
                 step_counter += 1
 
-            elif action == "FETCH_TOP_INSTITUTIONAL_BROKERS":
-                data, log = await tool_executor.fetch_top_institutional_brokers()
-                credits_used += 1
+            elif kind == "BROKER":
+                if data: broker_summaries[sym] = data
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title="Fetch Top Institutional Brokers",
-                    detail=f"Retrieved top market-wide institutional broker activity in {log.latency_ms}ms",
+                    title=f"Fetch Broker Summary ({sym})",
+                    detail=f"Retrieved top accumulating & distributing brokers for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 ))
                 step_counter += 1
 
-            elif action == "FETCH_TOP_MOVERS":
-                data, log = await tool_executor.fetch_top_movers()
-                credits_used += 1
+            elif kind == "FOREIGN":
+                if data: foreign_flows[sym] = data
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title="Fetch Market Top Movers",
-                    detail="Retrieved top gainers & losers for momentum benchmark",
+                    title=f"Fetch Net Foreign Flow ({sym})",
+                    detail=f"Retrieved historical net foreign broker inflow for {sym}",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+            elif kind == "SEGMENTS":
+                if data: segments_data[sym] = data
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title=f"Fetch Revenue Segments ({sym})",
+                    detail=f"Retrieved business revenue & cost breakdown for {sym}",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+            elif kind == "SCREENER":
+                screener_data = data
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title="Screen Companies Universe",
+                    detail=f"Screened IDX universe for matching criteria in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 ))
                 step_counter += 1
 
         # -------------------------------------------------------------
-        # 3. QUANTITATIVE COMPARATOR PHASE
+        # 3. COMPARISON & RATIO ENGINE (Deterministic Math)
         # -------------------------------------------------------------
         peer_matrix = None
         analyzed_broker = None
-        
+
         if reports:
             peer_matrix = comparator.build_peer_matrix(reports)
             trace.append(ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
-                title="Quantitative Comparison & Financial Math",
-                detail=f"Computed PE gap, PBV gap, ROE profitability, and dividend yield rankings across {len(peer_matrix)} emiten",
+                title="Deterministic Ratio & Multiples Calculation",
+                detail=f"Calculated valuation gaps, ROE, DER, NPM, and identified Best-in-Class badges for {len(peer_matrix)} companies",
                 timestamp=datetime.now().strftime("%H:%M:%S")
             ))
             step_counter += 1
@@ -185,43 +170,39 @@ class AgentOrchestrator:
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
-                title="Smart Money & Accumulation Signal Analysis",
-                detail=f"Signal: {analyzed_broker.get('sentiment')} (Buyer Concentration: {analyzed_broker.get('buyer_concentration')}%)",
+                title="Broker Accumulation Sentiment Scoring",
+                detail=f"Sentiment for {primary_ticker}: {analyzed_broker['sentiment']} (Buyer Concentration: {analyzed_broker['buyer_concentration']}%)",
                 timestamp=datetime.now().strftime("%H:%M:%S")
             ))
             step_counter += 1
 
         # -------------------------------------------------------------
-        # 4. SYNTHESIZING PHASE
+        # 4. SYNTHESIZING PHASE (Bahasa Indonesia LLM Synthesis)
         # -------------------------------------------------------------
-        synthesis = await synthesizer.synthesize(
+        trace.append(ReasoningStep(
+            id=f"step-{step_counter}",
+            step_number=step_counter,
+            phase=ExecutionPhase.SYNTHESIZING,
+            title="Executive Narrative Synthesis",
+            detail="Generating structured equity research briefing in Bahasa Indonesia with fact-grounded figures",
+            timestamp=datetime.now().strftime("%H:%M:%S")
+        ))
+        step_counter += 1
+
+        synthesis_result = await synthesizer.synthesize(
             query=query,
             intent=intent,
             tickers=tickers,
             reports=reports,
             peer_matrix=peer_matrix,
-            broker_summary=analyzed_broker,
+            broker_summary=analyzed_broker or (broker_summaries.get(primary_ticker) if primary_ticker else None),
             screener_data=screener_data
         )
 
-        trace.append(ReasoningStep(
-            id=f"step-{step_counter}",
-            step_number=step_counter,
-            phase=ExecutionPhase.SYNTHESIZING,
-            title="Structured Narrative Synthesis & Fact Grounding",
-            detail="Generated executive summary, valuation verdict, catalysts, and regulatory disclaimers",
-            timestamp=datetime.now().strftime("%H:%M:%S")
-        ))
-        step_counter += 1
+        total_latency = int((time.time() - start_time) * 1000)
 
-        total_time_ms = int((time.time() - start_time) * 1000)
-
-        # -------------------------------------------------------------
-        # 5. RESPONSE ASSEMBLY
-        # -------------------------------------------------------------
-        metrics_summary = None
-        if peer_matrix and len(peer_matrix) == 1:
-            metrics_summary = peer_matrix[0]
+        # Single summary metric if only 1 ticker
+        metrics_summary = peer_matrix[0] if peer_matrix and len(peer_matrix) == 1 else None
 
         return AgentQueryResponse(
             query=query,
@@ -232,8 +213,8 @@ class AgentOrchestrator:
             metrics_summary=metrics_summary,
             peer_matrix=peer_matrix,
             broker_summary=analyzed_broker,
-            synthesis=synthesis,
-            total_execution_time_ms=total_time_ms,
+            synthesis=synthesis_result,
+            total_execution_time_ms=total_latency,
             credits_consumed=credits_used
         )
 
