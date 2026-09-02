@@ -38,20 +38,12 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Content with Staggered Fade-in Animations */}
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6 pt-4">
           
-          {/* Track Tag */}
-          <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800/80 text-xs font-medium text-slate-300 backdrop-blur-md shadow-lg hover:border-emerald-500/40 transition-colors">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Sectors Hackathon 2026 • Track 01 AI Agents</span>
-            </div>
-          </div>
-
           {/* Main Headline */}
           <h1 
             className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] animate-fade-in-up"
-            style={{ animationDelay: '200ms' }}
+            style={{ animationDelay: '100ms' }}
           >
             Autonomous Equity Copilot untuk <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">

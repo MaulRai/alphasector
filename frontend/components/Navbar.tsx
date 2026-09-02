@@ -55,9 +55,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="text-base font-bold tracking-tight text-white">
                   Alpha<span className="text-emerald-400">Sector</span>
                 </span>
-                <span className="rounded px-1.5 py-0.2 text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  AI Agent
-                </span>
               </div>
               <span className="text-[10px] text-slate-400 hidden sm:inline -mt-0.5">
                 Autonomous Equity Research

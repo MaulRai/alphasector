@@ -66,11 +66,6 @@ export default function CopilotPage() {
         
         {/* Workspace Header */}
         <section className="max-w-3xl mx-auto pt-2 sm:pt-6 mb-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Autonomous AI Research Copilot • Groq OpenAI 120b</span>
-          </div>
-
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 leading-tight">
             Research Copilot Terminal
           </h1>
