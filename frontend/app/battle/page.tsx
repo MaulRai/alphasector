@@ -230,7 +230,7 @@ export default function PeerBattlePage() {
                   <Sparkles className="h-4 w-4" /> 3. AI Valuation Verdict
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Model Groq OpenAI 120b menyintesis kesimpulan komparatif, menyaring emiten yang terdiskon, dan mengidentifikasi katalis utama.
+                  Menyintesis kesimpulan komparatif, menyaring emiten yang terdiskon, dan mengidentifikasi katalis utama.
                 </p>
               </div>
             </div>

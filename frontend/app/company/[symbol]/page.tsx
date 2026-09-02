@@ -169,7 +169,7 @@ export default function CompanyDetailPage() {
                     </h3>
                   </div>
                   <p className="text-xs text-slate-400">
-                    Agent akan memanggil segmen bisnis, aliran broker flow, dan menyintesis narasi riset eksekutif via Groq 120b.
+                    Agent akan menganalisis segmen bisnis, aliran broker flow, dan menyintesis narasi riset fundamental.
                   </p>
                 </div>
 
@@ -199,7 +199,7 @@ export default function CompanyDetailPage() {
                 <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
                   <Sparkles className="h-4 w-4 text-cyan-400" />
                   <h3 className="text-base font-bold text-white">
-                    Sintesis Riset Fundamental Otonom (Bahasa Indonesia)
+                    Sintesis Riset Fundamental Otonom
                   </h3>
                 </div>
                 <p className="text-sm text-slate-200 leading-relaxed mb-4">

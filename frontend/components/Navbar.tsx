@@ -110,14 +110,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Status Actions */}
         <div className="flex items-center gap-3">
-          {/* Backend Status */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/70 border border-slate-800 text-[11px]">
-            <span className={`h-2 w-2 rounded-full ${backendOnline ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></span>
-            <span className="text-slate-400 hidden sm:inline">
-              {backendOnline ? 'Groq 120b + Sectors' : 'Backend Offline'}
-            </span>
-          </div>
-
           {/* Export Dossier Button if report is active */}
           {hasActiveReport && onOpenDossier && (
             <button

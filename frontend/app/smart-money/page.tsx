@@ -128,9 +128,6 @@ export default function SmartMoneyPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold text-white">{ticker}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                    Sectors Broker API
-                  </span>
                 </div>
                 <p className="text-xs text-slate-400">Pilih kode saham di bawah atau ketik kode baru</p>
               </div>
@@ -223,7 +220,7 @@ export default function SmartMoneyPage() {
                   <Sparkles className="h-4 w-4" /> 3. Narasi Sintesis AI
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Groq 120b menghasilkan ulasan tajam mengenai sentimen bandar/institusi dalam Bahasa Indonesia yang lugas.
+                  Menghasilkan ulasan mendalam mengenai sentimen bandar/institusi dalam Bahasa Indonesia yang lugas.
                 </p>
               </div>
             </div>

@@ -139,7 +139,7 @@ export default function CopilotPage() {
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <h3 className="text-base font-bold text-white">
-                    Sintesis Riset Otonom (Groq OpenAI 120b)
+                    Sintesis Riset Otonom
                   </h3>
                 </div>
                 <button

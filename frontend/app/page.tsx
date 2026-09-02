@@ -100,7 +100,7 @@ export default function LandingPage() {
             </div>
             <div className="flex items-center gap-2 hover:text-teal-300 transition-colors">
               <Sparkles className="h-4 w-4 text-teal-400" />
-              <span>Groq OpenAI 120b Engine</span>
+              <span>Autonomous AI Synthesis</span>
             </div>
           </div>
 
