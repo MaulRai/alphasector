@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealth } from '@/lib/api';
 import { 
-  Search, Filter, ShieldCheck, TrendingUp, Users, 
-  Zap, ArrowRight, RefreshCw, Layers, ExternalLink, Play, Sparkles, Database 
+  Search, Filter, Sparkles, RefreshCw, ArrowRight, 
+  CheckCircle2, ArrowUpDown, ChevronDown, ExternalLink, Zap, Layers, ShieldCheck, Users, TrendingUp,
+  Play, Database
 } from 'lucide-react';
+import { AuthGate } from '@/components/AuthGate';
 
 export default function ScreenerPage() {
   const [nlQuery, setNlQuery] = useState('');
@@ -111,6 +113,10 @@ export default function ScreenerPage() {
       <Navbar backendOnline={backendOnline} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
+        <AuthGate
+          featureName="Screener Pro & Trade Ideas Radar"
+          featureDescription="Saring semesta 900+ saham BEI dengan query natural language (NLP) dan kriteria fundamental terstruktur dengan akun analis."
+        >
         
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-slate-800">
@@ -391,6 +397,8 @@ export default function ScreenerPage() {
             </div>
           </div>
         )}
+
+        </AuthGate>
 
       </main>
     </div>

@@ -10,11 +10,13 @@ import { ResearchDossierModal } from '@/components/ResearchDossierModal';
 import { fetchCompanyReport, fetchCompanySegments, fetchBrokerSummary, queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse, PeerCompanyMetric } from '@/lib/types';
 import { 
-  Building2, Sparkles, TrendingUp, DollarSign, Layers, 
-  Award, ShieldCheck, Printer, RefreshCw, ArrowLeft, PieChart, ExternalLink, Play, Zap, Database 
+  Building2, Sparkles, TrendingUp, Users, 
+  ArrowLeft, RefreshCw, Layers, BookOpen, AlertCircle, Play, ShieldCheck,
+  Printer, PieChart, DollarSign, Award
 } from 'lucide-react';
+import { AuthGate } from '@/components/AuthGate';
 
-export default function CompanyDetailPage() {
+export default function Company360Page() {
   const params = useParams();
   const router = useRouter();
   const rawSymbol = (params?.symbol as string) || 'BBCA';
@@ -112,6 +114,10 @@ export default function CompanyDetailPage() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
+        <AuthGate
+          featureName={`Emiten 360° Profile & Dossier (${symbol})`}
+          featureDescription={`Akses profil komprehensif, segmen bisnis, valuasi multi-periode, dan aliran broker flow untuk ${symbol} dengan akun analis.`}
+        >
         
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between gap-4 mb-6">
@@ -309,6 +315,8 @@ export default function CompanyDetailPage() {
 
           </div>
         )}
+
+        </AuthGate>
 
       </main>
 

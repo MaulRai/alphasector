@@ -121,3 +121,41 @@ export async function checkBackendHealth() {
     return { status: 'offline' };
   }
 }
+
+// --- AUTH API METHODS ---
+
+export async function loginUser(email: string, password: string) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({ detail: 'Login gagal.' }));
+    throw new Error(err.detail || 'Email atau password salah.');
+  }
+  return response.json();
+}
+
+export async function registerUser(email: string, password: string, fullName: string) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, full_name: fullName }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({ detail: 'Registrasi gagal.' }));
+    throw new Error(err.detail || 'Registrasi gagal.');
+  }
+  return response.json();
+}
+
+export async function getMeProfile(token: string) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    throw new Error('Sesi kedaluwarsa.');
+  }
+  return response.json();
+}

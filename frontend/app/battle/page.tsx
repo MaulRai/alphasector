@@ -10,6 +10,7 @@ import {
   Swords, Sparkles, Play, RefreshCw, Zap, Award, 
   CheckCircle2, Plus, X, ArrowRight, ShieldCheck, Database, Layers
 } from 'lucide-react';
+import { AuthGate } from '@/components/AuthGate';
 
 export default function PeerBattlePage() {
   const [tickers, setTickers] = useState<string[]>(['BBRI', 'BMRI']);
@@ -31,12 +32,12 @@ export default function PeerBattlePage() {
     setIsLoading(true);
     setError(null);
     try {
-      const q = `Bandingkan valuasi, PBV, ROE, dan dividen ${selectedTickers.join(' vs ')}`;
-      const res = await queryAgent(q);
+      const query = `Bandingkan valuasi dan dividen ${selectedTickers.join(' vs ')}`;
+      const res = await queryAgent(query);
       setReport(res);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Gagal mengeksekusi Peer Battle.');
+      setError(err.message || 'Gagal mengeksekusi analisis komparasi.');
     } finally {
       setIsLoading(false);
     }
@@ -44,34 +45,34 @@ export default function PeerBattlePage() {
 
   const handleAddTicker = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = newTicker.trim().toUpperCase().replace('.JK', '');
-    if (!clean) return;
-    if (tickers.includes(clean)) {
-      setNewTicker('');
+    const sym = newTicker.trim().toUpperCase();
+    if (!sym) return;
+    if (tickers.includes(sym)) {
+      setError(`Emiten ${sym} sudah ada di dalam list.`);
       return;
     }
     if (tickers.length >= 4) {
-      setError('Maksimal 4 emiten untuk komparasi optimal.');
+      setError('Maksimal 4 emiten untuk satu sesi battle.');
       return;
     }
-    const updated = [...tickers, clean];
-    setTickers(updated);
+    setTickers([...tickers, sym]);
     setNewTicker('');
+    setError(null);
   };
 
-  const handleRemoveTicker = (sym: string) => {
+  const handleRemoveTicker = (symbolToRemove: string) => {
     if (tickers.length <= 2) {
-      setError('Minimal 2 emiten untuk komparasi.');
+      setError('Minimal 2 emiten untuk membandingkan.');
       return;
     }
-    const updated = tickers.filter(t => t !== sym);
-    setTickers(updated);
+    setTickers(tickers.filter(t => t !== symbolToRemove));
+    setError(null);
   };
 
   const presetBattles = [
-    { title: 'Big 4 Banks', symbols: ['BBCA', 'BBRI', 'BMRI', 'BBNI'] },
-    { title: 'Coal & Energy', symbols: ['ADRO', 'PTBA', 'ITMG'] },
+    { title: 'The Big 4 Banks', symbols: ['BBCA', 'BBRI', 'BMRI', 'BBNI'] },
     { title: 'Telco Giants', symbols: ['TLKM', 'ISAT', 'EXCL'] },
+    { title: 'Nickel & Metals', symbols: ['INCO', 'MBMA', 'NCKL'] },
     { title: 'Consumer Staples', symbols: ['ICBP', 'INDF', 'MYOR'] },
     { title: 'Auto & Industrial', symbols: ['ASII', 'AUTO'] },
   ];
@@ -81,6 +82,10 @@ export default function PeerBattlePage() {
       <Navbar backendOnline={backendOnline} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
+        <AuthGate
+          featureName="Peer Battle & Valuation Terminal"
+          featureDescription="Bandingkan rasio valuasi P/E, PBV, ROE, laba bersih, dan konsistensi dividen antar emiten secara instan dengan akun analis."
+        >
         
         {/* Page Header */}
         <div className="mb-8 pb-6 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -283,6 +288,8 @@ export default function PeerBattlePage() {
 
           </div>
         )}
+
+        </AuthGate>
 
       </main>
     </div>

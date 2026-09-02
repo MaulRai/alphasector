@@ -10,6 +10,7 @@ import {
   Users, TrendingUp, TrendingDown, Search, ArrowUpRight, 
   ArrowDownRight, RefreshCw, ShieldAlert, Sparkles, Building2, Play, Zap, Database, Activity 
 } from 'lucide-react';
+import { AuthGate } from '@/components/AuthGate';
 
 export default function SmartMoneyPage() {
   const [ticker, setTicker] = useState('TLKM');
@@ -78,6 +79,10 @@ export default function SmartMoneyPage() {
       <Navbar backendOnline={backendOnline} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
+        <AuthGate
+          featureName="Smart Money & Institutional Flow Tracker"
+          featureDescription="Lacak konsentrasi akumulasi broker bandar dan pergerakan aliran dana asing (Foreign Flow) dengan akun analis."
+        >
         
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -307,6 +312,8 @@ export default function SmartMoneyPage() {
 
           </div>
         )}
+
+        </AuthGate>
 
       </main>
     </div>

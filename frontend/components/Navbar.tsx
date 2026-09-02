@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import { 
   Swords, Users, Search, BookOpen, 
-  Activity, Home, Layers
+  Activity, Home, Layers, LogOut, User as UserIcon, LogIn
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -21,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   hasActiveReport,
 }) => {
   const pathname = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -41,6 +43,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'Screener', href: '/screener', icon: Search },
     { label: 'Emiten 360°', href: '/company/BBCA', icon: Layers },
   ];
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  };
 
   return (
     <header className="fixed top-0 inset-x-0 z-50">
@@ -113,16 +124,50 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right: Dossier CTA if active */}
+          {/* Right: Auth Profile Status & Dossier CTA */}
           <div className="flex items-center gap-2">
+            {/* Export Dossier CTA */}
             {hasActiveReport && onOpenDossier && (
               <button
                 onClick={onOpenDossier}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
               >
                 <BookOpen className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Dossier</span>
               </button>
+            )}
+
+            {/* User Profile / Auth State */}
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-2 pl-1 border-l border-slate-800">
+                <div 
+                  className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800"
+                  title={`${user.full_name} (${user.email})`}
+                >
+                  <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                    {getInitials(user.full_name || 'AN')}
+                  </div>
+                  <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate hidden sm:inline">
+                    {user.full_name.split(' ')[0]}
+                  </span>
+                </div>
+                
+                <button
+                  onClick={logout}
+                  title="Keluar (Logout)"
+                  className="p-1.5 rounded-xl bg-slate-900/80 hover:bg-red-500/10 border border-slate-800 hover:border-red-500/30 text-slate-400 hover:text-red-400 transition-all text-xs"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/copilot"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-white text-xs font-semibold transition-all"
+              >
+                <LogIn className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Masuk</span>
+              </Link>
             )}
           </div>
 

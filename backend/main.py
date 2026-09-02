@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.db.database import init_db
 from app.api.agent import router as agent_router
 from app.api.sectors import router as sectors_router
+from app.api.auth import router as auth_router
+
+# Initialize SQLite database and demo accounts
+init_db()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -21,6 +26,7 @@ app.add_middleware(
 )
 
 # Include API routers
+app.include_router(auth_router, prefix=f"{settings.API_V1_PREFIX}/auth", tags=["auth"])
 app.include_router(agent_router, prefix=settings.API_V1_PREFIX)
 app.include_router(sectors_router, prefix=settings.API_V1_PREFIX)
 
