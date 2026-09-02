@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   Terminal, Swords, Users, 
-  Search, BookOpen, ShieldCheck, Activity, Building2 
+  Search, BookOpen, ShieldCheck, Activity, Building2, Layers, Home 
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -25,11 +25,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
 
   const navItems = [
-    { label: 'Copilot', href: '/', icon: Activity },
+    { label: 'Home', href: '/', icon: Home },
+    { label: 'Copilot', href: '/copilot', icon: Activity },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
-    { label: 'Emiten 360°', href: '/company/BBCA', icon: Building2 },
+    { label: 'Emiten 360°', href: '/company/BBCA', icon: Layers },
   ];
 
   return (
