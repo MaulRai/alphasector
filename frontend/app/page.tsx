@@ -316,10 +316,18 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto text-center space-y-12">
           
           <RevealOnScroll direction="up">
-            <div className="space-y-3">
-              <span className="text-xs font-bold text-emerald-400 tracking-wider uppercase">
-                Infrastruktur Data Resmi
-              </span>
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-semibold text-slate-300">
+                <div className="relative h-4 w-4">
+                  <Image
+                    src="/images/sectors-icon.png"
+                    alt="Sectors.app"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span>Sectors Financial Data Engine</span>
+              </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Ditenagai Ekosistem Sectors Financial API v2
               </h2>
@@ -502,11 +510,16 @@ export default function LandingPage() {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-300 text-xs uppercase mb-3">Teknologi & Model</h4>
+            <h4 className="font-bold text-slate-300 text-xs uppercase mb-3">Teknologi & Ekosistem</h4>
             <ul className="space-y-2 text-[11px] text-slate-400">
-              <li>Sectors Financial API v2</li>
-              <li>Groq LPU Engine</li>
-              <li>OpenAI 120B Model</li>
+              <li className="flex items-center gap-1.5 text-slate-300 font-medium">
+                <div className="relative h-3.5 w-3.5 shrink-0">
+                  <Image src="/images/sectors-icon.png" alt="Sectors" fill className="object-contain" />
+                </div>
+                <span>Sectors Financial API v2</span>
+              </li>
+              <li>Autonomous Agent Orchestrator</li>
+              <li>Groq LPU Inference</li>
               <li>Next.js 16 & FastAPI</li>
             </ul>
           </div>
