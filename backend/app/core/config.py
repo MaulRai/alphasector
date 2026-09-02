@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     
     # Mock Data Toggle (True = use local high-fidelity mocks to save credits; False = live API calling)
     USE_MOCK_DATA: bool = Field(default_factory=lambda: os.getenv("USE_MOCK_DATA", "true").lower() in ("true", "1", "yes"))
+    
+    # Sectors API Cache TTL in Seconds (default 7200 = 2 hours)
+    SECTORS_CACHE_TTL_SECONDS: int = Field(default_factory=lambda: int(os.getenv("SECTORS_CACHE_TTL_SECONDS", "7200")))
 
     @property
     def cors_origins_list(self) -> List[str]:
