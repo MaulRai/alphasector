@@ -1,0 +1,152 @@
+from typing import Dict, Any, Optional, Tuple
+from app.sectors.client import sectors_client
+from app.schemas.agent import ToolCallLog
+
+class AgentToolExecutor:
+    """Executes deterministic tool calls to Sectors REST API."""
+
+    @staticmethod
+    async def fetch_company_report(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_company_report(ticker)
+            log = ToolCallLog(
+                endpoint=f"/v2/company/report/{ticker.upper()}/",
+                params={"sections": "overview,valuation,financials,peers"},
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched complete fundamental & valuation report for {ticker}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint=f"/v2/company/report/{ticker.upper()}/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching report for {ticker}: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_company_segments(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_company_segments(ticker)
+            log = ToolCallLog(
+                endpoint=f"/v2/company/segments/{ticker.upper()}/",
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched revenue & cost segments for {ticker}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint=f"/v2/company/segments/{ticker.upper()}/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching segments for {ticker}: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_broker_summary(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_broker_summary_top(ticker)
+            log = ToolCallLog(
+                endpoint=f"/v2/broker-summary/{ticker.upper()}/top/",
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched top accumulating & distributing brokers for {ticker}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint=f"/v2/broker-summary/{ticker.upper()}/top/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching broker summary for {ticker}: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_foreign_flow(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_foreign_flow(ticker)
+            log = ToolCallLog(
+                endpoint=f"/v2/broker-summary/foreign-flow/{ticker.upper()}/",
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched daily net foreign inflow for {ticker}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint=f"/v2/broker-summary/foreign-flow/{ticker.upper()}/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching foreign flow for {ticker}: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def screen_market(query: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.screen_companies(q=query)
+            log = ToolCallLog(
+                endpoint="/v2/companies/",
+                params={"q": query},
+                status=status,
+                latency_ms=ms,
+                description=f"Screened market using query: '{query}'"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="/v2/companies/",
+                status=500,
+                latency_ms=0,
+                description=f"Error screening market: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_top_institutional_brokers() -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_top_brokers(cohort="institutional", metric="gross")
+            log = ToolCallLog(
+                endpoint="/v2/brokers/top/",
+                params={"cohort": "institutional", "metric": "gross"},
+                status=status,
+                latency_ms=ms,
+                description="Fetched top active institutional brokers"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="/v2/brokers/top/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching top brokers: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_top_movers() -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        try:
+            data, ms, status = await sectors_client.get_top_movers(periods="7d", n_stock=5)
+            log = ToolCallLog(
+                endpoint="/v2/companies/top-changes/",
+                params={"periods": "7d", "n_stock": 5},
+                status=status,
+                latency_ms=ms,
+                description="Fetched top gainers & losers for 7 days"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="/v2/companies/top-changes/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching top movers: {str(e)}"
+            )
+            return None, log
+
+tool_executor = AgentToolExecutor()
