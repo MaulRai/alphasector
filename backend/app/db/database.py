@@ -1,6 +1,7 @@
 import json
 import uuid
-import os
+import time
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List
 import psycopg2
 import psycopg2.extras
@@ -31,32 +32,20 @@ def init_db():
         );
     """)
     
-    # 2. Chat Sessions Table (Rooms owned by user_id)
+    # 2. Chat Sessions Table (Rooms owned by user_id with JSONB messages column)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS chat_sessions (
             id TEXT PRIMARY KEY,
             user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
             title TEXT NOT NULL,
             primary_ticker TEXT,
+            messages JSONB DEFAULT '[]'::jsonb,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );
     """)
     
-    # 3. Chat Messages Table (Messages in a room owned by user_id)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS chat_messages (
-            id SERIAL PRIMARY KEY,
-            session_id TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            role TEXT NOT NULL,
-            content TEXT NOT NULL,
-            report_data JSONB,
-            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-        );
-    """)
-    
-    # 4. Research Reports Table (Dossier archives owned by user_id)
+    # 3. Research Reports Table (Dossier archives owned by user_id)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS research_reports (
             id SERIAL PRIMARY KEY,
@@ -72,7 +61,7 @@ def init_db():
         );
     """)
     
-    # 5. User Watchlist Table (Owned by user_id)
+    # 4. User Watchlist Table (Owned by user_id)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS user_watchlists (
             id SERIAL PRIMARY KEY,
@@ -136,7 +125,7 @@ class UserRepository:
 
 
 class ChatRepository:
-    """Neon PostgreSQL repository for User-Owned Chat Rooms & Message History."""
+    """Neon PostgreSQL repository for User-Owned Chat Rooms with JSONB messages column."""
 
     @staticmethod
     def create_session(user_id: int, title: str, primary_ticker: Optional[str] = None, session_id: Optional[str] = None) -> Dict[str, Any]:
@@ -144,31 +133,45 @@ class ChatRepository:
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         s_id = session_id or str(uuid.uuid4())
         cursor.execute("""
-            INSERT INTO chat_sessions (id, user_id, title, primary_ticker)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO chat_sessions (id, user_id, title, primary_ticker, messages)
+            VALUES (%s, %s, %s, %s, '[]'::jsonb)
             ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, updated_at = CURRENT_TIMESTAMP
             RETURNING *
         """, (s_id, user_id, title[:80], primary_ticker))
         row = cursor.fetchone()
         conn.commit()
         conn.close()
-        return dict(row)
+        res = dict(row)
+        if res.get("created_at"):
+            res["created_at"] = res["created_at"].isoformat()
+        if res.get("updated_at"):
+            res["updated_at"] = res["updated_at"].isoformat()
+        return res
 
     @staticmethod
     def get_user_sessions(user_id: int, limit: int = 30) -> List[Dict[str, Any]]:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""
-            SELECT s.*, 
-                   (SELECT COUNT(*) FROM chat_messages m WHERE m.session_id = s.id) as message_count
-            FROM chat_sessions s
-            WHERE s.user_id = %s
-            ORDER BY s.updated_at DESC
+            SELECT id, user_id, title, primary_ticker, 
+                   jsonb_array_length(COALESCE(messages, '[]'::jsonb)) as message_count,
+                   created_at, updated_at
+            FROM chat_sessions
+            WHERE user_id = %s
+            ORDER BY updated_at DESC
             LIMIT %s
         """, (user_id, limit))
         rows = cursor.fetchall()
         conn.close()
-        return [dict(r) for r in rows]
+        sessions = []
+        for r in rows:
+            s = dict(r)
+            if s.get("created_at"):
+                s["created_at"] = s["created_at"].isoformat()
+            if s.get("updated_at"):
+                s["updated_at"] = s["updated_at"].isoformat()
+            sessions.append(s)
+        return sessions
 
     @staticmethod
     def get_session(session_id: str, user_id: int) -> Optional[Dict[str, Any]]:
@@ -177,7 +180,14 @@ class ChatRepository:
         cursor.execute("SELECT * FROM chat_sessions WHERE id = %s AND user_id = %s", (session_id, user_id))
         row = cursor.fetchone()
         conn.close()
-        return dict(row) if row else None
+        if not row:
+            return None
+        res = dict(row)
+        if res.get("created_at"):
+            res["created_at"] = res["created_at"].isoformat()
+        if res.get("updated_at"):
+            res["updated_at"] = res["updated_at"].isoformat()
+        return res
 
     @staticmethod
     def update_session(session_id: str, user_id: int, title: Optional[str] = None, primary_ticker: Optional[str] = None) -> bool:
@@ -210,45 +220,39 @@ class ChatRepository:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
-        # Ensure session exists / touch updated_at
-        cursor.execute("""
-            UPDATE chat_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = %s AND user_id = %s
-        """, (session_id, user_id))
+        msg_obj = {
+            "id": int(time.time() * 1000),
+            "session_id": session_id,
+            "user_id": user_id,
+            "role": role,
+            "content": content,
+            "report_data": report_data,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
         
-        report_json = json.dumps(report_data, ensure_ascii=False) if report_data else None
+        # Append message to JSONB array and update session updated_at
         cursor.execute("""
-            INSERT INTO chat_messages (session_id, user_id, role, content, report_data)
-            VALUES (%s, %s, %s, %s, %s)
-            RETURNING *
-        """, (session_id, user_id, role, content, report_json))
-        row = cursor.fetchone()
+            UPDATE chat_sessions
+            SET messages = COALESCE(messages, '[]'::jsonb) || %s::jsonb,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = %s AND user_id = %s
+            RETURNING *;
+        """, (json.dumps([msg_obj], ensure_ascii=False), session_id, user_id))
+        
         conn.commit()
         conn.close()
-        
-        res = dict(row)
-        if res.get("created_at"):
-            res["created_at"] = res["created_at"].isoformat()
-        return res
+        return msg_obj
 
     @staticmethod
     def get_session_messages(session_id: str, user_id: int) -> List[Dict[str, Any]]:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("""
-            SELECT * FROM chat_messages 
-            WHERE session_id = %s AND user_id = %s
-            ORDER BY created_at ASC
-        """, (session_id, user_id))
-        rows = cursor.fetchall()
+        cursor.execute("SELECT messages FROM chat_sessions WHERE id = %s AND user_id = %s", (session_id, user_id))
+        row = cursor.fetchone()
         conn.close()
-        
-        messages = []
-        for r in rows:
-            m = dict(r)
-            if m.get("created_at"):
-                m["created_at"] = m["created_at"].isoformat()
-            messages.append(m)
-        return messages
+        if not row or not row.get("messages"):
+            return []
+        return row["messages"]
 
 
 class ResearchReportRepository:
