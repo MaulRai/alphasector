@@ -43,12 +43,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 pointer-events-none py-3 sm:py-4 px-3 sm:px-6 transition-all duration-300 ease-out">
+    <header className="fixed top-0 inset-x-0 z-50 pointer-events-none py-3 sm:py-4 px-4 sm:px-6">
       <div
-        className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between mx-auto ${
+        className={`pointer-events-auto flex items-center justify-between mx-auto rounded-2xl border transition-[max-width,height,background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out ${
           isScrolled
-            ? 'h-14 max-w-5xl rounded-2xl border border-slate-800/80 bg-[#07090e]/90 backdrop-blur-2xl shadow-2xl shadow-black/90 px-4 sm:px-6'
-            : 'h-16 max-w-7xl px-4 sm:px-6 lg:px-8 bg-transparent'
+            ? 'h-14 max-w-5xl border-slate-800/90 bg-[#07090e]/90 backdrop-blur-2xl shadow-2xl shadow-black/90 px-4 sm:px-6'
+            : 'h-16 max-w-7xl border-transparent bg-transparent shadow-none px-4 sm:px-6 lg:px-8'
         }`}
       >
         
