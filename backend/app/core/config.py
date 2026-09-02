@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     ENVIRONMENT: str = "development"
-    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000"
+    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,http://localhost:3002,http://localhost:8000"
     
     # Database
     DATABASE_URL: str = Field(default_factory=lambda: os.getenv("DATABASE_URL", ""))

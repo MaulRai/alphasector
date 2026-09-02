@@ -10,10 +10,11 @@ app = FastAPI(
     description="AlphaSector - Autonomous Equity Research Copilot for Indonesian Capital Markets (Sectors Hackathon 2026 - Track 01)"
 )
 
-# CORS Middleware configuration
+# CORS Middleware configuration with regex for all localhost ports
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
+    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
