@@ -184,7 +184,7 @@ export default function CopilotPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
+    <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
       
       {/* Top Navbar */}
       <Navbar
@@ -198,7 +198,7 @@ export default function CopilotPage() {
       >
 
       {/* Main Workspace Layout with Left Sidebar */}
-      <div className="flex-1 flex pt-16 sm:pt-20 h-[calc(100vh-1rem)] overflow-hidden">
+      <div className="flex-1 flex pt-16 overflow-hidden min-h-0 w-full relative">
         
         {/* ============================================================ */}
         {/* LEFT SIDEBAR: User-Owned Research Sessions History          */}
@@ -206,7 +206,7 @@ export default function CopilotPage() {
         <aside
           className={`${
             isSidebarOpen ? 'w-72 sm:w-80' : 'w-0'
-          } shrink-0 bg-[#0a0d16] border-r border-slate-800/80 transition-all duration-300 flex flex-col overflow-hidden relative z-20`}
+          } shrink-0 bg-[#0a0d16] border-r border-slate-800/80 transition-all duration-300 flex flex-col h-full overflow-hidden relative z-20`}
         >
           {/* Sidebar Header */}
           <div className="p-3 sm:p-4 border-b border-slate-800/80 flex items-center justify-between gap-2">
@@ -308,7 +308,7 @@ export default function CopilotPage() {
         {/* ============================================================ */}
         {/* MAIN CONVERSATIONAL WORKSPACE (CENTER)                       */}
         {/* ============================================================ */}
-        <section className="flex-1 flex flex-col h-full bg-[#07090e] overflow-hidden relative">
+        <section className="flex-1 flex flex-col h-full min-h-0 bg-[#07090e] overflow-hidden relative">
           
           {/* Top Session Bar with Sidebar Toggle */}
           <div className="h-12 border-b border-slate-800/80 bg-[#090d17]/80 backdrop-blur-md px-4 flex items-center justify-between gap-3 shrink-0 z-10">
@@ -348,7 +348,7 @@ export default function CopilotPage() {
           </div>
 
           {/* Scrollable Chat Message Feed */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6">
+          <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-6 space-y-6">
             
             {/* If New / Empty Session: Show Welcome & Radar Presets */}
             {messages.length === 0 && !isLoading && (

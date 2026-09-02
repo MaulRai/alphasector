@@ -105,7 +105,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8">
+    <div className="w-full h-full overflow-y-auto max-w-4xl mx-auto py-8 px-4">
       
       {/* Institutional Access Gate Card */}
       <div className="rounded-3xl border border-slate-800 bg-[#090d16]/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
