@@ -8,7 +8,13 @@ TICKER_REGEX = re.compile(r'\b([A-Z]{4})(?:\.JK)?\b', re.IGNORECASE)
 # Keywords to detect intent
 PEER_KEYWORDS = ["banding", "bandingkan", "komparasi", "vs", "versus", "compare", "mana yang lebih", "better than", "antara"]
 BROKER_KEYWORDS = ["broker", "bandar", "bandarmology", "smart money", "akumulasi", "distribusi", "foreign", "asing", "inflow", "outflow"]
-SCREENER_KEYWORDS = ["screen", "cari", "filter", "saham apa", "rekomendasi", "top", "terbaik", "paling tinggi", "tertinggi", "dividend yield", "dividen"]
+SCREENER_KEYWORDS = [
+    "screen", "screener", "cari", "filter", "saham apa", "rekomendasi", "top", 
+    "terbaik", "paling tinggi", "tertinggi", "dividend yield", "dividen", "dividend",
+    "growth", "titans", "titan", "revenue", "omset", "pendapatan", "laba", "esg", "leaders", "leader",
+    "shareholder", "pemegang saham", "pengendali", "kepemilikan", "operator", "operators", 
+    "efficient", "efisiensi", "karyawan", "undervalued", "murah", "mahal", "sektor", "sector"
+]
 COMMODITY_KEYWORDS = ["nikel", "nickel", "emas", "gold", "batubara", "coal", "tembaga", "copper", "timah", "tin", "komoditas", "commodity", "tambang"]
 
 # Comprehensive stopword list of common 4-letter Indonesian and English words that are NOT tickers
@@ -78,20 +84,20 @@ class AgentPlanner:
         # 1. Determine Intent with robust boundary-aware keyword matching
         intent = AgentIntent.GENERAL_FINANCIAL_QUERY
         
-        if len(tickers) >= 2 or contains_keyword(query, PEER_KEYWORDS):
+        if len(tickers) >= 2:
             intent = AgentIntent.PEER_BATTLE_COMPARISON
-        elif contains_keyword(query, BROKER_KEYWORDS):
+        elif contains_keyword(query, PEER_KEYWORDS) and len(tickers) >= 1:
+            intent = AgentIntent.PEER_BATTLE_COMPARISON
+        elif contains_keyword(query, BROKER_KEYWORDS) and len(tickers) >= 1:
             intent = AgentIntent.SMART_MONEY_RADAR
         elif contains_keyword(query, COMMODITY_KEYWORDS) and len(tickers) <= 1:
             intent = AgentIntent.COMMODITY_MACRO_IMPACT
-        elif contains_keyword(query, SCREENER_KEYWORDS) and len(tickers) == 0:
+        elif contains_keyword(query, SCREENER_KEYWORDS) or len(tickers) == 0:
             intent = AgentIntent.MARKET_SCREENING_DISCOVERY
         elif len(tickers) == 1:
             intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE
-        elif contains_keyword(query, SCREENER_KEYWORDS):
-            intent = AgentIntent.MARKET_SCREENING_DISCOVERY
         else:
-            intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE if tickers else AgentIntent.GENERAL_FINANCIAL_QUERY
+            intent = AgentIntent.MARKET_SCREENING_DISCOVERY
 
         # 2. Build Plan Steps (DAG)
         steps: List[Dict[str, Any]] = []
