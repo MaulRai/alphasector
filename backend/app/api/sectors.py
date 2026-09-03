@@ -1,9 +1,56 @@
-from typing import Optional, Dict, Any
+import asyncio
+from typing import Optional, Dict, Any, List
 from fastapi import APIRouter, HTTPException, Query, Header
 from app.sectors.client import get_sectors_client, sectors_client
 from app.core.config import settings
 
 router = APIRouter(prefix="/sectors", tags=["Sectors Financial API"])
+
+async def enrich_screener_items(client, raw_items: Any) -> Any:
+    """Enrich basic screener results with market_cap, sub_sector, pe, and pbv from cached company reports."""
+    if not raw_items:
+        return raw_items
+        
+    items_list = raw_items if isinstance(raw_items, list) else (raw_items.get("results", []) if isinstance(raw_items, dict) else [])
+    if not items_list:
+        return raw_items
+
+    async def _enrich_one(item: dict) -> dict:
+        if not isinstance(item, dict):
+            return item
+        symbol = (item.get("symbol") or "").replace(".JK", "").strip()
+        if not symbol:
+            return item
+        
+        # If already populated with valuation data, return as is
+        if item.get("market_cap") and item.get("pe"):
+            return item
+            
+        try:
+            report, _, _ = await client.get_company_report(symbol, sections="overview,valuation")
+            if report and isinstance(report, dict):
+                ov = report.get("overview") or {}
+                val = report.get("valuation") or {}
+                hist_val = val.get("historical_valuation") or []
+                latest_val = hist_val[-1] if hist_val else {}
+                
+                item["company_name"] = item.get("company_name") or report.get("company_name")
+                item["sub_sector"] = item.get("sub_sector") or ov.get("sub_sector") or ov.get("sector")
+                item["market_cap"] = item.get("market_cap") or ov.get("market_cap")
+                item["pe"] = item.get("pe") or latest_val.get("pe") or val.get("forward_pe")
+                item["pbv"] = item.get("pbv") or latest_val.get("pb")
+        except Exception:
+            pass
+        return item
+
+    # Enrich top 15 results concurrently
+    enriched = await asyncio.gather(*[_enrich_one(dict(x)) for x in items_list[:15]])
+    final_list = list(enriched) + list(items_list[15:])
+    
+    if isinstance(raw_items, dict) and "results" in raw_items:
+        raw_items["results"] = final_list
+        return raw_items
+    return final_list
 
 @router.get("/subsectors")
 async def get_subsectors(x_sectors_api_key: Optional[str] = Header(None)):
@@ -81,7 +128,8 @@ async def screen_companies(
     client = get_sectors_client(x_sectors_api_key)
     try:
         data, ms, status = await client.screen_companies(where=where, order_by=order_by, limit=limit, q=q)
-        return {"data": data, "latency_ms": ms}
+        enriched_data = await enrich_screener_items(client, data)
+        return {"data": enriched_data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -186,7 +234,8 @@ async def get_trade_idea_preset(
     client = get_sectors_client(x_sectors_api_key)
     try:
         data, ms, status = await client.screen_companies(where=preset["where"], order_by=preset["order_by"], limit=10)
-        return {"preset": idea_slug, "data": data, "latency_ms": ms, "is_mock": False}
+        enriched_data = await enrich_screener_items(client, data)
+        return {"preset": idea_slug, "data": enriched_data, "latency_ms": ms, "is_mock": False}
     except Exception as e:
         # Fallback to mock data on error so UI never breaks
         fallback = TRADE_IDEAS_MOCK_DATA.get(idea_slug, [])
