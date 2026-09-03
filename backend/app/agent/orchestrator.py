@@ -30,12 +30,46 @@ class AgentOrchestrator:
         query: str, 
         context_ticker: Optional[str] = None, 
         session_id: Optional[str] = None,
-        custom_api_key: Optional[str] = None
+        custom_api_key: Optional[str] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None
     ) -> AgentQueryResponse:
         start_time = time.time()
         trace: List[ReasoningStep] = []
         step_counter = 1
         credits_used = 0
+
+        # Check if this is a conversational follow-up in an ongoing multi-turn session
+        if conversation_history and len(conversation_history) > 0:
+            intent_check, detected_tickers, _ = planner.classify_and_plan(query, context_ticker)
+            if intent_check == AgentIntent.GENERAL_FINANCIAL_QUERY and len(detected_tickers) == 0:
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.SYNTHESIZING,
+                    title="Conversational Financial Reasoning",
+                    detail="Formulating direct structured response based on active multi-turn research context",
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                synthesis_result = await AgentSynthesizer.synthesize_conversational(
+                    query=query,
+                    conversation_history=conversation_history
+                )
+                total_ms = int((time.time() - start_time) * 1000)
+                return AgentQueryResponse(
+                    query=query,
+                    intent=AgentIntent.GENERAL_FINANCIAL_QUERY,
+                    session_id=session_id,
+                    primary_ticker=context_ticker,
+                    comparison_tickers=[],
+                    reasoning_trace=trace,
+                    metrics_summary=None,
+                    peer_matrix=None,
+                    broker_summary=None,
+                    synthesis=synthesis_result,
+                    suggested_followups=[],
+                    total_execution_time_ms=total_ms,
+                    credits_consumed=1
+                )
 
         # -------------------------------------------------------------
         # 1. PLANNING PHASE

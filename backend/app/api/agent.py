@@ -84,12 +84,27 @@ async def execute_agent_query(
                 content=request.query
             )
 
+        # Retrieve recent conversation history for multi-turn context (last 6 messages)
+        conversation_history = []
+        if user_id and active_session_id:
+            try:
+                raw_msgs = ChatRepository.get_session_messages(active_session_id, user_id)
+                # Keep messages prior to the current user message
+                conversation_history = [
+                    {"role": m["role"], "content": m["content"]}
+                    for m in raw_msgs[:-1]
+                    if m.get("content")
+                ][-6:]
+            except Exception as hist_err:
+                print(f"[Warning] Failed to fetch session history: {hist_err}")
+
         # Execute agent with custom or default key
         response = await agent_orchestrator.execute(
             query=request.query,
             context_ticker=request.context_ticker,
             session_id=active_session_id,
-            custom_api_key=custom_key
+            custom_api_key=custom_key,
+            conversation_history=conversation_history
         )
 
         # If authenticated, persist assistant message and update session primary ticker if identified

@@ -14,6 +14,7 @@ import { ResearchDossierModal } from '@/components/ResearchDossierModal';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { 
   queryAgent, 
   fetchUserChatSessions, 
@@ -287,10 +288,15 @@ function CopilotWorkspace() {
     handleSendMessage(inputQuery);
   };
 
-  // Extract all generated artifacts in this conversation room
+  // Extract all generated artifacts in this conversation room (filter out conversational follow-up text)
   const artifacts: ArtifactItem[] = useMemo(() => {
     return messages
-      .filter((m) => m.role === 'assistant' && m.report_data)
+      .filter((m) => {
+        if (m.role !== 'assistant' || !m.report_data) return false;
+        const rep = m.report_data;
+        const isConversational = !rep.peer_matrix && !rep.broker_summary && (!rep.synthesis?.key_findings || rep.synthesis.key_findings.length === 0);
+        return !isConversational;
+      })
       .map((m, idx) => ({
         id: String(m.id || `artifact-${idx}`),
         timestamp: m.created_at
@@ -581,7 +587,15 @@ function CopilotWorkspace() {
                     <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed animate-card-reveal">
                       {msg.content}
                     </div>
+                  ) : (!report?.peer_matrix && !report?.broker_summary && (!report?.synthesis?.key_findings || report.synthesis.key_findings.length === 0)) ? (
+                    /* Conversational Follow-Up Mode: Clean Markdown Bubble with Custom Tables */
+                    <div className="w-full space-y-2 animate-card-reveal">
+                      <div className="p-4 sm:p-5 rounded-2xl rounded-tl-none bg-[#0d121e]/90 border border-slate-800 shadow-xl glass-panel text-slate-200">
+                        <MarkdownRenderer content={msg.content || report?.synthesis?.executive_summary || ''} />
+                      </div>
+                    </div>
                   ) : (
+                    /* Heavy Autonomous Research Dossier Mode */
                     <div className="w-full space-y-5 animate-card-reveal">
                       
                       {/* Live/Completed Thinking Trace Accordion */}

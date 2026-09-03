@@ -19,6 +19,81 @@ class AgentSynthesizer:
     )
 
     @classmethod
+    async def synthesize_conversational(
+        cls,
+        query: str,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        context_data: Optional[Dict[str, Any]] = None
+    ) -> SynthesisResult:
+        """
+        Generates direct, clean conversational Markdown response for multi-turn chat follow-ups.
+        Supports rich custom markdown tables, pros/cons, tactical insights, without heavy widget overhead.
+        """
+        system_prompt = (
+            "Anda adalah AlphaSector, Senior Autonomous Equity Research Analyst pasar modal Indonesia (IDX).\n"
+            "Anda sedang berdiskusi langsung dengan analis atau investor pasar modal dalam sesi riset aktif.\n\n"
+            "PANDUAN RESPON:\n"
+            "1. Jawab secara langsung, cerdas, terstruktur, dan profesional dalam Bahasa Indonesia.\n"
+            "2. Gunakan konteks percakapan dan data emiten yang sudah dibahas sebelumnya untuk menjawab dengan akurat.\n"
+            "3. Jika pengguna meminta perbandingan, pro/cons, ringkasan, atau jika relevan, FORMATLAH dalam TABEL MARKDOWN yang rapi (| Kolom 1 | Kolom 2 |).\n"
+            "4. Gunakan poin-poin tebal (bold), bullet points, dan penomoran agar sangat mudah dibaca.\n"
+            "5. Berikan opini analitis yang tajam berbasis fundamental, valuasi, dan manajemen risiko.\n"
+            "6. Jawab secara to-the-point tanpa bertele-tele."
+        )
+
+        messages = [{"role": "system", "content": system_prompt}]
+
+        # Append last 6 conversation turns for wise context window length
+        if conversation_history:
+            for turn in conversation_history[-6:]:
+                role = turn.get("role", "user")
+                content = turn.get("content", "")
+                if content and role in ("user", "assistant"):
+                    messages.append({"role": role, "content": content})
+
+        messages.append({"role": "user", "content": query})
+
+        if groq_rotator.has_keys():
+            try:
+                response_text = await groq_rotator.generate_chat_completion(
+                    messages=messages,
+                    model=settings.GROQ_MODEL,
+                    temperature=0.3
+                )
+                return SynthesisResult(
+                    executive_summary=response_text.strip(),
+                    key_findings=[],
+                    valuation_verdict=None,
+                    smart_money_flow=None,
+                    catalysts=[],
+                    risks=[],
+                    suggested_followups=[],
+                    disclaimer=cls.MANDATORY_DISCLAIMER
+                )
+            except Exception as e:
+                logger.warning(f"Groq conversational follow-up failed, using fallback: {e}")
+
+        # Fallback response if Groq is unavailable
+        fallback_text = (
+            f"Berdasarkan analisis konteks riset terkini mengenai pertanyaan Anda (*{query}*):\n\n"
+            "Berikut poin pertimbangan utama:\n"
+            "- **Fundamental & Valuasi**: Evaluasi rasio P/E dan PBV terhadap rata-rata historis sektor emiten terkait.\n"
+            "- **Aliran Dana (Smart Money)**: Perhatikan konsentrasi akumulasi broker institusi dan arus net foreign flow harian.\n"
+            "- **Manajemen Risiko**: Tetapkan batasan toleransi risiko dan diversifikasi portofolio secara berimbang.\n\n"
+            "Silakan ajukan pertanyaan lebih spesifik mengenai emiten tertentu atau minta simulasi alokasi portofolio."
+        )
+        return SynthesisResult(
+            executive_summary=fallback_text,
+            key_findings=[],
+            valuation_verdict=None,
+            smart_money_flow=None,
+            catalysts=[],
+            risks=[],
+            suggested_followups=[],
+            disclaimer=cls.MANDATORY_DISCLAIMER
+        )
+
+    @classmethod
     async def synthesize(
         cls,
         query: str,
