@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
-import { LiveThinkingTrace } from '@/components/LiveThinkingTrace';
 import { Company360Card } from '@/components/Company360Card';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
@@ -746,9 +745,27 @@ function CopilotWorkspace() {
               );
             })}
 
-            {/* Live Interactive Reasoning Trace Streamer */}
+            {/* Clean & Simple Loading State */}
             {isLoading && (
-              <LiveThinkingTrace query={inputQuery} />
+              <div className="flex flex-col items-start max-w-4xl mx-auto w-full animate-card-reveal">
+                <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
+                  <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400">
+                    <Bot className="h-3 w-3" />
+                  </div>
+                  <span className="font-semibold text-emerald-400">AlphaSector Agent</span>
+                </div>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl rounded-tl-none bg-[#0d121e]/90 border border-slate-800 text-xs text-slate-300 shadow-xl glass-panel">
+                  <RefreshCw className="h-3.5 w-3.5 text-emerald-400 animate-spin shrink-0" />
+                  <span className="text-slate-300 font-medium">
+                    AlphaAgent sedang menganalisis pasar & menyusun data...
+                  </span>
+                  <span className="flex space-x-1 ml-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                </div>
+              </div>
             )}
 
             {/* Error & Quota Alert */}
