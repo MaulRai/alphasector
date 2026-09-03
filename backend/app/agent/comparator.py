@@ -35,7 +35,7 @@ class QuantitativeComparator:
             revenue = latest_fin.get("revenue") if isinstance(latest_fin, dict) else None
             net_income = (latest_fin.get("earnings") or latest_fin.get("net_income")) if isinstance(latest_fin, dict) else None
             total_equity = latest_fin.get("total_equity") if isinstance(latest_fin, dict) else None
-            total_debt = latest_fin.get("total_debt") if isinstance(latest_fin, dict) else None
+            total_debt = latest_fin.get("total_debt") if latest_fin.get("total_debt") is not None else latest_fin.get("total_liabilities")
 
             # Calculate derived ratios if not explicitly present
             roe = None

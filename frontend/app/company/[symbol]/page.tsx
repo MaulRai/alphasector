@@ -89,6 +89,17 @@ export default function Company360Page() {
   const valuation = reportData?.valuation || {};
   const financials = reportData?.financials || {};
   const histVal = valuation?.historical_valuation || [];
+  const histFin = financials?.historical_financials || [];
+  const latestFin = histFin.length > 0 ? histFin[histFin.length - 1] : (financials || {});
+
+  const earnings = Number(latestFin.earnings ?? latestFin.net_income ?? 0);
+  const totalEquity = Number(latestFin.total_equity ?? 0);
+  const revenue = Number(latestFin.revenue ?? 0);
+  const totalDebt = Number(latestFin.total_debt ?? latestFin.total_liabilities ?? 0);
+
+  const calculatedRoe = (earnings !== 0 && totalEquity > 0) ? (earnings / totalEquity) * 100 : (financials.roe ?? financials.return_on_equity ?? null);
+  const calculatedNpm = (earnings !== 0 && revenue > 0) ? (earnings / revenue) * 100 : (financials.npm ?? financials.net_profit_margin ?? null);
+  const calculatedDer = (totalDebt > 0 && totalEquity > 0) ? (totalDebt / totalEquity) : (financials.der ?? financials.debt_to_equity ?? null);
 
   // Format metric object for Company360Card
   const metricData: PeerCompanyMetric | null = reportData ? {
@@ -102,9 +113,9 @@ export default function Company360Page() {
     pbv: histVal.length > 0 ? histVal[histVal.length - 1].pb : valuation.pbv,
     pe_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pe_peer_avg : null,
     pb_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pb_peer_avg : null,
-    roe: financials.roe ?? financials.return_on_equity ?? overview.roe ?? null,
-    der: financials.der ?? financials.debt_to_equity ?? overview.der ?? null,
-    npm: financials.npm ?? financials.net_profit_margin ?? overview.npm ?? null,
+    roe: calculatedRoe,
+    der: calculatedDer,
+    npm: calculatedNpm,
     tags: overview.tags || []
   } : null;
 
