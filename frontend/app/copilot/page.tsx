@@ -29,7 +29,7 @@ import {
 import { AuthGate } from '@/components/AuthGate';
 
 export default function CopilotPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   // State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -202,6 +202,20 @@ export default function CopilotPage() {
     s.title.toLowerCase().includes(sessionSearch.toLowerCase()) ||
     (s.primary_ticker && s.primary_ticker.toLowerCase().includes(sessionSearch.toLowerCase()))
   );
+
+  if (isAuthLoading) {
+    return (
+      <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <RefreshCw className="h-6 w-6 text-emerald-400 animate-spin" />
+            <p className="text-xs text-slate-400 font-medium animate-pulse">Memuat terminal riset...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated || !user) {
     return (

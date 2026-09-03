@@ -21,32 +21,24 @@ const TOKEN_KEY = 'alphasector_auth_token';
 const USER_KEY = 'alphasector_user';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Synchronously initialize from localStorage to prevent unauthenticated flash on reload
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cachedUser = localStorage.getItem(USER_KEY);
-        return cachedUser ? JSON.parse(cachedUser) : null;
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  });
-
-  const [token, setToken] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(TOKEN_KEY);
-    }
-    return null;
-  });
-
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem(TOKEN_KEY);
+    const cachedUser = localStorage.getItem(USER_KEY);
+    
     if (storedToken) {
       setToken(storedToken);
+      if (cachedUser) {
+        try {
+          setUser(JSON.parse(cachedUser));
+        } catch {
+          // ignore corrupted json
+        }
+      }
+      
       getMeProfile(storedToken)
         .then((userData) => {
           setUser(userData);

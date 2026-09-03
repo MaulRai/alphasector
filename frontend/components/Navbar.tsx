@@ -24,8 +24,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 25);
     };
@@ -137,36 +139,40 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
 
             {/* User Profile / Auth State */}
-            {isAuthenticated && user ? (
-              <div className="flex items-center gap-2 pl-1 border-l border-slate-800">
-                <div 
-                  className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800"
-                  title={`${user.full_name} (${user.email})`}
-                >
-                  <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
-                    {getInitials(user.full_name || 'AN')}
+            {mounted ? (
+              isAuthenticated && user ? (
+                <div className="flex items-center gap-2 pl-1 border-l border-slate-800">
+                  <div 
+                    className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800"
+                    title={`${user.full_name} (${user.email})`}
+                  >
+                    <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                      {getInitials(user.full_name || 'AN')}
+                    </div>
+                    <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate hidden sm:inline">
+                      {user.full_name.split(' ')[0]}
+                    </span>
                   </div>
-                  <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate hidden sm:inline">
-                    {user.full_name.split(' ')[0]}
-                  </span>
+                  
+                  <button
+                    onClick={logout}
+                    title="Keluar (Logout)"
+                    className="p-1.5 rounded-xl bg-slate-900/80 hover:bg-red-500/10 border border-slate-800 hover:border-red-500/30 text-slate-400 hover:text-red-400 transition-all text-xs"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                  </button>
                 </div>
-                
-                <button
-                  onClick={logout}
-                  title="Keluar (Logout)"
-                  className="p-1.5 rounded-xl bg-slate-900/80 hover:bg-red-500/10 border border-slate-800 hover:border-red-500/30 text-slate-400 hover:text-red-400 transition-all text-xs"
+              ) : (
+                <Link
+                  href="/copilot"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-white text-xs font-semibold transition-all"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
-                </button>
-              </div>
+                  <LogIn className="h-3.5 w-3.5 text-emerald-400" />
+                  <span>Masuk</span>
+                </Link>
+              )
             ) : (
-              <Link
-                href="/copilot"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-white text-xs font-semibold transition-all"
-              >
-                <LogIn className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Masuk</span>
-              </Link>
+              <div className="w-16 h-7" />
             )}
           </div>
 
