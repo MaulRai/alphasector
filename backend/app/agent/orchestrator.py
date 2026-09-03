@@ -10,7 +10,7 @@ from app.schemas.agent import (
     AgentIntent,
     SynthesisResult
 )
-from app.agent.planner import planner
+from app.agent.planner import planner, contains_keyword
 from app.agent.tools import tool_executor
 from app.agent.comparator import comparator
 from app.agent.synthesizer import AgentSynthesizer
@@ -41,7 +41,10 @@ class AgentOrchestrator:
         # Check if this is a conversational follow-up in an ongoing multi-turn session
         if conversation_history and len(conversation_history) > 0:
             intent_check, detected_tickers, _ = planner.classify_and_plan(query, context_ticker)
-            if intent_check == AgentIntent.GENERAL_FINANCIAL_QUERY and len(detected_tickers) == 0:
+            is_explicit_battle = (len(detected_tickers) >= 2 and contains_keyword(query, ["vs", "versus", "bandingkan", "komparasi"]))
+            is_explicit_screen = (len(detected_tickers) == 0 and contains_keyword(query, ["screen", "screener", "filter"]))
+
+            if not is_explicit_battle and not is_explicit_screen:
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,

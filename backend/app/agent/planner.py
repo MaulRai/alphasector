@@ -20,7 +20,7 @@ COMMODITY_KEYWORDS = ["nikel", "nickel", "emas", "gold", "batubara", "coal", "te
 # Comprehensive stopword list of common 4-letter Indonesian and English words that are NOT tickers
 STOPWORDS_4 = {
     # Indonesian common 4-letter words & commodity/screener tokens
-    "BATU", "BARA", "SAHM", "SAHA", "KOTA", "DANA", "PROS", "EMIT", "SEKT", "JASA",
+    "BATU", "BARA", "SAHM", "SAHA", "KOTA", "DANA", "PROS", "CONS", "EMIT", "SEKT", "JASA",
     "LUAR", "BAIK", "JELE", "BESR", "KECI", "KUAT", "LEMA", "MURH", "MAHL", "TING",
     "REND", "SKOR", "HASI", "TAMP", "TIPE", "JENI", "KATA", "BANY", "SEDI", "PERK",
     "SEMI", "GAYA", "TEMA", "MODL", "EFIS", "KARY", "LEAD", "TITN", "GROW", "VALU",
@@ -38,7 +38,8 @@ STOPWORDS_4 = {
     "SANA", "SITU", "APAL", "AGAR", "BIAR", "SIAP", "PERU", "INDX", "KAYA", "TREN",
     "POLA", "AWAL", "AKHR", "BLAN", "THUN", "HARI", "MING", "TAHN", "KIRA", "SUDA",
     "TELH", "LALU", "KEMU", "KINI", "HANY", "CUMA", "LAIN", "BEBR", "TRUS", "DULU",
-    "LGIK", "MASI", "MASA", "SAMA", "SEGI",
+    "LGIK", "MASI", "MASA", "SAMA", "SEGI", "RING", "RANG", "KURA", "LEBI", "JELA",
+    "BERI", "SIMU", "TADI", "ATAS", "SEMU", "DAMP", "RISI", "STRA", "ALOK", "PERK",
     # English common 4-letter words
     "WITH", "HAVE", "THIS", "THAT", "FROM", "THEY", "SOME", "WHAT", "WHEN", "WHOM",
     "MANY", "EACH", "VERY", "MUCH", "BOTH", "SUCH", "LIKE", "OVER", "INTO", "ALSO",
@@ -90,20 +91,22 @@ class AgentPlanner:
         # 1. Determine Intent with robust boundary-aware keyword matching
         intent = AgentIntent.GENERAL_FINANCIAL_QUERY
         
-        if len(tickers) >= 2:
+        if len(tickers) >= 2 and contains_keyword(query, PEER_KEYWORDS + ["vs", "versus"]):
             intent = AgentIntent.PEER_BATTLE_COMPARISON
-        elif contains_keyword(query, PEER_KEYWORDS) and len(tickers) >= 1:
+        elif len(tickers) >= 2:
             intent = AgentIntent.PEER_BATTLE_COMPARISON
         elif contains_keyword(query, BROKER_KEYWORDS) and len(tickers) >= 1:
             intent = AgentIntent.SMART_MONEY_RADAR
         elif contains_keyword(query, COMMODITY_KEYWORDS) and len(tickers) <= 1:
             intent = AgentIntent.COMMODITY_MACRO_IMPACT
-        elif contains_keyword(query, SCREENER_KEYWORDS) or len(tickers) == 0:
+        elif contains_keyword(query, SCREENER_KEYWORDS) and len(tickers) == 0:
             intent = AgentIntent.MARKET_SCREENING_DISCOVERY
-        elif len(tickers) == 1:
+        elif len(tickers) == 1 and not contains_keyword(query, ["jelaskan", "mengapa", "kenapa", "bagaimana", "tabel", "pros", "cons", "kelebihan", "kekurangan", "menurutmu", "pendapat", "alokasi", "simulasi", "rangkum", "ringkas"]):
             intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE
+        elif len(tickers) == 0:
+            intent = AgentIntent.GENERAL_FINANCIAL_QUERY
         else:
-            intent = AgentIntent.MARKET_SCREENING_DISCOVERY
+            intent = AgentIntent.GENERAL_FINANCIAL_QUERY
 
         # 2. Build Plan Steps (DAG)
         steps: List[Dict[str, Any]] = []
