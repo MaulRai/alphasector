@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { POPULAR_IDX_TICKERS } from '@/lib/idx-tickers';
 import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealth } from '@/lib/api';
 import { 
   Search, Filter, Sparkles, RefreshCw, ArrowRight, 
@@ -354,6 +355,9 @@ export default function ScreenerPage() {
                 <tbody className="divide-y divide-slate-800/60 font-medium">
                   {results.map((c, idx) => {
                     const sym = (c.symbol || '').replace('.JK', '');
+                    const matchedTicker = POPULAR_IDX_TICKERS.find(t => t.symbol === sym);
+                    const subsector = c.sub_sector || c.sector || (selectedSubsector ? selectedSubsector : matchedTicker?.sector) || 'IDX Listed';
+
                     return (
                       <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
                         <td className="py-3 px-3.5">
@@ -365,29 +369,29 @@ export default function ScreenerPage() {
                             <span>{sym}</span>
                           </Link>
                         </td>
-                        <td className="py-3 px-3.5 text-slate-300 truncate max-w-[200px]">
-                          {c.company_name || c.name || '-'}
+                        <td className="py-3 px-3.5 text-slate-300 truncate max-w-[220px]">
+                          {c.company_name || c.name || matchedTicker?.name || '-'}
                         </td>
                         <td className="py-3 px-3.5 text-slate-400">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-800 text-[10px] text-slate-300">
-                            {c.sub_sector || c.sector || '-'}
+                          <span className="px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60 text-[10px] text-slate-300">
+                            {subsector}
                           </span>
                         </td>
-                        <td className="py-3 px-3.5 text-slate-200">
-                          {c.market_cap ? `Rp ${(c.market_cap / 1e12).toFixed(1)} T` : '-'}
+                        <td className="py-3 px-3.5 text-slate-200 font-mono">
+                          {c.market_cap ? `Rp ${(c.market_cap / 1e12).toFixed(1)} T` : <span className="text-slate-500">-</span>}
                         </td>
-                        <td className="py-3 px-3.5 text-slate-200">
-                          {c.pe ? `${Number(c.pe).toFixed(1)}x` : '-'}
+                        <td className="py-3 px-3.5 text-slate-200 font-mono">
+                          {c.pe ? `${Number(c.pe).toFixed(1)}x` : <span className="text-slate-500">-</span>}
                         </td>
-                        <td className="py-3 px-3.5 text-slate-200">
-                          {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : '-'}
+                        <td className="py-3 px-3.5 text-slate-200 font-mono">
+                          {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : <span className="text-slate-500">-</span>}
                         </td>
                         <td className="py-3 px-3.5 text-right">
                           <Link
                             href={`/company/${sym}`}
-                            className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-bold"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-all hover:scale-105"
                           >
-                            <span>Dossier</span>
+                            <span>Dossier 360°</span>
                             <ExternalLink className="h-3 w-3" />
                           </Link>
                         </td>
