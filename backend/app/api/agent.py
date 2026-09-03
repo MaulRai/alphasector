@@ -77,11 +77,18 @@ async def execute_agent_query(
 
         # If authenticated, save user message
         if user_id and active_session_id:
+            # Construct data URL if image attached
+            img_data_url = None
+            if request.image_base64:
+                mime = request.image_mime_type or "image/png"
+                img_data_url = f"data:{mime};base64,{request.image_base64}"
+            
             ChatRepository.add_message(
                 session_id=active_session_id,
                 user_id=user_id,
                 role="user",
-                content=request.query
+                content=request.query,
+                image_url=img_data_url
             )
 
         # Retrieve recent conversation history for multi-turn context (last 6 messages)
@@ -104,7 +111,9 @@ async def execute_agent_query(
             context_ticker=request.context_ticker,
             session_id=active_session_id,
             custom_api_key=custom_key,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            image_base64=request.image_base64,
+            image_mime_type=request.image_mime_type
         )
 
         # If authenticated, persist assistant message and update session primary ticker if identified

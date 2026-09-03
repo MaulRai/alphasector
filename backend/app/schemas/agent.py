@@ -38,6 +38,8 @@ class AgentQueryRequest(BaseModel):
     query: str = Field(..., description="User question in Indonesian or English")
     context_ticker: Optional[str] = Field(None, description="Optional primary ticker context (e.g. BBCA)")
     session_id: Optional[str] = Field(None, description="Optional session ID for multi-turn conversations")
+    image_base64: Optional[str] = Field(None, description="Optional base64-encoded financial image (chart, broxum, financial report)")
+    image_mime_type: Optional[str] = Field(None, description="Optional MIME type of image (e.g. image/png, image/jpeg)")
 
 class SynthesisResult(BaseModel):
     executive_summary: str
@@ -60,6 +62,7 @@ class AgentQueryResponse(BaseModel):
     peer_matrix: Optional[List[Dict[str, Any]]] = None
     broker_summary: Optional[Dict[str, Any]] = None
     synthesis: SynthesisResult
+    visual_context: Optional[str] = None
     suggested_followups: List[str] = []
     total_execution_time_ms: int
     credits_consumed: int

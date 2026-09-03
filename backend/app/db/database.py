@@ -260,7 +260,7 @@ class ChatRepository:
         return deleted
 
     @staticmethod
-    def add_message(session_id: str, user_id: int, role: str, content: str, report_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def add_message(session_id: str, user_id: int, role: str, content: str, report_data: Optional[Dict[str, Any]] = None, image_url: Optional[str] = None) -> Dict[str, Any]:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
@@ -271,6 +271,7 @@ class ChatRepository:
             "role": role,
             "content": content,
             "report_data": report_data,
+            "image_url": image_url,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
         

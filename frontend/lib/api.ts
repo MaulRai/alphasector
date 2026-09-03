@@ -48,7 +48,9 @@ export async function checkBackendHealth(): Promise<{ status: string }> {
 export async function queryAgent(
   query: string, 
   contextTicker?: string, 
-  sessionId?: string
+  sessionId?: string,
+  imageBase64?: string | null,
+  imageMimeType?: string | null
 ): Promise<AgentQueryResponse> {
   const headers = getApiHeaders();
 
@@ -59,6 +61,8 @@ export async function queryAgent(
       query,
       context_ticker: contextTicker || null,
       session_id: sessionId || null,
+      image_base64: imageBase64 || null,
+      image_mime_type: imageMimeType || null,
     }),
   });
 

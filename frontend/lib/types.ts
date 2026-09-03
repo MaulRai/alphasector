@@ -97,6 +97,7 @@ export interface AgentQueryResponse {
   peer_matrix?: PeerCompanyMetric[];
   broker_summary?: BrokerSummaryInfo;
   synthesis: SynthesisResult;
+  visual_context?: string | null;
   suggested_followups?: string[];
   total_execution_time_ms: number;
   credits_consumed: number;
@@ -119,6 +120,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   report_data?: AgentQueryResponse | null;
+  image_url?: string | null;
   created_at: string;
 }
 

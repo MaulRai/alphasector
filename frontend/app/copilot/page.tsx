@@ -28,7 +28,8 @@ import {
   BookOpen, AlertCircle, Plus, MessageSquare, 
   Trash2, ChevronRight, CornerDownLeft, Bot, 
   User as UserIcon, PanelLeftClose, PanelLeft, Clock,
-  ArrowRight, ShieldCheck, TrendingUp, FileText, Layers, Settings, Key
+  ArrowRight, ShieldCheck, TrendingUp, FileText, Layers, Settings, Key,
+  Paperclip, Image as ImageIcon, X
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
@@ -117,6 +118,15 @@ function CopilotWorkspace() {
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
+
+  // Multimodal Image State
+  const [attachedImage, setAttachedImage] = useState<{
+    base64: string;
+    mimeType: string;
+    previewUrl: string;
+    fileName: string;
+  } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Modal State for session deletion
   const [sessionToDelete, setSessionToDelete] = useState<{ id: string; title: string } | null>(null);
@@ -226,13 +236,53 @@ function CopilotWorkspace() {
     }
   };
 
+  // Handle Image Selection with max 5MB limit and client-side optimization
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Hanya file gambar (PNG, JPG, WEBP) yang didukung.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Ukuran gambar maksimal adalah 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64Data = result.split(',')[1];
+      setAttachedImage({
+        base64: base64Data,
+        mimeType: file.type,
+        previewUrl: result,
+        fileName: file.name
+      });
+      setError(null);
+    };
+    reader.readAsDataURL(file);
+    // Reset file input so same file can be re-selected if needed
+    e.target.value = '';
+  };
+
+  const handleRemoveImage = () => {
+    setAttachedImage(null);
+  };
+
   const handleSendMessage = async (queryText: string) => {
     const textToSend = queryText.trim();
-    if (!textToSend || isLoading) return;
+    if ((!textToSend && !attachedImage) || isLoading) return;
 
+    const currentImg = attachedImage;
+    setAttachedImage(null);
     setInputQuery('');
     setError(null);
     setIsLoading(true);
+
+    const defaultQuery = textToSend || (currentImg ? 'Jelaskan dan analisis konteks gambar finansial ini secara mendalam' : '');
 
     // Optimistically append user message to thread
     const optimisticUserMsg: ChatMessage = {
@@ -240,16 +290,19 @@ function CopilotWorkspace() {
       session_id: activeSessionId || 'temp',
       user_id: user?.id || 1,
       role: 'user',
-      content: textToSend,
+      content: defaultQuery,
+      image_url: currentImg?.previewUrl,
       created_at: new Date().toISOString()
     };
     setMessages((prev) => [...prev, optimisticUserMsg]);
 
     try {
       const response: AgentQueryResponse = await queryAgent(
-        textToSend,
+        defaultQuery,
         undefined,
-        activeSessionId || undefined
+        activeSessionId || undefined,
+        currentImg?.base64,
+        currentImg?.mimeType
       );
 
       // If a new session was created on backend, set it
@@ -583,8 +636,18 @@ function CopilotWorkspace() {
 
                   {/* Message Body Content */}
                   {isUser ? (
-                    <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed animate-card-reveal">
-                      {msg.content}
+                    <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed animate-card-reveal flex flex-col gap-2.5">
+                      {msg.image_url && (
+                        <div className="rounded-xl overflow-hidden border border-emerald-400/30 bg-black/20 max-h-64 flex items-center justify-center">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={msg.image_url}
+                            alt="Attached financial chart"
+                            className="max-h-60 w-auto object-contain rounded-lg hover:scale-105 transition-transform duration-200"
+                          />
+                        </div>
+                      )}
+                      <div>{msg.content}</div>
                     </div>
                   ) : (!report?.peer_matrix && !report?.broker_summary && (!report?.synthesis?.key_findings || report.synthesis.key_findings.length === 0)) ? (
                     /* Conversational Follow-Up Mode: Clean Markdown Bubble with Custom Tables */
@@ -802,23 +865,69 @@ function CopilotWorkspace() {
           {/* BOTTOM FIXED CHAT INPUT BAR                                  */}
           {/* ============================================================ */}
           <div className="p-3 sm:p-4 border-t border-slate-800/80 bg-[#080b13]/95 backdrop-blur-md shrink-0">
+            {/* Image Preview Chip if attached */}
+            {attachedImage && (
+              <div className="max-w-4xl mx-auto mb-2 flex items-center justify-between px-3 py-2 rounded-xl bg-[#0d121e] border border-emerald-500/40 text-xs text-slate-200 animate-card-reveal">
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={attachedImage.previewUrl}
+                    alt="Preview"
+                    className="h-8 w-8 object-cover rounded-lg border border-slate-700 shrink-0"
+                  />
+                  <div className="truncate">
+                    <span className="font-semibold text-emerald-400 block truncate">{attachedImage.fileName}</span>
+                    <span className="text-[10px] text-slate-400">Siap dianalisis dengan Gemini Flash Vision</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 transition-colors shrink-0 ml-2"
+                  title="Hapus gambar"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
             <form
               onSubmit={handleSubmit}
               className="max-w-4xl mx-auto relative flex items-center rounded-2xl border border-slate-700/80 bg-[#0d121e] p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald"
             >
-              <Search className="h-4 w-4 text-emerald-400 ml-3 mr-2 shrink-0" />
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleImageSelect}
+                className="hidden"
+              />
+
+              {/* Attach Image Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+                title="Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 5MB)"
+                className="p-2 ml-1 mr-1 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40"
+              >
+                <Paperclip className="h-4 w-4" />
+              </button>
+
+              <Search className="h-4 w-4 text-emerald-400 mr-2 shrink-0 hidden sm:block" />
               <input
                 ref={inputRef}
                 type="text"
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
-                placeholder="Tanyakan analisis emiten ke AlphaAgent (misal: Bandingkan BBCA vs BBRI, atau periksa foreign flow ASII)..."
+                placeholder={attachedImage ? "Tanyakan analisis teknikal/fundamental gambar ini (atau langsung tekan Kirim)..." : "Tanyakan analisis emiten ke AlphaAgent (misal: Bandingkan BBCA vs BBRI, atau lampirkan chart)..."}
                 className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1"
                 disabled={isLoading}
               />
               <button
                 type="submit"
-                disabled={isLoading || !inputQuery.trim()}
+                disabled={isLoading || (!inputQuery.trim() && !attachedImage)}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0"
               >
                 {isLoading ? (
@@ -831,8 +940,12 @@ function CopilotWorkspace() {
                 )}
               </button>
             </form>
-            <p className="text-[10px] text-slate-600 text-center mt-2">
-              Sesi terenkripsi dan tersimpan di database lokal Anda • Data resmi Sectors Financial API
+            <p className="text-[10px] text-slate-600 text-center mt-2 flex items-center justify-center gap-1.5">
+              <span>Sesi terenkripsi & tersimpan lokal</span>
+              <span>•</span>
+              <span className="text-emerald-500/80 font-medium">Multimodal Vision didukung Gemini Flash</span>
+              <span>•</span>
+              <span>Data resmi Sectors API</span>
             </p>
           </div>
 

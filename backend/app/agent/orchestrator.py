@@ -15,10 +15,12 @@ from app.agent.tools import tool_executor
 from app.agent.comparator import comparator
 from app.agent.synthesizer import AgentSynthesizer
 from app.sectors.client import sectors_client
+from app.core.gemini_rotator import gemini_rotator
 
 class AgentOrchestrator:
     """
     Coordinates end-to-end multi-step reasoning:
+    0. Multimodal Visual Perception (Gemini Flash Vision)
     1. Deterministic Intent & Plan DAG Generation
     2. Parallel Sectors REST API Tool Execution (with persistent caching)
     3. Deterministic Financial Ratio & Peer Matrix Computation
@@ -31,12 +33,58 @@ class AgentOrchestrator:
         context_ticker: Optional[str] = None, 
         session_id: Optional[str] = None,
         custom_api_key: Optional[str] = None,
-        conversation_history: Optional[List[Dict[str, str]]] = None
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        image_base64: Optional[str] = None,
+        image_mime_type: Optional[str] = None
     ) -> AgentQueryResponse:
         start_time = time.time()
         trace: List[ReasoningStep] = []
         step_counter = 1
         credits_used = 0
+        visual_context: Optional[str] = None
+
+        # -------------------------------------------------------------
+        # -1. MULTIMODAL VISION PERCEPTION PHASE (Gemini Flash)
+        # -------------------------------------------------------------
+        if image_base64 and gemini_rotator.has_keys():
+            try:
+                mime = image_mime_type or "image/png"
+                vision_res = await gemini_rotator.analyze_financial_image(
+                    image_base64=image_base64,
+                    mime_type=mime,
+                    user_prompt=query
+                )
+                if vision_res.get("success"):
+                    visual_context = vision_res.get("visual_summary", "")
+                    detected_img_ticker = vision_res.get("detected_ticker")
+                    if detected_img_ticker and not context_ticker:
+                        context_ticker = detected_img_ticker
+
+                    trace.append(ReasoningStep(
+                        id=f"step-{step_counter}",
+                        step_number=step_counter,
+                        phase=ExecutionPhase.FETCHING,
+                        title="Multimodal Financial Vision Perception",
+                        detail=f"Extracted visual chart/report intelligence via {vision_res.get('model', 'gemini-2.5-flash')}" + (f" | Identified Ticker: {detected_img_ticker}" if detected_img_ticker else ""),
+                        timestamp=datetime.now().strftime("%H:%M:%S")
+                    ))
+                    step_counter += 1
+            except Exception as vision_err:
+                print(f"[Warning] Gemini vision analysis failed: {vision_err}")
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.ERROR,
+                    title="Multimodal Vision Warning",
+                    detail=f"Could not parse image context: {vision_err}",
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+        # Enrich query with visual context if available
+        effective_query = query
+        if visual_context:
+            effective_query = f"{query}\n\n[KONTEKS OBSERVASI VISUAL DARI GAMBAR TERLAMPIR (GEMINI FLASH VISION)]:\n{visual_context}"
 
         # -------------------------------------------------------------
         # 0. HYBRID INTENT ARBITER (For Multi-Turn Sessions)
@@ -96,6 +144,7 @@ class AgentOrchestrator:
                     peer_matrix=None,
                     broker_summary=None,
                     synthesis=synthesis_result,
+                    visual_context=visual_context,
                     suggested_followups=[],
                     total_execution_time_ms=total_ms,
                     credits_consumed=1
@@ -334,7 +383,7 @@ class AgentOrchestrator:
         # 4. SYNTHESIS PHASE (LLM Structured Report Generation)
         # -------------------------------------------------------------
         synthesis_result: SynthesisResult = await AgentSynthesizer.synthesize(
-            query=query,
+            query=effective_query,
             intent=intent,
             tickers=tickers,
             reports=reports,
@@ -393,6 +442,7 @@ class AgentOrchestrator:
             peer_matrix=peer_matrix if (peer_matrix and len(peer_matrix) > 1) else None,
             broker_summary=broker_info,
             synthesis=synthesis_result,
+            visual_context=visual_context,
             suggested_followups=synthesis_result.suggested_followups if synthesis_result else [],
             total_execution_time_ms=total_ms,
             credits_consumed=credits_used
