@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AlphaSector — Autonomous Equity Research Copilot for IDX",
+  title: "AlphaSector — Autonomous Equity Research Agent for IDX",
   description: "Autonomous multi-step AI Agent for Indonesian Stock Market research, peer comparison, valuation, and institutional Smart Money tracking. Powered by Sectors Financial API.",
   keywords: ["IDX", "Sectors API", "AI Agent", "Saham Indonesia", "Stock Research", "Smart Money", "Peer Comparison", "Valuation"],
   icons: {

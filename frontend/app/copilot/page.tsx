@@ -248,7 +248,7 @@ export default function CopilotPage() {
         />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 flex flex-col justify-center">
           <AuthGate
-            featureName="Research Copilot Terminal"
+            featureName="AlphaAgent Research Terminal"
             featureDescription="Akses penalaran AI otonom, multi-turn chat rooms, dan perbandingan emiten interaktif memerlukan autentikasi analis."
           >
             <div />
@@ -433,7 +433,7 @@ export default function CopilotPage() {
                   <Bot className="h-8 w-8" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
-                  Research Copilot Terminal
+                  AlphaAgent Research Terminal
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto mb-8">
                   Ajukan analisis pasar modal IDX, komparasi multi-emiten, pelacakan bandarmology broker, atau pilih salah satu preset di bawah untuk memulai sesi riset otonom.
@@ -683,7 +683,7 @@ export default function CopilotPage() {
                 type="text"
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
-                placeholder="Tanyakan analisis emiten (misal: Bandingkan BBCA vs BBRI, atau periksa foreign flow ASII)..."
+                placeholder="Tanyakan analisis emiten ke AlphaAgent (misal: Bandingkan BBCA vs BBRI, atau periksa foreign flow ASII)..."
                 className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1"
                 disabled={isLoading}
               />

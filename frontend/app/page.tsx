@@ -45,7 +45,7 @@ export default function LandingPage() {
             className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] animate-fade-in-up"
             style={{ animationDelay: '100ms' }}
           >
-            Autonomous Equity Copilot untuk <br className="hidden sm:inline" />
+            Autonomous Agentic AI untuk <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
               Pasar Modal Indonesia
             </span>
@@ -69,7 +69,7 @@ export default function LandingPage() {
               href="/copilot"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30"
             >
-              <span>Buka Copilot Workspace</span>
+              <span>Buka AlphaAgent Workspace</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
 
@@ -466,7 +466,7 @@ export default function LandingPage() {
                   href="/copilot"
                   className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30"
                 >
-                  <span>Buka Copilot Sekarang</span>
+                  <span>Buka AlphaAgent Sekarang</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -495,14 +495,14 @@ export default function LandingPage() {
               </span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Autonomous Equity Research Copilot for IDX. Developed for Sectors Hackathon 2026.
+              Autonomous Equity Research Agent for IDX. Developed for Sectors Hackathon 2026.
             </p>
           </div>
 
           <div>
             <h4 className="font-bold text-slate-300 text-xs uppercase mb-3">Fitur Aplikasi</h4>
             <ul className="space-y-2 text-[11px] text-slate-400">
-              <li><Link href="/copilot" className="hover:text-emerald-400 transition-colors">AI Research Copilot</Link></li>
+              <li><Link href="/copilot" className="hover:text-emerald-400 transition-colors">AlphaAgent Terminal</Link></li>
               <li><Link href="/battle" className="hover:text-emerald-400 transition-colors">Peer Battle Terminal</Link></li>
               <li><Link href="/smart-money" className="hover:text-emerald-400 transition-colors">Smart Money Tracker</Link></li>
               <li><Link href="/screener" className="hover:text-emerald-400 transition-colors">Screener Pro (NLP & SQL)</Link></li>

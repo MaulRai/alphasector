@@ -14,7 +14,7 @@ init_db()
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="AlphaSector - Autonomous Equity Research Copilot for Indonesian Capital Markets (Sectors Hackathon 2026 - Track 01)"
+    description="AlphaSector - Autonomous Equity Research Agent for Indonesian Capital Markets (Sectors Hackathon 2026 - Track 01)"
 )
 
 # CORS Middleware configuration with regex for all localhost ports

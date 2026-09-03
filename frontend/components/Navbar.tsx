@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'Copilot', href: '/copilot', icon: Activity },
+    { label: 'AlphaAgent', href: '/copilot', icon: Activity },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
