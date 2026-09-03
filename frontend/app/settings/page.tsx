@@ -319,32 +319,36 @@ export default function SettingsPage() {
                 <span>Panduan Mendapatkan Sectors API Key:</span>
               </span>
               <a
-                href="https://sectors.app"
+                href="https://sectors.app/api"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1 font-semibold"
               >
-                <span>Buka sectors.app</span>
+                <span>Buka sectors.app/api</span>
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
 
-            <ol className="space-y-1.5 text-xs text-slate-400 list-decimal list-inside leading-relaxed">
+            <ol className="space-y-2 text-xs text-slate-400 list-decimal list-inside leading-relaxed">
               <li>
-                Kunjungi portal resmi{' '}
+                Kunjungi halaman resmi{' '}
                 <a
-                  href="https://sectors.app"
+                  href="https://sectors.app/api"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-2 inline-flex items-center gap-0.5"
                 >
-                  sectors.app
+                  sectors.app/api
                   <ExternalLink className="h-2.5 w-2.5 inline" />
                 </a>{' '}
-                dan login/register akun gratis Anda.
+                dan pastikan Anda sudah login ke akun Sectors Anda.
               </li>
-              <li>Selesaikan proses onboarding akun di portal Sectors.</li>
-              <li>Buka tab <strong className="text-slate-200">API Keys</strong>, klik <em>Generate Key</em>, lalu salin key Anda ke form di atas.</li>
+              <li>
+                Klik dan masuk ke tab <strong className="text-slate-200">API Key Management</strong> di bagian atas dashboard.
+              </li>
+              <li>
+                Klik tombol <strong className="text-emerald-300">Create Key</strong> untuk membuat key baru, lalu salin (*copy*) nilai API Key tersebut dan tempelkan ke form input di atas.
+              </li>
             </ol>
           </div>
 
