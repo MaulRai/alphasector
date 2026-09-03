@@ -39,15 +39,21 @@ export default function SettingsPage() {
   // Logout confirm modal
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Load existing key & credits on mount
+  // Load existing key & credits only if authenticated
   useEffect(() => {
-    const savedKey = getCustomSectorsKey() || '';
-    setApiKeyInput(savedKey);
-    setHasCustomKey(!!savedKey);
-    loadCredits();
-  }, []);
+    if (isAuthenticated && user) {
+      const savedKey = getCustomSectorsKey() || '';
+      setApiKeyInput(savedKey);
+      setHasCustomKey(!!savedKey);
+      loadCredits();
+    } else {
+      setApiKeyInput('');
+      setHasCustomKey(false);
+    }
+  }, [isAuthenticated, user]);
 
   const loadCredits = async () => {
+    if (!isAuthenticated) return;
     try {
       setIsLoadingCredits(true);
       const data = await fetchUserCredits();
@@ -136,7 +142,10 @@ export default function SettingsPage() {
       <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 pt-24 pb-16 space-y-8 animate-card-reveal">
-        
+        <AuthGate
+          featureName="Pengaturan Analis & Sectors API Key"
+          featureDescription="Halaman pengaturan dan pengelolaan personal API key (BYOK) hanya dapat diakses oleh analis yang telah login."
+        >
         {/* Back Link & Page Title */}
         <div className="space-y-3">
           <button
@@ -393,7 +402,7 @@ export default function SettingsPage() {
           </div>
 
         </div>
-
+        </AuthGate>
       </main>
 
       {/* Confirmation Modal for Logout */}
