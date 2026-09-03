@@ -454,25 +454,27 @@ export default function CopilotPage() {
 
                   {/* Message Body Content */}
                   {isUser ? (
-                    <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed">
+                    <div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-none bg-emerald-600/90 text-white text-xs sm:text-sm shadow-lg max-w-xl leading-relaxed animate-card-reveal">
                       {msg.content}
                     </div>
                   ) : (
-                    <div className="w-full space-y-5 animate-in fade-in duration-300">
+                    <div className="w-full space-y-5 animate-card-reveal">
                       
                       {/* Live/Completed Thinking Trace Accordion */}
                       {report?.reasoning_trace && (
-                        <AgentThinkingTrace
-                          steps={report.reasoning_trace}
-                          totalTimeMs={report.total_execution_time_ms}
-                          creditsConsumed={report.credits_consumed}
-                          isLoading={false}
-                        />
+                        <div className="animate-card-reveal">
+                          <AgentThinkingTrace
+                            steps={report.reasoning_trace}
+                            totalTimeMs={report.total_execution_time_ms}
+                            creditsConsumed={report.credits_consumed}
+                            isLoading={false}
+                          />
+                        </div>
                       )}
 
                       {/* Executive Narrative Synthesis Card */}
                       {report?.synthesis && (
-                        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel">
+                        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel animate-card-reveal-delay-1">
                           <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
                             <div className="flex items-center gap-2">
                               <Sparkles className="h-4 w-4 text-emerald-400" />
@@ -529,7 +531,7 @@ export default function CopilotPage() {
                             setSelectedArtifactId(String(msg.id || `artifact-${index}`));
                             setIsArtifactPanelOpen(true);
                           }}
-                          className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg"
+                          className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-1 hover:scale-[1.008]"
                         >
                           <div className="flex items-center gap-3 min-w-0">
                             <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
@@ -555,25 +557,31 @@ export default function CopilotPage() {
 
                       {/* Interactive Financial Cards */}
                       {report?.metrics_summary && (
-                        <Company360Card data={report.metrics_summary} />
+                        <div className="animate-card-reveal-delay-2">
+                          <Company360Card data={report.metrics_summary} />
+                        </div>
                       )}
 
                       {report?.peer_matrix && report.peer_matrix.length > 0 && (
-                        <PeerBattleMatrix matrix={report.peer_matrix} />
+                        <div className="animate-card-reveal-delay-2">
+                          <PeerBattleMatrix matrix={report.peer_matrix} />
+                        </div>
                       )}
 
                       {report?.broker_summary && (
-                        <BrokerFlowTracker
-                          brokerSummary={report.broker_summary}
-                          ticker={report.primary_ticker}
-                        />
+                        <div className="animate-card-reveal-delay-2">
+                          <BrokerFlowTracker
+                            brokerSummary={report.broker_summary}
+                            ticker={report.primary_ticker}
+                          />
+                        </div>
                       )}
 
                       {/* ============================================================ */}
                       {/* AI-GENERATED FOLLOW-UP QUESTIONS (SMART PROMPT PILLS)       */}
                       {/* ============================================================ */}
                       {report?.suggested_followups && report.suggested_followups.length > 0 && (
-                        <div className="pt-2">
+                        <div className="pt-2 animate-card-reveal-delay-3">
                           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <Sparkles className="h-3 w-3 text-emerald-400" />
                             <span>Pertanyaan Lanjutan yang Disarankan AI:</span>

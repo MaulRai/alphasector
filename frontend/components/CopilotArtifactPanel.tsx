@@ -40,8 +40,6 @@ export const CopilotArtifactPanel: React.FC<CopilotArtifactPanelProps> = ({
   const [copied, setCopied] = useState(false);
   const [librarySearch, setLibrarySearch] = useState('');
 
-  if (!isOpen) return null;
-
   // Selected artifact or default to latest
   const activeArtifact = 
     artifacts.find((a) => a.id === selectedArtifactId) || 
@@ -97,7 +95,13 @@ ${report.synthesis.disclaimer}
   });
 
   return (
-    <aside className="w-full sm:w-[480px] lg:w-[540px] shrink-0 bg-[#0a0d16] border-l border-slate-800 flex flex-col h-full overflow-hidden shadow-2xl relative z-30 animate-in slide-in-from-right-4 duration-200">
+    <aside
+      className={`${
+        isOpen
+          ? 'w-full sm:w-[480px] lg:w-[540px] opacity-100 border-l border-slate-800'
+          : 'w-0 opacity-0 pointer-events-none border-l-0'
+      } shrink-0 bg-[#0a0d16] flex flex-col h-full overflow-hidden shadow-2xl relative z-30 transition-all duration-300 ease-out`}
+    >
       
       {/* Panel Top Header (Claude Style) */}
       <div className="p-3.5 sm:p-4 border-b border-slate-800 bg-[#07090e]/80 flex items-center justify-between gap-3">
