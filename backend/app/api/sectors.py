@@ -1,51 +1,70 @@
-from typing import Optional
-from fastapi import APIRouter, HTTPException, Query
-from app.sectors.client import sectors_client
+from typing import Optional, Dict, Any
+from fastapi import APIRouter, HTTPException, Query, Header
+from app.sectors.client import get_sectors_client, sectors_client
 from app.core.config import settings
 
 router = APIRouter(prefix="/sectors", tags=["Sectors Financial API"])
 
 @router.get("/subsectors")
-async def get_subsectors():
+async def get_subsectors(x_sectors_api_key: Optional[str] = Header(None)):
     """Get list of IDX sectors and subsectors."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_subsectors()
+        data, ms, status = await client.get_subsectors()
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/company/{symbol}")
-async def get_company_report(symbol: str, sections: str = "overview,valuation,financials,peers"):
+async def get_company_report(
+    symbol: str, 
+    sections: str = "overview,valuation,financials,peers",
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get comprehensive company report."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_company_report(symbol, sections=sections)
+        data, ms, status = await client.get_company_report(symbol, sections=sections)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/company/{symbol}/segments")
-async def get_company_segments(symbol: str, year: Optional[int] = None):
+async def get_company_segments(
+    symbol: str, 
+    year: Optional[int] = None,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get Sankey revenue & cost segments."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_company_segments(symbol, year=year)
+        data, ms, status = await client.get_company_segments(symbol, year=year)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/broker-flow/{symbol}")
-async def get_broker_summary(symbol: str):
+async def get_broker_summary(
+    symbol: str,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get top accumulating & distributing brokers."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_broker_summary_top(symbol)
+        data, ms, status = await client.get_broker_summary_top(symbol)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/foreign-flow/{symbol}")
-async def get_foreign_flow(symbol: str):
+async def get_foreign_flow(
+    symbol: str,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get net foreign inflow history."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_foreign_flow(symbol)
+        data, ms, status = await client.get_foreign_flow(symbol)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -55,29 +74,41 @@ async def screen_companies(
     where: Optional[str] = Query(None, description="SQL-like WHERE clause"),
     order_by: Optional[str] = Query(None, description="Order by field"),
     limit: int = Query(20, ge=1, le=100),
-    q: Optional[str] = Query(None, description="Natural language query")
+    q: Optional[str] = Query(None, description="Natural language query"),
+    x_sectors_api_key: Optional[str] = Header(None)
 ):
     """Screen IDX companies universe."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.screen_companies(where=where, order_by=order_by, limit=limit, q=q)
+        data, ms, status = await client.screen_companies(where=where, order_by=order_by, limit=limit, q=q)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/top-movers")
-async def get_top_movers(periods: str = "7d", n_stock: int = 5):
+async def get_top_movers(
+    periods: str = "7d", 
+    n_stock: int = 5,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get top gainers, losers, and volume movers."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_top_movers(periods=periods, n_stock=n_stock)
+        data, ms, status = await client.get_top_movers(periods=periods, n_stock=n_stock)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/top-brokers")
-async def get_top_brokers(cohort: str = "all", metric: str = "gross"):
+async def get_top_brokers(
+    cohort: str = "all", 
+    metric: str = "gross",
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """Get top brokers leaderboard."""
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.get_top_brokers(cohort=cohort, metric=metric)
+        data, ms, status = await client.get_top_brokers(cohort=cohort, metric=metric)
         return {"data": data, "latency_ms": ms}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -125,7 +156,10 @@ PRESET_QUERIES = {
 }
 
 @router.get("/trade-ideas/{idea_slug}")
-async def get_trade_idea_preset(idea_slug: str):
+async def get_trade_idea_preset(
+    idea_slug: str,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
     """
     Execute curated Trade Ideas radar presets.
     - If USE_MOCK_DATA=true (default in dev/demo): Returns instant, zero-cost curated mock dataset.
@@ -149,8 +183,9 @@ async def get_trade_idea_preset(idea_slug: str):
     if not preset:
         raise HTTPException(status_code=400, detail=f"No live query defined for {idea_slug}")
         
+    client = get_sectors_client(x_sectors_api_key)
     try:
-        data, ms, status = await sectors_client.screen_companies(where=preset["where"], order_by=preset["order_by"], limit=10)
+        data, ms, status = await client.screen_companies(where=preset["where"], order_by=preset["order_by"], limit=10)
         return {"preset": idea_slug, "data": data, "latency_ms": ms, "is_mock": False}
     except Exception as e:
         # Fallback to mock data on error so UI never breaks
@@ -175,5 +210,3 @@ async def verify_sectors_api_key(payload: dict):
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"API Key tidak valid atau dinonaktifkan: {str(e)}")
-
-

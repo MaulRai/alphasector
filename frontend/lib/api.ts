@@ -21,6 +21,21 @@ export function setCustomSectorsKey(key: string | null) {
   }
 }
 
+export function getApiHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  const token = getStoredToken();
+  const customSectorsKey = getCustomSectorsKey();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  if (customSectorsKey && customSectorsKey.trim()) {
+    headers['X-Sectors-Api-Key'] = customSectorsKey.trim();
+  }
+  return headers;
+}
+
 export async function checkBackendHealth(): Promise<{ status: string }> {
   try {
     const res = await fetch(`${API_BASE_URL}/`);
@@ -35,17 +50,7 @@ export async function queryAgent(
   contextTicker?: string, 
   sessionId?: string
 ): Promise<AgentQueryResponse> {
-  const token = getStoredToken();
-  const customSectorsKey = getCustomSectorsKey();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  if (customSectorsKey) {
-    headers['X-Sectors-Api-Key'] = customSectorsKey;
-  }
+  const headers = getApiHeaders();
 
   const response = await fetch(`${API_BASE_URL}/api/agent/query`, {
     method: 'POST',
@@ -67,7 +72,9 @@ export async function queryAgent(
 
 export async function fetchCompanyReport(symbol: string) {
   const cleanSymbol = symbol.toUpperCase().replace('.JK', '');
-  const response = await fetch(`${API_BASE_URL}/api/sectors/company/${cleanSymbol}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/company/${cleanSymbol}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch report for ${symbol}`);
   }
@@ -79,7 +86,9 @@ export async function fetchCompanySegments(symbol: string, year?: number) {
   const url = year 
     ? `${API_BASE_URL}/api/sectors/company/${cleanSymbol}/segments?year=${year}`
     : `${API_BASE_URL}/api/sectors/company/${cleanSymbol}/segments`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch segments for ${symbol}`);
   }
@@ -88,7 +97,9 @@ export async function fetchCompanySegments(symbol: string, year?: number) {
 
 export async function fetchBrokerSummary(symbol: string) {
   const cleanSymbol = symbol.toUpperCase().replace('.JK', '');
-  const response = await fetch(`${API_BASE_URL}/api/sectors/broker-flow/${cleanSymbol}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/broker-flow/${cleanSymbol}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch broker flow for ${symbol}`);
   }
@@ -97,7 +108,9 @@ export async function fetchBrokerSummary(symbol: string) {
 
 export async function fetchForeignFlow(symbol: string) {
   const cleanSymbol = symbol.toUpperCase().replace('.JK', '');
-  const response = await fetch(`${API_BASE_URL}/api/sectors/foreign-flow/${cleanSymbol}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/foreign-flow/${cleanSymbol}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch foreign flow for ${symbol}`);
   }
@@ -116,7 +129,9 @@ export async function fetchScreener(params: {
   if (params.order_by) searchParams.set('order_by', params.order_by);
   if (params.limit) searchParams.set('limit', params.limit.toString());
 
-  const response = await fetch(`${API_BASE_URL}/api/sectors/screener?${searchParams.toString()}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/screener?${searchParams.toString()}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to screen companies`);
   }
@@ -124,7 +139,9 @@ export async function fetchScreener(params: {
 }
 
 export async function fetchTradeIdeaPreset(ideaSlug: string) {
-  const response = await fetch(`${API_BASE_URL}/api/sectors/trade-ideas/${ideaSlug}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/trade-ideas/${ideaSlug}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch trade idea ${ideaSlug}`);
   }
@@ -132,7 +149,9 @@ export async function fetchTradeIdeaPreset(ideaSlug: string) {
 }
 
 export async function fetchSubsectors() {
-  const response = await fetch(`${API_BASE_URL}/api/sectors/subsectors`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/subsectors`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch subsectors`);
   }
@@ -140,7 +159,9 @@ export async function fetchSubsectors() {
 }
 
 export async function fetchTopMovers(periods = '7d', n_stock = 5) {
-  const response = await fetch(`${API_BASE_URL}/api/sectors/top-movers?periods=${periods}&n_stock=${n_stock}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/top-movers?periods=${periods}&n_stock=${n_stock}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch top movers`);
   }
@@ -148,7 +169,9 @@ export async function fetchTopMovers(periods = '7d', n_stock = 5) {
 }
 
 export async function fetchTopBrokers(cohort = 'institutional', metric = 'gross') {
-  const response = await fetch(`${API_BASE_URL}/api/sectors/top-brokers?cohort=${cohort}&metric=${metric}`);
+  const response = await fetch(`${API_BASE_URL}/api/sectors/top-brokers?cohort=${cohort}&metric=${metric}`, {
+    headers: getApiHeaders(),
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch top brokers`);
   }
