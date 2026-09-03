@@ -73,6 +73,21 @@ def init_db():
         );
     """)
     
+    # 5. Global 24-Hour Sectors API Cache Table (Shared across all users)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sectors_api_cache (
+            cache_key TEXT PRIMARY KEY,
+            endpoint TEXT,
+            params JSONB,
+            response_data JSONB NOT NULL,
+            status_code INTEGER DEFAULT 200,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMPTZ NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_sectors_cache_expires ON sectors_api_cache (expires_at);
+        CREATE INDEX IF NOT EXISTS idx_sectors_cache_endpoint ON sectors_api_cache (endpoint);
+    """)
+    
     # Pre-seed demo user if not exists
     cursor.execute("SELECT id FROM users WHERE email = %s", ("demo@alphasector.id",))
     if not cursor.fetchone():
@@ -377,3 +392,96 @@ class WatchlistRepository:
         conn.commit()
         conn.close()
         return deleted
+
+
+class SectorsCacheRepository:
+    """Neon PostgreSQL repository for 24-Hour Persistent Sectors API Caching across all users."""
+
+    @staticmethod
+    def get(cache_key: str) -> Optional[Any]:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        try:
+            cursor.execute("""
+                SELECT response_data, status_code
+                FROM sectors_api_cache
+                WHERE cache_key = %s AND expires_at > CURRENT_TIMESTAMP
+            """, (cache_key,))
+            row = cursor.fetchone()
+            if row:
+                return row["response_data"]
+            return None
+        except Exception as e:
+            return None
+        finally:
+            conn.close()
+
+    @staticmethod
+    def set(
+        cache_key: str, 
+        data: Any, 
+        endpoint: str = "", 
+        params: Optional[Dict[str, Any]] = None, 
+        ttl_seconds: int = 86400, 
+        status_code: int = 200
+    ) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO sectors_api_cache (
+                    cache_key, endpoint, params, response_data, status_code, created_at, expires_at
+                ) VALUES (
+                    %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, 
+                    CURRENT_TIMESTAMP + (%s || ' seconds')::INTERVAL
+                )
+                ON CONFLICT (cache_key) DO UPDATE SET
+                    response_data = EXCLUDED.response_data,
+                    endpoint = EXCLUDED.endpoint,
+                    params = EXCLUDED.params,
+                    status_code = EXCLUDED.status_code,
+                    created_at = CURRENT_TIMESTAMP,
+                    expires_at = CURRENT_TIMESTAMP + (%s || ' seconds')::INTERVAL;
+            """, (
+                cache_key,
+                endpoint,
+                json.dumps(params or {}),
+                json.dumps(data, ensure_ascii=False),
+                status_code,
+                str(ttl_seconds),
+                str(ttl_seconds)
+            ))
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            return False
+        finally:
+            conn.close()
+
+    @staticmethod
+    def clear_expired() -> int:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("DELETE FROM sectors_api_cache WHERE expires_at <= CURRENT_TIMESTAMP")
+            deleted = cursor.rowcount
+            conn.commit()
+            return deleted
+        except Exception:
+            return 0
+        finally:
+            conn.close()
+
+    @staticmethod
+    def count_active() -> int:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT COUNT(*) FROM sectors_api_cache WHERE expires_at > CURRENT_TIMESTAMP")
+            return cursor.fetchone()[0]
+        except Exception:
+            return 0
+        finally:
+            conn.close()
+
