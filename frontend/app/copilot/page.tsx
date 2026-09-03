@@ -32,6 +32,50 @@ import {
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
+const STOPWORDS_SESSION = new Set([
+  'BATU', 'BARA', 'SAHM', 'SAHA', 'KOTA', 'DANA', 'PROS', 'EMIT', 'SEKT', 'JASA',
+  'LUAR', 'BAIK', 'JELE', 'BESR', 'KECI', 'KUAT', 'LEMA', 'MURH', 'MAHL', 'TING',
+  'REND', 'SKOR', 'HASI', 'TAMP', 'TIPE', 'JENI', 'KATA', 'BANY', 'SEDI', 'PERK',
+  'SEMI', 'GAYA', 'TEMA', 'MODL', 'EFIS', 'KARY', 'LEAD', 'TITN', 'GROW', 'VALU',
+  'DIVI', 'YILD', 'ROEE', 'ROAA', 'DERR', 'NPMM', 'PBVV', 'PERR', 'MCAP', 'CAPS',
+  'SEGI', 'CARA', 'OPSI', 'PILI', 'MENU', 'TABL', 'ROWW', 'COLL', 'KOLO', 'SLOT',
+  'CARI', 'CEK', 'LIAT', 'BAGI', 'BACA', 'MAU', 'DENG', 'DATA', 'INFO', 'PEER',
+  'FLOW', 'FUND', 'BANK', 'LABA', 'RUGI', 'NAIK', 'TURU', 'JUAL', 'BELI', 'RISK',
+  'DEBT', 'YIEL', 'VIEW', 'LIST', 'HELP', 'BEST', 'GOOD', 'MORE', 'LESS', 'SHOW',
+  'FIND', 'RANK', 'GAIN', 'LOSS', 'RATE', 'TIME', 'DATE', 'TEST', 'CODE', 'TYPE',
+  'TEXT', 'FREE', 'PAGE', 'USER', 'CHAT', 'AUTO', 'TERM', 'COST', 'DEAL', 'SEEK',
+  'FAST', 'SLOW', 'TRUE', 'ELSE', 'NULL', 'ITEM', 'NEWS', 'PORT', 'DARI', 'YANG',
+  'PADA', 'BISA', 'KITA', 'ATAU', 'IKUT', 'MAKA', 'AKAN', 'SAAT', 'JUGA', 'KAMI',
+  'ADAK', 'POST', 'JSON', 'HTTP', 'REST', 'BEDA', 'MANA', 'BUAT', 'PULA', 'SAJA',
+  'POIN', 'SATU', 'DUAA', 'TIGA', 'LIMA', 'ENAM', 'RIBU', 'JUTA', 'TRIL', 'SINI',
+  'SANA', 'SITU', 'APAL', 'AGAR', 'BIAR', 'SIAP', 'PERU', 'INDX', 'KAYA', 'TREN',
+  'POLA', 'AWAL', 'AKHR', 'BLAN', 'THUN', 'HARI', 'MING', 'TAHN', 'KIRA', 'SUDA',
+  'TELH', 'LALU', 'KEMU', 'KINI', 'HANY', 'CUMA', 'LAIN', 'BEBR', 'TRUS', 'DULU',
+  'LGIK', 'MASI', 'MASA', 'SAMA', 'SEGI'
+]);
+
+function extractSessionTickers(session: ChatSession): string[] {
+  const text = `${session.title || ''} ${session.primary_ticker || ''}`;
+  const matches = text.match(/\b[A-Z]{4}\b/g) || [];
+  const validTickers: string[] = [];
+  
+  for (const m of matches) {
+    const sym = m.toUpperCase();
+    if (!STOPWORDS_SESSION.has(sym) && !validTickers.includes(sym)) {
+      validTickers.push(sym);
+    }
+  }
+
+  if (validTickers.length === 0 && session.primary_ticker) {
+    const sym = session.primary_ticker.toUpperCase().replace('.JK', '');
+    if (!STOPWORDS_SESSION.has(sym) && !validTickers.includes(sym)) {
+      validTickers.push(sym);
+    }
+  }
+
+  return validTickers.slice(0, 4);
+}
+
 function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const searchParams = useSearchParams();
@@ -341,6 +385,7 @@ function CopilotWorkspace() {
             ) : (
               filteredSessions.map((s) => {
                 const isActive = s.id === activeSessionId;
+                const tickers = extractSessionTickers(s);
                 return (
                   <div
                     key={s.id}
@@ -351,21 +396,35 @@ function CopilotWorkspace() {
                         : 'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 border border-transparent'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <div className={`p-1 rounded-md shrink-0 ${isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
-                        <Sparkles className="h-3 w-3" />
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2 flex-1">
+                      {/* Left: Complete Company Logos Cluster (No star icon) */}
+                      <div className="flex items-center shrink-0">
+                        {tickers.length > 0 ? (
+                          <div className="flex -space-x-1.5 items-center p-0.5">
+                            {tickers.map((sym, i) => (
+                              <div 
+                                key={sym} 
+                                className="relative rounded-full ring-1.5 ring-[#0a0d16] bg-slate-900 overflow-hidden shadow-sm flex items-center justify-center shrink-0"
+                                style={{ zIndex: 10 - i }}
+                                title={sym}
+                              >
+                                <CompanyLogo symbol={sym} size="sm" />
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
+                            <MessageSquare className="h-4 w-4" />
+                          </div>
+                        )}
                       </div>
-                      <div className="min-w-0 truncate">
-                        <p className="truncate font-semibold text-slate-200">
+
+                      {/* Middle: Title & Message Count */}
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-semibold text-slate-200 group-hover:text-white transition-colors">
                           {s.title}
                         </p>
                         <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
-                          {s.primary_ticker && (
-                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 text-cyan-400 font-mono font-bold">
-                              <CompanyLogo symbol={s.primary_ticker} size="xs" />
-                              <span>{s.primary_ticker}</span>
-                            </span>
-                          )}
                           <span>{s.message_count ? `${s.message_count} pesan` : 'Baru'}</span>
                         </div>
                       </div>
