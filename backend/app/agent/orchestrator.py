@@ -282,7 +282,7 @@ class AgentOrchestrator:
         trace.append(ReasoningStep(
             id=f"step-{step_counter}",
             step_number=step_counter,
-            phase=ExecutionPhase.SYNTHESIS,
+            phase=ExecutionPhase.SYNTHESIZING,
             title="Institutional Autonomous Synthesis",
             detail=f"Generated executive verdict, key findings, and catalysts in Indonesian language",
             timestamp=datetime.now().strftime("%H:%M:%S")

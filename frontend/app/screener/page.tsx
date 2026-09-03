@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { CompanyLogo } from '@/components/CompanyLogo';
 import { POPULAR_IDX_TICKERS } from '@/lib/idx-tickers';
-import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealth } from '@/lib/api';
+import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealth, queryAgent } from '@/lib/api';
 import { 
   Search, Filter, Sparkles, RefreshCw, ArrowRight, 
   CheckCircle2, ArrowUpDown, ChevronDown, ExternalLink, Zap, Layers, ShieldCheck, Users, TrendingUp,
@@ -22,6 +22,7 @@ export default function ScreenerPage() {
   const [subsectors, setSubsectors] = useState<string[]>([]);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPreparingChat, setIsPreparingChat] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activePreset, setActivePreset] = useState<string | null>(null);
   const [backendOnline, setBackendOnline] = useState(true);
@@ -425,15 +426,40 @@ export default function ScreenerPage() {
                 </div>
               </div>
               <button
-                onClick={() => {
-                  const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean);
-                  const query = `Bandingkan fundamental dan valuasi ${topSymbols.join(' vs ')}`;
-                  router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                onClick={async () => {
+                  if (results.length === 0 || isPreparingChat) return;
+                  setIsPreparingChat(true);
+                  setError(null);
+                  try {
+                    const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean);
+                    const query = `Bandingkan fundamental dan valuasi ${topSymbols.join(' vs ')}`;
+                    const res = await queryAgent(query);
+                    if (res?.session_id) {
+                      router.push(`/copilot?session_id=${encodeURIComponent(res.session_id)}`);
+                    } else {
+                      router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                    }
+                  } catch (err: any) {
+                    console.error('Failed to prepare chat room from screener:', err);
+                    setError(err.message || 'Gagal menyiapkan chat room.');
+                  } finally {
+                    setIsPreparingChat(false);
+                  }
                 }}
-                className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+                disabled={isPreparingChat}
+                className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-60 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
               >
-                <span>Buka Chat Room AlphaAgent</span>
-                <ArrowRight className="h-4 w-4" />
+                {isPreparingChat ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin text-slate-950" />
+                    <span>Mempersiapkan Chat Room...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Buka Chat Room AlphaAgent</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>
