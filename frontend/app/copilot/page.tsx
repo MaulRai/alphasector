@@ -76,6 +76,26 @@ function extractSessionTickers(session: ChatSession): string[] {
   return validTickers.slice(0, 4);
 }
 
+function formatLastInteraction(dateStr?: string): string {
+  if (!dateStr) return 'Baru saja';
+  try {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+
+    if (diffMins < 1) return 'Baru saja';
+    if (diffMins < 60) return `${diffMins} mnt lalu`;
+    if (diffHours < 24 && now.getDate() === d.getDate()) {
+      return `Hari ini, ${d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  } catch {
+    return 'Baru saja';
+  }
+}
+
 function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const searchParams = useSearchParams();
@@ -424,8 +444,9 @@ function CopilotWorkspace() {
                         <p className="truncate font-semibold text-slate-200 group-hover:text-white transition-colors">
                           {s.title}
                         </p>
-                        <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
-                          <span>{s.message_count ? `${s.message_count} pesan` : 'Baru'}</span>
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
+                          <Clock className="h-2.5 w-2.5 opacity-60" />
+                          <span>{formatLastInteraction(s.updated_at || s.created_at)}</span>
                         </div>
                       </div>
                     </div>
