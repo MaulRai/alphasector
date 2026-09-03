@@ -73,6 +73,8 @@ export default function CopilotPage() {
     }
   }, [messages, isLoading]);
 
+  const initialQueryExecuted = useRef(false);
+
   // Load user chat sessions on mount or when user logs in
   useEffect(() => {
     if (user) {
@@ -80,11 +82,27 @@ export default function CopilotPage() {
     }
   }, [user]);
 
+  // Handle follow-up query passed from Peer Battle, Smart Money, or Screener
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !initialQueryExecuted.current) {
+      const params = new URLSearchParams(window.location.search);
+      const initQ = params.get('initial_query') || params.get('q');
+      if (initQ) {
+        initialQueryExecuted.current = true;
+        window.history.replaceState({}, '', window.location.pathname);
+        setActiveSessionId(null);
+        setMessages([]);
+        handleSendMessage(initQ);
+      }
+    }
+  }, [user]);
+
   const loadSessions = async () => {
     try {
       const res = await fetchUserChatSessions();
       setSessions(res.sessions || []);
-      if (res.sessions && res.sessions.length > 0 && !activeSessionId) {
+      const hasInitQuery = typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('initial_query') || new URLSearchParams(window.location.search).get('q'));
+      if (res.sessions && res.sessions.length > 0 && !activeSessionId && !hasInitQuery && !initialQueryExecuted.current) {
         // Load the most recent session by default
         loadSessionDetails(res.sessions[0].id);
       }

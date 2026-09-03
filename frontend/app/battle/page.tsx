@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -9,12 +10,13 @@ import { queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
 import { 
   Swords, Sparkles, Play, RefreshCw, Zap, Award, 
-  CheckCircle2, Plus, X, ArrowRight, ShieldCheck, Database, Layers
+  CheckCircle2, Plus, X, ArrowRight, ShieldCheck, Database, Layers, Bot, MessageSquare
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 export default function PeerBattlePage() {
+  const router = useRouter();
   const [tickers, setTickers] = useState<string[]>(['BBRI', 'BMRI']);
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<AgentQueryResponse | null>(null);
@@ -280,6 +282,36 @@ export default function PeerBattlePage() {
                   <strong>Valuation Verdict:</strong> {report.synthesis.valuation_verdict}
                 </div>
               )}
+            </div>
+
+            {/* Follow-Up Chat Room CTA Card */}
+            <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-[#0d121e] p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-5 glass-panel">
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shrink-0">
+                  <Bot className="h-6 w-6" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-white flex items-center gap-2">
+                    Lanjutkan Diskusi di AlphaAgent Chat
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold">
+                      Follow-Up Room Baru
+                    </span>
+                  </h4>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Buka room chat interaktif baru untuk membahas rekomendasi alokasi bobot portofolio, sentimen prospek, dan model komparasi {tickers.join(', ')}.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  const query = `Analisis mendalam perbandingan fundamental dan valuasi antara emiten ${tickers.join(', ')} berdasarkan perbandingan Peer Battle terbaru. Berikan rekomendasi bobot portofolio dan katalis utamanya.`;
+                  router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                }}
+                className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+              >
+                <span>Buka Chat Room AlphaAgent</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
 
           </div>

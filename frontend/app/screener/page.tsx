@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { CompanyLogo } from '@/components/CompanyLogo';
@@ -9,11 +10,12 @@ import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealt
 import { 
   Search, Filter, Sparkles, RefreshCw, ArrowRight, 
   CheckCircle2, ArrowUpDown, ChevronDown, ExternalLink, Zap, Layers, ShieldCheck, Users, TrendingUp,
-  Play, Database
+  Play, Database, Bot
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
 export default function ScreenerPage() {
+  const router = useRouter();
   const [nlQuery, setNlQuery] = useState('');
   const [selectedSubsector, setSelectedSubsector] = useState('');
   const [orderBy, setOrderBy] = useState('-market_cap');
@@ -338,68 +340,102 @@ export default function ScreenerPage() {
 
         {/* Results Table */}
         {!isLoading && results.length > 0 && (
-          <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 shadow-2xl glass-panel overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold bg-slate-900/50">
-                    <th className="py-3 px-3.5 rounded-l-xl">Kode Emiten</th>
-                    <th className="py-3 px-3.5">Nama Perusahaan</th>
-                    <th className="py-3 px-3.5">Subsektor</th>
-                    <th className="py-3 px-3.5">Market Cap</th>
-                    <th className="py-3 px-3.5">P/E</th>
-                    <th className="py-3 px-3.5">PBV</th>
-                    <th className="py-3 px-3.5 rounded-r-xl text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 font-medium">
-                  {results.map((c, idx) => {
-                    const sym = (c.symbol || '').replace('.JK', '');
-                    const matchedTicker = POPULAR_IDX_TICKERS.find(t => t.symbol === sym);
-                    const subsector = c.sub_sector || c.sector || (selectedSubsector ? selectedSubsector : matchedTicker?.sector) || 'IDX Listed';
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 shadow-2xl glass-panel overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold bg-slate-900/50">
+                      <th className="py-3 px-3.5 rounded-l-xl">Kode Emiten</th>
+                      <th className="py-3 px-3.5">Nama Perusahaan</th>
+                      <th className="py-3 px-3.5">Subsektor</th>
+                      <th className="py-3 px-3.5">Market Cap</th>
+                      <th className="py-3 px-3.5">P/E</th>
+                      <th className="py-3 px-3.5">PBV</th>
+                      <th className="py-3 px-3.5 rounded-r-xl text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 font-medium">
+                    {results.map((c, idx) => {
+                      const sym = (c.symbol || '').replace('.JK', '');
+                      const matchedTicker = POPULAR_IDX_TICKERS.find(t => t.symbol === sym);
+                      const subsector = c.sub_sector || c.sector || (selectedSubsector ? selectedSubsector : matchedTicker?.sector) || 'IDX Listed';
 
-                    return (
-                      <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="py-3 px-3.5">
-                          <Link 
-                            href={`/company/${sym}`}
-                            className="font-bold text-white hover:text-emerald-400 transition-colors flex items-center gap-2"
-                          >
-                            <CompanyLogo symbol={sym} size="xs" />
-                            <span>{sym}</span>
-                          </Link>
-                        </td>
-                        <td className="py-3 px-3.5 text-slate-300 truncate max-w-[220px]">
-                          {c.company_name || c.name || matchedTicker?.name || '-'}
-                        </td>
-                        <td className="py-3 px-3.5 text-slate-400">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60 text-[10px] text-slate-300">
-                            {subsector}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3.5 text-slate-200 font-mono">
-                          {c.market_cap ? `Rp ${(c.market_cap / 1e12).toFixed(1)} T` : <span className="text-slate-500">-</span>}
-                        </td>
-                        <td className="py-3 px-3.5 text-slate-200 font-mono">
-                          {c.pe ? `${Number(c.pe).toFixed(1)}x` : <span className="text-slate-500">-</span>}
-                        </td>
-                        <td className="py-3 px-3.5 text-slate-200 font-mono">
-                          {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : <span className="text-slate-500">-</span>}
-                        </td>
-                        <td className="py-3 px-3.5 text-right">
-                          <Link
-                            href={`/company/${sym}`}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-all hover:scale-105"
-                          >
-                            <span>Dossier 360°</span>
-                            <ExternalLink className="h-3 w-3" />
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
+                          <td className="py-3 px-3.5">
+                            <Link 
+                              href={`/company/${sym}`}
+                              className="font-bold text-white hover:text-emerald-400 transition-colors flex items-center gap-2"
+                            >
+                              <CompanyLogo symbol={sym} size="xs" />
+                              <span>{sym}</span>
+                            </Link>
+                          </td>
+                          <td className="py-3 px-3.5 text-slate-300 truncate max-w-[220px]">
+                            {c.company_name || c.name || matchedTicker?.name || '-'}
+                          </td>
+                          <td className="py-3 px-3.5 text-slate-400">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60 text-[10px] text-slate-300">
+                              {subsector}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3.5 text-slate-200 font-mono">
+                            {c.market_cap ? `Rp ${(c.market_cap / 1e12).toFixed(1)} T` : <span className="text-slate-500">-</span>}
+                          </td>
+                          <td className="py-3 px-3.5 text-slate-200 font-mono">
+                            {c.pe ? `${Number(c.pe).toFixed(1)}x` : <span className="text-slate-500">-</span>}
+                          </td>
+                          <td className="py-3 px-3.5 text-slate-200 font-mono">
+                            {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : <span className="text-slate-500">-</span>}
+                          </td>
+                          <td className="py-3 px-3.5 text-right">
+                            <Link
+                              href={`/company/${sym}`}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-all hover:scale-105"
+                            >
+                              <span>Dossier 360°</span>
+                              <ExternalLink className="h-3 w-3" />
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Follow-Up Chat Room CTA Card */}
+            <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-[#0d121e] p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-5 glass-panel">
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
+                  <Bot className="h-6 w-6" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-white flex items-center gap-2">
+                    Lanjutkan Analisis Semesta Emiten di AlphaAgent Chat
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">
+                      Follow-Up Room Baru
+                    </span>
+                  </h4>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Buka room chat baru untuk meminta rekomendasi top-pick, perbandingan mendalam, atau tesis investasi dari hasil penyaringan ini.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean).join(', ');
+                  const contextDesc = activePreset ? `preset radar "${activePreset}"` : nlQuery ? `query NLP "${nlQuery}"` : selectedSubsector ? `subsektor "${selectedSubsector}"` : 'screener semesta emiten';
+                  const query = `Analisis hasil penyaringan ${contextDesc} untuk emiten teratas (${topSymbols}). Berikan evaluasi komprehensif saham mana yang paling prospektif secara valuasi dan fundamental.`;
+                  router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                }}
+                className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+              >
+                <span>Buka Chat Room AlphaAgent</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         )}
