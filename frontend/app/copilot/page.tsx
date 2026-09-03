@@ -54,15 +54,22 @@ export default function CopilotPage() {
   const [isDeletingSession, setIsDeletingSession] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom of messages
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Smart natural scroll: scroll to top of new assistant response, or to bottom when user sends query
   useEffect(() => {
-    scrollToBottom();
+    if (isLoading) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } else if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === 'assistant') {
+        // Scroll to the top of the newly arrived AI response so the user reads naturally from the top
+        latestAssistantMsgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   }, [messages, isLoading]);
 
   // Load user chat sessions on mount or when user logs in
@@ -442,10 +449,13 @@ export default function CopilotPage() {
               const isUser = msg.role === 'user';
               const report = msg.report_data;
 
+              const isLastAssistant = !isUser && index === messages.length - 1;
+
               return (
                 <div
                   key={msg.id || index}
-                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-4xl mx-auto w-full`}
+                  ref={isLastAssistant ? latestAssistantMsgRef : null}
+                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-4xl mx-auto w-full scroll-mt-6`}
                 >
                   {/* Message Sender Header */}
                   <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
