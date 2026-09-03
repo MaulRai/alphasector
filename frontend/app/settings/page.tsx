@@ -18,7 +18,7 @@ import {
   Settings, Key, User, LogOut, 
   Eye, EyeOff, CheckCircle2, AlertCircle, 
   ExternalLink, Sparkles, HelpCircle, Loader2,
-  Zap, ArrowLeft, ShieldCheck, Database
+  Zap, ArrowLeft, ShieldCheck, Database, Trash2
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -37,8 +37,9 @@ export default function SettingsPage() {
   const [hasCustomKey, setHasCustomKey] = useState<boolean>(false);
   const [isLoadingCredits, setIsLoadingCredits] = useState(false);
 
-  // Logout confirm modal
+  // Modals
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isDeleteKeyModalOpen, setIsDeleteKeyModalOpen] = useState(false);
 
   // Load existing key & credits from DB when authenticated
   useEffect(() => {
@@ -297,10 +298,11 @@ export default function SettingsPage() {
               {hasCustomKey && (
                 <button
                   type="button"
-                  onClick={handleResetKey}
-                  className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-red-500/10 text-xs font-semibold text-slate-400 hover:text-red-400 border border-slate-800 hover:border-red-500/30 transition-all"
+                  onClick={() => setIsDeleteKeyModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-xs font-semibold text-red-400 border border-red-500/30 hover:border-red-500/50 transition-all active:scale-95"
                 >
-                  Hapus Key
+                  <Trash2 className="h-3.5 w-3.5 text-red-400" />
+                  <span>Hapus Key</span>
                 </button>
               )}
             </div>
@@ -415,6 +417,21 @@ export default function SettingsPage() {
         title="Konfirmasi Logout"
         description="Apakah Anda yakin ingin keluar dari sesi analis AlphaSector?"
         confirmText="Keluar (Logout)"
+        cancelText="Batal"
+        variant="danger"
+      />
+
+      {/* Confirmation Modal for Deleting API Key */}
+      <ConfirmModal
+        isOpen={isDeleteKeyModalOpen}
+        onClose={() => setIsDeleteKeyModalOpen(false)}
+        onConfirm={async () => {
+          setIsDeleteKeyModalOpen(false);
+          await handleResetKey();
+        }}
+        title="Hapus Sectors API Key"
+        description="Apakah Anda yakin ingin menghapus API Key pribadi Anda? Sistem akan kembali menggunakan kuota demo server bersama jika tersedia."
+        confirmText="Hapus Key"
         cancelText="Batal"
         variant="danger"
       />
