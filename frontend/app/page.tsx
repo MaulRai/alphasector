@@ -138,6 +138,7 @@ export default function LandingPage() {
                       src="/images/landing/peer-battle.jpeg"
                       alt="Peer Battle Matrix"
                       fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
@@ -171,6 +172,7 @@ export default function LandingPage() {
                       src="/images/landing/money-charts.jpeg"
                       alt="Smart Money Flow"
                       fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
@@ -204,6 +206,7 @@ export default function LandingPage() {
                       src="/images/landing/trading-chart-intense.jpg"
                       alt="Screener Pro"
                       fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
@@ -301,6 +304,7 @@ export default function LandingPage() {
                   src="/images/landing/digital-dossier.jpeg"
                   alt="Digital Dossier Preview"
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07090e] via-transparent to-transparent opacity-80" />

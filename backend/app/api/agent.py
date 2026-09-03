@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Header
 from typing import Optional, List, Dict, Any
 from app.schemas.agent import AgentQueryRequest, AgentQueryResponse
 from app.agent.orchestrator import agent_orchestrator
-from app.db.database import ResearchReportRepository, ChatRepository
+from app.db.database import ResearchReportRepository, ChatRepository, UserRepository
 from app.core.security import decode_access_token
 
 router = APIRouter(prefix="/agent", tags=["AI Agent"])
