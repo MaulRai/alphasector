@@ -1,12 +1,18 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { PeerCompanyMetric } from '@/lib/types';
-import { Award, Zap, TrendingDown, CheckCircle } from 'lucide-react';
+import { Award, Zap, TrendingDown, CheckCircle, ExternalLink } from 'lucide-react';
 
 interface PeerBattleMatrixProps {
   matrix: PeerCompanyMetric[];
 }
+
+const formatVal = (val: any, decimals: number = 2, suffix: string = ''): string => {
+  if (val === null || val === undefined || isNaN(Number(val))) return '-';
+  return `${Number(val).toFixed(decimals)}${suffix}`;
+};
 
 export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) => {
   if (!matrix || matrix.length === 0) return null;
@@ -24,7 +30,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Komparasi rasio valuasi, efisiensi modal, dan performa keuangan dalam satu subsektor
+            Komparasi rasio valuasi, efisiensi modal, dan performa keuangan dalam satu subsektor • Klik ticker untuk profil 360°
           </p>
         </div>
       </div>
@@ -55,9 +61,14 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-white text-base">
-                          {c.symbol}
-                        </span>
+                        <Link
+                          href={`/company/${c.symbol}`}
+                          className="font-bold text-white text-base hover:text-cyan-400 hover:underline transition-colors flex items-center gap-1 group"
+                          title={`Buka Profil Emiten 360° untuk ${c.symbol}`}
+                        >
+                          <span>{c.symbol}</span>
+                          <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400" />
+                        </Link>
                         {c.is_lowest_pe && (
                           <span className="flex items-center gap-0.5 text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                             <Zap className="h-2.5 w-2.5" /> Best PE
@@ -78,7 +89,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
 
                 {/* Market Cap */}
                 <td className="py-4 px-4 text-slate-300">
-                  {c.market_cap ? `Rp ${(c.market_cap / 1e12).toFixed(1)} T` : '-'}
+                  {c.market_cap ? `Rp ${(Number(c.market_cap) / 1e12).toFixed(1)} T` : '-'}
                 </td>
 
                 {/* PE */}
@@ -88,7 +99,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
                       : 'text-slate-200'
                   }`}>
-                    {c.pe ? `${c.pe}x` : '-'}
+                    {formatVal(c.pe, 2, 'x')}
                   </span>
                 </td>
 
@@ -99,7 +110,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                       ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' 
                       : 'text-slate-200'
                   }`}>
-                    {c.pbv ? `${c.pbv}x` : '-'}
+                    {formatVal(c.pbv, 2, 'x')}
                   </span>
                 </td>
 
@@ -110,18 +121,18 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
                       : 'text-slate-200'
                   }`}>
-                    {c.roe !== null && c.roe !== undefined ? `${c.roe}%` : '-'}
+                    {formatVal(c.roe, 2, '%')}
                   </span>
                 </td>
 
                 {/* NPM */}
                 <td className="py-4 px-4 text-slate-300">
-                  {c.npm !== null && c.npm !== undefined ? `${c.npm}%` : '-'}
+                  {formatVal(c.npm, 2, '%')}
                 </td>
 
                 {/* DER */}
                 <td className="py-4 px-4 text-slate-300">
-                  {c.der !== null && c.der !== undefined ? `${c.der}x` : '-'}
+                  {formatVal(c.der, 2, 'x')}
                 </td>
 
               </tr>

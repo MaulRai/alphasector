@@ -8,6 +8,11 @@ interface Company360CardProps {
   data: PeerCompanyMetric;
 }
 
+const formatVal = (val: any, decimals: number = 2, suffix: string = ''): string => {
+  if (val === null || val === undefined || isNaN(Number(val))) return '-';
+  return `${Number(val).toFixed(decimals)}${suffix}`;
+};
+
 export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
   if (!data) return null;
 
@@ -38,10 +43,10 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
         <div className="text-left sm:text-right">
           <div className="text-xs text-slate-400 font-medium">Harga Penutupan Terakhir</div>
           <div className="text-2xl font-bold text-emerald-400">
-            Rp {data.last_close_price ? data.last_close_price.toLocaleString('id-ID') : '-'}
+            Rp {data.last_close_price ? Number(data.last_close_price).toLocaleString('id-ID') : '-'}
           </div>
           <div className="text-xs text-slate-500 mt-0.5">
-            Market Cap: Rp {data.market_cap ? (data.market_cap / 1e12).toFixed(1) + ' T' : '-'}
+            Market Cap: Rp {data.market_cap ? (Number(data.market_cap) / 1e12).toFixed(1) + ' T' : '-'}
           </div>
         </div>
       </div>
@@ -56,11 +61,11 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
             <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
           </div>
           <div className="text-xl font-bold text-white">
-            {data.pe ? `${data.pe}x` : '-'}
+            {formatVal(data.pe, 2, 'x')}
           </div>
-          {data.pe_peer_avg && (
+          {data.pe_peer_avg !== null && data.pe_peer_avg !== undefined && (
             <div className="text-[11px] text-slate-500 mt-1">
-              Peer Avg: {data.pe_peer_avg}x
+              Peer Avg: {formatVal(data.pe_peer_avg, 2, 'x')}
             </div>
           )}
         </div>
@@ -72,11 +77,11 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
             <Layers className="h-3.5 w-3.5 text-cyan-400" />
           </div>
           <div className="text-xl font-bold text-white">
-            {data.pbv ? `${data.pbv}x` : '-'}
+            {formatVal(data.pbv, 2, 'x')}
           </div>
-          {data.pb_peer_avg && (
+          {data.pb_peer_avg !== null && data.pb_peer_avg !== undefined && (
             <div className="text-[11px] text-slate-500 mt-1">
-              Peer Avg: {data.pb_peer_avg}x
+              Peer Avg: {formatVal(data.pb_peer_avg, 2, 'x')}
             </div>
           )}
         </div>
@@ -88,10 +93,10 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
             <Award className="h-3.5 w-3.5 text-amber-400" />
           </div>
           <div className="text-xl font-bold text-amber-400">
-            {data.roe !== null && data.roe !== undefined ? `${data.roe}%` : '-'}
+            {formatVal(data.roe, 2, '%')}
           </div>
           <div className="text-[11px] text-slate-500 mt-1">
-            NPM: {data.npm ? `${data.npm}%` : '-'}
+            NPM: {formatVal(data.npm, 2, '%')}
           </div>
         </div>
 
@@ -102,7 +107,7 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
             <DollarSign className="h-3.5 w-3.5 text-blue-400" />
           </div>
           <div className="text-xl font-bold text-white">
-            {data.der !== null && data.der !== undefined ? `${data.der}x` : '-'}
+            {formatVal(data.der, 2, 'x')}
           </div>
           <div className="text-[11px] text-slate-500 mt-1">
             Leverage Ratio

@@ -102,6 +102,9 @@ export default function Company360Page() {
     pbv: histVal.length > 0 ? histVal[histVal.length - 1].pb : valuation.pbv,
     pe_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pe_peer_avg : null,
     pb_peer_avg: histVal.length > 0 ? histVal[histVal.length - 1].pb_peer_avg : null,
+    roe: financials.roe ?? financials.return_on_equity ?? overview.roe ?? null,
+    der: financials.der ?? financials.debt_to_equity ?? overview.der ?? null,
+    npm: financials.npm ?? financials.net_profit_margin ?? overview.npm ?? null,
     tags: overview.tags || []
   } : null;
 
@@ -123,10 +126,10 @@ export default function Company360Page() {
         <div className="flex items-center justify-between gap-4 mb-6">
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm active:scale-95"
           >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Kembali ke Screener / Copilot</span>
+            <ArrowLeft className="h-3.5 w-3.5 text-slate-400" />
+            <span>Kembali ke Halaman Sebelumnya</span>
           </button>
 
           {agentReport && (
@@ -260,12 +263,12 @@ export default function Company360Page() {
                       {histVal.map((v: any, idx: number) => (
                         <tr key={idx} className="hover:bg-slate-800/30">
                           <td className="py-2.5 px-3 font-bold text-white">{v.year || '-'}</td>
-                          <td className="py-2.5 px-3 text-emerald-400 font-bold">{v.pe ? `${Number(v.pe).toFixed(1)}x` : '-'}</td>
-                          <td className="py-2.5 px-3 text-slate-400">{v.pe_peer_avg ? `${Number(v.pe_peer_avg).toFixed(1)}x` : '-'}</td>
-                          <td className="py-2.5 px-3 text-cyan-400 font-bold">{v.pb ? `${Number(v.pb).toFixed(1)}x` : '-'}</td>
-                          <td className="py-2.5 px-3 text-slate-400">{v.pb_peer_avg ? `${Number(v.pb_peer_avg).toFixed(1)}x` : '-'}</td>
-                          <td className="py-2.5 px-3 text-slate-300">{v.ps ? `${Number(v.ps).toFixed(1)}x` : '-'}</td>
-                          <td className="py-2.5 px-3 text-slate-300">{v.pcf ? `${Number(v.pcf).toFixed(1)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-emerald-400 font-bold">{v.pe !== null && v.pe !== undefined ? `${Number(v.pe).toFixed(2)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-400">{v.pe_peer_avg !== null && v.pe_peer_avg !== undefined ? `${Number(v.pe_peer_avg).toFixed(2)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-cyan-400 font-bold">{v.pb !== null && v.pb !== undefined ? `${Number(v.pb).toFixed(2)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-400">{v.pb_peer_avg !== null && v.pb_peer_avg !== undefined ? `${Number(v.pb_peer_avg).toFixed(2)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-300">{v.ps !== null && v.ps !== undefined ? `${Number(v.ps).toFixed(2)}x` : '-'}</td>
+                          <td className="py-2.5 px-3 text-slate-300">{v.pcf !== null && v.pcf !== undefined ? `${Number(v.pcf).toFixed(2)}x` : '-'}</td>
                         </tr>
                       ))}
                     </tbody>

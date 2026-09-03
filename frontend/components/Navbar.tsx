@@ -41,7 +41,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
-    { label: 'Emiten 360°', href: '/company/BBCA', icon: Layers },
   ];
 
   const getInitials = (name: string) => {
