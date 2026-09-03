@@ -28,7 +28,7 @@ import {
 import { AuthGate } from '@/components/AuthGate';
 
 export default function CopilotPage() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   
   // State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -183,6 +183,25 @@ export default function CopilotPage() {
     (s.primary_ticker && s.primary_ticker.toLowerCase().includes(sessionSearch.toLowerCase()))
   );
 
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
+        <Navbar
+          onOpenDossier={() => setIsDossierOpen(true)}
+          hasActiveReport={!!latestReport}
+        />
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 flex flex-col justify-center">
+          <AuthGate
+            featureName="Research Copilot Terminal"
+            featureDescription="Akses penalaran AI otonom, multi-turn chat rooms, dan perbandingan emiten interaktif memerlukan autentikasi analis."
+          >
+            <div />
+          </AuthGate>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
       
@@ -191,11 +210,6 @@ export default function CopilotPage() {
         onOpenDossier={() => setIsDossierOpen(true)}
         hasActiveReport={!!latestReport}
       />
-
-      <AuthGate
-        featureName="Research Copilot Terminal"
-        featureDescription="Akses penalaran AI otonom, multi-turn chat rooms, dan perbandingan emiten interaktif memerlukan autentikasi analis."
-      >
 
       {/* Main Workspace Layout with Left Sidebar */}
       <div className="flex-1 flex pt-16 overflow-hidden min-h-0 w-full relative">
@@ -584,8 +598,6 @@ export default function CopilotPage() {
         </section>
 
       </div>
-
-      </AuthGate>
 
       {/* Exportable Research Dossier Modal */}
       {latestReport && (

@@ -105,10 +105,9 @@ export const AuthGate: React.FC<AuthGateProps> = ({
   };
 
   return (
-    <div className="w-full flex-1 overflow-y-auto pt-16 sm:pt-20 pb-12 px-4 flex flex-col items-center justify-center min-h-0">
-      <div className="w-full max-w-4xl">
-        {/* Institutional Access Gate Card */}
-        <div className="rounded-3xl border border-slate-800 bg-[#090d16]/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+    <div className="w-full max-w-4xl mx-auto py-2">
+      {/* Institutional Access Gate Card */}
+      <div className="rounded-3xl border border-slate-800 bg-[#090d16]/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
         
         {/* Ambient Glow */}
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -390,8 +389,6 @@ export const AuthGate: React.FC<AuthGateProps> = ({
           </div>
 
         </div>
-
-      </div>
 
       </div>
 
