@@ -10,6 +10,7 @@ import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
 import { 
   queryAgent, 
@@ -47,6 +48,10 @@ export default function CopilotPage() {
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
+  
+  // Modal State for session deletion
+  const [sessionToDelete, setSessionToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isDeletingSession, setIsDeletingSession] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -103,17 +108,25 @@ export default function CopilotPage() {
     inputRef.current?.focus();
   };
 
-  const handleDeleteSession = async (e: React.MouseEvent, sessionId: string) => {
+  const handleRequestDeleteSession = (e: React.MouseEvent, session: ChatSession) => {
     e.stopPropagation();
-    if (!confirm('Hapus sesi riset ini beserta seluruh riwayatnya?')) return;
+    setSessionToDelete({ id: session.id, title: session.title });
+  };
+
+  const handleConfirmDeleteSession = async () => {
+    if (!sessionToDelete) return;
     try {
-      await deleteChatRoom(sessionId);
-      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
-      if (activeSessionId === sessionId) {
+      setIsDeletingSession(true);
+      await deleteChatRoom(sessionToDelete.id);
+      setSessions((prev) => prev.filter((s) => s.id !== sessionToDelete.id));
+      if (activeSessionId === sessionToDelete.id) {
         handleCreateNewSession();
       }
+      setSessionToDelete(null);
     } catch (err: any) {
-      alert(err.message || 'Gagal menghapus sesi.');
+      setError(err.message || 'Gagal menghapus sesi riset.');
+    } finally {
+      setIsDeletingSession(false);
     }
   };
 
@@ -332,7 +345,7 @@ export default function CopilotPage() {
                     </div>
 
                     <button
-                      onClick={(e) => handleDeleteSession(e, s.id)}
+                      onClick={(e) => handleRequestDeleteSession(e, s)}
                       title="Hapus Sesi"
                       className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0"
                     >
@@ -693,6 +706,24 @@ export default function CopilotPage() {
           report={activeModalReport || latestReport!}
         />
       )}
+
+      {/* Institutional Reusable Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!sessionToDelete}
+        onClose={() => setSessionToDelete(null)}
+        onConfirm={handleConfirmDeleteSession}
+        title="Hapus Sesi Riset"
+        description={
+          <>
+            Apakah Anda yakin ingin menghapus sesi riset{' '}
+            <span className="font-semibold text-white">"{sessionToDelete?.title}"</span>? Seluruh riwayat percakapan dan dossier di dalamnya akan dihapus secara permanen dari database.
+          </>
+        }
+        confirmText="Hapus Sesi"
+        cancelText="Batal"
+        variant="danger"
+        isLoading={isDeletingSession}
+      />
 
     </div>
   );
