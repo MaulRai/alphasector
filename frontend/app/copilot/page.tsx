@@ -75,51 +75,46 @@ export default function CopilotPage() {
 
   const initialQueryExecuted = useRef(false);
 
-  // Load user chat sessions on mount or when user logs in
+  // Initialize sessions and handle navigation from Peer Battle, Smart Money, or Screener
   useEffect(() => {
-    if (user) {
-      loadSessions();
-    }
-  }, [user]);
+    const initCopilotWorkspace = async () => {
+      if (!user) return;
 
-  // Handle session_id or initial_query passed from Peer Battle, Smart Money, or Screener
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const targetSessionId = params.get('session_id');
-      const initQ = params.get('initial_query') || params.get('q');
-
-      if (targetSessionId) {
-        window.history.replaceState({}, '', window.location.pathname);
-        loadSessionDetails(targetSessionId);
-      } else if (initQ && !initialQueryExecuted.current) {
-        initialQueryExecuted.current = true;
-        window.history.replaceState({}, '', window.location.pathname);
-        setActiveSessionId(null);
-        setMessages([]);
-        handleSendMessage(initQ);
-      }
-    }
-  }, [user]);
-
-  const loadSessions = async () => {
-    try {
-      const res = await fetchUserChatSessions();
-      setSessions(res.sessions || []);
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const targetSessionId = params?.get('session_id');
-      const hasInitQuery = params?.get('initial_query') || params?.get('q');
+      const initQ = params?.get('initial_query') || params?.get('q');
 
-      if (targetSessionId) {
-        loadSessionDetails(targetSessionId);
-      } else if (res.sessions && res.sessions.length > 0 && !activeSessionId && !hasInitQuery && !initialQueryExecuted.current) {
-        // Load the most recent session by default
-        loadSessionDetails(res.sessions[0].id);
+      try {
+        const res = await fetchUserChatSessions();
+        const userSessions = res.sessions || [];
+        setSessions(userSessions);
+
+        if (targetSessionId) {
+          // Direct handshake from Peer Battle / Smart Money (zero re-generation)
+          if (typeof window !== 'undefined') {
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+          await loadSessionDetails(targetSessionId);
+        } else if (initQ && !initialQueryExecuted.current) {
+          // Initial prompt from Screener
+          initialQueryExecuted.current = true;
+          if (typeof window !== 'undefined') {
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+          setActiveSessionId(null);
+          setMessages([]);
+          await handleSendMessage(initQ);
+        } else if (userSessions.length > 0 && !activeSessionId) {
+          // Default: load latest existing session
+          await loadSessionDetails(userSessions[0].id);
+        }
+      } catch (err) {
+        console.error('Failed to initialize copilot workspace:', err);
       }
-    } catch (err) {
-      console.error('Failed to load chat sessions:', err);
-    }
-  };
+    };
+
+    initCopilotWorkspace();
+  }, [user]);
 
   const loadSessionDetails = async (sessionId: string) => {
     setIsFetchingHistory(true);
