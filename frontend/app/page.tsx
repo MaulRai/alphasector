@@ -135,7 +135,7 @@ export default function LandingPage() {
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5 border border-slate-800">
                     <Image
-                      src="/images/landing/spider-chart.jpg"
+                      src="/images/landing/peer-battle.jpeg"
                       alt="Peer Battle Matrix"
                       fill
                       className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
