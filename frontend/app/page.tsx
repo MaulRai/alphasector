@@ -42,11 +42,11 @@ export default function LandingPage() {
           
           {/* Main Headline */}
           <h1 
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] animate-fade-in-up"
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.15] animate-fade-in-up"
             style={{ animationDelay: '100ms' }}
           >
-            Autonomous Agentic AI untuk <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="block">Autonomous Agentic AI</span>
+            <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
               Pasar Modal Indonesia
             </span>
           </h1>
