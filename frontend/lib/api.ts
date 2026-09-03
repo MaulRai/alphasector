@@ -344,6 +344,25 @@ export async function saveCustomSectorsApiKey(apiKey: string | null) {
   }
 }
 
+export async function fetchCustomSectorsApiKey(): Promise<string> {
+  const token = getStoredToken();
+  if (!token) return getCustomSectorsKey() || '';
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/settings/api-key`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!res.ok) return getCustomSectorsKey() || '';
+    const data = await res.json();
+    const key = data.api_key || '';
+    if (key) {
+      setCustomSectorsKey(key);
+    }
+    return key;
+  } catch {
+    return getCustomSectorsKey() || '';
+  }
+}
+
 export async function fetchUserCredits(): Promise<{ demo_credits: number; max_credits: number; has_custom_sectors_key: boolean }> {
   const token = getStoredToken();
   if (!token) return { demo_credits: 50, max_credits: 50, has_custom_sectors_key: !!getCustomSectorsKey() };

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthResponse } from './types';
-import { loginUser, registerUser, getMeProfile } from './api';
+import { loginUser, registerUser, getMeProfile, fetchCustomSectorsApiKey } from './api';
 
 interface AuthContextType {
   user: User | null;
@@ -71,6 +71,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
       setUser(res.user);
+      // Synchronize saved Sectors API key from DB into client storage
+      await fetchCustomSectorsApiKey().catch(() => '');
     } finally {
       setIsLoading(false);
     }

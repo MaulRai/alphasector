@@ -10,7 +10,8 @@ import {
   getCustomSectorsKey, 
   saveCustomSectorsApiKey, 
   verifySectorsApiKey, 
-  fetchUserCredits 
+  fetchUserCredits,
+  fetchCustomSectorsApiKey
 } from '@/lib/api';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { 
@@ -39,28 +40,29 @@ export default function SettingsPage() {
   // Logout confirm modal
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Load existing key & credits only if authenticated
+  // Load existing key & credits from DB when authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
-      const savedKey = getCustomSectorsKey() || '';
-      setApiKeyInput(savedKey);
-      setHasCustomKey(!!savedKey);
-      loadCredits();
+      loadDataFromDB();
     } else {
       setApiKeyInput('');
       setHasCustomKey(false);
     }
   }, [isAuthenticated, user]);
 
-  const loadCredits = async () => {
+  const loadDataFromDB = async () => {
     if (!isAuthenticated) return;
     try {
       setIsLoadingCredits(true);
-      const data = await fetchUserCredits();
-      setCredits(data.demo_credits);
-      if (data.has_custom_sectors_key) {
-        setHasCustomKey(true);
-      }
+      const [savedKey, creditsData] = await Promise.all([
+        fetchCustomSectorsApiKey().catch(() => getCustomSectorsKey() || ''),
+        fetchUserCredits().catch(() => ({ demo_credits: 50, has_custom_sectors_key: false }))
+      ]);
+
+      const effectiveKey = savedKey || getCustomSectorsKey() || '';
+      setApiKeyInput(effectiveKey);
+      setHasCustomKey(!!effectiveKey || creditsData.has_custom_sectors_key);
+      setCredits(creditsData.demo_credits ?? 50);
     } catch {
       // fallback
     } finally {

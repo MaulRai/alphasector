@@ -210,11 +210,14 @@ export const AuthGate: React.FC<AuthGateProps> = ({
               </button>
             </div>
 
-            {/* Error Banner */}
+            {/* Error Banner with High-Contrast Shake Animation */}
             {error && (
-              <div className="p-3 mb-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{error}</span>
+              <div className="p-3.5 mb-4 rounded-xl bg-red-500/15 border border-red-500/50 text-red-300 text-xs flex items-start gap-2.5 shadow-lg shadow-red-500/10 animate-shake">
+                <AlertCircle className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="font-bold block text-red-200">Gagal Masuk:</span>
+                  <span className="leading-relaxed">{error}</span>
+                </div>
               </div>
             )}
 

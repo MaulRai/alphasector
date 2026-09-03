@@ -80,12 +80,23 @@ async def get_me(authorization: Optional[str] = Header(None)):
         raise HTTPException(status_code=404, detail="User tidak ditemukan.")
     return format_user_response(user_dict)
 
+@router.get("/settings/api-key")
+async def get_custom_api_key(authorization: Optional[str] = Header(None)):
+    """Retrieve saved personal Sectors API Key for the authenticated user from PostgreSQL DB."""
+    user_id = get_current_user_id(authorization)
+    user_dict = UserRepository.get_by_id(user_id)
+    if not user_dict:
+        raise HTTPException(status_code=404, detail="User tidak ditemukan.")
+    return {
+        "api_key": user_dict.get("custom_sectors_key") or ""
+    }
+
 @router.post("/settings/api-key", response_model=UserResponse)
 async def update_custom_api_key(
     req: CustomApiKeyRequest,
     authorization: Optional[str] = Header(None)
 ):
-    """Save or remove personal Sectors API Key (BYOK) for the user."""
+    """Save or remove personal Sectors API Key (BYOK) for the user in PostgreSQL DB."""
     user_id = get_current_user_id(authorization)
     UserRepository.update_custom_api_key(user_id, req.api_key)
     user_dict = UserRepository.get_by_id(user_id)
