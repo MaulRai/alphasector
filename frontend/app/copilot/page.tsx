@@ -134,7 +134,7 @@ function CopilotWorkspace() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Smart natural scroll: scroll to top of new assistant response, or to bottom when user sends query
   useEffect(() => {
@@ -168,7 +168,7 @@ function CopilotWorkspace() {
 
         if (sessionIdParam) {
           // Direct handshake from Peer Battle / Smart Money (zero re-generation)
-          await loadSessionDetails(sessionIdParam);
+          await handleSelectSession(sessionIdParam);
         } else if (initialQueryParam && !initialQueryExecuted.current) {
           // Initial prompt from Screener
           initialQueryExecuted.current = true;
@@ -177,7 +177,7 @@ function CopilotWorkspace() {
           await handleSendMessage(initialQueryParam);
         } else if (userSessions.length > 0 && !activeSessionId) {
           // Default: load latest existing session
-          await loadSessionDetails(userSessions[0].id);
+          await handleSelectSession(userSessions[0].id);
         }
       } catch (err) {
         console.error('Failed to initialize copilot workspace:', err);
@@ -191,16 +191,23 @@ function CopilotWorkspace() {
     };
   }, [user, sessionIdParam]);
 
-  const loadSessionDetails = async (sessionId: string) => {
-    setIsFetchingHistory(true);
-    setActiveSessionId(sessionId);
-    setError(null);
+  // Load message history when session selected
+  useEffect(() => {
+    if (sessionIdParam && sessionIdParam !== activeSessionId) {
+      handleSelectSession(sessionIdParam);
+    }
+  }, [sessionIdParam]);
+
+  const handleSelectSession = async (sessionId: string) => {
     try {
+      setIsFetchingHistory(true);
+      setActiveSessionId(sessionId);
+      setError(null);
       const res = await fetchChatRoomDetails(sessionId);
       setMessages(res.messages || []);
     } catch (err: any) {
-      console.error('Failed to load session details:', err);
-      setError('Gagal memuat riwayat pesan.');
+      console.error('Failed to load session history:', err);
+      setError('Gagal memuat riwayat percakapan sesi ini.');
     } finally {
       setIsFetchingHistory(false);
     }
@@ -211,7 +218,10 @@ function CopilotWorkspace() {
     setMessages([]);
     setInputQuery('');
     setError(null);
-    inputRef.current?.focus();
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.focus();
+    }
   };
 
   const handleRequestDeleteSession = (e: React.MouseEvent, session: ChatSession) => {
@@ -236,11 +246,8 @@ function CopilotWorkspace() {
     }
   };
 
-  // Handle Image Selection with max 5MB limit and client-side optimization
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  // Reusable Image File Processor for both File Input and Clipboard Paste
+  const processImageFile = (file: File) => {
     if (!file.type.startsWith('image/')) {
       setError('Hanya file gambar (PNG, JPG, WEBP) yang didukung.');
       return;
@@ -259,17 +266,59 @@ function CopilotWorkspace() {
         base64: base64Data,
         mimeType: file.type,
         previewUrl: result,
-        fileName: file.name
+        fileName: file.name || 'clipboard-image.png'
       });
       setError(null);
     };
     reader.readAsDataURL(file);
-    // Reset file input so same file can be re-selected if needed
+  };
+
+  // Handle Image Selection via File Browser
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processImageFile(file);
     e.target.value = '';
+  };
+
+  // Handle Clipboard Paste directly in textarea
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.type.indexOf('image') !== -1) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) {
+          processImageFile(file);
+        }
+        break;
+      }
+    }
   };
 
   const handleRemoveImage = () => {
     setAttachedImage(null);
+  };
+
+  // Auto-resize textarea up to max 3 lines (~84px) and wrap properly
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputQuery(e.target.value);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 84)}px`;
+    }
+  };
+
+  // Handle Enter to Send, Shift+Enter for new line
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!isLoading && (inputQuery.trim() || attachedImage)) {
+        handleSendMessage(inputQuery);
+      }
+    }
   };
 
   const handleSendMessage = async (queryText: string) => {
@@ -279,6 +328,9 @@ function CopilotWorkspace() {
     const currentImg = attachedImage;
     setAttachedImage(null);
     setInputQuery('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     setError(null);
     setIsLoading(true);
 
@@ -467,7 +519,7 @@ function CopilotWorkspace() {
                 return (
                   <div
                     key={s.id}
-                    onClick={() => loadSessionDetails(s.id)}
+                    onClick={() => handleSelectSession(s.id)}
                     className={`group relative flex items-center justify-between p-2.5 rounded-xl text-xs cursor-pointer transition-all ${
                       isActive
                         ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-medium'
@@ -893,7 +945,7 @@ function CopilotWorkspace() {
 
             <form
               onSubmit={handleSubmit}
-              className="max-w-4xl mx-auto relative flex items-center rounded-2xl border border-slate-700/80 bg-[#0d121e] p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald"
+              className="max-w-4xl mx-auto relative flex items-end rounded-2xl border border-slate-700/80 bg-[#0d121e] p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald"
             >
               {/* Hidden file input */}
               <input
@@ -909,26 +961,30 @@ function CopilotWorkspace() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isLoading}
-                title="Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 5MB)"
-                className="p-2 ml-1 mr-1 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40"
+                title="Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 5MB • Bisa juga langsung Ctrl+V)"
+                className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5"
               >
                 <Paperclip className="h-4 w-4" />
               </button>
 
-              <Search className="h-4 w-4 text-emerald-400 mr-2 shrink-0 hidden sm:block" />
-              <input
-                ref={inputRef}
-                type="text"
+              {/* Auto-wrapping & Auto-expanding Textarea (Max 3 lines, Enter to send, Shift+Enter for newline, Ctrl+V image paste supported) */}
+              <textarea
+                ref={textareaRef}
+                rows={1}
                 value={inputQuery}
-                onChange={(e) => setInputQuery(e.target.value)}
-                placeholder={attachedImage ? "Tanyakan analisis teknikal/fundamental gambar ini (atau langsung tekan Kirim)..." : "Tanyakan analisis emiten ke AlphaAgent (misal: Bandingkan BBCA vs BBRI, atau lampirkan chart)..."}
-                className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1"
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
+                placeholder={attachedImage ? "Tanyakan analisis gambar ini (Enter untuk kirim, Shift+Enter baris baru)..." : "Tanyakan analisis emiten ke AlphaAgent (Enter untuk kirim, Shift+Enter baris baru, atau Ctrl+V gambar)..."}
+                className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1.5 resize-none overflow-y-auto max-h-[84px] leading-relaxed my-auto"
                 disabled={isLoading}
               />
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading || (!inputQuery.trim() && !attachedImage)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0 mb-0.5 ml-1.5"
               >
                 {isLoading ? (
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
