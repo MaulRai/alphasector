@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { BrokerSummaryInfo } from '@/lib/types';
-import { Users, TrendingUp, TrendingDown, ShieldAlert, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { getBrokerInfo } from '@/lib/idx-brokers';
+import { Users, TrendingUp, TrendingDown, ShieldAlert, ArrowUpRight, ArrowDownRight, Globe } from 'lucide-react';
 
 interface BrokerFlowTrackerProps {
   brokerSummary: Partial<BrokerSummaryInfo> & {
@@ -11,6 +12,25 @@ interface BrokerFlowTrackerProps {
   };
   ticker?: string;
 }
+
+const getNetVal = (item: any): number => {
+  if (!item) return 0;
+  const val = item.net_idr ?? item.net_buy_value ?? item.net_sell_value ?? item.net_val ?? item.buy_idr ?? item.sell_idr ?? item.buy_val ?? item.sell_val ?? 0;
+  return Number(val) || 0;
+};
+
+const formatIdr = (val: number, isBuy: boolean = true): string => {
+  if (val === 0 || isNaN(val)) return '-';
+  const absVal = Math.abs(val);
+  const prefix = isBuy ? '+Rp ' : '-Rp ';
+  if (absVal >= 1e12) {
+    return `${prefix}${(absVal / 1e12).toFixed(2)} T`;
+  }
+  if (absVal >= 1e9) {
+    return `${prefix}${(absVal / 1e9).toFixed(1)} M`;
+  }
+  return `${prefix}${(absVal / 1e6).toFixed(0)} Jt`;
+};
 
 export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSummary, ticker }) => {
   if (!brokerSummary) return null;
@@ -21,27 +41,27 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
   let sentiment = brokerSummary.sentiment || 'NEUTRAL';
   let buyerConcentration = brokerSummary.buyer_concentration;
 
-  // Auto-calculate sentiment & concentration if not provided (e.g. from direct Sectors API response)
-  if (!brokerSummary.sentiment) {
-    const totalBuyVal = topBuyers.slice(0, 3).reduce((acc: number, b: any) => acc + (b.net_buy_value || b.buy_val || b.net_val || 0), 0);
-    const totalSellVal = Math.abs(topSellers.slice(0, 3).reduce((acc: number, s: any) => acc + (s.net_sell_value || s.sell_val || s.net_val || 0), 0));
+  // Auto-calculate sentiment & concentration from actual broker summary values
+  const totalBuyVal = topBuyers.slice(0, 3).reduce((acc: number, b: any) => acc + Math.abs(getNetVal(b)), 0);
+  const totalSellVal = topSellers.slice(0, 3).reduce((acc: number, s: any) => acc + Math.abs(getNetVal(s)), 0);
 
-    if (totalBuyVal > totalSellVal * 1.25) {
+  if (!brokerSummary.sentiment || brokerSummary.sentiment === 'NEUTRAL') {
+    if (totalBuyVal > totalSellVal * 1.25 && totalBuyVal > 0) {
       sentiment = 'STRONG_ACCUMULATION';
-    } else if (totalBuyVal > totalSellVal * 1.05) {
+    } else if (totalBuyVal > totalSellVal * 1.05 && totalBuyVal > 0) {
       sentiment = 'MODERATE_ACCUMULATION';
-    } else if (totalSellVal > totalBuyVal * 1.25) {
+    } else if (totalSellVal > totalBuyVal * 1.25 && totalSellVal > 0) {
       sentiment = 'STRONG_DISTRIBUTION';
-    } else if (totalSellVal > totalBuyVal * 1.05) {
+    } else if (totalSellVal > totalBuyVal * 1.05 && totalSellVal > 0) {
       sentiment = 'MODERATE_DISTRIBUTION';
     } else {
       sentiment = 'NEUTRAL';
     }
+  }
 
-    if (buyerConcentration === undefined || buyerConcentration === null) {
-      const sum = totalBuyVal + totalSellVal;
-      buyerConcentration = sum > 0 ? Math.round((totalBuyVal / sum) * 100) : 50;
-    }
+  if (buyerConcentration === undefined || buyerConcentration === null || buyerConcentration === 50) {
+    const sum = totalBuyVal + totalSellVal;
+    buyerConcentration = sum > 0 ? Math.round((totalBuyVal / sum) * 100) : 50;
   }
 
   const isAccumulation = String(sentiment).includes('ACCUMULATION');
@@ -94,7 +114,7 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Analisis konsentrasi transaksi broker institusi, asing, dan ritel 14 hari terakhir
+            Analisis konsentrasi transaksi broker institusi, asing, dan ritel 14–30 hari terakhir
           </p>
         </div>
 
@@ -128,21 +148,40 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
           </div>
           <div className="space-y-2">
             {topBuyers.length > 0 ? (
-              topBuyers.slice(0, 4).map((b: any, idx: number) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 border border-slate-800 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded bg-emerald-500/10 text-emerald-400 font-bold font-mono">
-                      {b.broker_code || b.broker_name || 'BK'}
-                    </span>
-                    <span className="text-slate-300 font-medium truncate max-w-[140px]">
-                      {b.broker_name || `Broker ${b.broker_code}`}
+              topBuyers.slice(0, 4).map((b: any, idx: number) => {
+                const brokerCode = (b.broker_code || b.broker_name || 'BK').toUpperCase();
+                const brokerInfo = getBrokerInfo(brokerCode);
+                const netVal = getNetVal(b);
+                const displayVal = formatIdr(netVal, true);
+
+                return (
+                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs hover:border-emerald-500/30 transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold font-mono text-xs">
+                        {brokerCode}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 truncate">
+                          <span className="text-slate-200 font-semibold truncate">
+                            {brokerInfo.name}
+                          </span>
+                          {brokerInfo.is_foreign && (
+                            <span className="px-1 py-0.2 rounded bg-cyan-500/10 text-cyan-400 text-[9px] font-mono shrink-0">
+                              Foreign
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-slate-500 capitalize">
+                          {brokerInfo.cohort} cohort
+                        </div>
+                      </div>
+                    </div>
+                    <span className="font-mono font-bold text-emerald-400 shrink-0 text-xs">
+                      {displayVal}
                     </span>
                   </div>
-                  <span className="font-semibold text-emerald-400">
-                    {b.net_buy_value ? `+Rp ${(b.net_buy_value / 1e9).toFixed(1)} M` : b.buy_val ? `Rp ${(b.buy_val / 1e9).toFixed(1)} M` : b.net_val ? `Rp ${(b.net_val / 1e9).toFixed(1)} M` : '-'}
-                  </span>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="text-xs text-slate-500 py-3 text-center">Data buyer tidak tersedia</div>
             )}
@@ -159,21 +198,40 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
           </div>
           <div className="space-y-2">
             {topSellers.length > 0 ? (
-              topSellers.slice(0, 4).map((s: any, idx: number) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-slate-900/80 border border-slate-800 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded bg-red-500/10 text-red-400 font-bold font-mono">
-                      {s.broker_code || s.broker_name || 'SL'}
-                    </span>
-                    <span className="text-slate-300 font-medium truncate max-w-[140px]">
-                      {s.broker_name || `Broker ${s.broker_code}`}
+              topSellers.slice(0, 4).map((s: any, idx: number) => {
+                const brokerCode = (s.broker_code || s.broker_name || 'SL').toUpperCase();
+                const brokerInfo = getBrokerInfo(brokerCode);
+                const netVal = getNetVal(s);
+                const displayVal = formatIdr(netVal, false);
+
+                return (
+                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs hover:border-red-500/30 transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-bold font-mono text-xs">
+                        {brokerCode}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 truncate">
+                          <span className="text-slate-200 font-semibold truncate">
+                            {brokerInfo.name}
+                          </span>
+                          {brokerInfo.is_foreign && (
+                            <span className="px-1 py-0.2 rounded bg-cyan-500/10 text-cyan-400 text-[9px] font-mono shrink-0">
+                              Foreign
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-slate-500 capitalize">
+                          {brokerInfo.cohort} cohort
+                        </div>
+                      </div>
+                    </div>
+                    <span className="font-mono font-bold text-red-400 shrink-0 text-xs">
+                      {displayVal}
                     </span>
                   </div>
-                  <span className="font-semibold text-red-400">
-                    {s.net_sell_value ? `-Rp ${(Math.abs(s.net_sell_value) / 1e9).toFixed(1)} M` : s.sell_val ? `Rp ${(s.sell_val / 1e9).toFixed(1)} M` : s.net_val ? `Rp ${(s.net_val / 1e9).toFixed(1)} M` : '-'}
-                  </span>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="text-xs text-slate-500 py-3 text-center">Data seller tidak tersedia</div>
             )}
