@@ -242,32 +242,33 @@ class AgentOrchestrator:
             ))
             step_counter += 1
 
-        primary_ticker = tickers[0] if tickers else None
+        # Determine valid primary ticker from peer_matrix with real data
+        if peer_matrix and len(peer_matrix) > 0 and peer_matrix[0].get("symbol"):
+            primary_ticker = peer_matrix[0].get("symbol")
+        elif tickers:
+            primary_ticker = tickers[0]
+        else:
+            primary_ticker = None
+
         if primary_ticker and primary_ticker in broker_summaries:
             analyzed_broker = comparator.analyze_broker_sentiment(broker_summaries[primary_ticker])
             trace.append(ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
-                title="Broker Accumulation Sentiment Scoring",
-                detail=f"Sentiment for {primary_ticker}: {analyzed_broker['sentiment']} (Buyer Concentration: {analyzed_broker['buyer_concentration']}%)",
+                title=f"Smart Money Concentration Analysis ({primary_ticker})",
+                detail=f"Classified broker flow as {analyzed_broker.get('sentiment', 'NEUTRAL')} with {analyzed_broker.get('buyer_concentration', 0)}% buyer concentration",
                 timestamp=datetime.now().strftime("%H:%M:%S")
             ))
             step_counter += 1
+        elif broker_summaries:
+            first_valid_broker = next((sym for sym in broker_summaries if broker_summaries[sym]), None)
+            if first_valid_broker:
+                analyzed_broker = comparator.analyze_broker_sentiment(broker_summaries[first_valid_broker])
 
         # -------------------------------------------------------------
-        # 4. SYNTHESIZING PHASE (Bahasa Indonesia LLM Synthesis)
+        # 4. SYNTHESIS PHASE (LLM Structured Report Generation)
         # -------------------------------------------------------------
-        trace.append(ReasoningStep(
-            id=f"step-{step_counter}",
-            step_number=step_counter,
-            phase=ExecutionPhase.SYNTHESIZING,
-            title="Executive Narrative Synthesis",
-            detail="Generating structured equity research briefing in Bahasa Indonesia with fact-grounded figures",
-            timestamp=datetime.now().strftime("%H:%M:%S")
-        ))
-        step_counter += 1
-
         synthesis_result: SynthesisResult = await AgentSynthesizer.synthesize(
             query=query,
             intent=intent,
@@ -278,15 +279,39 @@ class AgentOrchestrator:
             screener_data={"companies": screener_data} if screener_data else None
         )
 
+        trace.append(ReasoningStep(
+            id=f"step-{step_counter}",
+            step_number=step_counter,
+            phase=ExecutionPhase.SYNTHESIS,
+            title="Institutional Autonomous Synthesis",
+            detail=f"Generated executive verdict, key findings, and catalysts in Indonesian language",
+            timestamp=datetime.now().strftime("%H:%M:%S")
+        ))
+
         total_ms = int((time.time() - start_time) * 1000)
 
-        # Single Ticker summary metrics
-        metrics_summary = peer_matrix[0] if (peer_matrix and len(peer_matrix) == 1) else None
+        # Build clean comparison_tickers from peer_matrix
+        valid_comp_tickers = []
+        if peer_matrix:
+            valid_comp_tickers = [p.get("symbol") for p in peer_matrix if p.get("symbol") and p.get("symbol") != primary_ticker]
+        elif tickers and len(tickers) > 1:
+            valid_comp_tickers = [t for t in tickers if t != primary_ticker]
+
+        metrics_summary = None
+        if reports and len(reports) > 0:
+            first_rep = next((r for r in reports if r and r.get("symbol") == primary_ticker), reports[0])
+            if first_rep and first_rep.get("overview"):
+                metrics_summary = {
+                    "primary_ticker": primary_ticker,
+                    "company_name": first_rep.get("company_name", primary_ticker),
+                    "sector": first_rep.get("overview", {}).get("sector", "-"),
+                    "market_cap": first_rep.get("overview", {}).get("market_cap")
+                }
 
         broker_info = None
         if analyzed_broker:
             broker_info = {
-                "sentiment": analyzed_broker["sentiment"],
+                "sentiment": analyzed_broker.get("sentiment", "NEUTRAL"),
                 "net_foreign_flow_status": analyzed_broker.get("net_foreign_flow_status", "NEUTRAL"),
                 "top_buyers": analyzed_broker.get("top_buyers", []),
                 "top_sellers": analyzed_broker.get("top_sellers", []),
@@ -298,7 +323,7 @@ class AgentOrchestrator:
             intent=intent,
             session_id=session_id,
             primary_ticker=primary_ticker,
-            comparison_tickers=tickers[1:] if len(tickers) > 1 else [],
+            comparison_tickers=valid_comp_tickers,
             reasoning_trace=trace,
             metrics_summary=metrics_summary,
             peer_matrix=peer_matrix if (peer_matrix and len(peer_matrix) > 1) else None,

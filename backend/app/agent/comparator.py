@@ -11,11 +11,19 @@ class QuantitativeComparator:
             if not rep or not isinstance(rep, dict):
                 continue
 
-            symbol = rep.get("symbol", "").replace(".JK", "")
-            name = rep.get("company_name", symbol)
+            symbol = rep.get("symbol", "").replace(".JK", "").strip()
+            if not symbol or rep.get("status") == 404 or rep.get("error"):
+                continue
+
             overview = rep.get("overview", {}) or {}
             valuation = rep.get("valuation", {}) or {}
             financials = rep.get("financials", {}) or {}
+
+            # If company has no overview, valuation, or financials data at all, skip invalid ticker
+            if not overview and not valuation and not financials:
+                continue
+
+            name = rep.get("company_name") or overview.get("company_name", symbol)
 
             # Extract valuation multiples (check historical_valuation latest item first)
             hist_val = valuation.get("historical_valuation", []) or []

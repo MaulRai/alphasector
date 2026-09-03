@@ -426,9 +426,8 @@ export default function ScreenerPage() {
               </div>
               <button
                 onClick={() => {
-                  const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean).join(', ');
-                  const contextDesc = activePreset ? `preset radar "${activePreset}"` : nlQuery ? `query NLP "${nlQuery}"` : selectedSubsector ? `subsektor "${selectedSubsector}"` : 'screener semesta emiten';
-                  const query = `Analisis hasil penyaringan ${contextDesc} untuk emiten teratas (${topSymbols}). Berikan evaluasi komprehensif saham mana yang paling prospektif secara valuasi dan fundamental.`;
+                  const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean);
+                  const query = `Bandingkan fundamental dan valuasi ${topSymbols.join(' vs ')}`;
                   router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
                 }}
                 className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
