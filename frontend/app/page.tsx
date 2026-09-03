@@ -527,7 +527,7 @@ export default function LandingPage() {
           <div>
             <h4 className="font-bold text-slate-300 text-xs uppercase mb-3">Kepatuhan</h4>
             <p className="text-[11px] text-slate-500 leading-relaxed">
-              ⚠️ Seluruh informasi disajikan semata-mata untuk kebutuhan edukasi dan analisis riset finansial. Bukan merupakan rekomendasi atau ajakan jual/beli efek.
+              Seluruh informasi disajikan semata-mata untuk kebutuhan edukasi dan analisis riset finansial. Bukan merupakan rekomendasi atau ajakan jual/beli efek.
             </p>
           </div>
 

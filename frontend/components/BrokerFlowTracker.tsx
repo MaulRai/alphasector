@@ -50,30 +50,30 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
   const getSentimentBadge = () => {
     if (sentiment === 'STRONG_ACCUMULATION') {
       return {
-        text: '🔥 Strong Accumulation',
+        text: 'Strong Accumulation',
         bg: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
       };
     }
     if (sentiment === 'MODERATE_ACCUMULATION') {
       return {
-        text: '📈 Moderate Accumulation',
+        text: 'Moderate Accumulation',
         bg: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
       };
     }
     if (sentiment === 'STRONG_DISTRIBUTION') {
       return {
-        text: '⚠️ Strong Distribution',
+        text: 'Strong Distribution',
         bg: 'bg-red-500/20 text-red-400 border-red-500/30'
       };
     }
     if (sentiment === 'MODERATE_DISTRIBUTION') {
       return {
-        text: '📉 Moderate Distribution',
+        text: 'Moderate Distribution',
         bg: 'bg-red-500/10 text-red-300 border-red-500/20'
       };
     }
     return {
-      text: '⚖️ Neutral Flow',
+      text: 'Neutral Flow',
       bg: 'bg-slate-500/10 text-slate-300 border-slate-500/20'
     };
   };
@@ -87,7 +87,7 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-white tracking-tight">
-              🏛️ Smart Money & Broker Flow Tracker {ticker ? `(${ticker})` : ''}
+              Smart Money & Broker Flow Tracker {ticker ? `(${ticker})` : ''}
             </h3>
             <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${badge.bg}`}>
               {badge.text}

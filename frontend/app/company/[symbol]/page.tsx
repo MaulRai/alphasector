@@ -237,7 +237,7 @@ export default function Company360Page() {
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-base font-bold text-white">
-                      📊 Valuasi Historis & Peer Comparison (Tahunan)
+                      Valuasi Historis & Peer Comparison (Tahunan)
                     </h3>
                     <p className="text-xs text-slate-400">Multiples historis vs rata-rata peers subsektor {overview.sub_sector}</p>
                   </div>
@@ -280,7 +280,7 @@ export default function Company360Page() {
                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
                   <PieChart className="h-4 w-4 text-emerald-400" />
                   <h3 className="text-base font-bold text-white">
-                    🧩 Laporan Segmen Pendapatan & Biaya Operasional
+                    Laporan Segmen Pendapatan & Biaya Operasional
                   </h3>
                 </div>
                 

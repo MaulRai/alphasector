@@ -125,7 +125,7 @@ export default function ScreenerPage() {
               <Search className="h-5 w-5" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              🔍 Screener Pro & Trade Ideas Radar
+              Screener Pro & Trade Ideas Radar
             </h1>
           </div>
           <p className="text-sm text-slate-400">

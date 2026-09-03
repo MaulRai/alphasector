@@ -12,7 +12,7 @@ class AgentSynthesizer:
     """Generates structured, fact-grounded equity research synthesis in Bahasa Indonesia using Groq."""
 
     MANDATORY_DISCLAIMER = (
-        "⚠️ DISCLAIMER: AlphaSector adalah alat bantu analisis dan riset finansial otonom "
+        "DISCLAIMER: AlphaSector adalah alat bantu analisis dan riset finansial otonom "
         "berbasis data pasar modal resmi Sectors Financial API. Informasi yang disajikan "
         "bersifat edukatif dan analitis, BUKAN merupakan rekomendasi atau ajakan jual/beli efek. "
         "Keputusan investasi sepenuhnya merupakan tanggung jawab investor pribadi."

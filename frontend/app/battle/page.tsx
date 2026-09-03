@@ -95,7 +95,7 @@ export default function PeerBattlePage() {
                 <Swords className="h-5 w-5" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                ⚔️ Peer Battle & Valuation Terminal
+                Peer Battle & Valuation Terminal
               </h1>
             </div>
             <p className="text-sm text-slate-400">
@@ -273,7 +273,7 @@ export default function PeerBattlePage() {
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
                 <Sparkles className="h-4 w-4 text-cyan-400" />
                 <h3 className="text-base font-bold text-white">
-                  ⚖️ Ringkasan & Valuation Verdict (AI Synthesis)
+                  Ringkasan & Valuation Verdict (AI Synthesis)
                 </h3>
               </div>
               <p className="text-sm text-slate-200 leading-relaxed mb-4">

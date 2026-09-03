@@ -92,7 +92,7 @@ export default function SmartMoneyPage() {
                 <Users className="h-5 w-5" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                🏛️ Smart Money & Institutional Flow Tracker
+                Smart Money & Institutional Flow Tracker
               </h1>
             </div>
             <p className="text-sm text-slate-400">
@@ -284,7 +284,7 @@ export default function SmartMoneyPage() {
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-base font-bold text-white">
-                      🏆 IDX Broker Leaderboard (Top Gross Members)
+                      IDX Broker Leaderboard (Top Gross Members)
                     </h3>
                     <p className="text-xs text-slate-400">Anggota Bursa (AB) dengan volume transaksi pasar terbesar</p>
                   </div>

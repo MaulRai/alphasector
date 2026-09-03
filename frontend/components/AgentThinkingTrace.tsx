@@ -139,11 +139,11 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
                       </span>
                       {step.tool_call.latency_ms > 0 && (
                         <span className="text-slate-500">
-                          ⚡ {step.tool_call.latency_ms}ms
+                          {step.tool_call.latency_ms}ms
                         </span>
                       )}
                       <span className="text-emerald-400">
-                        ✓ Status {step.tool_call.status}
+                        Status {step.tool_call.status}
                       </span>
                     </div>
                   )}

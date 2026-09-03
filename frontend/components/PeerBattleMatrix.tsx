@@ -17,7 +17,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-white tracking-tight">
-              ⚔️ Peer Battle & Valuation Matrix
+              Peer Battle & Valuation Matrix
             </h3>
             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               {matrix.length} Emiten Head-to-Head

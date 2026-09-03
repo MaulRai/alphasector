@@ -169,7 +169,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({
                 ) : (
                   <>
                     <Zap className="h-4 w-4 fill-black" />
-                    <span>⚡ 1-Click Demo Login (Akses Instan)</span>
+                    <span>1-Click Demo Login (Akses Instan)</span>
                   </>
                 )}
               </button>
