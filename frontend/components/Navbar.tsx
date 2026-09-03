@@ -127,8 +127,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right: Auth Profile Status & Dossier CTA */}
           <div className="flex items-center gap-2">
-            {/* Export Dossier CTA */}
-            {hasActiveReport && onOpenDossier && (
+            {/* Export Dossier CTA (Replaced by Artifacts panel on /copilot) */}
+            {hasActiveReport && onOpenDossier && pathname !== '/copilot' && (
               <button
                 onClick={onOpenDossier}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"

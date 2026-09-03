@@ -260,10 +260,7 @@ export default function CopilotPage() {
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
-        <Navbar
-          onOpenDossier={() => setIsDossierOpen(true)}
-          hasActiveReport={artifacts.length > 0}
-        />
+        <Navbar />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 flex flex-col justify-center">
           <AuthGate
             featureName="AlphaAgent Research Terminal"
@@ -280,10 +277,7 @@ export default function CopilotPage() {
     <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
       
       {/* Top Navbar */}
-      <Navbar
-        onOpenDossier={() => setIsArtifactPanelOpen(!isArtifactPanelOpen)}
-        hasActiveReport={artifacts.length > 0}
-      />
+      <Navbar />
 
       {/* Main Workspace Layout with Left Sidebar */}
       <div className="flex-1 flex pt-16 overflow-hidden min-h-0 w-full relative">
