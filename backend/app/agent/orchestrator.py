@@ -38,13 +38,20 @@ class AgentOrchestrator:
         step_counter = 1
         credits_used = 0
 
-        # Check if this is a conversational follow-up in an ongoing multi-turn session
+        # In an active conversation session (follow-up turns):
+        # DEFAULT = Regular Conversation (clean Markdown, custom tables, multi-turn memory).
+        # Only switch to Full Agentic Flow if the user explicitly demands a fresh full tool pipeline.
         if conversation_history and len(conversation_history) > 0:
-            intent_check, detected_tickers, _ = planner.classify_and_plan(query, context_ticker)
-            is_explicit_battle = (len(detected_tickers) >= 2 and contains_keyword(query, ["vs", "versus", "bandingkan", "komparasi"]))
-            is_explicit_screen = (len(detected_tickers) == 0 and contains_keyword(query, ["screen", "screener", "filter"]))
+            query_lower = query.lower().strip()
+            
+            # Explicit triggers that demand a brand new full agentic DAG execution in an existing room
+            explicit_agentic_triggers = [
+                "jalankan riset baru", "buat dosir baru", "full battle", "full screening",
+                "screening baru", "filter pasar baru", "deep dive baru", "riset lengkap:"
+            ]
+            demands_full_agentic = any(trig in query_lower for trig in explicit_agentic_triggers)
 
-            if not is_explicit_battle and not is_explicit_screen:
+            if not demands_full_agentic:
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
