@@ -17,38 +17,38 @@ interface LiveStep {
 const DEFAULT_STEPS: LiveStep[] = [
   {
     id: 1,
-    title: 'Intent Classification & Query Routing',
+    title: 'Intent Classification & Plan Generation',
     phase: 'PLANNING',
-    description: 'Mengidentifikasi tujuan analisis, filter emiten, dan target perbandingan sektor...',
-    delayMs: 400,
+    description: 'Mengklasifikasikan intent analisis, parsing target emiten, dan merancang execution plan DAG...',
+    delayMs: 700,
   },
   {
     id: 2,
     title: 'Sectors Financial API Data Ingestion',
     phase: 'FETCHING',
-    description: 'Mengambil laporan keuangan resmi, valuasi terkini, dan profil emiten IDX via Sectors API...',
-    delayMs: 1600,
+    description: 'Mengambil laporan keuangan resmi, valuasi terkini, dan data emiten IDX via Sectors API...',
+    delayMs: 2200,
   },
   {
     id: 3,
     title: 'Calculating Multiples & Financial Health Matrix',
     phase: 'COMPARING',
     description: 'Menghitung rasio PE, PBV, ROE, laba bersih, dan metrik komparatif multi-emiten...',
-    delayMs: 3200,
+    delayMs: 3800,
   },
   {
     id: 4,
     title: 'Smart Money & Institutional Flow Tracking',
     phase: 'COMPARING',
-    description: 'Menganalisis akumulasi/distribusi broker dan pola arus dana asing terkini...',
-    delayMs: 4800,
+    description: 'Menganalisis akumulasi/distribusi broker dan pola arus dana institusi asing...',
+    delayMs: 5400,
   },
   {
     id: 5,
     title: 'Autonomous Equity Research Synthesis',
     phase: 'SYNTHESIZING',
     description: 'Menyusun ringkasan eksekutif, temuan kunci, katalis, dan memorandum riset terstruktur...',
-    delayMs: 6400,
+    delayMs: 7000,
   },
 ];
 
@@ -58,9 +58,10 @@ interface LiveThinkingTraceProps {
 
 export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) => {
   const [elapsedMs, setElapsedMs] = useState(0);
+  // Default is immediately at Step 1 (PLANNING)
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
-  // Live Timer
+  // Live Timer & Step Progression
   useEffect(() => {
     const startTime = Date.now();
     const interval = setInterval(() => {
@@ -69,12 +70,13 @@ export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) =
       setElapsedMs(diff);
 
       // Advance step based on elapsed time
-      const nextIdx = DEFAULT_STEPS.findIndex((s) => s.delayMs > diff);
-      if (nextIdx === -1) {
-        setCurrentStepIdx(DEFAULT_STEPS.length - 1);
-      } else {
-        setCurrentStepIdx(Math.max(0, nextIdx - 1));
+      let activeIdx = 0;
+      for (let i = 0; i < DEFAULT_STEPS.length; i++) {
+        if (diff >= DEFAULT_STEPS[i].delayMs) {
+          activeIdx = Math.min(i + 1, DEFAULT_STEPS.length - 1);
+        }
       }
+      setCurrentStepIdx(activeIdx);
     }, 100);
 
     return () => clearInterval(interval);
@@ -114,6 +116,21 @@ export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) =
         return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       default:
         return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+    }
+  };
+
+  const getStatusText = (phase: string) => {
+    switch (phase) {
+      case 'PLANNING':
+        return 'Planning intent & DAG...';
+      case 'FETCHING':
+        return 'Fetching Sectors API...';
+      case 'COMPARING':
+        return 'Calculating metrics...';
+      case 'SYNTHESIZING':
+        return 'Synthesizing report...';
+      default:
+        return 'Running...';
     }
   };
 
@@ -166,7 +183,6 @@ export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) =
           {DEFAULT_STEPS.map((step, idx) => {
             const isDone = idx < currentStepIdx;
             const isCurrent = idx === currentStepIdx;
-            const isUpcoming = idx > currentStepIdx;
 
             return (
               <div
@@ -217,9 +233,9 @@ export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) =
                     </div>
 
                     {isCurrent && (
-                      <span className="text-[10px] font-mono font-semibold text-emerald-400 flex items-center gap-1">
+                      <span className="text-[10px] font-mono font-semibold text-emerald-400 flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
-                        <span>Running...</span>
+                        <span>{getStatusText(step.phase)}</span>
                       </span>
                     )}
 
