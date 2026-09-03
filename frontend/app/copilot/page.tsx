@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { LiveThinkingTrace } from '@/components/LiveThinkingTrace';
@@ -31,8 +32,11 @@ import {
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
-export default function CopilotPage() {
+function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const searchParams = useSearchParams();
+  const sessionIdParam = searchParams.get('session_id');
+  const initialQueryParam = searchParams.get('initial_query') || searchParams.get('q');
   
   // State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -77,33 +81,26 @@ export default function CopilotPage() {
 
   // Initialize sessions and handle navigation from Peer Battle, Smart Money, or Screener
   useEffect(() => {
+    let isMounted = true;
+
     const initCopilotWorkspace = async () => {
       if (!user) return;
 
-      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-      const targetSessionId = params?.get('session_id');
-      const initQ = params?.get('initial_query') || params?.get('q');
-
       try {
         const res = await fetchUserChatSessions();
+        if (!isMounted) return;
         const userSessions = res.sessions || [];
         setSessions(userSessions);
 
-        if (targetSessionId) {
+        if (sessionIdParam) {
           // Direct handshake from Peer Battle / Smart Money (zero re-generation)
-          if (typeof window !== 'undefined') {
-            window.history.replaceState({}, '', window.location.pathname);
-          }
-          await loadSessionDetails(targetSessionId);
-        } else if (initQ && !initialQueryExecuted.current) {
+          await loadSessionDetails(sessionIdParam);
+        } else if (initialQueryParam && !initialQueryExecuted.current) {
           // Initial prompt from Screener
           initialQueryExecuted.current = true;
-          if (typeof window !== 'undefined') {
-            window.history.replaceState({}, '', window.location.pathname);
-          }
           setActiveSessionId(null);
           setMessages([]);
-          await handleSendMessage(initQ);
+          await handleSendMessage(initialQueryParam);
         } else if (userSessions.length > 0 && !activeSessionId) {
           // Default: load latest existing session
           await loadSessionDetails(userSessions[0].id);
@@ -114,7 +111,11 @@ export default function CopilotPage() {
     };
 
     initCopilotWorkspace();
-  }, [user]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, sessionIdParam]);
 
   const loadSessionDetails = async (sessionId: string) => {
     setIsFetchingHistory(true);
@@ -774,5 +775,23 @@ export default function CopilotPage() {
       />
 
     </div>
+  );
+}
+
+export default function CopilotPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <RefreshCw className="h-6 w-6 text-emerald-400 animate-spin" />
+            <p className="text-xs text-slate-400 font-medium animate-pulse">Memuat AlphaAgent workspace...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <CopilotWorkspace />
+    </Suspense>
   );
 }
