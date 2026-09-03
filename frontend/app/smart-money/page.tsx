@@ -11,10 +11,10 @@ import {
   ArrowDownRight, RefreshCw, ShieldAlert, Sparkles, Building2, Play, Zap, Database, Activity 
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
+import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 export default function SmartMoneyPage() {
   const [ticker, setTicker] = useState('TLKM');
-  const [inputTicker, setInputTicker] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [brokerSummary, setBrokerSummary] = useState<any>(null);
   const [topBrokers, setTopBrokers] = useState<any[]>([]);
@@ -60,16 +60,6 @@ export default function SmartMoneyPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputTicker.trim()) return;
-    const sym = inputTicker.trim().toUpperCase().replace('.JK', '');
-    setTicker(sym);
-    setInputTicker('');
-    setBrokerSummary(null);
-    setAgentReport(null);
   };
 
   const popularTickers = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'AMMN', 'BREN', 'ADRO'];
@@ -138,22 +128,18 @@ export default function SmartMoneyPage() {
               </div>
             </div>
 
-            <form onSubmit={handleSearch} className="flex items-center gap-2">
-              <input
-                type="text"
-                value={inputTicker}
-                onChange={(e) => setInputTicker(e.target.value)}
-                placeholder="Ganti emiten (misal: BBCA)..."
-                className="px-3.5 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 uppercase w-44"
-                maxLength={6}
-              />
-              <button
-                type="submit"
-                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all border border-slate-700"
-              >
-                Pilih
-              </button>
-            </form>
+            {/* Ticker Autocomplete Input with Focus & Live Search */}
+            <TickerAutocompleteInput
+              onSelectTicker={(selected) => {
+                setTicker(selected);
+                executeSmartMoneyAnalysis(selected);
+              }}
+              selectedTickers={[ticker]}
+              maxSelected={2}
+              disabled={isLoading}
+              placeholder="Ganti emiten (misal: BBCA)..."
+              buttonText="Pilih"
+            />
           </div>
 
           {/* Action Trigger Row */}

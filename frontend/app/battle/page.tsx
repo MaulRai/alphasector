@@ -11,10 +11,10 @@ import {
   CheckCircle2, Plus, X, ArrowRight, ShieldCheck, Database, Layers
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
+import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 export default function PeerBattlePage() {
   const [tickers, setTickers] = useState<string[]>(['BBRI', 'BMRI']);
-  const [newTicker, setNewTicker] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<AgentQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,20 +43,18 @@ export default function PeerBattlePage() {
     }
   };
 
-  const handleAddTicker = (e: React.FormEvent) => {
-    e.preventDefault();
-    const sym = newTicker.trim().toUpperCase();
-    if (!sym) return;
-    if (tickers.includes(sym)) {
-      setError(`Emiten ${sym} sudah ada di dalam list.`);
+  const handleSelectTicker = (sym: string) => {
+    const cleanSym = sym.trim().toUpperCase();
+    if (!cleanSym) return;
+    if (tickers.includes(cleanSym)) {
+      setError(`Emiten ${cleanSym} sudah ada di dalam list.`);
       return;
     }
     if (tickers.length >= 4) {
       setError('Maksimal 4 emiten untuk satu sesi battle.');
       return;
     }
-    setTickers([...tickers, sym]);
-    setNewTicker('');
+    setTickers([...tickers, cleanSym]);
     setError(null);
   };
 
@@ -144,25 +142,15 @@ export default function PeerBattlePage() {
               ))}
             </div>
 
-            {/* Add Ticker Input */}
-            <form onSubmit={handleAddTicker} className="flex items-center gap-2">
-              <input
-                type="text"
-                value={newTicker}
-                onChange={(e) => setNewTicker(e.target.value)}
-                placeholder="Tambah kode emiten..."
-                className="px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 uppercase w-40"
-                maxLength={6}
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !newTicker.trim() || tickers.length >= 4}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all disabled:opacity-50 border border-slate-700"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>Tambah</span>
-              </button>
-            </form>
+            {/* Add Ticker Input with Focus Suggestions & Live Search */}
+            <TickerAutocompleteInput
+              onSelectTicker={handleSelectTicker}
+              selectedTickers={tickers}
+              maxSelected={4}
+              disabled={isLoading}
+              placeholder="Tambah kode emiten..."
+              buttonText="Tambah"
+            />
           </div>
 
           {/* Action Trigger Row */}
