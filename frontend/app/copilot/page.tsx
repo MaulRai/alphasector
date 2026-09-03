@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -9,6 +9,7 @@ import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
+import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
 import { 
   queryAgent, 
   fetchUserChatSessions, 
@@ -23,7 +24,7 @@ import {
   BookOpen, AlertCircle, Plus, MessageSquare, 
   Trash2, ChevronRight, CornerDownLeft, Bot, 
   User as UserIcon, PanelLeftClose, PanelLeft, Clock,
-  ArrowRight, ShieldCheck, TrendingUp
+  ArrowRight, ShieldCheck, TrendingUp, FileText, Layers
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
@@ -42,6 +43,9 @@ export default function CopilotPage() {
   const [isFetchingHistory, setIsFetchingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
+  const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
+  const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
+  const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -173,7 +177,23 @@ export default function CopilotPage() {
     handleSendMessage(inputQuery);
   };
 
-  // Get latest assistant report for dossier
+  // Extract all generated artifacts in this conversation room
+  const artifacts: ArtifactItem[] = useMemo(() => {
+    return messages
+      .filter((m) => m.role === 'assistant' && m.report_data)
+      .map((m, idx) => ({
+        id: String(m.id || `artifact-${idx}`),
+        timestamp: m.created_at
+          ? new Date(m.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+          : `Dossier #${idx + 1}`,
+        report: m.report_data!,
+        query: m.report_data?.query || `Riset Pasar Saham #${idx + 1}`,
+        primaryTicker: m.report_data?.primary_ticker,
+        intent: m.report_data?.intent,
+      }));
+  }, [messages]);
+
+  // Get latest assistant report for fallback
   const latestReport = [...messages]
     .reverse()
     .find((m) => m.role === 'assistant' && m.report_data)?.report_data || null;
@@ -188,7 +208,7 @@ export default function CopilotPage() {
       <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
         <Navbar
           onOpenDossier={() => setIsDossierOpen(true)}
-          hasActiveReport={!!latestReport}
+          hasActiveReport={artifacts.length > 0}
         />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 flex flex-col justify-center">
           <AuthGate
@@ -207,8 +227,8 @@ export default function CopilotPage() {
       
       {/* Top Navbar */}
       <Navbar
-        onOpenDossier={() => setIsDossierOpen(true)}
-        hasActiveReport={!!latestReport}
+        onOpenDossier={() => setIsArtifactPanelOpen(!isArtifactPanelOpen)}
+        hasActiveReport={artifacts.length > 0}
       />
 
       {/* Main Workspace Layout with Left Sidebar */}
@@ -350,13 +370,18 @@ export default function CopilotPage() {
               </div>
             </div>
 
-            {latestReport && (
+            {/* Claude-Style Artifacts Library Toggle Button */}
+            {artifacts.length > 0 && (
               <button
-                onClick={() => setIsDossierOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-emerald-400 border border-emerald-500/30 transition-all shrink-0"
+                onClick={() => setIsArtifactPanelOpen(!isArtifactPanelOpen)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all shrink-0 ${
+                  isArtifactPanelOpen
+                    ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20 font-bold'
+                    : 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+                }`}
               >
-                <BookOpen className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Lihat Full Dossier</span>
+                <FileText className="h-3.5 w-3.5" />
+                <span>Artifacts ({artifacts.length})</span>
               </button>
             )}
           </div>
@@ -483,6 +508,37 @@ export default function CopilotPage() {
                         </div>
                       )}
 
+                      {/* Claude-Style Interactive Inline Artifact Card */}
+                      {report && (
+                        <div
+                          onClick={() => {
+                            setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                            setIsArtifactPanelOpen(true);
+                          }}
+                          className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                              <FileText className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
+                                  {report.query || 'Research Dossier'}
+                                </span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 shrink-0">
+                                  Artifact Dossier
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                Buka pratinjau lengkap di Artifact Panel ➔
+                              </p>
+                            </div>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                        </div>
+                      )}
+
                       {/* Interactive Financial Cards */}
                       {report?.metrics_summary && (
                         <Company360Card data={report.metrics_summary} />
@@ -597,14 +653,32 @@ export default function CopilotPage() {
 
         </section>
 
+        {/* ============================================================ */}
+        {/* RIGHT SIDEBAR: Claude-Style Artifacts & Dossier Library       */}
+        {/* ============================================================ */}
+        <CopilotArtifactPanel
+          isOpen={isArtifactPanelOpen}
+          onClose={() => setIsArtifactPanelOpen(false)}
+          artifacts={artifacts}
+          selectedArtifactId={selectedArtifactId}
+          onSelectArtifact={(id) => setSelectedArtifactId(id)}
+          onOpenFullscreenModal={(rep) => {
+            setActiveModalReport(rep);
+            setIsDossierOpen(true);
+          }}
+        />
+
       </div>
 
       {/* Exportable Research Dossier Modal */}
-      {latestReport && (
+      {(activeModalReport || latestReport) && (
         <ResearchDossierModal
           isOpen={isDossierOpen}
-          onClose={() => setIsDossierOpen(false)}
-          report={latestReport}
+          onClose={() => {
+            setIsDossierOpen(false);
+            setActiveModalReport(null);
+          }}
+          report={activeModalReport || latestReport!}
         />
       )}
 
