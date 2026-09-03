@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { fetchBrokerSummary, fetchForeignFlow, fetchTopBrokers, queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
 import { 
@@ -117,9 +118,7 @@ export default function SmartMoneyPage() {
         <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 mb-8 glass-panel space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold text-lg">
-                {ticker.slice(0, 2)}
-              </div>
+              <CompanyLogo symbol={ticker} size="lg" rounded="rounded-xl" />
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold text-white">{ticker}</span>

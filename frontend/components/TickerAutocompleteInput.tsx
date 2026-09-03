@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { POPULAR_IDX_TICKERS, IDXTickerItem } from '@/lib/idx-tickers';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { Search, Plus, Check } from 'lucide-react';
 
 interface TickerAutocompleteInputProps {
@@ -166,9 +167,7 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="h-7 w-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-cyan-400 shrink-0">
-                      {item.symbol.slice(0, 2)}
-                    </div>
+                    <CompanyLogo symbol={item.symbol} size="sm" rounded="rounded-lg" />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="font-bold text-white text-xs">{item.symbol}</span>

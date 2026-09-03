@@ -12,6 +12,7 @@ import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { 
   queryAgent, 
   fetchUserChatSessions, 
@@ -342,8 +343,9 @@ export default function CopilotPage() {
                         </p>
                         <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
                           {s.primary_ticker && (
-                            <span className="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-400 font-mono font-bold">
-                              {s.primary_ticker}
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 text-cyan-400 font-mono font-bold">
+                              <CompanyLogo symbol={s.primary_ticker} size="xs" rounded="rounded-sm" />
+                              <span>{s.primary_ticker}</span>
                             </span>
                           )}
                           <span>{s.message_count ? `${s.message_count} pesan` : 'Baru'}</span>

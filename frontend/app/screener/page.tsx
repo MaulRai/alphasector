@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealth } from '@/lib/api';
 import { 
   Search, Filter, Sparkles, RefreshCw, ArrowRight, 
@@ -358,8 +359,9 @@ export default function ScreenerPage() {
                         <td className="py-3 px-3.5">
                           <Link 
                             href={`/company/${sym}`}
-                            className="font-bold text-white hover:text-emerald-400 transition-colors flex items-center gap-1.5"
+                            className="font-bold text-white hover:text-emerald-400 transition-colors flex items-center gap-2"
                           >
+                            <CompanyLogo symbol={sym} size="xs" />
                             <span>{sym}</span>
                           </Link>
                         </td>

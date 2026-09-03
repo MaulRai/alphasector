@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PeerCompanyMetric } from '@/lib/types';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { Award, Zap, TrendingDown, CheckCircle, ExternalLink } from 'lucide-react';
 
 interface PeerBattleMatrixProps {
@@ -56,9 +57,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                 {/* Symbol & Name */}
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-white">
-                      {c.symbol.slice(0, 2)}
-                    </div>
+                    <CompanyLogo symbol={c.symbol} size="sm" />
                     <div>
                       <div className="flex items-center gap-1.5">
                         <Link

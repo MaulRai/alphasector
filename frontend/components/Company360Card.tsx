@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { PeerCompanyMetric } from '@/lib/types';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { Building2, TrendingUp, DollarSign, Award, Layers, AlertTriangle } from 'lucide-react';
 
 interface Company360CardProps {
@@ -21,9 +22,7 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-lg">
-            {data.symbol.slice(0, 2)}
-          </div>
+          <CompanyLogo symbol={data.symbol} size="lg" rounded="rounded-2xl" />
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold text-white tracking-tight">

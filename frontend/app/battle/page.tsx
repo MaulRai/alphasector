@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
+import { CompanyLogo } from '@/components/CompanyLogo';
 import { queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
 import { 
@@ -129,8 +130,9 @@ export default function PeerBattlePage() {
               {tickers.map(sym => (
                 <span
                   key={sym}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
                 >
+                  <CompanyLogo symbol={sym} size="xs" rounded="rounded-md" />
                   <span>{sym}</span>
                   <button
                     onClick={() => handleRemoveTicker(sym)}
