@@ -9,7 +9,6 @@ import {
   Swords, Users, Search, BookOpen, 
   Activity, Home, Layers, LogOut, User as UserIcon, LogIn, Settings
 } from 'lucide-react';
-import { SettingsModal } from '@/components/SettingsModal';
 
 interface NavbarProps {
   onOpenDossier?: () => void;
@@ -26,7 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { user, isAuthenticated, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -57,8 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <>
-      <header className="fixed top-0 inset-x-0 z-50">
+    <header className="fixed top-0 inset-x-0 z-50">
       
       {/* 1. Full-Width Background Bar at Top (Fades out seamlessly when floating) */}
       <div 
@@ -157,13 +154,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   </div>
                   
-                  <button
-                    onClick={() => setIsSettingsOpen(true)}
+                  <Link
+                    href="/settings"
                     title="Pengaturan & Sectors API Key (Settings)"
                     className="p-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 transition-all text-xs"
                   >
                     <Settings className="h-3.5 w-3.5" />
-                  </button>
+                  </Link>
                 </div>
               ) : (
                 <Link
@@ -204,12 +201,5 @@ export const Navbar: React.FC<NavbarProps> = ({
         })}
       </div>
     </header>
-
-      {/* Settings Modal (BYOK & Profile Configuration) */}
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-    </>
   );
 };

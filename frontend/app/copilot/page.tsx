@@ -12,7 +12,6 @@ import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
-import { SettingsModal } from '@/components/SettingsModal';
 import { 
   queryAgent, 
   fetchUserChatSessions, 
@@ -50,10 +49,9 @@ export default function CopilotPage() {
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
   
-  // Modal State for session deletion & settings
+  // Modal State for session deletion
   const [sessionToDelete, setSessionToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isDeletingSession, setIsDeletingSession] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
@@ -655,13 +653,13 @@ export default function CopilotPage() {
                 </div>
 
                 {(error.includes('KUOTA_HABIS') || error.includes('402') || error.includes('Settings')) && (
-                  <button
-                    onClick={() => setIsSettingsOpen(true)}
+                  <Link
+                    href="/settings"
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 text-black font-bold text-xs shrink-0 transition-all active:scale-95 shadow-md shadow-emerald-500/10"
                   >
                     <Settings className="h-3.5 w-3.5" />
-                    <span>Buka Settings (BYOK)</span>
-                  </button>
+                    <span>Buka Halaman Settings (BYOK)</span>
+                  </Link>
                 )}
               </div>
             )}
@@ -754,12 +752,6 @@ export default function CopilotPage() {
         cancelText="Batal"
         variant="danger"
         isLoading={isDeletingSession}
-      />
-
-      {/* Settings Modal (BYOK & Quota Configuration) */}
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
       />
 
     </div>
