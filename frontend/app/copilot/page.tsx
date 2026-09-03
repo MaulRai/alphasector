@@ -344,7 +344,7 @@ export default function CopilotPage() {
                         <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5">
                           {s.primary_ticker && (
                             <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 text-cyan-400 font-mono font-bold">
-                              <CompanyLogo symbol={s.primary_ticker} size="xs" rounded="rounded-sm" />
+                              <CompanyLogo symbol={s.primary_ticker} size="xs" />
                               <span>{s.primary_ticker}</span>
                             </span>
                           )}

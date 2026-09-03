@@ -132,7 +132,7 @@ export default function PeerBattlePage() {
                   key={sym}
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
                 >
-                  <CompanyLogo symbol={sym} size="xs" rounded="rounded-md" />
+                  <CompanyLogo symbol={sym} size="xs" />
                   <span>{sym}</span>
                   <button
                     onClick={() => handleRemoveTicker(sym)}

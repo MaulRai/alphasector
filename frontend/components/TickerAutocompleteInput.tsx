@@ -167,7 +167,7 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <CompanyLogo symbol={item.symbol} size="sm" rounded="rounded-lg" />
+                    <CompanyLogo symbol={item.symbol} size="sm" />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="font-bold text-white text-xs">{item.symbol}</span>

@@ -6,23 +6,21 @@ interface CompanyLogoProps {
   symbol: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  rounded?: string;
   alt?: string;
 }
 
 const sizeClasses = {
-  xs: 'w-5 h-5 text-[9px]',
-  sm: 'w-7 h-7 text-[10px]',
-  md: 'w-9 h-9 text-xs',
-  lg: 'w-12 h-12 text-sm font-bold',
-  xl: 'w-16 h-16 text-base font-bold',
+  xs: 'w-4.5 h-4.5 min-w-[18px] min-h-[18px] text-[8px]',
+  sm: 'w-6 h-6 min-w-[24px] min-h-[24px] text-[9px]',
+  md: 'w-8 h-8 min-w-[32px] min-h-[32px] text-xs',
+  lg: 'w-11 h-11 min-w-[44px] min-h-[44px] text-sm font-bold',
+  xl: 'w-14 h-14 min-w-[56px] min-h-[56px] text-base font-bold',
 };
 
 export const CompanyLogo: React.FC<CompanyLogoProps> = ({
   symbol,
   size = 'md',
   className = '',
-  rounded = 'rounded-xl',
   alt,
 }) => {
   const [hasError, setHasError] = useState(false);
@@ -34,23 +32,21 @@ export const CompanyLogo: React.FC<CompanyLogoProps> = ({
   if (hasError) {
     return (
       <div 
-        className={`shrink-0 ${sizeClasses[size]} ${rounded} bg-slate-900 border border-slate-800 flex items-center justify-center font-bold text-slate-300 select-none shadow-sm ${className}`}
+        className={`shrink-0 ${sizeClasses[size]} rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 select-none ${className}`}
         title={alt || cleanTicker}
       >
-        <span>{cleanTicker.slice(0, 4)}</span>
+        <span>{cleanTicker.slice(0, 3)}</span>
       </div>
     );
   }
 
   return (
-    <div className={`relative shrink-0 ${sizeClasses[size]} ${rounded} overflow-hidden bg-slate-900/90 border border-slate-800 p-0.5 flex items-center justify-center shadow-sm ${className}`}>
-      <img
-        src={logoSrc}
-        alt={alt || `${cleanTicker} Logo`}
-        className="w-full h-full object-contain"
-        onError={() => setHasError(true)}
-        loading="lazy"
-      />
-    </div>
+    <img
+      src={logoSrc}
+      alt={alt || `${cleanTicker} Logo`}
+      className={`shrink-0 ${sizeClasses[size]} rounded-full object-contain ${className}`}
+      onError={() => setHasError(true)}
+      loading="lazy"
+    />
   );
 };

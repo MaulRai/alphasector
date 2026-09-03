@@ -22,7 +22,7 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
         <div className="flex items-center gap-3.5">
-          <CompanyLogo symbol={data.symbol} size="lg" rounded="rounded-2xl" />
+          <CompanyLogo symbol={data.symbol} size="lg" />
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold text-white tracking-tight">
