@@ -139,13 +139,20 @@ export default function SettingsPage() {
         
         {/* Back Link & Page Title */}
         <div className="space-y-3">
-          <Link
-            href="/copilot"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.history.length > 1) {
+                router.back();
+              } else {
+                router.push('/copilot');
+              }
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer group"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Kembali ke Copilot Terminal</span>
-          </Link>
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>Kembali ke Halaman Sebelumnya</span>
+          </button>
 
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-md shadow-emerald-500/5">
