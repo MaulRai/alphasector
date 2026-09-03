@@ -60,10 +60,6 @@ export default function PeerBattlePage() {
   };
 
   const handleRemoveTicker = (symbolToRemove: string) => {
-    if (tickers.length <= 2) {
-      setError('Minimal 2 emiten untuk membandingkan.');
-      return;
-    }
     setTickers(tickers.filter(t => t !== symbolToRemove));
     setError(null);
   };
@@ -127,21 +123,25 @@ export default function PeerBattlePage() {
             {/* Active Tickers Chips */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-slate-400 font-medium mr-1">Emiten Dipilih:</span>
-              {tickers.map(sym => (
-                <span
-                  key={sym}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
-                >
-                  <CompanyLogo symbol={sym} size="xs" />
-                  <span>{sym}</span>
-                  <button
-                    onClick={() => handleRemoveTicker(sym)}
-                    className="p-0.5 rounded hover:bg-cyan-500/20 text-cyan-400"
+              {tickers.length === 0 ? (
+                <span className="text-xs text-slate-500 italic">Belum ada emiten. Silakan tambahkan minimal 2 emiten.</span>
+              ) : (
+                tickers.map(sym => (
+                  <span
+                    key={sym}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold text-xs"
                   >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
+                    <CompanyLogo symbol={sym} size="xs" />
+                    <span>{sym}</span>
+                    <button
+                      onClick={() => handleRemoveTicker(sym)}
+                      className="p-0.5 rounded hover:bg-cyan-500/20 text-cyan-400"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))
+              )}
             </div>
 
             {/* Add Ticker Input with Focus Suggestions & Live Search */}
@@ -165,7 +165,7 @@ export default function PeerBattlePage() {
             <button
               onClick={() => runBattle(tickers)}
               disabled={isLoading || tickers.length < 2}
-              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100"
             >
               {isLoading ? (
                 <>
@@ -175,7 +175,13 @@ export default function PeerBattlePage() {
               ) : (
                 <>
                   <Play className="h-4 w-4 fill-black" />
-                  <span>Jalankan Peer Battle ({tickers.join(' vs ')})</span>
+                  <span>
+                    {tickers.length >= 2 
+                      ? `Jalankan Peer Battle (${tickers.join(' vs ')})`
+                      : tickers.length === 1
+                      ? 'Pilih 1 Emiten Lagi (Min. 2)'
+                      : 'Pilih Minimal 2 Emiten'}
+                  </span>
                 </>
               )}
             </button>
