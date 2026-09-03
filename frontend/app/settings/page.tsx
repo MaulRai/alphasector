@@ -323,7 +323,19 @@ export default function SettingsPage() {
             </div>
 
             <ol className="space-y-1.5 text-xs text-slate-400 list-decimal list-inside leading-relaxed">
-              <li>Kunjungi portal resmi <strong className="text-slate-200">sectors.app</strong> dan login/register gratis.</li>
+              <li>
+                Kunjungi portal resmi{' '}
+                <a
+                  href="https://sectors.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-2 inline-flex items-center gap-0.5"
+                >
+                  sectors.app
+                  <ExternalLink className="h-2.5 w-2.5 inline" />
+                </a>{' '}
+                dan login/register akun gratis Anda.
+              </li>
               <li>Selesaikan proses onboarding akun di portal Sectors.</li>
               <li>Buka tab <strong className="text-slate-200">API Keys</strong>, klik <em>Generate Key</em>, lalu salin key Anda ke form di atas.</li>
             </ol>
