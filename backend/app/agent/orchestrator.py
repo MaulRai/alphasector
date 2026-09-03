@@ -46,8 +46,10 @@ class AgentOrchestrator:
             
             # Explicit triggers that demand a brand new full agentic DAG execution in an existing room
             explicit_agentic_triggers = [
-                "jalankan riset baru", "buat dosir baru", "full battle", "full screening",
-                "screening baru", "filter pasar baru", "deep dive baru", "riset lengkap:"
+                "jalankan riset baru", "jalankan riset", "buat dosir baru", "buatkan dosir baru",
+                "full battle", "battle baru", "full screening", "screening baru",
+                "filter pasar baru", "deep dive baru", "riset lengkap", "riset otonom",
+                "lakukan screening baru", "jalankan full battle"
             ]
             demands_full_agentic = any(trig in query_lower for trig in explicit_agentic_triggers)
 
