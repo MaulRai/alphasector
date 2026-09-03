@@ -18,10 +18,29 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const TOKEN_KEY = 'alphasector_auth_token';
+const USER_KEY = 'alphasector_user';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // Synchronously initialize from localStorage to prevent unauthenticated flash on reload
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cachedUser = localStorage.getItem(USER_KEY);
+        return cachedUser ? JSON.parse(cachedUser) : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(TOKEN_KEY);
+    }
+    return null;
+  });
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -31,12 +50,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       getMeProfile(storedToken)
         .then((userData) => {
           setUser(userData);
+          localStorage.setItem(USER_KEY, JSON.stringify(userData));
         })
-        .catch(() => {
-          // Expired or invalid token
-          localStorage.removeItem(TOKEN_KEY);
-          setToken(null);
-          setUser(null);
+        .catch((err: any) => {
+          // ONLY clear session if server explicitly returned 401 Unauthorized
+          // Never log out on temporary network reload or 500 error
+          const msg = err?.message || '';
+          if (err?.status === 401 || msg.includes('401') || msg.includes('kedaluwarsa') || msg.includes('Unauthorized')) {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(USER_KEY);
+            setToken(null);
+            setUser(null);
+          }
         })
         .finally(() => {
           setIsLoading(false);
@@ -51,6 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res: AuthResponse = await loginUser(email, password);
       localStorage.setItem(TOKEN_KEY, res.access_token);
+      localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
       setUser(res.user);
     } finally {
@@ -67,6 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res: AuthResponse = await registerUser(email, password, fullName);
       localStorage.setItem(TOKEN_KEY, res.access_token);
+      localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
       setUser(res.user);
     } finally {
@@ -76,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
   };
