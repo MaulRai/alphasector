@@ -82,12 +82,17 @@ export default function CopilotPage() {
     }
   }, [user]);
 
-  // Handle follow-up query passed from Peer Battle, Smart Money, or Screener
+  // Handle session_id or initial_query passed from Peer Battle, Smart Money, or Screener
   useEffect(() => {
-    if (typeof window !== 'undefined' && !initialQueryExecuted.current) {
+    if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
+      const targetSessionId = params.get('session_id');
       const initQ = params.get('initial_query') || params.get('q');
-      if (initQ) {
+
+      if (targetSessionId) {
+        window.history.replaceState({}, '', window.location.pathname);
+        loadSessionDetails(targetSessionId);
+      } else if (initQ && !initialQueryExecuted.current) {
         initialQueryExecuted.current = true;
         window.history.replaceState({}, '', window.location.pathname);
         setActiveSessionId(null);
@@ -101,8 +106,13 @@ export default function CopilotPage() {
     try {
       const res = await fetchUserChatSessions();
       setSessions(res.sessions || []);
-      const hasInitQuery = typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('initial_query') || new URLSearchParams(window.location.search).get('q'));
-      if (res.sessions && res.sessions.length > 0 && !activeSessionId && !hasInitQuery && !initialQueryExecuted.current) {
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const targetSessionId = params?.get('session_id');
+      const hasInitQuery = params?.get('initial_query') || params?.get('q');
+
+      if (targetSessionId) {
+        loadSessionDetails(targetSessionId);
+      } else if (res.sessions && res.sessions.length > 0 && !activeSessionId && !hasInitQuery && !initialQueryExecuted.current) {
         // Load the most recent session by default
         loadSessionDetails(res.sessions[0].id);
       }

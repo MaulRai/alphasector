@@ -304,8 +304,12 @@ export default function PeerBattlePage() {
               </div>
               <button
                 onClick={() => {
-                  const query = `Analisis mendalam perbandingan fundamental dan valuasi antara emiten ${tickers.join(', ')} berdasarkan perbandingan Peer Battle terbaru. Berikan rekomendasi bobot portofolio dan katalis utamanya.`;
-                  router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                  if (report?.session_id) {
+                    router.push(`/copilot?session_id=${encodeURIComponent(report.session_id)}`);
+                  } else {
+                    const query = `Bandingkan valuasi dan dividen ${tickers.join(' vs ')}`;
+                    router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                  }
                 }}
                 className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
               >
