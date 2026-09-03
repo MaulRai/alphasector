@@ -20,24 +20,25 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
   creditsConsumed = 0,
   isLoading = false,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  // Collapsed by default so investors can immediately focus on the Executive Synthesis and Data
+  const [isExpanded, setIsExpanded] = useState(false);
 
   if (!steps || steps.length === 0) return null;
 
   const getPhaseIcon = (phase: ExecutionPhase) => {
     switch (phase) {
       case 'PLANNING':
-        return <Cpu className="h-4 w-4 text-purple-400" />;
+        return <Cpu className="h-3 w-3 text-purple-400" />;
       case 'FETCHING':
-        return <Database className="h-4 w-4 text-blue-400" />;
+        return <Database className="h-3 w-3 text-blue-400" />;
       case 'COMPARING':
-        return <Calculator className="h-4 w-4 text-amber-400" />;
+        return <Calculator className="h-3 w-3 text-amber-400" />;
       case 'SYNTHESIZING':
-        return <FileText className="h-4 w-4 text-emerald-400" />;
+        return <FileText className="h-3 w-3 text-emerald-400" />;
       case 'ERROR':
-        return <AlertCircle className="h-4 w-4 text-red-400" />;
+        return <AlertCircle className="h-3 w-3 text-red-400" />;
       default:
-        return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
+        return <CheckCircle2 className="h-3 w-3 text-emerald-400" />;
     }
   };
 
@@ -59,82 +60,76 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
   };
 
   return (
-    <div className="w-full rounded-2xl border border-slate-800 bg-[#0b0f19]/90 shadow-xl overflow-hidden mb-6">
-      {/* Accordion Header */}
+    <div className="w-full rounded-xl border border-slate-800/80 bg-[#090d16]/70 shadow-sm overflow-hidden mb-3">
+      {/* Compact Accordion Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between px-5 py-3.5 bg-slate-900/50 hover:bg-slate-900/80 transition-colors border-b border-slate-800/80"
+        className="w-full flex items-center justify-between px-3.5 py-2 hover:bg-slate-800/40 transition-colors text-left"
       >
-        <div className="flex items-center gap-3">
-          <div className="relative p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="p-1 rounded-md bg-emerald-500/10 text-emerald-400 shrink-0">
             {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-3 w-3 animate-spin" />
             ) : (
-              <Cpu className="h-4 w-4" />
+              <Cpu className="h-3 w-3" />
             )}
           </div>
-          <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-white tracking-wide">
-                Agent Multi-Step Reasoning Trace
-              </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                {steps.length} Steps Executed
-              </span>
-            </div>
-            <p className="text-xs text-slate-400">
-              Deterministic planner & custom tool orchestration pipeline
-            </p>
+          <div className="flex items-center gap-2 truncate">
+            <span className="text-xs font-semibold text-slate-300">
+              Reasoning Trace
+            </span>
+            <span className="text-[10px] font-medium px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700/60">
+              {steps.length} Steps
+            </span>
+            <span className="hidden sm:inline text-[11px] text-slate-500 font-mono">
+              ({totalTimeMs}ms • {creditsConsumed} cr)
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-3 text-xs text-slate-400">
-            <span>Latency: <strong className="text-slate-200">{totalTimeMs}ms</strong></span>
-            <span>•</span>
-            <span>Credits: <strong className="text-emerald-400">{creditsConsumed}</strong></span>
-          </div>
-          <div className="p-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        <div className="flex items-center gap-2 text-slate-500 hover:text-slate-300 text-xs shrink-0">
+          <span className="text-[11px] hidden sm:inline">{isExpanded ? 'Tutup' : 'Audit Log'}</span>
+          <div className="p-0.5 rounded text-slate-400">
+            {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
           </div>
         </div>
       </button>
 
-      {/* Accordion Body */}
+      {/* Accordion Body (Subtle compact audit log) */}
       {isExpanded && (
-        <div className="p-5 space-y-4 max-h-96 overflow-y-auto bg-slate-950/40">
-          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-800">
+        <div className="p-3.5 space-y-2.5 max-h-72 overflow-y-auto bg-slate-950/60 border-t border-slate-800/60">
+          <div className="relative pl-5 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-px before:bg-slate-800">
             {steps.map((step, idx) => (
               <div key={step.id || idx} className="relative group">
                 {/* Timeline Dot */}
-                <div className="absolute -left-6 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 border border-slate-700 group-hover:border-emerald-500 transition-colors">
-                  <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
+                <div className="absolute -left-5 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 border border-slate-700">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-400"></div>
                 </div>
 
-                {/* Step Card */}
-                <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-3.5 hover:border-slate-700 transition-all">
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs font-bold text-slate-200 truncate">
+                {/* Compact Step Card */}
+                <div className="rounded-lg border border-slate-800/60 bg-slate-900/40 p-2.5 hover:border-slate-700 transition-all text-xs">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="font-semibold text-slate-200 text-xs truncate">
                         Step {step.step_number}: {step.title}
                       </span>
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${getPhaseBadge(step.phase)}`}>
+                      <span className={`text-[9px] font-medium px-1.5 py-0.2 rounded border ${getPhaseBadge(step.phase)}`}>
                         {step.phase}
                       </span>
                     </div>
-                    <span className="text-[11px] text-slate-500 font-mono shrink-0">
+                    <span className="text-[10px] text-slate-500 font-mono shrink-0">
                       {step.timestamp}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
                     {step.detail}
                   </p>
 
                   {/* Tool Call Metadata if present */}
                   {step.tool_call && (
-                    <div className="mt-2.5 pt-2.5 border-t border-slate-800/60 flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700/60">
+                    <div className="mt-1.5 pt-1.5 border-t border-slate-800/40 flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-slate-400">
+                      <span className="px-1.5 py-0.2 rounded bg-slate-800 text-cyan-400 border border-slate-700/60">
                         {step.tool_call.endpoint}
                       </span>
                       {step.tool_call.latency_ms > 0 && (
@@ -142,7 +137,7 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
                           {step.tool_call.latency_ms}ms
                         </span>
                       )}
-                      <span className="text-emerald-400">
+                      <span className="text-emerald-400 font-semibold">
                         Status {step.tool_call.status}
                       </span>
                     </div>
