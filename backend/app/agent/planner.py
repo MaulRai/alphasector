@@ -83,6 +83,8 @@ def contains_keyword(text: str, keywords: List[str]) -> bool:
 
 class AgentPlanner:
     """Plans multi-step execution DAG based on query intent & parameters."""
+    parse_tickers = staticmethod(parse_tickers_from_query)
+    contains_keyword = staticmethod(contains_keyword)
     
     @staticmethod
     def plan(query: str, context_ticker: Optional[str] = None) -> Tuple[AgentIntent, List[str], List[Dict[str, Any]]]:

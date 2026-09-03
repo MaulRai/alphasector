@@ -38,22 +38,40 @@ class AgentOrchestrator:
         step_counter = 1
         credits_used = 0
 
-        # In an active conversation session (follow-up turns):
-        # DEFAULT = Regular Conversation (clean Markdown, custom tables, multi-turn memory).
-        # Only switch to Full Agentic Flow if the user explicitly demands a fresh full tool pipeline.
+        # -------------------------------------------------------------
+        # 0. HYBRID INTENT ARBITER (For Multi-Turn Sessions)
+        # -------------------------------------------------------------
         if conversation_history and len(conversation_history) > 0:
             query_lower = query.lower().strip()
             
-            # Explicit triggers that demand a brand new full agentic DAG execution in an existing room
-            explicit_agentic_triggers = [
-                "jalankan riset baru", "jalankan riset", "buat dosir baru", "buatkan dosir baru",
-                "full battle", "battle baru", "full screening", "screening baru",
-                "filter pasar baru", "deep dive baru", "riset lengkap", "riset otonom",
-                "lakukan screening baru", "jalankan full battle"
+            # 1. Markers indicating a pure conversational discussion / table / advice
+            conversational_markers = [
+                "jelaskan", "kenapa", "mengapa", "bagaimana", "apakah", "menurutmu", "pendapat",
+                "buatkan tabel", "tabel ringkas", "tabel perbandingan", "tabel pros", "pros", "cons",
+                "kelebihan", "kekurangan", "alokasi", "simulasi", "rangkum", "ringkas", "kesimpulan",
+                "saran", "rekomendasi alokasi", "tersebut", "tadi", "di atas", "keduanya", "semuanya",
+                "keenam", "ketiga", "keempat", "kelima", "analisiskan poin", "apa itu", "arti dari"
             ]
-            demands_full_agentic = any(trig in query_lower for trig in explicit_agentic_triggers)
+            is_conversational_marker = any(m in query_lower for m in conversational_markers)
 
-            if not demands_full_agentic:
+            # 2. Extract any newly mentioned stock tickers in the query
+            detected_tickers = planner.parse_tickers(query)
+
+            # 3. Check if user is asking for a fresh market-wide screening / filtering
+            screening_verbs = ["screen", "screener", "filter", "cari saham", "temukan saham", "top saham", "saham terbaik", "saham dividen"]
+            is_screening_intent = any(v in query_lower for v in screening_verbs) and len(detected_tickers) == 0
+
+            # 4. Check if user is introducing 2+ distinct tickers for a brand new Peer Battle
+            is_peer_battle_intent = len(detected_tickers) >= 2 and not is_conversational_marker
+
+            # 5. Check explicit command keywords
+            explicit_triggers = ["jalankan riset baru", "buat dosir baru", "full battle", "deep dive baru", "riset lengkap"]
+            is_explicit_command = any(t in query_lower for t in explicit_triggers)
+
+            # Determine whether to run Full Agentic DAG or Fast Conversational Response
+            should_run_full_agentic = (is_peer_battle_intent or is_screening_intent or is_explicit_command) and not is_conversational_marker
+
+            if not should_run_full_agentic:
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
