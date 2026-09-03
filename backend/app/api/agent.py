@@ -23,16 +23,35 @@ def get_optional_user_id(authorization: Optional[str]) -> Optional[int]:
 @router.post("/query", response_model=AgentQueryResponse)
 async def execute_agent_query(
     request: AgentQueryRequest,
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    x_sectors_api_key: Optional[str] = Header(None)
 ):
     """
     Execute autonomous multi-step reasoning query across Sectors Financial API.
-    Returns live step-by-step reasoning trace, quantitative metrics, AI synthesis, and suggested follow-ups.
-    Persists to both chat_sessions/chat_messages and research_reports for the authenticated user.
+    Supports Bring Your Own Key (BYOK) or uses free 50-credit demo server quota.
     """
     try:
         user_id = get_optional_user_id(authorization)
         active_session_id = request.session_id
+
+        # Determine effective Sectors API Key & Credit Quota
+        custom_key: Optional[str] = x_sectors_api_key.strip() if x_sectors_api_key else None
+        
+        if user_id:
+            user_dict = UserRepository.get_by_id(user_id)
+            if not custom_key and user_dict and user_dict.get("custom_sectors_key"):
+                custom_key = user_dict["custom_sectors_key"].strip()
+            
+            # If still using server demo key, verify demo credits
+            if not custom_key:
+                credits = user_dict.get("demo_credits", 50) if user_dict else 50
+                if credits is not None and credits <= 0:
+                    raise HTTPException(
+                        status_code=402,
+                        detail="KUOTA_HABIS: Kuota 50 credit demo server Anda telah habis. Silakan pasang Sectors API Key pribadi Anda di menu Settings (⚙️) untuk melanjutkan riset."
+                    )
+                # Deduct 1 credit for server lookup
+                UserRepository.deduct_demo_credits(user_id, 1)
 
         # If user is authenticated and session_id provided, ensure session exists
         if user_id and active_session_id:
@@ -65,11 +84,12 @@ async def execute_agent_query(
                 content=request.query
             )
 
-        # Execute agent
+        # Execute agent with custom or default key
         response = await agent_orchestrator.execute(
             query=request.query,
             context_ticker=request.context_ticker,
-            session_id=active_session_id
+            session_id=active_session_id,
+            custom_api_key=custom_key
         )
 
         # If authenticated, persist assistant message and update session primary ticker if identified

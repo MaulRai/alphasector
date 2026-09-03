@@ -127,6 +127,8 @@ export interface User {
   email: string;
   full_name: string;
   role: string;
+  demo_credits?: number;
+  has_custom_sectors_key?: boolean;
 }
 
 export interface AuthResponse {

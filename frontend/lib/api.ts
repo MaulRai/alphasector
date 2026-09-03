@@ -7,6 +7,20 @@ function getStoredToken(): string | null {
   return localStorage.getItem('alphasector_auth_token');
 }
 
+export function getCustomSectorsKey(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('alphasector_custom_sectors_key');
+}
+
+export function setCustomSectorsKey(key: string | null) {
+  if (typeof window === 'undefined') return;
+  if (key && key.trim()) {
+    localStorage.setItem('alphasector_custom_sectors_key', key.trim());
+  } else {
+    localStorage.removeItem('alphasector_custom_sectors_key');
+  }
+}
+
 export async function checkBackendHealth(): Promise<{ status: string }> {
   try {
     const res = await fetch(`${API_BASE_URL}/`);
@@ -22,11 +36,15 @@ export async function queryAgent(
   sessionId?: string
 ): Promise<AgentQueryResponse> {
   const token = getStoredToken();
+  const customSectorsKey = getCustomSectorsKey();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  }
+  if (customSectorsKey) {
+    headers['X-Sectors-Api-Key'] = customSectorsKey;
   }
 
   const response = await fetch(`${API_BASE_URL}/api/agent/query`, {
@@ -268,5 +286,47 @@ export async function removeFromWatchlist(ticker: string) {
     headers: { 'Authorization': `Bearer ${token}` },
   });
   if (!res.ok) throw new Error('Gagal menghapus dari watchlist.');
+  return res.json();
+}
+
+// --- SETTINGS & BYOK SECTORS API KEY ---
+
+export async function verifySectorsApiKey(apiKey: string): Promise<{ status: string; message: string; latency_ms: number }> {
+  const res = await fetch(`${API_BASE_URL}/api/sectors/verify-key`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ api_key: apiKey }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Verifikasi API key gagal.' }));
+    throw new Error(err.detail || 'API key tidak valid.');
+  }
+  return res.json();
+}
+
+export async function saveCustomSectorsApiKey(apiKey: string | null) {
+  const token = getStoredToken();
+  setCustomSectorsKey(apiKey);
+  if (token) {
+    try {
+      await fetch(`${API_BASE_URL}/api/auth/settings/api-key`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ api_key: apiKey }),
+      });
+    } catch {}
+  }
+}
+
+export async function fetchUserCredits(): Promise<{ demo_credits: number; max_credits: number; has_custom_sectors_key: boolean }> {
+  const token = getStoredToken();
+  if (!token) return { demo_credits: 50, max_credits: 50, has_custom_sectors_key: !!getCustomSectorsKey() };
+  const res = await fetch(`${API_BASE_URL}/api/auth/credits`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  if (!res.ok) return { demo_credits: 50, max_credits: 50, has_custom_sectors_key: !!getCustomSectorsKey() };
   return res.json();
 }

@@ -157,3 +157,23 @@ async def get_trade_idea_preset(idea_slug: str):
         fallback = TRADE_IDEAS_MOCK_DATA.get(idea_slug, [])
         return {"preset": idea_slug, "data": fallback, "latency_ms": 1, "is_mock": True, "fallback": True}
 
+@router.post("/verify-key")
+async def verify_sectors_api_key(payload: dict):
+    """Verify if a user's Sectors API key is valid by testing connectivity."""
+    from app.sectors.client import SectorsAPIClient
+    api_key = payload.get("api_key", "").strip()
+    if not api_key:
+        raise HTTPException(status_code=400, detail="Sectors API key tidak boleh kosong.")
+    
+    test_client = SectorsAPIClient(api_key=api_key)
+    try:
+        data, ms, status = await test_client.get_subsectors()
+        return {
+            "status": "valid",
+            "message": "Sectors API Key terverifikasi & aktif!",
+            "latency_ms": ms
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"API Key tidak valid atau dinonaktifkan: {str(e)}")
+
+

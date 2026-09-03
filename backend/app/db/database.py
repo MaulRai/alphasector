@@ -20,7 +20,7 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
-    # 1. Users Table (Owner Entity)
+    # 1. Users Table (Owner Entity with 50 Free Demo Credits & BYOK Custom Key)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -28,8 +28,12 @@ def init_db():
             full_name TEXT NOT NULL,
             hashed_password TEXT NOT NULL,
             role TEXT DEFAULT 'analyst',
+            demo_credits INTEGER DEFAULT 50,
+            custom_sectors_key TEXT,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS demo_credits INTEGER DEFAULT 50;
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS custom_sectors_key TEXT;
     """)
     
     # 2. Chat Sessions Table (Rooms owned by user_id with JSONB messages column)
@@ -129,14 +133,39 @@ class UserRepository:
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         pwd_hash = hash_password(password)
         cursor.execute("""
-            INSERT INTO users (email, full_name, hashed_password, role)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO users (email, full_name, hashed_password, role, demo_credits)
+            VALUES (%s, %s, %s, %s, 50)
             RETURNING *
         """, (email.lower().strip(), full_name.strip(), pwd_hash, role))
         row = cursor.fetchone()
         conn.commit()
         conn.close()
         return dict(row)
+
+    @staticmethod
+    def update_custom_api_key(user_id: int, custom_key: Optional[str]) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        clean_key = custom_key.strip() if custom_key else None
+        cursor.execute("UPDATE users SET custom_sectors_key = %s WHERE id = %s", (clean_key, user_id))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def deduct_demo_credits(user_id: int, amount: int = 1) -> int:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("""
+            UPDATE users 
+            SET demo_credits = GREATEST(0, demo_credits - %s)
+            WHERE id = %s
+            RETURNING demo_credits
+        """, (amount, user_id))
+        row = cursor.fetchone()
+        conn.commit()
+        conn.close()
+        return row["demo_credits"] if row else 0
 
 
 class ChatRepository:

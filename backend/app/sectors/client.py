@@ -135,3 +135,9 @@ class SectorsAPIClient:
         return await self._get("/mining/sites/", use_cache=True)
 
 sectors_client = SectorsAPIClient()
+
+def get_sectors_client(api_key: Optional[str] = None) -> SectorsAPIClient:
+    """Return SectorsAPIClient with custom user key if provided, else shared singleton."""
+    if api_key and api_key.strip():
+        return SectorsAPIClient(api_key=api_key.strip())
+    return sectors_client

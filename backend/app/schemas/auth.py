@@ -10,11 +10,16 @@ class UserLoginRequest(BaseModel):
     email: str
     password: str
 
+class CustomApiKeyRequest(BaseModel):
+    api_key: Optional[str] = Field(None, description="Personal Sectors API Key or empty to reset")
+
 class UserResponse(BaseModel):
     id: int
     email: str
     full_name: str
     role: str
+    demo_credits: int = 50
+    has_custom_sectors_key: bool = False
     created_at: Optional[str] = None
 
 class TokenResponse(BaseModel):

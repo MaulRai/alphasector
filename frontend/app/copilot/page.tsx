@@ -12,6 +12,7 @@ import { TradeIdeasRadar } from '@/components/TradeIdeasRadar';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifactPanel';
+import { SettingsModal } from '@/components/SettingsModal';
 import { 
   queryAgent, 
   fetchUserChatSessions, 
@@ -26,7 +27,7 @@ import {
   BookOpen, AlertCircle, Plus, MessageSquare, 
   Trash2, ChevronRight, CornerDownLeft, Bot, 
   User as UserIcon, PanelLeftClose, PanelLeft, Clock,
-  ArrowRight, ShieldCheck, TrendingUp, FileText, Layers
+  ArrowRight, ShieldCheck, TrendingUp, FileText, Layers, Settings, Key
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 
@@ -49,9 +50,10 @@ export default function CopilotPage() {
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
   
-  // Modal State for session deletion
+  // Modal State for session deletion & settings
   const [sessionToDelete, setSessionToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isDeletingSession, setIsDeletingSession] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
@@ -637,11 +639,30 @@ export default function CopilotPage() {
               <LiveThinkingTrace query={inputQuery} />
             )}
 
-            {/* Error Alert */}
+            {/* Error & Quota Alert */}
             {error && (
-              <div className="max-w-4xl mx-auto w-full p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 shrink-0" />
-                <p>{error}</p>
+              <div className="max-w-4xl mx-auto w-full p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-card-reveal shadow-xl">
+                <div className="flex items-start sm:items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5 sm:mt-0" />
+                  <div>
+                    <p className="font-semibold text-amber-200">{error}</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      {error.includes('KUOTA_HABIS') || error.includes('402')
+                        ? 'Pasang API Key Sectors pribadi Anda untuk melanjutkan riset tanpa batasan kuota demo server.'
+                        : 'Periksa koneksi jaringan atau coba ulangi query Anda.'}
+                    </p>
+                  </div>
+                </div>
+
+                {(error.includes('KUOTA_HABIS') || error.includes('402') || error.includes('Settings')) && (
+                  <button
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 text-black font-bold text-xs shrink-0 transition-all active:scale-95 shadow-md shadow-emerald-500/10"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                    <span>Buka Settings (BYOK)</span>
+                  </button>
+                )}
               </div>
             )}
 
@@ -733,6 +754,12 @@ export default function CopilotPage() {
         cancelText="Batal"
         variant="danger"
         isLoading={isDeletingSession}
+      />
+
+      {/* Settings Modal (BYOK & Quota Configuration) */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
 
     </div>

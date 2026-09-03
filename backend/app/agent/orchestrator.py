@@ -25,7 +25,13 @@ class AgentOrchestrator:
     4. Bahasa Indonesia Synthesis with Groq (120b)
     """
 
-    async def execute(self, query: str, context_ticker: Optional[str] = None, session_id: Optional[str] = None) -> AgentQueryResponse:
+    async def execute(
+        self, 
+        query: str, 
+        context_ticker: Optional[str] = None, 
+        session_id: Optional[str] = None,
+        custom_api_key: Optional[str] = None
+    ) -> AgentQueryResponse:
         start_time = time.time()
         trace: List[ReasoningStep] = []
         step_counter = 1
@@ -61,29 +67,29 @@ class AgentOrchestrator:
             action = step.get("action")
             if action == "FETCH_REPORT":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_company_report(t)
+                data, log = await tool_executor.fetch_company_report(t, api_key=custom_api_key)
                 return ("REPORT", t, data, log)
             elif action == "FETCH_BROKER_SUMMARY":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_broker_summary(t)
+                data, log = await tool_executor.fetch_broker_summary(t, api_key=custom_api_key)
                 return ("BROKER", t, data, log)
             elif action == "FETCH_FOREIGN_FLOW":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_foreign_flow(t)
+                data, log = await tool_executor.fetch_foreign_flow(t, api_key=custom_api_key)
                 return ("FOREIGN", t, data, log)
             elif action == "FETCH_SEGMENTS":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_company_segments(t)
+                data, log = await tool_executor.fetch_company_segments(t, api_key=custom_api_key)
                 return ("SEGMENTS", t, data, log)
             elif action in ("SCREEN_MARKET", "RUN_SCREENER"):
                 q_text = step.get("query", query)
-                data, log = await tool_executor.screen_market(q_text)
+                data, log = await tool_executor.screen_market(q_text, api_key=custom_api_key)
                 return ("SCREENER", "SCREENER", data, log)
             elif action == "FETCH_TOP_MOVERS":
-                data, log = await tool_executor.fetch_top_movers()
+                data, log = await tool_executor.fetch_top_movers(api_key=custom_api_key)
                 return ("TOP_MOVERS", "TOP_MOVERS", data, log)
             elif action == "FETCH_TOP_INSTITUTIONAL_BROKERS":
-                data, log = await tool_executor.fetch_top_institutional_brokers()
+                data, log = await tool_executor.fetch_top_institutional_brokers(api_key=custom_api_key)
                 return ("TOP_BROKERS", "TOP_BROKERS", data, log)
             return (None, None, None, None)
 

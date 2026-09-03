@@ -1,14 +1,15 @@
 from typing import Dict, Any, Optional, Tuple, List
-from app.sectors.client import sectors_client
+from app.sectors.client import get_sectors_client
 from app.schemas.agent import ToolCallLog
 
 class AgentToolExecutor:
-    """Executes deterministic tool calls to Sectors REST API."""
+    """Executes deterministic tool calls to Sectors REST API with optional custom BYOK API key."""
 
     @staticmethod
-    async def fetch_company_report(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_company_report(ticker: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_company_report(ticker)
+            data, ms, status = await client.get_company_report(ticker)
             log = ToolCallLog(
                 endpoint=f"/v2/company/report/{ticker.upper()}/",
                 params={"sections": "overview,valuation,financials,peers"},
@@ -27,9 +28,10 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def fetch_company_segments(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_company_segments(ticker: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_company_segments(ticker)
+            data, ms, status = await client.get_company_segments(ticker)
             log = ToolCallLog(
                 endpoint=f"/v2/company/segments/{ticker.upper()}/",
                 status=status,
@@ -47,9 +49,10 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def fetch_broker_summary(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_broker_summary(ticker: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_broker_summary_top(ticker)
+            data, ms, status = await client.get_broker_summary_top(ticker)
             log = ToolCallLog(
                 endpoint=f"/v2/broker-summary/{ticker.upper()}/top/",
                 status=status,
@@ -67,9 +70,10 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def fetch_foreign_flow(ticker: str) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_foreign_flow(ticker: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_foreign_flow(ticker)
+            data, ms, status = await client.get_foreign_flow(ticker)
             log = ToolCallLog(
                 endpoint=f"/v2/broker-summary/foreign-flow/{ticker.upper()}/",
                 status=status,
@@ -87,7 +91,8 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def screen_market(query: str) -> Tuple[Optional[List[Dict[str, Any]]], ToolCallLog]:
+    async def screen_market(query: str, api_key: Optional[str] = None) -> Tuple[Optional[List[Dict[str, Any]]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         clean_q = query.lower().strip()
         try:
             # 1. Check if query matches a Trade Ideas preset
@@ -112,7 +117,7 @@ class AgentToolExecutor:
                 ms = 1
                 status = 200
             else:
-                data, ms, status = await sectors_client.screen_companies(q=query)
+                data, ms, status = await client.screen_companies(q=query)
 
             log = ToolCallLog(
                 endpoint="/v2/companies/",
@@ -132,9 +137,10 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def fetch_top_institutional_brokers() -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_top_institutional_brokers(api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_top_brokers(cohort="institutional", metric="gross")
+            data, ms, status = await client.get_top_brokers(cohort="institutional", metric="gross")
             log = ToolCallLog(
                 endpoint="/v2/brokers/top/",
                 params={"cohort": "institutional", "metric": "gross"},
@@ -153,9 +159,10 @@ class AgentToolExecutor:
             return None, log
 
     @staticmethod
-    async def fetch_top_movers() -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+    async def fetch_top_movers(api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
         try:
-            data, ms, status = await sectors_client.get_top_movers(periods="7d", n_stock=5)
+            data, ms, status = await client.get_top_movers(periods="7d", n_stock=5)
             log = ToolCallLog(
                 endpoint="/v2/companies/top-changes/",
                 params={"periods": "7d", "n_stock": 5},
