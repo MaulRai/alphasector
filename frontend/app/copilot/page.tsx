@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
+import { LiveThinkingTrace } from '@/components/LiveThinkingTrace';
 import { Company360Card } from '@/components/Company360Card';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
@@ -608,20 +609,9 @@ export default function CopilotPage() {
               );
             })}
 
-            {/* Live Loading State Message */}
+            {/* Live Interactive Reasoning Trace Streamer */}
             {isLoading && (
-              <div className="flex flex-col items-start max-w-4xl mx-auto w-full animate-in fade-in duration-200">
-                <div className="flex items-center gap-2 mb-1.5 text-[11px] text-emerald-400 font-semibold">
-                  <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400">
-                    <Bot className="h-3 w-3" />
-                  </div>
-                  <span>AlphaSector Agent sedang bernalar...</span>
-                </div>
-                <div className="p-4 rounded-2xl border border-slate-800 bg-[#0d121e]/90 flex items-center gap-3 text-xs text-slate-300 w-full max-w-md">
-                  <RefreshCw className="h-4 w-4 animate-spin text-emerald-400 shrink-0" />
-                  <span>Mengeksekusi multi-step reasoning DAG & tool calling Sectors API...</span>
-                </div>
-              </div>
+              <LiveThinkingTrace query={inputQuery} />
             )}
 
             {/* Error Alert */}
