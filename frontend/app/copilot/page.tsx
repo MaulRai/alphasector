@@ -977,7 +977,7 @@ function CopilotWorkspace() {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder={attachedImage ? "Tanyakan analisis gambar ini (Enter untuk kirim, Shift+Enter baris baru)..." : "Tanyakan analisis emiten ke AlphaAgent (Enter untuk kirim, Shift+Enter baris baru, atau Ctrl+V gambar)..."}
+                placeholder={attachedImage ? "Tanyakan analisis gambar ini ke AlphaAgent..." : "Tanyakan analisis emiten ke AlphaAgent..."}
                 className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1.5 resize-none overflow-y-auto max-h-[84px] leading-relaxed my-auto"
                 disabled={isLoading}
               />
