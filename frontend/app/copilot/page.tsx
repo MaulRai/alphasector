@@ -32,6 +32,7 @@ import {
   Paperclip, Image as ImageIcon, X
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
+import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
 const STOPWORDS_SESSION = new Set([
   'BATU', 'BARA', 'SAHM', 'SAHA', 'KOTA', 'DANA', 'PROS', 'EMIT', 'SEKT', 'JASA',
@@ -637,8 +638,8 @@ function CopilotWorkspace() {
             {/* If New / Empty Session: Show Welcome & Radar Presets */}
             {messages.length === 0 && !isLoading && (
               <div className="max-w-3xl mx-auto py-8 text-center animate-in fade-in duration-300">
-                <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-4">
-                  <Bot className="h-8 w-8" />
+                <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-4 shadow-lg shadow-emerald-500/5">
+                  <AlphaAgentLogo size={44} glow />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
                   AlphaAgent Research Terminal
@@ -678,10 +679,10 @@ function CopilotWorkspace() {
                       </>
                     ) : (
                       <>
-                        <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400">
-                          <Bot className="h-3 w-3" />
+                        <div className="p-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                          <AlphaAgentLogo size={16} />
                         </div>
-                        <span className="font-semibold text-emerald-400">AlphaSector Agent</span>
+                        <span className="font-semibold text-emerald-400">AlphaAgent</span>
                       </>
                     )}
                   </div>
