@@ -53,16 +53,7 @@ export const AlphaAgentLogo: React.FC<AlphaAgentLogoProps> = ({
           filter="url(#alphaGlow)"
         />
 
-        {/* --- 2. Inner Drop Cable (hanging down from apex inside 'A') --- */}
-        <path
-          d="M 52 14 L 52 50"
-          stroke="#34d399"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          opacity="0.85"
-        />
-
-        {/* --- 3. Main Horizontal Crossbar Cable --- */}
+        {/* --- 2. Main Horizontal Crossbar Cable --- */}
         <path
           d="M 33 52 L 70 52"
           stroke="url(#cableGradCyan)"
@@ -70,7 +61,7 @@ export const AlphaAgentLogo: React.FC<AlphaAgentLogoProps> = ({
           strokeLinecap="round"
         />
 
-        {/* Optional Secondary Parallel Conduit / Accent Cross Line */}
+        {/* Secondary Parallel Conduit / Accent Cross Line */}
         <path
           d="M 37 60 L 67 60"
           stroke="#06b6d4"
@@ -79,7 +70,7 @@ export const AlphaAgentLogo: React.FC<AlphaAgentLogoProps> = ({
           opacity="0.9"
         />
 
-        {/* --- 4. Right Looping Cable Branch with Terminal Node Jack --- */}
+        {/* --- 3. Right Looping Cable Branch with Terminal Node Jack --- */}
         {/* Curving out from the crossbar rightward and curving up like an audio/data probe */}
         <path
           d="M 68 52 C 78 52 82 54 86 48 C 89 43 86 36 82 34"
@@ -92,17 +83,7 @@ export const AlphaAgentLogo: React.FC<AlphaAgentLogoProps> = ({
         <circle cx="82" cy="34" r="5" fill="#0B0F19" stroke="#38bdf8" strokeWidth="3" />
         <circle cx="82" cy="34" r="1.5" fill="#38bdf8" />
 
-        {/* --- 5. Downward Hanging Cable 1 (Center-Left Drop) with Node --- */}
-        <path
-          d="M 52 60 L 52 78"
-          stroke="#10b981"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <circle cx="52" cy="82" r="4.5" fill="#0B0F19" stroke="#10b981" strokeWidth="2.5" />
-        <circle cx="52" cy="82" r="1.2" fill="#34d399" />
-
-        {/* --- 6. Downward Hanging Cable 2 (Right Side Drop) with Node --- */}
+        {/* --- 4. Downward Hanging Cable (Terminal Drop) with Node --- */}
         <path
           d="M 66 60 L 68 83"
           stroke="#06b6d4"

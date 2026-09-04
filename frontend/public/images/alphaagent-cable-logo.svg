@@ -27,15 +27,6 @@
     filter="url(#alphaGlow)"
   />
 
-  <!-- Inner Drop Cable (hanging down from apex inside 'A') -->
-  <path
-    d="M 52 14 L 52 50"
-    stroke="#34d399"
-    stroke-width="3.5"
-    stroke-linecap="round"
-    opacity="0.85"
-  />
-
   <!-- Main Horizontal Crossbar Cable -->
   <path
     d="M 33 52 L 70 52"
@@ -64,17 +55,7 @@
   <circle cx="82" cy="34" r="5" fill="#0B0F19" stroke="#38bdf8" stroke-width="3" />
   <circle cx="82" cy="34" r="1.5" fill="#38bdf8" />
 
-  <!-- Downward Hanging Cable 1 with Node -->
-  <path
-    d="M 52 60 L 52 78"
-    stroke="#10b981"
-    stroke-width="3.5"
-    stroke-linecap="round"
-  />
-  <circle cx="52" cy="82" r="4.5" fill="#0B0F19" stroke="#10b981" stroke-width="2.5" />
-  <circle cx="52" cy="82" r="1.2" fill="#34d399" />
-
-  <!-- Downward Hanging Cable 2 with Node -->
+  <!-- Downward Hanging Cable (Right Drop) with Node -->
   <path
     d="M 66 60 L 68 83"
     stroke="#06b6d4"
