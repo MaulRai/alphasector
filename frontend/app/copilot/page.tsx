@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -997,13 +998,20 @@ function CopilotWorkspace() {
                 )}
               </button>
             </form>
-            <p className="text-[10px] text-slate-600 text-center mt-2 flex items-center justify-center gap-1.5">
+            <div className="text-[10px] text-slate-500 text-center mt-2 flex items-center justify-center gap-2 flex-wrap">
               <span>Sesi terenkripsi & tersimpan lokal</span>
-              <span>•</span>
-              <span className="text-emerald-500/80 font-medium">Multimodal Vision didukung Gemini Flash</span>
-              <span>•</span>
-              <span>Data resmi Sectors API</span>
-            </p>
+              <span className="text-slate-700">•</span>
+              <span className="inline-flex items-center gap-1.5 text-slate-400 font-medium">
+                <Image
+                  src="/images/sectors-icon.png"
+                  alt="Sectors Logo"
+                  width={13}
+                  height={13}
+                  className="rounded-sm object-contain"
+                />
+                <span>Terverifikasi Data Resmi Sectors Financial API</span>
+              </span>
+            </div>
           </div>
 
         </section>
