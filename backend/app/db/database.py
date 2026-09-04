@@ -91,6 +91,35 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_sectors_cache_expires ON sectors_api_cache (expires_at);
         CREATE INDEX IF NOT EXISTS idx_sectors_cache_endpoint ON sectors_api_cache (endpoint);
     """)
+
+    # 6. Comprehensive AI Interaction & Observability Audit Logs
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ai_interaction_logs (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            session_id TEXT,
+            query TEXT NOT NULL,
+            model_name TEXT,
+            vision_model TEXT,
+            image_url TEXT,
+            intent TEXT,
+            primary_ticker TEXT,
+            comparison_tickers JSONB,
+            context_data JSONB,
+            sectors_tool_calls JSONB,
+            credits_consumed INTEGER DEFAULT 0,
+            execution_time_ms INTEGER DEFAULT 0,
+            estimated_cost JSONB,
+            output_summary TEXT,
+            output_data JSONB,
+            reasoning_trace JSONB,
+            error_message TEXT,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE INDEX IF NOT EXISTS idx_ai_logs_user_id ON ai_interaction_logs (user_id);
+        CREATE INDEX IF NOT EXISTS idx_ai_logs_session_id ON ai_interaction_logs (session_id);
+        CREATE INDEX IF NOT EXISTS idx_ai_logs_created_at ON ai_interaction_logs (created_at DESC);
+    """)
     
     # Pre-seed demo user if not exists
     cursor.execute("SELECT id FROM users WHERE email = %s", ("demo@alphasector.id",))
@@ -514,4 +543,108 @@ class SectorsCacheRepository:
             return 0
         finally:
             conn.close()
+
+class AILogRepository:
+    """Repository for auditing, behavioral investigation, and observability of all AI calls."""
+    
+    @staticmethod
+    def log_interaction(
+        query: str,
+        model_name: str,
+        user_id: Optional[int] = None,
+        session_id: Optional[str] = None,
+        vision_model: Optional[str] = None,
+        image_url: Optional[str] = None,
+        intent: Optional[str] = None,
+        primary_ticker: Optional[str] = None,
+        comparison_tickers: Optional[List[str]] = None,
+        context_data: Optional[Dict[str, Any]] = None,
+        sectors_tool_calls: Optional[List[Dict[str, Any]]] = None,
+        credits_consumed: int = 0,
+        execution_time_ms: int = 0,
+        estimated_cost: Optional[Dict[str, Any]] = None,
+        output_summary: Optional[str] = None,
+        output_data: Optional[Dict[str, Any]] = None,
+        reasoning_trace: Optional[List[Dict[str, Any]]] = None,
+        error_message: Optional[str] = None
+    ) -> Optional[int]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO ai_interaction_logs (
+                    user_id, session_id, query, model_name, vision_model, image_url,
+                    intent, primary_ticker, comparison_tickers, context_data,
+                    sectors_tool_calls, credits_consumed, execution_time_ms, estimated_cost,
+                    output_summary, output_data, reasoning_trace, error_message, created_at
+                ) VALUES (
+                    %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s,
+                    %s, %s, %s, %s,
+                    %s, %s, %s, %s, CURRENT_TIMESTAMP
+                ) RETURNING id;
+            """, (
+                user_id,
+                session_id,
+                query,
+                model_name,
+                vision_model,
+                image_url,
+                intent,
+                primary_ticker,
+                json.dumps(comparison_tickers or []),
+                json.dumps(context_data or {}, ensure_ascii=False),
+                json.dumps(sectors_tool_calls or [], ensure_ascii=False),
+                credits_consumed,
+                execution_time_ms,
+                json.dumps(estimated_cost or {}),
+                output_summary,
+                json.dumps(output_data or {}, ensure_ascii=False) if output_data else None,
+                json.dumps(reasoning_trace or [], ensure_ascii=False) if reasoning_trace else None,
+                error_message
+            ))
+            new_id = cursor.fetchone()[0]
+            conn.commit()
+            return new_id
+        except Exception as e:
+            print(f"[Warning] Failed to log AI interaction to DB: {e}")
+            conn.rollback()
+            return None
+        finally:
+            conn.close()
+
+    @staticmethod
+    def get_logs(limit: int = 50, session_id: Optional[str] = None, user_id: Optional[int] = None) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        try:
+            query = "SELECT * FROM ai_interaction_logs"
+            params = []
+            conditions = []
+            if session_id:
+                conditions.append("session_id = %s")
+                params.append(session_id)
+            if user_id:
+                conditions.append("user_id = %s")
+                params.append(user_id)
+            if conditions:
+                query += " WHERE " + " AND ".join(conditions)
+            query += " ORDER BY created_at DESC LIMIT %s"
+            params.append(limit)
+            cursor.execute(query, tuple(params))
+            rows = cursor.fetchall()
+            logs = []
+            for r in rows:
+                d = dict(r)
+                if d.get("created_at") and hasattr(d["created_at"], "isoformat"):
+                    d["created_at"] = d["created_at"].isoformat()
+                logs.append(d)
+            return logs
+        except Exception as e:
+            print(f"[Warning] Failed to fetch AI interaction logs: {e}")
+            return []
+        finally:
+            conn.close()
+
+
 
