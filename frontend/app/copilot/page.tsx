@@ -931,7 +931,6 @@ function CopilotWorkspace() {
                   />
                   <div className="truncate">
                     <span className="font-semibold text-emerald-400 block truncate">{attachedImage.fileName}</span>
-                    <span className="text-[10px] text-slate-400">Siap dianalisis dengan Gemini Flash Vision</span>
                   </div>
                 </div>
                 <button
