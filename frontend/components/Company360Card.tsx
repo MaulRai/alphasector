@@ -15,7 +15,7 @@ const formatVal = (val: any, decimals: number = 2, suffix: string = ''): string 
 };
 
 export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
-  if (!data) return null;
+  if (!data || (!data.symbol && !data.last_close_price && !data.pe && !data.pbv)) return null;
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 shadow-2xl glass-panel glow-emerald mb-6">

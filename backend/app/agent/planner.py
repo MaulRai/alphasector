@@ -138,16 +138,12 @@ class AgentPlanner:
                     "ticker": ticker,
                     "description": f"Fetch company report for {ticker}"
                 })
-                steps.append({
-                    "action": "FETCH_BROKER_SUMMARY",
-                    "ticker": ticker,
-                    "description": f"Fetch broker accumulation for {ticker}"
-                })
             steps.append({
                 "action": "COMPUTE_PEER_MATRIX",
                 "tickers": tickers[:4],
                 "description": f"Compute valuation and profitability comparison matrix across {', '.join(tickers[:4])}"
             })
+
 
         elif intent == AgentIntent.SMART_MONEY_RADAR:
             if tickers:

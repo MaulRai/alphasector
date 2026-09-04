@@ -711,152 +711,409 @@ function CopilotWorkspace() {
                       </div>
                     </div>
                   ) : (
-                    /* Heavy Autonomous Research Dossier Mode */
-                    <div className="w-full space-y-5 animate-card-reveal">
-                      
-                      {/* Live/Completed Thinking Trace Accordion */}
-                      {report?.reasoning_trace && (
-                        <div className="animate-card-reveal">
-                          <AgentThinkingTrace
-                            steps={report.reasoning_trace}
-                            totalTimeMs={report.total_execution_time_ms}
-                            creditsConsumed={report.credits_consumed}
-                            isLoading={false}
-                          />
-                        </div>
-                      )}
+                    /* Autonomous Research Dossier Mode with Feature-Aware Signature Layout Builder */
+                    (() => {
+                      const isPeerBattle = Boolean(
+                        report?.intent === 'PEER_BATTLE_COMPARISON' ||
+                        (report?.peer_matrix && report.peer_matrix.length > 1 && !report?.metrics_summary)
+                      );
+                      const isSmartMoney = Boolean(
+                        report?.intent === 'SMART_MONEY_RADAR' ||
+                        (report?.broker_summary && !report?.peer_matrix && !report?.metrics_summary)
+                      );
+                      const isCompany360 = Boolean(
+                        report?.intent === 'SINGLE_TICKER_DEEP_DIVE' ||
+                        (report?.metrics_summary && !report?.peer_matrix)
+                      );
 
-                      {/* Executive Narrative Synthesis Card */}
-                      {report?.synthesis && (
-                        <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel animate-card-reveal-delay-1">
-                          <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
-                            <div className="flex items-center gap-2">
-                              <Sparkles className="h-4 w-4 text-emerald-400" />
-                              <h3 className="text-sm font-bold text-white">
-                                Sintesis Riset Otonom
-                              </h3>
+
+                      return (
+                        <div className="w-full space-y-5 animate-card-reveal">
+                          {/* Live/Completed Thinking Trace Accordion */}
+                          {report?.reasoning_trace && (
+                            <div className="animate-card-reveal">
+                              <AgentThinkingTrace
+                                steps={report.reasoning_trace}
+                                totalTimeMs={report.total_execution_time_ms}
+                                creditsConsumed={report.credits_consumed}
+                                isLoading={false}
+                              />
                             </div>
-                            <span className="text-[11px] font-mono text-slate-500">
-                              Verified IDX Fact-Grounded
-                            </span>
-                          </div>
+                          )}
 
-                          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
-                            {report.synthesis.executive_summary}
-                          </p>
-
-                          {/* Key Findings & Multiples */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-800/60 text-xs">
-                            <div>
-                              <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
-                                Key Findings & Highlights
-                              </h4>
-                              <ul className="space-y-1.5 text-slate-300">
-                                {report.synthesis.key_findings.map((f, fi) => (
-                                  <li key={fi} className="flex items-start gap-2">
-                                    <span className="text-emerald-400 mt-0.5">•</span>
-                                    <span>{f}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            <div>
-                              <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
-                                Valuasi & Smart Money Signal
-                              </h4>
-                              <div className="space-y-2">
-                                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
-                                  <strong className="text-cyan-400">Valuasi:</strong> {report.synthesis.valuation_verdict || 'N/A'}
+                          {/* ============================================================ */}
+                          {/* 1. PEER BATTLE SIGNATURE LAYOUT (Matches /battle exactly)     */}
+                          {/* ============================================================ */}
+                          {isPeerBattle && (
+                            <>
+                              {/* Prominent Multi-Emiten Head-to-Head Comparison Matrix */}
+                              {report?.peer_matrix && report.peer_matrix.length > 0 && (
+                                <div className="animate-card-reveal-delay-1">
+                                  <PeerBattleMatrix matrix={report.peer_matrix} />
                                 </div>
-                                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
-                                  <strong className="text-amber-400">Smart Money:</strong> {report.synthesis.smart_money_flow || 'N/A'}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                              )}
 
-                      {/* Claude-Style Interactive Inline Artifact Card */}
-                      {report && (
-                        <div
-                          onClick={() => {
-                            setSelectedArtifactId(String(msg.id || `artifact-${index}`));
-                            setIsArtifactPanelOpen(true);
-                          }}
-                          className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-1 hover:scale-[1.008]"
-                        >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
-                              <FileText className="h-4 w-4" />
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
-                                  {report.query || 'Research Dossier'}
-                                </span>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 shrink-0">
-                                  Artifact Dossier
-                                </span>
-                              </div>
-                              <p className="text-[11px] text-slate-400 mt-0.5">
-                                Buka pratinjau lengkap di Artifact Panel ➔
+                              {/* Cyan-Themed Ringkasan & Valuation Verdict Card */}
+                              {report?.synthesis && (
+                                <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel glow-cyan animate-card-reveal-delay-2">
+                                  <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <Sparkles className="h-4 w-4 text-cyan-400" />
+                                      <h3 className="text-sm font-bold text-white">
+                                        Ringkasan & Valuation Verdict (AI Synthesis)
+                                      </h3>
+                                    </div>
+                                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-semibold border border-cyan-500/20">
+                                      Peer Battle Head-to-Head
+                                    </span>
+                                  </div>
+
+                                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                                    {report.synthesis.executive_summary}
+                                  </p>
+
+                                  {report.synthesis.valuation_verdict && (
+                                    <div className="p-3.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-200 mb-3 font-medium">
+                                      <strong className="text-cyan-400">Valuation Verdict:</strong> {report.synthesis.valuation_verdict}
+                                    </div>
+                                  )}
+
+                                  {report.synthesis.key_findings && report.synthesis.key_findings.length > 0 && (
+                                    <div className="pt-3 border-t border-slate-800/60 text-xs">
+                                      <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                        Key Comparative Highlights
+                                      </h4>
+                                      <ul className="space-y-1.5 text-slate-300">
+                                        {report.synthesis.key_findings.map((f, fi) => (
+                                          <li key={fi} className="flex items-start gap-2">
+                                            <span className="text-cyan-400 mt-0.5">•</span>
+                                            <span>{f}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Cyan-Accented Artifact Dossier Link */}
+                              {report && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                                    setIsArtifactPanelOpen(true);
+                                  }}
+                                  className="p-3.5 rounded-2xl bg-[#090e1a] border border-cyan-500/30 hover:border-cyan-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-2 hover:scale-[1.008]"
+                                >
+                                  <div className="flex items-center gap-3 min-w-0">
+                                    <div className="h-9 w-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform shrink-0">
+                                      <FileText className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
+                                          {report.query || 'Peer Battle Dossier'}
+                                        </span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 font-semibold border border-cyan-500/20 shrink-0">
+                                          Peer Battle Dossier
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-400 mt-0.5">
+                                        Buka visualisasi komparatif lengkap di Artifact Panel ➔
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-cyan-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ============================================================ */}
+                          {/* 2. SMART MONEY SIGNATURE LAYOUT (Matches /smart-money)       */}
+                          {/* ============================================================ */}
+                          {isSmartMoney && (
+                            <>
+                              {/* Broker Flow Tracker Component */}
+                              {report?.broker_summary && (
+                                <div className="animate-card-reveal-delay-1">
+                                  <BrokerFlowTracker
+                                    brokerSummary={report.broker_summary}
+                                    ticker={report.primary_ticker}
+                                  />
+                                </div>
+                              )}
+
+                              {/* Amber/Teal-Themed Smart Money Synthesis Card */}
+                              {report?.synthesis && (
+                                <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel glow-emerald animate-card-reveal-delay-2">
+                                  <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <Sparkles className="h-4 w-4 text-amber-400" />
+                                      <h3 className="text-sm font-bold text-white">
+                                        Sintesis Smart Money {report.primary_ticker ? `(${report.primary_ticker})` : ''}
+                                      </h3>
+                                    </div>
+                                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 font-semibold border border-amber-500/20">
+                                      Bandarmology & Flow
+                                    </span>
+                                  </div>
+
+                                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                                    {report.synthesis.executive_summary}
+                                  </p>
+
+                                  {report.synthesis.smart_money_flow && (
+                                    <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 mb-3 font-medium">
+                                      <strong className="text-amber-400">Deteksi Flow:</strong> {report.synthesis.smart_money_flow}
+                                    </div>
+                                  )}
+
+                                  {report.synthesis.key_findings && report.synthesis.key_findings.length > 0 && (
+                                    <div className="pt-3 border-t border-slate-800/60 text-xs">
+                                      <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                        Broker Accumulation Highlights
+                                      </h4>
+                                      <ul className="space-y-1.5 text-slate-300">
+                                        {report.synthesis.key_findings.map((f, fi) => (
+                                          <li key={fi} className="flex items-start gap-2">
+                                            <span className="text-amber-400 mt-0.5">•</span>
+                                            <span>{f}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Amber-Accented Artifact Dossier Link */}
+                              {report && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                                    setIsArtifactPanelOpen(true);
+                                  }}
+                                  className="p-3.5 rounded-2xl bg-[#090e1a] border border-amber-500/30 hover:border-amber-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-2 hover:scale-[1.008]"
+                                >
+                                  <div className="flex items-center gap-3 min-w-0">
+                                    <div className="h-9 w-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                                      <FileText className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors truncate">
+                                          {report.query || 'Smart Money Dossier'}
+                                        </span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-semibold border border-amber-500/20 shrink-0">
+                                          Smart Money Dossier
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-400 mt-0.5">
+                                        Buka visualisasi flow lengkap di Artifact Panel ➔
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-amber-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ============================================================ */}
+                          {/* 3. COMPANY 360 DEEP DIVE SIGNATURE LAYOUT (Single Ticker)     */}
+                          {/* ============================================================ */}
+                          {isCompany360 && (
+                            <>
+                              {/* 360 Fundamental Overview Card */}
+                              {report?.metrics_summary && (
+                                <div className="animate-card-reveal-delay-1">
+                                  <Company360Card data={report.metrics_summary} />
+                                </div>
+                              )}
+
+                              {/* Fundamental AI Synthesis Card */}
+                              {report?.synthesis && (
+                                <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel glow-emerald animate-card-reveal-delay-2">
+                                  <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <Sparkles className="h-4 w-4 text-emerald-400" />
+                                      <h3 className="text-sm font-bold text-white">
+                                        Sintesis Riset Fundamental ({report.primary_ticker || 'Emiten'})
+                                      </h3>
+                                    </div>
+                                    <span className="text-[11px] font-mono text-slate-500">
+                                      Verified IDX Fact-Grounded
+                                    </span>
+                                  </div>
+
+                                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                                    {report.synthesis.executive_summary}
+                                  </p>
+
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-800/60 text-xs">
+                                    <div>
+                                      <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                        Key Findings & Highlights
+                                      </h4>
+                                      <ul className="space-y-1.5 text-slate-300">
+                                        {report.synthesis.key_findings.map((f, fi) => (
+                                          <li key={fi} className="flex items-start gap-2">
+                                            <span className="text-emerald-400 mt-0.5">•</span>
+                                            <span>{f}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+
+                                    <div>
+                                      <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                        Valuasi & Sinyal Pasar
+                                      </h4>
+                                      <div className="space-y-2">
+                                        <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
+                                          <strong className="text-cyan-400">Valuasi:</strong> {report.synthesis.valuation_verdict || 'N/A'}
+                                        </div>
+                                        {report.synthesis.smart_money_flow && (
+                                          <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-300">
+                                            <strong className="text-amber-400">Smart Money:</strong> {report.synthesis.smart_money_flow}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Optional Secondary Broker Flow if available */}
+                              {report?.broker_summary && (
+                                <div className="animate-card-reveal-delay-2">
+                                  <BrokerFlowTracker
+                                    brokerSummary={report.broker_summary}
+                                    ticker={report.primary_ticker}
+                                  />
+                                </div>
+                              )}
+
+                              {/* Artifact Link */}
+                              {report && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                                    setIsArtifactPanelOpen(true);
+                                  }}
+                                  className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-2 hover:scale-[1.008]"
+                                >
+                                  <div className="flex items-center gap-3 min-w-0">
+                                    <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                                      <FileText className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
+                                          {report.query || 'Company 360 Dossier'}
+                                        </span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 shrink-0">
+                                          Company 360 Dossier
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-400 mt-0.5">
+                                        Buka pratinjau lengkap di Artifact Panel ➔
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ============================================================ */}
+                          {/* 4. GENERAL / SCREENER UNIVERSE FALLBACK                      */}
+                          {/* ============================================================ */}
+                          {!isPeerBattle && !isSmartMoney && !isCompany360 && (
+                            <>
+                              {report?.peer_matrix && report.peer_matrix.length > 0 && (
+                                <div className="animate-card-reveal-delay-1">
+                                  <PeerBattleMatrix matrix={report.peer_matrix} />
+                                </div>
+                              )}
+
+                              {report?.synthesis && (
+                                <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel animate-card-reveal-delay-2">
+                                  <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <Sparkles className="h-4 w-4 text-emerald-400" />
+                                      <h3 className="text-sm font-bold text-white">
+                                        Sintesis Riset Otonom
+                                      </h3>
+                                    </div>
+                                    <span className="text-[11px] font-mono text-slate-500">
+                                      Verified IDX Fact-Grounded
+                                    </span>
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                                    {report.synthesis.executive_summary}
+                                  </p>
+                                </div>
+                              )}
+
+                              {report && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                                    setIsArtifactPanelOpen(true);
+                                  }}
+                                  className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-2 hover:scale-[1.008]"
+                                >
+                                  <div className="flex items-center gap-3 min-w-0">
+                                    <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                                      <FileText className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
+                                        {report.query || 'Research Dossier'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* Smart Follow-up Questions Pills */}
+                          {report?.suggested_followups && report.suggested_followups.length > 0 && (
+                            <div className="pt-2 animate-card-reveal-delay-3">
+                              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                <Sparkles className="h-3 w-3 text-emerald-400" />
+                                <span>Pertanyaan Lanjutan yang Disarankan AI:</span>
                               </p>
+                              <div className="flex flex-wrap gap-2">
+                                {report.suggested_followups.map((followup, fIdx) => (
+                                  <button
+                                    key={fIdx}
+                                    onClick={() => handleSendMessage(followup)}
+                                    disabled={isLoading}
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border text-xs text-left transition-all active:scale-95 group shadow-sm ${
+                                      isPeerBattle
+                                        ? 'hover:bg-cyan-950/40 border-slate-700/80 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300'
+                                        : isSmartMoney
+                                        ? 'hover:bg-amber-950/40 border-slate-700/80 hover:border-amber-500/50 text-slate-300 hover:text-amber-300'
+                                        : 'hover:bg-emerald-950/40 border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-300'
+                                    }`}
+                                  >
+                                    <span className="line-clamp-1">{followup}</span>
+                                    <ArrowRight className="h-3 w-3 text-slate-500 group-hover:text-current shrink-0 transition-transform group-hover:translate-x-0.5" />
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                          <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                          )}
                         </div>
-                      )}
+                      );
+                    })()
 
-                      {/* Interactive Financial Cards */}
-                      {report?.metrics_summary && (
-                        <div className="animate-card-reveal-delay-2">
-                          <Company360Card data={report.metrics_summary} />
-                        </div>
-                      )}
-
-                      {report?.peer_matrix && report.peer_matrix.length > 0 && (
-                        <div className="animate-card-reveal-delay-2">
-                          <PeerBattleMatrix matrix={report.peer_matrix} />
-                        </div>
-                      )}
-
-                      {report?.broker_summary && (
-                        <div className="animate-card-reveal-delay-2">
-                          <BrokerFlowTracker
-                            brokerSummary={report.broker_summary}
-                            ticker={report.primary_ticker}
-                          />
-                        </div>
-                      )}
-
-                      {/* ============================================================ */}
-                      {/* AI-GENERATED FOLLOW-UP QUESTIONS (SMART PROMPT PILLS)       */}
-                      {/* ============================================================ */}
-                      {report?.suggested_followups && report.suggested_followups.length > 0 && (
-                        <div className="pt-2 animate-card-reveal-delay-3">
-                          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <Sparkles className="h-3 w-3 text-emerald-400" />
-                            <span>Pertanyaan Lanjutan yang Disarankan AI:</span>
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {report.suggested_followups.map((followup, fIdx) => (
-                              <button
-                                key={fIdx}
-                                onClick={() => handleSendMessage(followup)}
-                                disabled={isLoading}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-300 text-xs text-left transition-all active:scale-95 group shadow-sm"
-                              >
-                                <span className="line-clamp-1">{followup}</span>
-                                <ArrowRight className="h-3 w-3 text-slate-500 group-hover:text-emerald-400 shrink-0 transition-transform group-hover:translate-x-0.5" />
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                    </div>
                   )}
                 </div>
               );

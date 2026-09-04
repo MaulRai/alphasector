@@ -410,25 +410,18 @@ class AgentOrchestrator:
 
         total_ms = int((time.time() - start_time) * 1000)
 
-        # Build clean comparison_tickers from peer_matrix
+        # Clean comparison_tickers from peer_matrix
         valid_comp_tickers = []
         if peer_matrix:
             valid_comp_tickers = [p.get("symbol") for p in peer_matrix if p.get("symbol") and p.get("symbol") != primary_ticker]
         elif tickers and len(tickers) > 1:
             valid_comp_tickers = [t for t in tickers if t != primary_ticker]
 
+        # Strict separation by intent to ensure signature layouts are pristine and free of cross-contamination:
         metrics_summary = None
-        if reports and len(reports) > 0:
-            first_rep = next((r for r in reports if r and r.get("symbol") == primary_ticker), reports[0])
-            if first_rep and first_rep.get("overview"):
-                metrics_summary = {
-                    "primary_ticker": primary_ticker,
-                    "company_name": first_rep.get("company_name", primary_ticker),
-                    "sector": first_rep.get("overview", {}).get("sector", "-"),
-                    "market_cap": first_rep.get("overview", {}).get("market_cap")
-                }
-
+        effective_peer_matrix = None
         broker_info = None
+
         if analyzed_broker:
             broker_info = {
                 "sentiment": analyzed_broker.get("sentiment", "NEUTRAL"),
@@ -438,6 +431,31 @@ class AgentOrchestrator:
                 "buyer_concentration": analyzed_broker.get("buyer_concentration", 0)
             }
 
+        if intent == AgentIntent.PEER_BATTLE_COMPARISON:
+            # Only peer matrix for side-by-side comparison (No 360 overview, no smart money tracker)
+            effective_peer_matrix = peer_matrix if (peer_matrix and len(peer_matrix) > 1) else peer_matrix
+            broker_info = None
+            metrics_summary = None
+        elif intent == AgentIntent.SMART_MONEY_RADAR:
+            # Only smart money broker info (No peer battle table, no 360 card)
+            effective_peer_matrix = None
+            metrics_summary = None
+        elif intent == AgentIntent.MARKET_SCREENING_DISCOVERY:
+            # Only filtered peer universe
+            effective_peer_matrix = peer_matrix
+            broker_info = None
+            metrics_summary = None
+        elif intent == AgentIntent.COMPANY_DEEP_DIVE:
+            # Single company 360 card with complete metric fields
+            if peer_matrix and len(peer_matrix) > 0:
+                metrics_summary = peer_matrix[0]
+            effective_peer_matrix = None
+        else: # GENERAL or fallback
+            if peer_matrix and len(peer_matrix) > 1:
+                effective_peer_matrix = peer_matrix
+            elif peer_matrix and len(peer_matrix) == 1:
+                metrics_summary = peer_matrix[0]
+
         return AgentQueryResponse(
             query=query,
             intent=intent,
@@ -446,7 +464,7 @@ class AgentOrchestrator:
             comparison_tickers=valid_comp_tickers,
             reasoning_trace=trace,
             metrics_summary=metrics_summary,
-            peer_matrix=peer_matrix if (peer_matrix and len(peer_matrix) > 1) else None,
+            peer_matrix=effective_peer_matrix,
             broker_summary=broker_info,
             synthesis=synthesis_result,
             visual_context=visual_context,
@@ -454,5 +472,6 @@ class AgentOrchestrator:
             total_execution_time_ms=total_ms,
             credits_consumed=credits_used
         )
+
 
 agent_orchestrator = AgentOrchestrator()
