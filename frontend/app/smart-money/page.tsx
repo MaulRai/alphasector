@@ -131,7 +131,7 @@ export default function SmartMoneyPage() {
               </div>
             </div>
 
-            {/* Ticker Autocomplete Input with Focus & Live Search */}
+            {/* Ticker Autocomplete Search Bar */}
             <TickerAutocompleteInput
               onSelectTicker={(selected) => {
                 setTicker(selected);
@@ -142,9 +142,12 @@ export default function SmartMoneyPage() {
               selectedTickers={[ticker]}
               maxSelected={2}
               disabled={isLoading}
-              placeholder="Ganti emiten (misal: BBCA)..."
-              buttonText="Pilih"
+              placeholder="Cari atau ganti emiten (misal: BBCA)..."
+              showActionButton={false}
+              showSearchIcon={true}
+              accentColor="amber"
             />
+
 
           </div>
 

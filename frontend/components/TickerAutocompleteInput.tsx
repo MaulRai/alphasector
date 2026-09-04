@@ -13,6 +13,9 @@ interface TickerAutocompleteInputProps {
   disabled?: boolean;
   buttonText?: string;
   className?: string;
+  showActionButton?: boolean;
+  showSearchIcon?: boolean;
+  accentColor?: 'cyan' | 'amber';
 }
 
 export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = ({
@@ -23,7 +26,11 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
   disabled = false,
   buttonText = 'Tambah',
   className = '',
+  showActionButton = true,
+  showSearchIcon = false,
+  accentColor = 'cyan',
 }) => {
+
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -101,11 +108,15 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
   };
 
   const isLimitReached = selectedTickers.length >= maxSelected;
+  const isAmber = accentColor === 'amber';
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="relative flex items-center">
+          {showSearchIcon && (
+            <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 pointer-events-none" />
+          )}
           <input
             ref={inputRef}
             type="text"
@@ -119,7 +130,13 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder={isLimitReached ? `Maksimal ${maxSelected} emiten` : placeholder}
-            className="px-3.5 py-1.5 text-xs bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/40 uppercase w-48 sm:w-56 transition-all disabled:opacity-50"
+            className={`py-1.5 text-xs bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none uppercase transition-all disabled:opacity-50 ${
+              isAmber 
+                ? 'focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40' 
+                : 'focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/40'
+            } ${
+              showSearchIcon ? 'pl-9 pr-7 w-56 sm:w-64' : 'px-3.5 w-48 sm:w-56'
+            }`}
             maxLength={10}
           />
           {query && (
@@ -136,14 +153,16 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={disabled || !query.trim() || isLimitReached}
-          className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold text-xs transition-all disabled:opacity-50 border border-slate-700 shadow-sm"
-        >
-          <Plus className="h-3.5 w-3.5 text-cyan-400" />
-          <span>{buttonText}</span>
-        </button>
+        {showActionButton && (
+          <button
+            type="submit"
+            disabled={disabled || !query.trim() || isLimitReached}
+            className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold text-xs transition-all disabled:opacity-50 border border-slate-700 shadow-sm"
+          >
+            <Plus className={`h-3.5 w-3.5 ${isAmber ? 'text-amber-400' : 'text-cyan-400'}`} />
+            <span>{buttonText}</span>
+          </button>
+        )}
       </form>
 
       {/* Floating Suggestions Dropdown */}
@@ -163,7 +182,9 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                   onClick={() => handleSelect(item.symbol)}
                   onMouseEnter={() => setHighlightedIndex(idx)}
                   className={`w-full px-3.5 py-2 text-left flex items-center justify-between gap-3 transition-colors ${
-                    highlightedIndex === idx ? 'bg-cyan-500/15 text-white' : 'hover:bg-slate-800/60 text-slate-200'
+                    highlightedIndex === idx 
+                      ? (isAmber ? 'bg-amber-500/15 text-white' : 'bg-cyan-500/15 text-white') 
+                      : 'hover:bg-slate-800/60 text-slate-200'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -182,7 +203,7 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                   </div>
 
                   <div className="p-1 rounded bg-slate-800/60 text-slate-400 shrink-0">
-                    <Plus className="h-3 w-3 text-cyan-400" />
+                    <Plus className={`h-3 w-3 ${isAmber ? 'text-amber-400' : 'text-cyan-400'}`} />
                   </div>
                 </button>
               ))
@@ -191,7 +212,7 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                 {query.trim() ? (
                   <div>
                     <p className="text-slate-300">
-                      Tekan Enter untuk menambahkan <span className="font-bold text-cyan-400 uppercase">{query}</span>
+                      Tekan Enter untuk memilih <span className={`font-bold uppercase ${isAmber ? 'text-amber-400' : 'text-cyan-400'}`}>{query}</span>
                     </p>
                   </div>
                 ) : (
@@ -204,4 +225,5 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
       )}
     </div>
   );
+
 };
