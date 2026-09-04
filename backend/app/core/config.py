@@ -35,6 +35,12 @@ class Settings(BaseSettings):
     # Sectors API Database Cache TTL in Seconds (default 86400 = 24 hours)
     SECTORS_CACHE_TTL_SECONDS: int = Field(default_factory=lambda: int(os.getenv("SECTORS_CACHE_TTL_SECONDS", "86400")))
 
+    # Cloudinary Storage
+    CLOUDINARY_CLOUD_NAME: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_CLOUD_NAME", ""))
+    CLOUDINARY_API_KEY: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_API_KEY", ""))
+    CLOUDINARY_API_SECRET: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_API_SECRET", ""))
+    CLOUDINARY_URL: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_URL", ""))
+
     @property
     def cors_origins_list(self) -> List[str]:
         if not self.CORS_ORIGINS:

@@ -4,6 +4,7 @@ from app.schemas.agent import AgentQueryRequest, AgentQueryResponse
 from app.agent.orchestrator import agent_orchestrator
 from app.db.database import ResearchReportRepository, ChatRepository, UserRepository
 from app.core.security import decode_access_token
+from app.core.cloudinary_service import cloudinary_service
 
 router = APIRouter(prefix="/agent", tags=["AI Agent"])
 
@@ -77,11 +78,15 @@ async def execute_agent_query(
 
         # If authenticated, save user message
         if user_id and active_session_id:
-            # Construct data URL if image attached
+            # Construct image URL (Upload to Cloudinary CDN if configured, fallback to data URI)
             img_data_url = None
             if request.image_base64:
                 mime = request.image_mime_type or "image/png"
-                img_data_url = f"data:{mime};base64,{request.image_base64}"
+                cloudinary_url = await cloudinary_service.upload_base64_image(
+                    base64_data=request.image_base64,
+                    mime_type=mime
+                )
+                img_data_url = cloudinary_url or f"data:{mime};base64,{request.image_base64}"
             
             ChatRepository.add_message(
                 session_id=active_session_id,
