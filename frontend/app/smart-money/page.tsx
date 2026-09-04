@@ -135,7 +135,9 @@ export default function SmartMoneyPage() {
             <TickerAutocompleteInput
               onSelectTicker={(selected) => {
                 setTicker(selected);
-                executeSmartMoneyAnalysis(selected);
+                setBrokerSummary(null);
+                setAgentReport(null);
+                setError(null);
               }}
               selectedTickers={[ticker]}
               maxSelected={2}
@@ -143,6 +145,7 @@ export default function SmartMoneyPage() {
               placeholder="Ganti emiten (misal: BBCA)..."
               buttonText="Pilih"
             />
+
           </div>
 
           {/* Action Trigger Row */}
