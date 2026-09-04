@@ -10,7 +10,7 @@ import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors, checkBackendHealt
 import { 
   Search, Filter, Sparkles, RefreshCw, ArrowRight, 
   CheckCircle2, ArrowUpDown, ChevronDown, ExternalLink, Zap, Layers, ShieldCheck, Users, TrendingUp,
-  Play, Database, Bot
+  Play, Database, Bot, Swords, MessageSquare, X
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
@@ -28,6 +28,85 @@ export default function ScreenerPage() {
   const [activePreset, setActivePreset] = useState<string | null>(null);
   const [backendOnline, setBackendOnline] = useState(true);
   const [hasSearched, setHasSearched] = useState(false);
+  const [selectedTickersForBattle, setSelectedTickersForBattle] = useState<string[]>([]);
+
+  const toggleTickerForBattle = (sym: string) => {
+    setSelectedTickersForBattle(prev => {
+      if (prev.includes(sym)) {
+        return prev.filter(t => t !== sym);
+      }
+      if (prev.length >= 4) {
+        return prev;
+      }
+      return [...prev, sym];
+    });
+  };
+
+  const getScreeningThesisQuery = () => {
+    if (activePreset === 'esg-leaders') {
+      return 'Analisis tesis investasi, katalis sektor, dan rekomendasi emiten unggulan dari hasil screening ESG Leaders IDX';
+    }
+    if (activePreset === 'revenue-growth') {
+      return 'Analisis tesis investasi, katalis sektor, dan rekomendasi emiten unggulan dari hasil screening Revenue Titans IDX';
+    }
+    if (activePreset === 'large-shareholder') {
+      return 'Analisis tesis investasi, kepemilikan pengendali, dan emiten unggulan dari hasil screening Large Shareholder IDX';
+    }
+    if (activePreset === 'efficient-operators') {
+      return 'Analisis tesis efisiensi operasional, profitabilitas per karyawan, dan emiten unggulan dari hasil screening Efficient Operators IDX';
+    }
+    if (nlQuery.trim()) {
+      return `Analisis tesis hasil screening '${nlQuery.trim()}': emiten mana yang paling prospektif dan apa risikonya?`;
+    }
+    if (selectedSubsector) {
+      return `Analisis tesis investasi dan rekomendasi emiten unggulan pada subsektor ${selectedSubsector} berdasarkan hasil screening`;
+    }
+    return 'Analisis tesis investasi, katalis sektor, dan rekomendasi emiten terbaik dari hasil screening semesta IHSG';
+  };
+
+  const SCREENER_STORAGE_KEY = 'alphasector_screener_cache';
+
+  // Restore previous screener state from local memory on mount
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(SCREENER_STORAGE_KEY) || localStorage.getItem(SCREENER_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.results && Array.isArray(parsed.results) && parsed.results.length > 0) {
+          setResults(parsed.results);
+          setHasSearched(true);
+          if (parsed.activePreset !== undefined) setActivePreset(parsed.activePreset);
+          if (parsed.nlQuery !== undefined) setNlQuery(parsed.nlQuery);
+          if (parsed.selectedSubsector !== undefined) setSelectedSubsector(parsed.selectedSubsector);
+          if (parsed.orderBy !== undefined) setOrderBy(parsed.orderBy);
+          if (parsed.selectedTickersForBattle !== undefined) setSelectedTickersForBattle(parsed.selectedTickersForBattle);
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to parse cached screener state:', e);
+    }
+  }, []);
+
+  // Save screener state to memory whenever results or active filters change
+  useEffect(() => {
+    if (hasSearched && results && results.length > 0) {
+      try {
+        const stateToSave = {
+          results,
+          activePreset,
+          nlQuery,
+          selectedSubsector,
+          orderBy,
+          hasSearched,
+          selectedTickersForBattle,
+        };
+        sessionStorage.setItem(SCREENER_STORAGE_KEY, JSON.stringify(stateToSave));
+        localStorage.setItem(SCREENER_STORAGE_KEY, JSON.stringify(stateToSave));
+      } catch (e) {
+        console.warn('Failed to save screener state to storage:', e);
+      }
+    }
+  }, [results, activePreset, nlQuery, selectedSubsector, orderBy, hasSearched, selectedTickersForBattle]);
 
   useEffect(() => {
     checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
@@ -273,9 +352,28 @@ export default function ScreenerPage() {
             </button>
 
             {hasSearched && (
-              <span className="text-slate-500 ml-auto">
-                Ditemukan: <strong>{results.length}</strong> emiten
-              </span>
+              <div className="flex items-center gap-2 ml-auto">
+                <span className="text-slate-500">
+                  Ditemukan: <strong>{results.length}</strong> emiten
+                </span>
+                <button
+                  onClick={() => {
+                    setResults([]);
+                    setHasSearched(false);
+                    setActivePreset(null);
+                    setNlQuery('');
+                    setSelectedTickersForBattle([]);
+                    try {
+                      sessionStorage.removeItem(SCREENER_STORAGE_KEY);
+                      localStorage.removeItem(SCREENER_STORAGE_KEY);
+                    } catch (e) {}
+                  }}
+                  className="text-[11px] text-slate-500 hover:text-red-400 underline transition-colors cursor-pointer ml-1"
+                  title="Bersihkan filter dan hasil skrining dari memori"
+                >
+                  Reset
+                </button>
+              </div>
             )}
           </div>
 
@@ -348,7 +446,10 @@ export default function ScreenerPage() {
                 <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold bg-slate-900/50">
-                      <th className="py-3 px-3.5 rounded-l-xl">Kode Emiten</th>
+                      <th className="py-3 px-3 rounded-l-xl w-10 text-center" title="Pilih emiten untuk Peer Battle">
+                        <Swords className="h-3.5 w-3.5 text-slate-500 mx-auto" />
+                      </th>
+                      <th className="py-3 px-3.5">Kode Emiten</th>
                       <th className="py-3 px-3.5">Nama Perusahaan</th>
                       <th className="py-3 px-3.5">Subsektor</th>
                       <th className="py-3 px-3.5">Market Cap</th>
@@ -362,9 +463,21 @@ export default function ScreenerPage() {
                       const sym = (c.symbol || '').replace('.JK', '');
                       const matchedTicker = POPULAR_IDX_TICKERS.find(t => t.symbol === sym);
                       const subsector = c.sub_sector || c.sector || (selectedSubsector ? selectedSubsector : matchedTicker?.sector) || 'IDX Listed';
+                      const isSelected = selectedTickersForBattle.includes(sym);
+                      const isMaxReached = selectedTickersForBattle.length >= 4;
 
                       return (
-                        <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
+                        <tr key={idx} className={`transition-colors ${isSelected ? 'bg-cyan-950/20 hover:bg-cyan-950/30' : 'hover:bg-slate-800/40'}`}>
+                          <td className="py-3 px-3 text-center">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleTickerForBattle(sym)}
+                              disabled={!isSelected && isMaxReached}
+                              title={!isSelected && isMaxReached ? "Maksimal 4 emiten untuk Peer Battle" : `Pilih ${sym} untuk Peer Battle`}
+                              className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-0 focus:ring-offset-0 cursor-pointer accent-cyan-500 disabled:opacity-30"
+                            />
+                          </td>
                           <td className="py-3 px-3.5">
                             <Link 
                               href={`/company/${sym}`}
@@ -392,13 +505,26 @@ export default function ScreenerPage() {
                             {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : <span className="text-slate-500">-</span>}
                           </td>
                           <td className="py-3 px-3.5 text-right">
-                            <Link
-                              href={`/company/${sym}`}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-all hover:scale-105"
-                            >
-                              <span>Dossier 360°</span>
-                              <ExternalLink className="h-3 w-3" />
-                            </Link>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => {
+                                  const query = `Bedah prospek fundamental, valuasi, dan katalis emiten ${sym}`;
+                                  router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/20 transition-all hover:scale-105 cursor-pointer"
+                                title={`Tanya AlphaAgent tentang ${sym}`}
+                              >
+                                <MessageSquare className="h-3 w-3" />
+                                <span>Tanya AI</span>
+                              </button>
+                              <Link
+                                href={`/company/${sym}`}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-all hover:scale-105"
+                              >
+                                <span>Dossier 360°</span>
+                                <ExternalLink className="h-3 w-3" />
+                              </Link>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -408,7 +534,7 @@ export default function ScreenerPage() {
               </div>
             </div>
 
-            {/* Follow-Up Chat Room CTA Card */}
+            {/* Follow-Up Chat Room CTA Card (Screening Discovery Thesis) */}
             <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-[#0d121e] p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-5 glass-panel">
               <div className="flex items-center gap-4">
                 <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0 flex items-center justify-center">
@@ -416,13 +542,13 @@ export default function ScreenerPage() {
                 </div>
                 <div>
                   <h4 className="text-base font-bold text-white flex items-center gap-2">
-                    Lanjutkan Analisis Semesta Emiten di AlphaAgent Chat
+                    Bahas Tesis & Top Pick Screening di AlphaAgent Chat
                     <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">
-                      Follow-Up Room Baru
+                      Screening Discovery
                     </span>
                   </h4>
                   <p className="text-xs text-slate-400 mt-1">
-                    Buka room chat baru untuk meminta rekomendasi top-pick, perbandingan mendalam, atau tesis investasi dari hasil penyaringan ini.
+                    Buka room chat interaktif untuk mengulas katalis sektor, alasan emiten-emiten ini terpilih, dan rekomendasi alokasi portofolio.
                   </p>
                 </div>
               </div>
@@ -432,8 +558,7 @@ export default function ScreenerPage() {
                   setIsPreparingChat(true);
                   setError(null);
                   try {
-                    const topSymbols = results.slice(0, 5).map((c: any) => (c.symbol || '').replace('.JK', '')).filter(Boolean);
-                    const query = `Bandingkan fundamental dan valuasi ${topSymbols.join(' vs ')}`;
+                    const query = getScreeningThesisQuery();
                     const res = await queryAgent(query);
                     if (res?.session_id) {
                       router.push(`/copilot?session_id=${encodeURIComponent(res.session_id)}`);
@@ -453,16 +578,77 @@ export default function ScreenerPage() {
                 {isPreparingChat ? (
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin text-slate-950" />
-                    <span>Mempersiapkan Chat Room...</span>
+                    <span>Menganalisis Tesis Screening...</span>
                   </>
                 ) : (
                   <>
-                    <span>Buka Chat Room AlphaAgent</span>
+                    <span>Bahas Tesis Screening di Chat</span>
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
               </button>
             </div>
+
+            {/* Floating Action Bar for Selected Emitens (Peer Battle Launch) */}
+            {selectedTickersForBattle.length > 0 && (
+              <div className="fixed bottom-6 inset-x-0 mx-auto max-w-2xl px-4 z-40 animate-in slide-in-from-bottom-5 duration-200">
+                <div className="rounded-2xl border border-cyan-500/40 bg-[#090e1a]/95 backdrop-blur-xl p-4 shadow-2xl shadow-cyan-950/60 flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel">
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <div className="p-2 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 shrink-0">
+                      <Swords className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-white">
+                          {selectedTickersForBattle.length}/4 Emiten Dipilih
+                        </span>
+                        <div className="flex items-center gap-1 flex-wrap">
+                          {selectedTickersForBattle.map((s) => (
+                            <span
+                              key={s}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-bold text-cyan-300"
+                            >
+                              {s}
+                              <button
+                                onClick={() => toggleTickerForBattle(s)}
+                                className="text-cyan-400 hover:text-white cursor-pointer ml-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        {selectedTickersForBattle.length < 2
+                          ? 'Pilih minimal 1 emiten lagi untuk memulai perbandingan'
+                          : 'Siap dikomparasikan head-to-head di arena Peer Battle'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
+                    <button
+                      onClick={() => setSelectedTickersForBattle([])}
+                      className="px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold border border-slate-700/60 transition-all cursor-pointer"
+                    >
+                      Reset
+                    </button>
+
+                    <button
+                      disabled={selectedTickersForBattle.length < 2}
+                      onClick={() => {
+                        router.push(`/battle?tickers=${selectedTickersForBattle.join(',')}&autorun=true`);
+                      }}
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-40 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      <Swords className="h-3.5 w-3.5" />
+                      <span>Adu di Peer Battle ({selectedTickersForBattle.length})</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

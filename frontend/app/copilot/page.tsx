@@ -669,24 +669,15 @@ function CopilotWorkspace() {
                   ref={isLastAssistant ? latestAssistantMsgRef : null}
                   className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-4xl mx-auto w-full scroll-mt-6`}
                 >
-                  {/* Message Sender Header */}
-                  <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
-                    {isUser ? (
-                      <>
-                        <span className="font-semibold text-slate-300">Anda (Analyst)</span>
-                        <div className="p-1 rounded-md bg-slate-800 text-slate-300">
-                          <UserIcon className="h-3 w-3" />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="p-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-                          <AlphaAgentLogo size={16} />
-                        </div>
-                        <span className="font-semibold text-emerald-400">AlphaAgent</span>
-                      </>
-                    )}
-                  </div>
+                  {/* Message Sender Header (Only for AlphaAgent Assistant) */}
+                  {!isUser && (
+                    <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
+                      <div className="p-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                        <AlphaAgentLogo size={16} />
+                      </div>
+                      <span className="font-semibold text-emerald-400">AlphaAgent</span>
+                    </div>
+                  )}
 
                   {/* Message Body Content */}
                   {isUser ? (
@@ -713,9 +704,14 @@ function CopilotWorkspace() {
                   ) : (
                     /* Autonomous Research Dossier Mode with Feature-Aware Signature Layout Builder */
                     (() => {
+                      const isMarketScreening = Boolean(
+                        report?.intent === 'MARKET_SCREENING_DISCOVERY'
+                      );
                       const isPeerBattle = Boolean(
-                        report?.intent === 'PEER_BATTLE_COMPARISON' ||
-                        (report?.peer_matrix && report.peer_matrix.length > 1 && !report?.metrics_summary)
+                        !isMarketScreening && (
+                          report?.intent === 'PEER_BATTLE_COMPARISON' ||
+                          (report?.peer_matrix && report.peer_matrix.length > 1 && !report?.metrics_summary)
+                        )
                       );
                       const isSmartMoney = Boolean(
                         report?.intent === 'SMART_MONEY_RADAR' ||
@@ -1029,9 +1025,106 @@ function CopilotWorkspace() {
                           )}
 
                           {/* ============================================================ */}
-                          {/* 4. GENERAL / SCREENER UNIVERSE FALLBACK                      */}
+                          {/* 4. MARKET SCREENING DISCOVERY SIGNATURE LAYOUT               */}
                           {/* ============================================================ */}
-                          {!isPeerBattle && !isSmartMoney && !isCompany360 && (
+                          {isMarketScreening && (
+                            <>
+                              {/* Screened Peer Universe Table */}
+                              {report?.peer_matrix && report.peer_matrix.length > 0 && (
+                                <div className="animate-card-reveal-delay-1">
+                                  <div className="mb-2 flex items-center justify-between">
+                                    <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                      <Layers className="h-3.5 w-3.5 text-emerald-400" />
+                                      Hasil Saring Semesta Emiten ({report.peer_matrix.length} Emiten Terpilih)
+                                    </span>
+                                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                                      Screener Discovery
+                                    </span>
+                                  </div>
+                                  <PeerBattleMatrix matrix={report.peer_matrix} />
+                                </div>
+                              )}
+
+                              {/* Emerald/Teal-Themed Screening Thesis Card */}
+                              {report?.synthesis && (
+                                <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 shadow-2xl glass-panel glow-emerald animate-card-reveal-delay-2">
+                                  <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-800 mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <Sparkles className="h-4 w-4 text-emerald-400" />
+                                      <h3 className="text-sm font-bold text-white">
+                                        Tesis Investasi & Temuan Skrining
+                                      </h3>
+                                    </div>
+                                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 font-semibold border border-emerald-500/20">
+                                      Screener Discovery Thesis
+                                    </span>
+                                  </div>
+
+                                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
+                                    {report.synthesis.executive_summary}
+                                  </p>
+
+                                  {report.synthesis.valuation_verdict && (
+                                    <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-200 mb-3 font-medium">
+                                      <strong className="text-emerald-400">Rekomendasi & Top Pick:</strong> {report.synthesis.valuation_verdict}
+                                    </div>
+                                  )}
+
+                                  {report.synthesis.key_findings && report.synthesis.key_findings.length > 0 && (
+                                    <div className="pt-3 border-t border-slate-800/60 text-xs">
+                                      <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-2 text-[10px]">
+                                        Katalis & Alasan Pemilihan Emiten
+                                      </h4>
+                                      <ul className="space-y-1.5 text-slate-300">
+                                        {report.synthesis.key_findings.map((f, fi) => (
+                                          <li key={fi} className="flex items-start gap-2">
+                                            <span className="text-emerald-400 mt-0.5">•</span>
+                                            <span>{f}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Emerald-Accented Artifact Link */}
+                              {report && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedArtifactId(String(msg.id || `artifact-${index}`));
+                                    setIsArtifactPanelOpen(true);
+                                  }}
+                                  className="p-3.5 rounded-2xl bg-[#090e1a] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-[#0c1426] transition-all cursor-pointer group flex items-center justify-between shadow-lg animate-card-reveal-delay-2 hover:scale-[1.008]"
+                                >
+                                  <div className="flex items-center gap-3 min-w-0">
+                                    <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                                      <FileText className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
+                                          {report.query || 'Screener Discovery Dossier'}
+                                        </span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 shrink-0">
+                                          Screener Dossier
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-400 mt-0.5">
+                                        Buka hasil skrining dan metrik komparasi lengkap di Artifact Panel ➔
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ============================================================ */}
+                          {/* 5. GENERAL / FALLBACK                                        */}
+                          {/* ============================================================ */}
+                          {!isPeerBattle && !isSmartMoney && !isCompany360 && !isMarketScreening && (
                             <>
                               {report?.peer_matrix && report.peer_matrix.length > 0 && (
                                 <div className="animate-card-reveal-delay-1">

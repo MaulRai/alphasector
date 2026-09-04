@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { PeerCompanyMetric } from '@/lib/types';
 import { CompanyLogo } from '@/components/CompanyLogo';
-import { Award, Zap, TrendingDown, CheckCircle, ExternalLink } from 'lucide-react';
+import { Award, Zap, TrendingDown, CheckCircle, ExternalLink, ShieldCheck, Activity } from 'lucide-react';
 
 interface PeerBattleMatrixProps {
   matrix: PeerCompanyMetric[];
@@ -31,7 +31,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Komparasi rasio valuasi, efisiensi modal, dan performa keuangan dalam satu subsektor • Klik ticker untuk profil 360°
+            Komparasi rasio valuasi, Piotroski F-Score deterministik, P/E historical band, dan efisiensi modal • Klik ticker untuk profil 360°
           </p>
         </div>
       </div>
@@ -46,7 +46,8 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
               <th className="py-3 px-4">P/E Ratio</th>
               <th className="py-3 px-4">PBV Ratio</th>
               <th className="py-3 px-4">ROE</th>
-              <th className="py-3 px-4">NPM</th>
+              <th className="py-3 px-4">Piotroski Score</th>
+              <th className="py-3 px-4">P/E Band</th>
               <th className="py-3 px-4 rounded-r-xl">DER</th>
             </tr>
           </thead>
@@ -124,9 +125,45 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                   </span>
                 </td>
 
-                {/* NPM */}
-                <td className="py-4 px-4 text-slate-300">
-                  {formatVal(c.npm, 2, '%')}
+                {/* Piotroski Score */}
+                <td className="py-4 px-4">
+                  {c.piotroski?.score !== null && c.piotroski?.score !== undefined ? (
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className={`px-2 py-0.5 rounded-lg text-xs font-bold font-mono ${
+                        c.piotroski.score >= 8
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          : c.piotroski.score >= 5
+                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                          : 'bg-red-500/20 text-red-300 border border-red-500/40'
+                      }`}>
+                        {c.piotroski.score}/9
+                      </span>
+                      {c.is_highest_piotroski && (
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold" title="Kesehatan Fundamental Tertinggi">
+                          Top F-Score
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-slate-500">-</span>
+                  )}
+                </td>
+
+                {/* PE Band */}
+                <td className="py-4 px-4">
+                  {c.pe_band?.status && c.pe_band.status !== 'NEUTRAL' ? (
+                    <span className={`px-2 py-0.5 rounded-lg text-[11px] font-bold ${
+                      c.pe_band.status === 'UNDERVALUED'
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        : c.pe_band.status === 'FAIR_VALUE'
+                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                        : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                    }`}>
+                      {c.pe_band.status} {c.pe_band.discount_pct !== null && c.pe_band.discount_pct !== undefined ? `(${c.pe_band.discount_pct > 0 ? '+' : ''}${c.pe_band.discount_pct}%)` : ''}
+                    </span>
+                  ) : (
+                    <span className="text-slate-500">-</span>
+                  )}
                 </td>
 
                 {/* DER */}

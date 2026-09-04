@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Optional
+from app.agent.financial_engine import financial_engine
 
 class QuantitativeComparator:
     """Performs deterministic financial ratio & peer comparison calculations."""
@@ -62,6 +63,10 @@ class QuantitativeComparator:
             tags = overview.get("tags", []) or []
             has_high_div = any("dividend" in t for t in tags)
 
+            # Calculate deterministic Piotroski F-Score and Historical PE Band
+            piotroski = financial_engine.compute_piotroski_f_score(hist_fin)
+            pe_band = financial_engine.compute_pe_historical_band(hist_val, pe)
+
             matrix.append({
                 "symbol": symbol,
                 "company_name": name,
@@ -79,7 +84,9 @@ class QuantitativeComparator:
                 "revenue": revenue,
                 "net_income": net_income,
                 "has_high_dividend_tag": has_high_div,
-                "tags": tags[:5]
+                "tags": tags[:5],
+                "piotroski": piotroski,
+                "pe_band": pe_band
             })
 
         # Calculate best in class badges
@@ -104,6 +111,13 @@ class QuantitativeComparator:
                 min_pbv_symbol = min(valid_pbvs, key=lambda x: x["pbv"])["symbol"]
                 for x in matrix:
                     x["is_lowest_pbv"] = (x["symbol"] == min_pbv_symbol)
+
+            # Best Piotroski Score
+            valid_piotroski = [x for x in matrix if x.get("piotroski", {}).get("score") is not None]
+            if valid_piotroski:
+                max_piotroski_score = max(valid_piotroski, key=lambda x: x["piotroski"]["score"])["piotroski"]["score"]
+                for x in matrix:
+                    x["is_highest_piotroski"] = (x.get("piotroski", {}).get("score") == max_piotroski_score and max_piotroski_score >= 6)
 
         return matrix
 

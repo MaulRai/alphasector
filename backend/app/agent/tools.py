@@ -101,7 +101,7 @@ class AgentToolExecutor:
                 data = TRADE_IDEAS_MOCK_DATA.get("esg-leaders", [])
                 ms = 1
                 status = 200
-            elif "growth" in clean_q or "omset" in clean_q or "pendapatan" in clean_q or "titans" in clean_q:
+            elif "growth" in clean_q or "omset" in clean_q or "pendapatan" in clean_q or "titans" in clean_q or ("pertumbuhan" in clean_q and "revenue" in clean_q):
                 from app.api.sectors import TRADE_IDEAS_MOCK_DATA
                 data = TRADE_IDEAS_MOCK_DATA.get("revenue-growth", [])
                 ms = 1

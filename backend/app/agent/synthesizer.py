@@ -152,12 +152,13 @@ class AgentSynthesizer:
             "ATURAN MUTLAK:\n"
             "1. Tulis seluruh analisis dalam Bahasa Indonesia profesional dan lugas.\n"
             "2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON yang diberikan tanpa halusinasi.\n"
-            "3. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam untuk membantu analis mendalami riset ini lebih lanjut.\n"
-            "4. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
+            "3. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' (Historical PE Standard Deviation Band) di dalam peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit di 'key_findings' dan 'valuation_verdict' sebagai bukti ketajaman riset deterministik institusi.\n"
+            "4. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam untuk membantu analis mendalami riset ini lebih lanjut.\n"
+            "5. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
             "{\n"
             '  "executive_summary": "Ringkasan eksekutif 2-3 kalimat mengenai temuan utama riset ini.",\n'
             '  "key_findings": ["Poin kunci 1", "Poin kunci 2", "Poin kunci 3"],\n'
-            '  "valuation_verdict": "Penilaian valuasi objektif (apakah terdiskon, wajar, atau premium dibanding peer).",\n'
+            '  "valuation_verdict": "Penilaian valuasi objektif (apakah terdiskon, wajar, atau premium dibanding peer & deviasi historis).",\n'
             '  "smart_money_flow": "Analisis aliran akumulasi broker institusi & foreign flow.",\n'
             '  "catalysts": ["Katalis positif 1", "Katalis positif 2"],\n'
             '  "risks": ["Faktor risiko 1", "Faktor risiko 2"],\n'
@@ -186,6 +187,10 @@ class AgentSynthesizer:
             text = text.split("```")[1].split("```")[0].strip()
 
         parsed = json.loads(text)
+        if isinstance(parsed, list) and len(parsed) > 0 and isinstance(parsed[0], dict):
+            parsed = parsed[0]
+        elif not isinstance(parsed, dict):
+            parsed = {}
         
         # Ensure default followups if model didn't return any
         followups = parsed.get("suggested_followups") or []
@@ -239,14 +244,20 @@ class AgentSynthesizer:
                 f"Secara keseluruhan, sektor ini menunjukkan fundamental yang solid dengan pertumbuhan stabil."
             )
             
+            piot_items = [
+                f"{x.get('symbol')}: {x.get('piotroski', {}).get('score', '-')}/9 ({x.get('piotroski', {}).get('rating', '-')})"
+                for x in peer_matrix[:3] if x.get("piotroski", {}).get("score") is not None
+            ]
+            piot_summary = ", ".join(piot_items) if piot_items else "Terkonfirmasi stabil"
+
             key_findings = [
                 f"Valuasi terendah: {lowest_pe['symbol']} (PE: {lowest_pe.get('pe', '-')}x, PBV: {lowest_pe.get('pbv', '-')}x)",
                 f"Efisiensi modal terbaik: {highest_roe['symbol']} (ROE: {highest_roe.get('roe', '-')}%, NPM: {highest_roe.get('npm', '-')}%)",
-                f"Dividen: {peer_matrix[0]['symbol']} membagikan yield sebesar {peer_matrix[0].get('dividend_yield', 0)}%"
+                f"Kesehatan Finansial (Piotroski): {piot_summary}"
             ]
             
             valuation_verdict = (
-                f"Berdasarkan rasio harga terhadap laba (P/E), {lowest_pe['symbol']} berada pada posisi terdiskon dibanding peers-nya."
+                f"Berdasarkan rasio P/E dan P/E Historical Band, {lowest_pe['symbol']} berada pada posisi paling terdiskon dibanding peers-nya."
             )
 
             followups = [
@@ -257,20 +268,24 @@ class AgentSynthesizer:
             
         elif peer_matrix and len(peer_matrix) == 1:
             p = peer_matrix[0]
+            piot = p.get("piotroski") or {}
+            pe_b = p.get("pe_band") or {}
+
             exec_summary = (
                 f"{p['symbol']} ({p['company_name']}) beroperasi di sektor {p['sector']} ({p['sub_sector']}). "
                 f"Emiten ini memiliki kapitalisasi pasar sebesar Rp {p.get('market_cap', 0):,}, "
                 f"diperdagangkan pada valuasi PE {p.get('pe', '-')}x dan PBV {p.get('pbv', '-')}x dengan ROE {p.get('roe', '-')}%. "
-                f"Kondisi neraca keuangan menunjukkan rasio DER sebesar {p.get('der', '-')}, mencerminkan struktur leverage yang terukur."
+                f"Kesehatan fundamental berdasarkan Piotroski F-Score berada pada skor {piot.get('score', '-')}/9 ({piot.get('rating', 'STABIL')}), "
+                f"dengan status valuasi P/E Band teridentifikasi {pe_b.get('status', 'FAIR_VALUE')} ({pe_b.get('discount_pct', 0)}% vs Mean Historis {pe_b.get('mean_pe', '-')}x)."
             )
             
             key_findings = [
-                f"Kapitalisasi Pasar: Rp {p.get('market_cap', 0):,}",
-                f"Valuasi: P/E {p.get('pe', '-')}x | PBV {p.get('pbv', '-')}x",
-                f"Profitabilitas: ROE {p.get('roe', '-')}%, Margin Laba Bersih {p.get('npm', '-')}%, Dividend Yield {p.get('dividend_yield', 0)}%"
+                f"Piotroski F-Score: {piot.get('score', '-')}/9 ({piot.get('rating', 'STABIL')}) — Kualitas laba & neraca teruji",
+                f"P/E Historical Band: Status {pe_b.get('status', 'FAIR_VALUE')} (Deviasi: {pe_b.get('discount_pct', 0)}% vs Mean {pe_b.get('mean_pe', '-')}x)",
+                f"Profitabilitas & Valuasi: ROE {p.get('roe', '-')}%, PBV {p.get('pbv', '-')}x, DER {p.get('der', '-')}"
             ]
             
-            valuation_verdict = f"Valuasi {p['symbol']} saat ini tergolong kompetitif di subsektor {p['sub_sector']}."
+            valuation_verdict = f"Valuasi {p['symbol']} saat ini teridentifikasi {pe_b.get('status', 'KOMPETITIF')} dengan deviasi {pe_b.get('discount_pct', 0)}% terhadap rata-rata P/E historisnya."
             
             followups = [
                 f"Siapa saja 3 broker institusi pembeli terbesar di {p['symbol']}?",

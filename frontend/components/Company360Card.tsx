@@ -3,7 +3,7 @@
 import React from 'react';
 import { PeerCompanyMetric } from '@/lib/types';
 import { CompanyLogo } from '@/components/CompanyLogo';
-import { Building2, TrendingUp, DollarSign, Award, Layers, AlertTriangle } from 'lucide-react';
+import { Building2, TrendingUp, DollarSign, Award, Layers, AlertTriangle, ShieldCheck, Activity } from 'lucide-react';
 
 interface Company360CardProps {
   data: PeerCompanyMetric;
@@ -114,6 +114,67 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
         </div>
 
       </div>
+
+      {/* Deterministic Financial Intelligence Panel */}
+      {((data.piotroski?.score !== null && data.piotroski?.score !== undefined) || data.pe_band?.status) && (
+        <div className="pt-4 pb-2 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Piotroski F-Score Card */}
+          {data.piotroski?.score !== null && data.piotroski?.score !== undefined && (
+            <div className="p-3.5 rounded-xl bg-[#090f1d] border border-slate-800/90 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className={`p-2 rounded-lg ${data.piotroski.score >= 8 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : data.piotroski.score >= 5 ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'}`}>
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                    <span>Piotroski F-Score</span>
+                    <span className="text-[10px] text-slate-500 font-normal">(Stanford Model)</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    {data.piotroski.score >= 8 ? 'Kesehatan Fundamental Prima' : data.piotroski.score >= 5 ? 'Kondisi Keuangan Moderat' : 'Risiko Tekanan Finansial'}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-base font-bold text-white font-mono">
+                  {data.piotroski.score}<span className="text-xs text-slate-500">/9</span>
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${data.piotroski.score >= 8 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : data.piotroski.score >= 5 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'}`}>
+                  {data.piotroski.rating}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Historical PE Band Card */}
+          {data.pe_band?.status && (
+            <div className="p-3.5 rounded-xl bg-[#090f1d] border border-slate-800/90 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className={`p-2 rounded-lg ${data.pe_band.status === 'UNDERVALUED' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : data.pe_band.status === 'FAIR_VALUE' ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'}`}>
+                  <Activity className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                    <span>P/E Historical Band</span>
+                    <span className="text-[10px] text-slate-500 font-normal">({data.pe_band.years_analyzed || '3'} Thn SD)</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Mean: {data.pe_band.mean_pe ? `${data.pe_band.mean_pe}x` : '-'} | Deviasi: {data.pe_band.discount_pct !== null && data.pe_band.discount_pct !== undefined ? `${data.pe_band.discount_pct}%` : '-'}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${data.pe_band.status === 'UNDERVALUED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : data.pe_band.status === 'FAIR_VALUE' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}`}>
+                  {data.pe_band.status}
+                </span>
+                <div className="text-[10px] text-slate-500 mt-1 font-mono">
+                  Batas: {data.pe_band.minus_1sd ? `${data.pe_band.minus_1sd}x` : '-'} ~ {data.pe_band.plus_1sd ? `${data.pe_band.plus_1sd}x` : '-'}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Tags list */}
       {data.tags && data.tags.length > 0 && (

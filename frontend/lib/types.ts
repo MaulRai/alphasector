@@ -32,6 +32,26 @@ export interface ReasoningStep {
   timestamp: string;
 }
 
+export interface PiotroskiScoreData {
+  score: number | null;
+  max_score: number;
+  rating: 'PRIMA' | 'MODERAT' | 'RENTAN' | 'N/A';
+  criteria_met?: string[];
+  criteria_failed?: string[];
+}
+
+export interface PeHistoricalBandData {
+  current_pe?: number | null;
+  mean_pe?: number | null;
+  std_dev?: number | null;
+  plus_1sd?: number | null;
+  minus_1sd?: number | null;
+  status?: 'UNDERVALUED' | 'FAIR_VALUE' | 'OVERVALUED' | 'NEUTRAL';
+  discount_pct?: number | null;
+  years_analyzed?: number;
+  historical_pes?: number[];
+}
+
 export interface PeerCompanyMetric {
   symbol: string;
   company_name: string;
@@ -52,8 +72,11 @@ export interface PeerCompanyMetric {
   is_lowest_pbv?: boolean;
   is_highest_roe?: boolean;
   is_highest_dividend?: boolean;
+  is_highest_piotroski?: boolean;
   has_high_dividend_tag?: boolean;
   tags?: string[];
+  piotroski?: PiotroskiScoreData;
+  pe_band?: PeHistoricalBandData;
 }
 
 export interface BrokerSummaryInfo {

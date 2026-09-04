@@ -18,7 +18,7 @@ import {
   Settings, Key, User, LogOut, 
   Eye, EyeOff, CheckCircle2, AlertCircle, 
   ExternalLink, Sparkles, HelpCircle, Loader2,
-  Zap, ArrowLeft, ShieldCheck, Database, Trash2
+  Zap, ArrowLeft, ShieldCheck, Database, Trash2, Gift
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -342,6 +342,14 @@ export default function SettingsPage() {
               </a>
             </div>
 
+            {/* Free Credits & Onboarding Alert Box */}
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-start gap-2.5">
+              <Gift className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="leading-relaxed">
+                <strong className="text-emerald-400">Penting untuk Akun Baru:</strong> Pastikan Anda telah menyelesaikan langkah <em>onboarding</em> di dashboard Sectors untuk mengklaim kuota <strong>kredit gratis (*Free Credits*)</strong> agar API Key langsung aktif dan memiliki kuota kueri.
+              </div>
+            </div>
+
             <ol className="space-y-2 text-xs text-slate-400 list-decimal list-inside leading-relaxed">
               <li>
                 Kunjungi halaman resmi{' '}
@@ -355,6 +363,9 @@ export default function SettingsPage() {
                   <ExternalLink className="h-2.5 w-2.5 inline" />
                 </a>{' '}
                 dan pastikan Anda sudah login ke akun Sectors Anda.
+              </li>
+              <li>
+                Jika akun baru, selesaikan sesi onboarding di dashboard untuk mengaktifkan kuota kredit gratis Anda.
               </li>
               <li>
                 Klik dan masuk ke tab <strong className="text-slate-200">API Key Management</strong> di bagian atas dashboard.

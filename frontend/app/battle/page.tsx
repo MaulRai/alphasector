@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { PeerBattleMatrix } from '@/components/PeerBattleMatrix';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -16,8 +16,12 @@ import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
-export default function PeerBattlePage() {
+function PeerBattleContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tickersParam = searchParams.get('tickers');
+  const autoRunParam = searchParams.get('autorun');
+
   const [tickers, setTickers] = useState<string[]>(['BBRI', 'BMRI']);
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<AgentQueryResponse | null>(null);
@@ -27,6 +31,22 @@ export default function PeerBattlePage() {
   useEffect(() => {
     checkBackendHealth().then(res => setBackendOnline(res.status === 'healthy'));
   }, []);
+
+  useEffect(() => {
+    if (tickersParam) {
+      const parsed = tickersParam
+        .split(',')
+        .map(s => s.trim().toUpperCase())
+        .filter(Boolean)
+        .slice(0, 4);
+      if (parsed.length >= 2) {
+        setTickers(parsed);
+        if (autoRunParam === 'true') {
+          runBattle(parsed);
+        }
+      }
+    }
+  }, [tickersParam, autoRunParam]);
 
   const runBattle = async (selectedTickers: string[] = tickers) => {
     if (selectedTickers.length < 2) {
@@ -326,5 +346,23 @@ export default function PeerBattlePage() {
 
       </main>
     </div>
+  );
+}
+
+export default function PeerBattlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <RefreshCw className="h-6 w-6 text-cyan-400 animate-spin" />
+            <p className="text-xs text-slate-400 font-medium animate-pulse">Memuat Peer Battle arena...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <PeerBattleContent />
+    </Suspense>
   );
 }

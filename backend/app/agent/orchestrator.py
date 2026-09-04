@@ -323,8 +323,8 @@ class AgentOrchestrator:
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
-                title="Deterministic Ratio & Multiples Calculation",
-                detail=f"Calculated valuation gaps, ROE, DER, NPM, and identified Best-in-Class badges for {len(peer_matrix)} companies",
+                title="Deterministic Financial Intelligence Engine",
+                detail=f"Computed Piotroski F-Score (0-9), Historical P/E Standard Deviation Bands, and Best-in-Class metrics across {len(peer_matrix)} emitens",
                 timestamp=datetime.now().strftime("%H:%M:%S")
             ))
             step_counter += 1
@@ -348,7 +348,12 @@ class AgentOrchestrator:
                         "pbv": item.get("pbv") or item.get("pb"),
                         "roe": item.get("roe"),
                         "npm": item.get("net_profit_margin") or item.get("npm"),
-                        "tags": [f"ESG: {item['esg_score']}"] if item.get("esg_score") else []
+                        "tags": (
+                            [f"ESG: {item['esg_score']}"] if item.get("esg_score")
+                            else [f"YoY Growth: +{item['revenue_growth_yoy']}%"] if item.get("revenue_growth_yoy")
+                            else [f"Major Owner: {item['major_shareholder_pct']}%"] if item.get("major_shareholder_pct")
+                            else []
+                        )
                     })
             if not tickers and extracted_tickers:
                 tickers = extracted_tickers
@@ -445,7 +450,7 @@ class AgentOrchestrator:
             effective_peer_matrix = peer_matrix
             broker_info = None
             metrics_summary = None
-        elif intent == AgentIntent.COMPANY_DEEP_DIVE:
+        elif intent in (AgentIntent.SINGLE_TICKER_DEEP_DIVE, AgentIntent.COMPANY_DEEP_DIVE):
             # Single company 360 card with complete metric fields
             if peer_matrix and len(peer_matrix) > 0:
                 metrics_summary = peer_matrix[0]
