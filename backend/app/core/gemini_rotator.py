@@ -85,20 +85,20 @@ class GeminiKeyRotator:
         last_error = None
 
         system_instruction = (
-            "Anda adalah Vision Intelligence Specialist pasar modal Indonesia (IDX) untuk AlphaSector Autonomous Equity Research. "
-            "Tugas Anda adalah membaca gambar finansial (bisa berupa Chart Candlestick TradingView, Tangkapan Layar Laporan Keuangan IDX, "
-            "Tabel Broker Summary Bandarmology, atau Tangkapan Layar Aplikasi Sekuritas seperti IPOT/Ajaib/Mirae). "
+            "Anda adalah Vision Intelligence Specialist pasar modal Indonesia (IDX) untuk AlphaSector Autonomous Equity Research.\n"
+            "Tugas Anda adalah membaca gambar finansial (bisa berupa Chart Candlestick, Tangkapan Layar Laporan Keuangan IDX, "
+            "Tabel Broker Summary Bandarmology, Data Google Finance/Stockbit/RTI, atau Riset Sekuritas).\n"
             "Lakukan observasi fakta visual secara teliti, objektif, dan terstruktur.\n\n"
-            "EKSTRAK DAN SEBUTKAN:\n"
-            "1. Ticker saham yang teridentifikasi jelas (misal: BBRI, BBCA, ASII, ADRO) jika ada.\n"
-            "2. Tipe gambar (misal: Chart Candlestick Harian/Mingguan, Neraca/Laba Rugi, Broker Summary, atau Data Konsensus).\n"
-            "3. Indikator/angka penting yang terlihat di layar: level harga terakhir, support, resistance, MA, volume spike, atau akumulasi broker.\n"
-            "4. Rangkuman singkat fakta visual (2-4 kalimat) dalam Bahasa Indonesia profesional agar dapat diinjeksi ke analis fundamental pasar modal."
+            "FORMAT OUTPUT WAJIB (Tulis di awal respon):\n"
+            "PRIMARY_TICKER: [KODE_4_HURUF emiten utama pada gambar, misal: BBRI, atau NONE jika tidak tertera]\n"
+            "RELATED_TICKERS: [Daftar kode ticker lain yang terlihat di gambar dipisah koma, misal: BMRI, BBCA, BBNI, atau NONE]\n\n"
+            "RINGKASAN_VISUAL:\n"
+            "[Sajikan data penting yang tertera di gambar: nama perusahaan, level harga terakhir, persentase perubahan, P/E ratio, dividend yield, revenue/net income, volume, support/resistance, atau broker terakumulasi/distribusi secara padat dan akurat]"
         )
 
         prompt_text = (
             f"Pertanyaan analis pengguna: '{user_prompt or 'Jelaskan dan analisis konteks gambar ini'}'\n\n"
-            "Analisis gambar finansial ini sekarang dan sajikan temuannya secara padat dan terstruktur."
+            "Analisis gambar finansial ini sekarang dan sajikan temuannya secara padat dan terstruktur sesuai format wajib di atas."
         )
 
         # Request payload for Gemini Generative Language REST API
@@ -117,8 +117,8 @@ class GeminiKeyRotator:
                 }
             ],
             "generationConfig": {
-                "temperature": 0.2,
-                "maxOutputTokens": 800
+                "temperature": 0.1,
+                "maxOutputTokens": 2048
             }
         }
 
@@ -129,7 +129,7 @@ class GeminiKeyRotator:
             for model_name in models_to_try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
                 try:
-                    async with httpx.AsyncClient(timeout=25.0) as client:
+                    async with httpx.AsyncClient(timeout=40.0) as client:
                         resp = await client.post(
                             url,
                             json=request_body,
@@ -143,14 +143,16 @@ class GeminiKeyRotator:
                             parts = candidates[0].get("content", {}).get("parts", [])
                             extracted_text = "".join(p.get("text", "") for p in parts if "text" in p)
                             
-                            # Extract potential ticker from vision output
+                            # Extract primary and related tickers from structured vision output
                             detected_ticker = self._extract_potential_ticker(extracted_text)
+                            related_tickers = self._extract_related_tickers(extracted_text, detected_ticker)
                             
                             return {
                                 "success": True,
                                 "model": model_name,
                                 "visual_summary": extracted_text.strip(),
-                                "detected_ticker": detected_ticker
+                                "detected_ticker": detected_ticker,
+                                "related_tickers": related_tickers
                             }
                         else:
                             last_error = f"Gemini returned no candidates: {resp.text}"
@@ -167,12 +169,36 @@ class GeminiKeyRotator:
         raise RuntimeError(f"All Gemini API keys failed. Last error: {last_error}")
 
     def _extract_potential_ticker(self, text: str) -> Optional[str]:
-        """Extracts potential 4-letter Indonesian stock ticker identified in visual text."""
-        match = re.search(r'\b([A-Z]{4})(?:\.JK)?\b', text)
-        if match:
+        """Extracts primary 4-letter Indonesian stock ticker identified in visual text."""
+        # 1. Explicit PRIMARY_TICKER header
+        primary_match = re.search(r'PRIMARY_TICKER:\s*([A-Z]{4})\b', text, re.IGNORECASE)
+        if primary_match:
+            val = primary_match.group(1).upper()
+            if val != "NONE" and val not in ("CHART", "PRICE", "TIME", "DATE", "DATA", "PEER", "INFO", "USER", "TEXT", "VIEW", "BANK"):
+                return val
+        
+        # 2. IDX: TICKER or BEI: TICKER
+        idx_match = re.search(r'(?:IDX|BEI|SAHAM)[:\s]+([A-Z]{4})\b', text, re.IGNORECASE)
+        if idx_match:
+            return idx_match.group(1).upper()
+
+        # 3. Fallback scan ignoring common stopwords
+        for match in re.finditer(r'\b([A-Z]{4})(?:\.JK)?\b', text):
             cand = match.group(1).upper()
-            if cand not in ("CHART", "PRICE", "TIME", "DATE", "DATA", "PEER", "INFO", "USER", "TEXT", "VIEW"):
+            if cand not in ("NONE", "CHART", "PRICE", "TIME", "DATE", "DATA", "PEER", "INFO", "USER", "TEXT", "VIEW", "BANK", "TRUE", "HIGH", "LAST", "OPEN", "BEAT"):
                 return cand
         return None
+
+    def _extract_related_tickers(self, text: str, primary: Optional[str]) -> List[str]:
+        """Extracts related peer tickers mentioned in vision text."""
+        related: List[str] = []
+        match = re.search(r'RELATED_TICKERS:\s*([A-Z0-9,\s]+)', text, re.IGNORECASE)
+        if match:
+            raw = match.group(1)
+            for m in re.finditer(r'\b([A-Z]{4})\b', raw):
+                sym = m.group(1).upper()
+                if sym != "NONE" and sym != primary and sym not in ("BANK", "PEER", "DATA", "INFO", "NONE") and sym not in related:
+                    related.append(sym)
+        return related
 
 gemini_rotator = GeminiKeyRotator()

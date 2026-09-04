@@ -57,15 +57,22 @@ class AgentOrchestrator:
                 if vision_res.get("success"):
                     visual_context = vision_res.get("visual_summary", "")
                     detected_img_ticker = vision_res.get("detected_ticker")
-                    if detected_img_ticker and not context_ticker:
+                    related_img_tickers = vision_res.get("related_tickers", [])
+                    if detected_img_ticker:
                         context_ticker = detected_img_ticker
+
+                    detail_msg = f"Extracted visual chart/report intelligence via {vision_res.get('model', 'gemini-2.5-flash')}"
+                    if detected_img_ticker:
+                        detail_msg += f" | Identified Ticker: {detected_img_ticker}"
+                    if related_img_tickers:
+                        detail_msg += f" (Peers: {', '.join(related_img_tickers)})"
 
                     trace.append(ReasoningStep(
                         id=f"step-{step_counter}",
                         step_number=step_counter,
                         phase=ExecutionPhase.FETCHING,
                         title="Multimodal Financial Vision Perception",
-                        detail=f"Extracted visual chart/report intelligence via {vision_res.get('model', 'gemini-2.5-flash')}" + (f" | Identified Ticker: {detected_img_ticker}" if detected_img_ticker else ""),
+                        detail=detail_msg,
                         timestamp=datetime.now().strftime("%H:%M:%S")
                     ))
                     step_counter += 1
@@ -129,7 +136,7 @@ class AgentOrchestrator:
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 ))
                 synthesis_result = await AgentSynthesizer.synthesize_conversational(
-                    query=query,
+                    query=effective_query,
                     conversation_history=conversation_history
                 )
                 total_ms = int((time.time() - start_time) * 1000)
