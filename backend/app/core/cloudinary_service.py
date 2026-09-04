@@ -46,7 +46,7 @@ class CloudinaryService:
         self,
         base64_data: str,
         mime_type: str = "image/png",
-        folder: str = "alphasector/chat_uploads"
+        folder: Optional[str] = None
     ) -> Optional[str]:
         """
         Uploads a base64 image string to Cloudinary.
@@ -62,10 +62,12 @@ class CloudinaryService:
         else:
             data_uri = base64_data
 
+        target_folder = folder or settings.CLOUDINARY_FOLDER or os.getenv("CLOUDINARY_FOLDER", "alphasector/chat_uploads")
+
         def _do_upload():
             return cloudinary.uploader.upload(
                 data_uri,
-                folder=folder,
+                folder=target_folder,
                 resource_type="image",
                 transformation=[
                     {"quality": "auto", "fetch_format": "auto"}

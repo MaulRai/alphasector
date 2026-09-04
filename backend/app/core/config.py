@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_API_KEY", ""))
     CLOUDINARY_API_SECRET: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_API_SECRET", ""))
     CLOUDINARY_URL: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_URL", ""))
+    CLOUDINARY_FOLDER: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_FOLDER", "alphasector/chat_uploads"))
 
     @property
     def cors_origins_list(self) -> List[str]:
