@@ -7,14 +7,15 @@ interface AlphaAgentLogoProps {
 }
 
 export const AlphaAgentLogo: React.FC<AlphaAgentLogoProps> = ({
-  className = 'w-8 h-8',
+  className = '',
   size,
   glow = false,
 }) => {
-  const style = size ? { width: size, height: size } : undefined;
+  const defaultSizeClass = !size && !className ? 'w-8 h-8' : className;
+  const style = size ? { width: `${size}px`, height: `${size}px` } : undefined;
 
   return (
-    <div className={`relative inline-flex items-center justify-center shrink-0 ${className}`} style={style}>
+    <div className={`relative inline-flex items-center justify-center shrink-0 ${defaultSizeClass}`} style={style}>
       {glow && (
         <div className="absolute inset-0 bg-emerald-500/25 blur-md rounded-full pointer-events-none -z-10" />
       )}

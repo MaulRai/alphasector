@@ -9,6 +9,7 @@ import {
   Swords, Users, Search, BookOpen, 
   Activity, Home, Layers, LogOut, User as UserIcon, LogIn, Settings
 } from 'lucide-react';
+import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
 interface NavbarProps {
   onOpenDossier?: () => void;
@@ -39,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'AlphaAgent', href: '/copilot', icon: Activity },
+    { label: 'AlphaAgent', href: '/copilot', isCustomLogo: true },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
@@ -118,7 +119,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                   }`}
                 >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                  {item.isCustomLogo ? (
+                    <AlphaAgentLogo size={14} className={isActive ? 'brightness-125 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]' : 'opacity-80'} />
+                  ) : Icon ? (
+                    <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                  ) : null}
                   <span>{item.label}</span>
                 </Link>
               );
@@ -194,7 +199,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-slate-400 hover:text-slate-200 bg-slate-900/50'
               }`}
             >
-              <Icon className="h-3.5 w-3.5" />
+              {item.isCustomLogo ? (
+                <AlphaAgentLogo size={14} className={isActive ? 'brightness-125 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]' : 'opacity-80'} />
+              ) : Icon ? (
+                <Icon className="h-3.5 w-3.5" />
+              ) : null}
               <span>{item.label}</span>
             </Link>
           );

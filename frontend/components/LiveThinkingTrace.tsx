@@ -5,6 +5,7 @@ import {
   Bot, Cpu, Database, Calculator, FileText, 
   Loader2, CheckCircle2, Sparkles, Clock, Zap
 } from 'lucide-react';
+import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
 interface LiveStep {
   id: number;
@@ -139,11 +140,11 @@ export const LiveThinkingTrace: React.FC<LiveThinkingTraceProps> = ({ query }) =
       
       {/* Sender Header */}
       <div className="flex items-center gap-2 mb-2 text-[11px] text-emerald-400 font-semibold">
-        <div className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 animate-pulse">
-          <Bot className="h-3.5 w-3.5" />
+        <div className="p-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center animate-pulse">
+          <AlphaAgentLogo size={16} />
         </div>
         <span className="flex items-center gap-1.5">
-          <span>AlphaSector Agent sedang bernalar...</span>
+          <span>AlphaAgent sedang bernalar...</span>
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
         </span>
       </div>

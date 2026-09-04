@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
+import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
 export default function PeerBattlePage() {
   const router = useRouter();
@@ -287,8 +288,8 @@ export default function PeerBattlePage() {
             {/* Follow-Up Chat Room CTA Card */}
             <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-[#0d121e] p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-5 glass-panel">
               <div className="flex items-center gap-4">
-                <div className="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shrink-0">
-                  <Bot className="h-6 w-6" />
+                <div className="p-2.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shrink-0 flex items-center justify-center">
+                  <AlphaAgentLogo size={26} glow />
                 </div>
                 <div>
                   <h4 className="text-base font-bold text-white flex items-center gap-2">
