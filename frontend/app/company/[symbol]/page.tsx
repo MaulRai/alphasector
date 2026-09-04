@@ -7,6 +7,7 @@ import { Company360Card } from '@/components/Company360Card';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { ResearchDossierModal } from '@/components/ResearchDossierModal';
+import { NotionExportModal } from '@/components/NotionExportModal';
 import { fetchCompanyReport, fetchCompanySegments, fetchBrokerSummary, queryAgent, checkBackendHealth } from '@/lib/api';
 import { AgentQueryResponse, PeerCompanyMetric } from '@/lib/types';
 import { 
@@ -30,6 +31,7 @@ export default function Company360Page() {
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
+  const [isNotionModalOpen, setIsNotionModalOpen] = useState(false);
   const [backendOnline, setBackendOnline] = useState(true);
 
   useEffect(() => {
@@ -150,6 +152,17 @@ export default function Company360Page() {
             >
               <Printer className="h-3.5 w-3.5" />
               <span>Cetak / Export Dossier</span>
+            </button>
+          )}
+
+          {reportData && (
+            <button
+              onClick={() => setIsNotionModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#151c2c] hover:bg-[#1c263c] border border-slate-700 hover:border-emerald-500/40 text-slate-200 hover:text-emerald-300 text-xs font-semibold transition-all shadow-sm"
+              title="Sync Investment Memo ke Workspace Notion"
+            >
+              <span className="font-serif font-black text-white text-[10px] bg-slate-800 px-1 py-0.2 rounded border border-slate-700">N</span>
+              <span>Sync to Notion</span>
             </button>
           )}
         </div>
@@ -340,6 +353,21 @@ export default function Company360Page() {
           isOpen={isDossierOpen}
           onClose={() => setIsDossierOpen(false)}
           report={agentReport}
+        />
+      )}
+
+      {/* 1-Click Notion Investment Memo Modal */}
+      {reportData && (
+        <NotionExportModal
+          isOpen={isNotionModalOpen}
+          onClose={() => setIsNotionModalOpen(false)}
+          ticker={symbol}
+          companyName={reportData?.overview?.company_name}
+          metrics={metricData}
+          piotroski={metricData?.piotroski}
+          pe_band={metricData?.pe_band}
+          synthesis={agentReport?.synthesis}
+          brokerSummary={brokerData}
         />
       )}
     </div>

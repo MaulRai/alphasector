@@ -42,6 +42,10 @@ class Settings(BaseSettings):
     CLOUDINARY_URL: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_URL", ""))
     CLOUDINARY_FOLDER: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_FOLDER", "alphasector/chat_uploads"))
 
+    # Notion Integration (1-Click Investment Memo)
+    NOTION_API_KEY: str = Field(default_factory=lambda: os.getenv("NOTION_API_KEY", ""))
+    NOTION_PARENT_PAGE_ID: str = Field(default_factory=lambda: os.getenv("NOTION_PARENT_PAGE_ID", ""))
+
     @property
     def cors_origins_list(self) -> List[str]:
         if not self.CORS_ORIGINS:

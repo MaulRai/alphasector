@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PeerCompanyMetric } from '@/lib/types';
 import { CompanyLogo } from '@/components/CompanyLogo';
 import { Building2, TrendingUp, DollarSign, Award, Layers, AlertTriangle, ShieldCheck, Activity } from 'lucide-react';
+import { NotionExportModal } from '@/components/NotionExportModal';
 
 interface Company360CardProps {
   data: PeerCompanyMetric;
@@ -15,23 +16,34 @@ const formatVal = (val: any, decimals: number = 2, suffix: string = ''): string 
 };
 
 export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
+  const [isNotionModalOpen, setIsNotionModalOpen] = useState(false);
+
   if (!data || (!data.symbol && !data.last_close_price && !data.pe && !data.pbv)) return null;
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 shadow-2xl glass-panel glow-emerald mb-6">
-      {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-        <div className="flex items-center gap-3.5">
-          <CompanyLogo symbol={data.symbol} size="lg" />
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-white tracking-tight">
-                {data.symbol}
-              </h2>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                {data.sub_sector}
-              </span>
-            </div>
+    <>
+      <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-6 shadow-2xl glass-panel glow-emerald mb-6">
+        {/* Header Info */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div className="flex items-center gap-3.5">
+            <CompanyLogo symbol={data.symbol} size="lg" />
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  {data.symbol}
+                </h2>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  {data.sub_sector}
+                </span>
+                <button
+                  onClick={() => setIsNotionModalOpen(true)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-700 hover:border-emerald-500/50 bg-[#151c2c] hover:bg-[#1a2336] text-[11px] font-semibold text-slate-200 hover:text-emerald-300 transition-all shadow-sm ml-1"
+                  title="Ekspor Ringkasan Memo Riset ke Workspace Notion"
+                >
+                  <span className="font-serif font-black text-white text-[10px] bg-slate-800 px-1 py-0.2 rounded border border-slate-700">N</span>
+                  <span>Sync to Notion</span>
+                </button>
+              </div>
             <p className="text-sm text-slate-400 font-medium mt-0.5">
               {data.company_name}
             </p>
@@ -191,6 +203,17 @@ export const Company360Card: React.FC<Company360CardProps> = ({ data }) => {
         </div>
       )}
 
-    </div>
+      </div>
+
+      <NotionExportModal
+        isOpen={isNotionModalOpen}
+        onClose={() => setIsNotionModalOpen(false)}
+        ticker={data.symbol}
+        companyName={data.company_name}
+        metrics={data}
+        piotroski={data.piotroski}
+        pe_band={data.pe_band}
+      />
+    </>
   );
 };

@@ -7,6 +7,7 @@ from app.api.sectors import router as sectors_router
 from app.api.auth import router as auth_router
 from app.api.watchlist import router as watchlist_router
 from app.api.chat import router as chat_router
+from app.api.export import router as export_router
 
 # Initialize SQLite database and demo accounts
 init_db()
@@ -33,6 +34,7 @@ app.include_router(watchlist_router, prefix=f"{settings.API_V1_PREFIX}/user", ta
 app.include_router(chat_router, prefix=settings.API_V1_PREFIX)
 app.include_router(agent_router, prefix=settings.API_V1_PREFIX)
 app.include_router(sectors_router, prefix=settings.API_V1_PREFIX)
+app.include_router(export_router, prefix=f"{settings.API_V1_PREFIX}/export", tags=["export"])
 
 @app.get("/")
 async def root():

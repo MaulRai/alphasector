@@ -376,3 +376,38 @@ export async function fetchUserCredits(): Promise<{ demo_credits: number; max_cr
   if (!res.ok) return { demo_credits: 50, max_credits: 50, has_custom_sectors_key: !!getCustomSectorsKey() };
   return res.json();
 }
+
+// --- NOTION WORKSPACE EXPORT API ---
+
+export interface NotionExportPayload {
+  ticker: string;
+  company_name?: string;
+  synthesis?: any;
+  metrics?: any;
+  piotroski?: any;
+  pe_band?: any;
+  broker_summary?: any;
+  custom_notion_api_key?: string;
+  custom_parent_page_id?: string;
+}
+
+export async function exportToNotion(payload: NotionExportPayload): Promise<{
+  success: boolean;
+  notion_url?: string;
+  page_id?: string;
+  is_mock?: boolean;
+  message?: string;
+  error?: string;
+}> {
+  const res = await fetch(`${API_BASE_URL}/api/export/notion`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Gagal ekspor ke Notion.' }));
+    throw new Error(err.detail || err.message || 'Gagal ekspor ke Notion.');
+  }
+  return res.json();
+}
+
