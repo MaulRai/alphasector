@@ -20,38 +20,67 @@
     color: #f1f5f9;
     font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    caret-color: #10b981;
+  }
+
+  ::selection {
+    background-color: rgba(16, 185, 129, 0.3);
+    color: #ffffff;
   }
 }
 
-/* Custom Glassmorphism & Glow Effects */
+/* Impeccable Numeric & Typography Utilities */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Custom Glassmorphism & Impeccable Shadowcraft */
 .glass-panel {
-  background: rgba(13, 18, 30, 0.75);
+  background: rgba(10, 15, 29, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
 .glass-panel-interactive {
-  background: rgba(13, 18, 30, 0.75);
+  background: rgba(10, 15, 29, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-interactive:hover {
-  background: rgba(18, 26, 44, 0.9);
+  background: rgba(15, 23, 42, 0.88);
   border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.65), 0 0 20px -2px rgba(16, 185, 129, 0.12);
   transform: translateY(-2px);
 }
 
 .glow-emerald {
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2), 0 4px 10px -2px rgba(16, 185, 129, 0.1);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.2), 0 4px 10px -2px rgba(6, 182, 212, 0.1);
+}
+
+/* Impeccable True-Depth Elevation */
+.shadow-craft-sm {
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.5), 0 1px 3px -1px rgba(0, 0, 0, 0.4);
+}
+
+.shadow-craft-md {
+  box-shadow: 0 10px 20px -4px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+}
+
+.shadow-craft-lg {
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7), 0 10px 15px -5px rgba(0, 0, 0, 0.5);
 }
 
 /* Custom scrollbar */
@@ -67,6 +96,7 @@
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
