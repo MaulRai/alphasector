@@ -80,6 +80,9 @@ export const NotionExportModal: React.FC<NotionExportModalProps> = ({
 
       const res = await exportToNotion(payload);
       setResult(res);
+      if (res && !res.success) {
+        setShowConfig(true);
+      }
     } catch (err: any) {
       setError(err.message || 'Gagal mengekspor memo ke Notion.');
     } finally {
@@ -179,6 +182,19 @@ export const NotionExportModal: React.FC<NotionExportModalProps> = ({
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             )}
+          </div>
+        )}
+
+        {/* Warning / Requires Config Alert */}
+        {result && !result.success && (
+          <div className="mb-4 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs">
+            <div className="flex items-start gap-2 font-semibold mb-1">
+              <AlertCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+              <span>Konfigurasi Kredensial Notion Diperlukan</span>
+            </div>
+            <p className="text-[11px] text-amber-200/90 leading-relaxed mt-1">
+              {result.message}
+            </p>
           </div>
         )}
 

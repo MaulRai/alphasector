@@ -216,16 +216,16 @@ class NotionService:
             broker_summary=broker_summary
         )
 
-        # If no Notion API key or Parent Page ID is provided, return a demo simulated success response
+        # If no Notion API key or Parent Page ID is provided, return a clear validation requirement
         if not api_key or not parent_id:
-            mock_url = f"https://notion.so/alphaagent-investment-memo-{ticker.lower()}-preview"
-            logger.info(f"Notion credentials not set. Returning demo mock URL: {mock_url}")
+            logger.info("Notion credentials not configured in request or environment.")
             return {
-                "success": True,
-                "notion_url": mock_url,
-                "page_id": f"demo-{ticker.lower()}",
-                "is_mock": True,
-                "message": "Demo Mode: Berhasil menghasilkan struktur memo Notion. Pasang NOTION_API_KEY & NOTION_PARENT_PAGE_ID di .env untuk integrasi ke workspace riil."
+                "success": False,
+                "requires_credentials": True,
+                "notion_url": None,
+                "page_id": None,
+                "is_mock": False,
+                "message": "Kredensial Notion belum dikonfigurasi. Silakan masukkan Notion Integration Token (API Key) dan Parent Page ID pada opsi lanjutan di bawah, atau isi NOTION_API_KEY & NOTION_PARENT_PAGE_ID di file .env backend."
             }
 
         headers = {

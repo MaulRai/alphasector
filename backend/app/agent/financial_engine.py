@@ -130,28 +130,28 @@ class FinancialEngine:
                 criteria_failed.append("Leverage utang melebihi total ekuitas")
 
         # 6. Solvency / Asset Coverage
-        if assets_curr and debt_curr is not None and assets_curr > debt_curr:
-            score += 1
-            criteria_met.append("Solvabilitas terjaga (Total Aset melampaui Total Liabilitas)")
-        elif assets_curr:
-            score += 1
-            criteria_met.append("Solvabilitas aset terkonfirmasi positif")
+        if assets_curr is not None and debt_curr is not None and debt_curr >= 0:
+            if assets_curr > debt_curr:
+                score += 1
+                criteria_met.append("Solvabilitas terjaga (Total Aset melampaui Total Liabilitas)")
+            else:
+                criteria_failed.append("Total liabilitas melampaui total aset")
+        else:
+            criteria_failed.append("Data perbandingan aset terhadap liabilitas tidak lengkap")
 
         # 7. No Share Dilution (Shares outstanding did not increase YoY)
         if prev and shares_curr:
             shares_prev = prev.get("outstanding_shares")
-            if shares_prev:
+            if shares_prev and shares_prev > 0:
                 if shares_curr <= shares_prev:
                     score += 1
                     criteria_met.append("Tidak ada dilusi saham (No Share Dilution)")
                 else:
                     criteria_failed.append("Terjadi penambahan lembar saham beredar (Dilusi)")
             else:
-                score += 1
-                criteria_met.append("Struktur kepemilikan saham stabil")
+                criteria_failed.append("Data pembanding lembar saham tahun sebelumnya tidak tersedia")
         else:
-            score += 1
-            criteria_met.append("Struktur lembar saham beredar stabil")
+            criteria_failed.append("Data historis lembar saham beredar tidak lengkap")
 
         # --- C. OPERATING EFFICIENCY (2 Points) ---
         # 8. Higher Profit Margin YoY
@@ -261,12 +261,18 @@ class FinancialEngine:
 
         effective_curr_pe = current_pe if isinstance(current_pe, (int, float)) and current_pe > 0 else valid_pes[-1]
 
+        plus_2sd = mean_pe + (2 * std_dev)
         plus_1sd = mean_pe + std_dev
         minus_1sd = max(0.1, mean_pe - std_dev)
+        minus_2sd = max(0.1, mean_pe - (2 * std_dev))
 
         # Determine valuation positioning relative to standard deviation band
-        if effective_curr_pe <= (mean_pe - (0.5 * std_dev)):
+        if effective_curr_pe <= minus_2sd:
+            status = "EXTREME_UNDERVALUED"
+        elif effective_curr_pe <= (mean_pe - (0.5 * std_dev)):
             status = "UNDERVALUED"
+        elif effective_curr_pe >= plus_2sd:
+            status = "EXTREME_OVERVALUED"
         elif effective_curr_pe >= (mean_pe + (0.5 * std_dev)):
             status = "OVERVALUED"
         else:
@@ -278,8 +284,10 @@ class FinancialEngine:
             "current_pe": round(effective_curr_pe, 2),
             "mean_pe": round(mean_pe, 2),
             "std_dev": round(std_dev, 2),
+            "plus_2sd": round(plus_2sd, 2),
             "plus_1sd": round(plus_1sd, 2),
             "minus_1sd": round(minus_1sd, 2),
+            "minus_2sd": round(minus_2sd, 2),
             "status": status,
             "discount_pct": discount_pct,
             "years_analyzed": n,
