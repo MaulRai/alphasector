@@ -140,7 +140,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
             )
           ),
           blockquote: ({ node, ...props }) => (
-            <blockquote className="border-l-2 border-emerald-500/60 pl-3 my-2 text-slate-400 italic bg-emerald-500/5 py-1 rounded-r-lg" {...props}>
+            <blockquote className="p-3 my-2 rounded-xl bg-slate-900/60 border border-slate-800/80 text-slate-300 italic" {...props}>
               {renderWithHtmlBreaks(props.children)}
             </blockquote>
           ),

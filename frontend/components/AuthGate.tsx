@@ -107,11 +107,11 @@ export const AuthGate: React.FC<AuthGateProps> = ({
   return (
     <div className="w-full max-w-4xl mx-auto py-2">
       {/* Institutional Access Gate Card */}
-      <div className="rounded-3xl border border-slate-800 bg-[#090d16]/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+      <div className="rounded-3xl border border-slate-800 bg-[#0a0f1d] p-6 sm:p-10 shadow-craft-lg relative overflow-hidden">
         
         {/* Ambient Glow */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           
@@ -126,17 +126,17 @@ export const AuthGate: React.FC<AuthGateProps> = ({
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 {featureName}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              <p className="text-sm text-slate-200 leading-relaxed">
                 {featureDescription}
               </p>
             </div>
 
             {/* Unlocked Capabilities List */}
             <div className="space-y-2.5 pt-2 border-t border-slate-800/80">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Fitur yang Terbuka Setelah Masuk:
+              <span className="text-xs font-bold text-slate-300">
+                Fitur yang terbuka setelah masuk:
               </span>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-2 text-xs text-slate-200">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
                   <span>Autonomous Multi-Step AlphaAgent & LPU Reasoning</span>
@@ -161,7 +161,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({
               <button
                 onClick={handleDemoLogin}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 active:scale-98 text-black font-bold text-xs transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 active:scale-98 text-black font-bold text-xs transition-all shadow-lg shadow-black/50 disabled:opacity-50 cursor-pointer"
               >
                 {isSubmitting ? (
                   <RefreshCw className="h-4 w-4 animate-spin text-black" />
@@ -172,15 +172,15 @@ export const AuthGate: React.FC<AuthGateProps> = ({
                   </>
                 )}
               </button>
-              <p className="text-[10px] text-center text-slate-400 mt-1.5">
-                Menggunakan akun demo terverifikasi (<span className="text-slate-300 font-mono">demo@alphasector.id</span>)
+              <p className="text-xs text-center text-slate-300 mt-2">
+                Menggunakan akun demo terverifikasi (<span className="text-emerald-400 font-mono">demo@alphasector.id</span>)
               </p>
             </div>
 
           </div>
 
           {/* Right Column: In-Page Auth Form */}
-          <div className="lg:col-span-6 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl">
+          <div className="lg:col-span-6 p-6 rounded-2xl bg-slate-900/40 border border-slate-800/60 shadow-craft-sm">
             
             {/* Form Tabs */}
             <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-950/80 border border-slate-800 mb-5">

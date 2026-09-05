@@ -78,13 +78,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Left: Brand Logo & Title */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all glow-emerald shadow-md shrink-0">
+              <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/30 group-hover:border-emerald-400/60 transition-all shadow-craft-sm shrink-0">
                 <Image 
                   src="/images/alphasector-icon.png"
                   alt="AlphaSector Logo"
                   width={36}
                   height={36}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  className="w-full h-full object-cover"
                   priority
                 />
               </div>
@@ -94,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     Alpha<span className="text-emerald-400">Sector</span>
                   </span>
                 </div>
-                <span className="text-[9px] sm:text-[10px] text-slate-400 hidden sm:inline -mt-0.5">
+                <span className="text-xs text-slate-400 hidden sm:inline -mt-0.5">
                   Autonomous Equity Research
                 </span>
               </div>

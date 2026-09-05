@@ -134,7 +134,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col">
       <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 pt-24 pb-16 space-y-8 animate-card-reveal">

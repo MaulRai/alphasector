@@ -180,7 +180,7 @@ export const ApiKeyManagerCard: React.FC<ApiKeyManagerCardProps> = ({
       </div>
 
       {/* Guide Link */}
-      <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-xs text-slate-300 flex items-center justify-between gap-3">
+      <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-xs text-emerald-200/90 flex items-center justify-between gap-3">
         <span>Belum punya API key Sectors? Daftar dan dapatkan key gratis di portal resmi.</span>
         <a
           href="https://sectors.app"

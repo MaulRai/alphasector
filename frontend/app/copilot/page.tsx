@@ -182,7 +182,7 @@ function CopilotWorkspace() {
 
   if (isAuthLoading) {
     return (
-      <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
+      <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
@@ -196,7 +196,7 @@ function CopilotWorkspace() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black">
+      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col">
         <Navbar />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 flex flex-col justify-center">
           <AuthGate
@@ -211,7 +211,7 @@ function CopilotWorkspace() {
   }
 
   return (
-    <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-black">
+    <div className="h-screen w-full bg-[#07090e] text-slate-100 flex flex-col overflow-hidden">
       <Navbar />
 
       <div className="flex-1 flex min-h-0 pt-16 relative overflow-hidden">

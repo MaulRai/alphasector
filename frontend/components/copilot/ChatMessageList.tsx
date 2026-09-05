@@ -521,14 +521,14 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
                               disabled={isLoading}
                               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border text-xs text-left transition-all active:scale-95 group shadow-sm ${
                                 isPeerBattle
-                                  ? 'hover:bg-cyan-950/40 border-slate-700/80 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300'
+                                  ? 'hover:bg-cyan-950/50 border-slate-700/80 hover:border-cyan-500/50 text-white hover:text-cyan-200'
                                   : isSmartMoney
-                                  ? 'hover:bg-amber-950/40 border-slate-700/80 hover:border-amber-500/50 text-slate-300 hover:text-amber-300'
-                                  : 'hover:bg-emerald-950/40 border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-300'
+                                  ? 'hover:bg-amber-950/50 border-slate-700/80 hover:border-amber-500/50 text-white hover:text-amber-200'
+                                  : 'hover:bg-emerald-950/50 border-slate-700/80 hover:border-emerald-500/50 text-white hover:text-emerald-200'
                               }`}
                             >
                               <span className="line-clamp-1">{followup}</span>
-                              <ArrowRight className="h-3 w-3 text-slate-500 group-hover:text-current shrink-0 transition-transform group-hover:translate-x-0.5" />
+                              <ArrowRight className="h-3 w-3 text-slate-400 group-hover:text-current shrink-0 transition-transform group-hover:translate-x-0.5" />
                             </button>
                           ))}
                         </div>
@@ -556,10 +556,10 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
             <span className="text-slate-300 font-medium">
               AlphaAgent sedang menganalisis pasar & menyusun data...
             </span>
-            <span className="flex space-x-1 ml-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+            <span className="flex space-x-1.5 ml-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '0ms' }} />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '200ms' }} />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '400ms' }} />
             </span>
           </div>
         </div>

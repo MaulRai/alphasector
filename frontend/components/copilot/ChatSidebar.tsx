@@ -121,8 +121,12 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                           </div>
                         ))}
                       </div>
+                    ) : isActive ? (
+                      <div className="p-1.5 rounded-lg shrink-0 bg-emerald-500/20 text-emerald-400">
+                        <MessageSquare className="h-4 w-4" />
+                      </div>
                     ) : (
-                      <div className={`p-1.5 rounded-lg shrink-0 ${isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
+                      <div className="p-1.5 rounded-lg shrink-0 bg-slate-800 text-slate-400">
                         <MessageSquare className="h-4 w-4" />
                       </div>
                     )}
@@ -143,7 +147,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 <button
                   onClick={(e) => onRequestDeleteSession(e, s)}
                   title="Hapus Sesi"
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0"
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-all shrink-0"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

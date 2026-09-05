@@ -117,7 +117,7 @@ export default function Company360Page() {
   } : null;
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-blue-500 selection:text-black">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col">
       <Navbar 
         backendOnline={backendOnline}
         hasActiveReport={!!agentReport}
