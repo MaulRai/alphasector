@@ -61,6 +61,6 @@ graph TD
 ## 💻 Tech Stack Ringkas
 
 - **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Vanilla Tailwind CSS (Custom Dark Glassmorphism, Neon Cyan & Emerald Glow), Lucide Icons.
-- **Backend & AI:** FastAPI (Python 3.11+), LangChain / Google Gemini 2.5 Flash (Vision & Multimodal), Pydantic v2, Sectors Financial API v2 REST Client.
-- **Database & State:** SQLite via aiosqlite (sesi chat multi-turn, watchlist analis, cache kuota & custom key).
-- **Ekspor & Integrasi:** Notion API Client (v2.2+ SDK) untuk 1-Click Institutional Investment Memo sync.
+- **Backend & AI:** FastAPI (Python 3.11+), Minimalist Direct-to-API Orchestration (Groq `openai/gpt-oss-120b` untuk grounded synthesis + Google Gemini untuk Multimodal Chart Vision), Pydantic v2, Sectors Financial API v2 REST Client.
+- **Database & State:** Dual-Mode Storage Architecture (Production Neon PostgreSQL dengan otomatis fallback ke local SQLite `alphasector.db` untuk 100% clone-and-run out-of-the-box).
+- **Ekspor & Integrasi:** Notion API Client (v2.2+ SDK) untuk 1-Click Institutional Investment Memo sync dengan validasi kredensial transparan.

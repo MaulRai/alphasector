@@ -10,7 +10,7 @@ Direktori ini memuat dokumentasi komprehensif mengenai seluruh fitur, arsitektur
    - Problem statement dan latar belakang pasar modal Indonesia (IDX).
    - Kualifikasi Track 01 (AI Agents & Assistants) Sectors Hackathon 2026.
    - Peta navigasi seluruh rute aplikasi (`/`, `/copilot`, `/battle`, `/screener`, `/company/[symbol]`, `/smart-money`, `/settings`).
-   - Ringkasan tech stack (FastAPI, Next.js 15, Gemini 2.5 Flash, SQLite, Sectors REST API v2).
+   - Ringkasan tech stack (FastAPI, Next.js 15, Groq, Gemini Vision, Dual-Mode Postgres/SQLite, Sectors REST API v2).
 
 2. [**01_CORE_FEATURES.md**](file:///d:/Projects/Web%20Shi/sectors-hackathon/exploration/ideation/have-built/01_CORE_FEATURES.md) — **Dokumentasi Komprehensif Fitur Utama**
    - **AlphaAgent Workspace (`/copilot`):** Multi-turn chat context, cluster logo emiten dinamis, analisis visual chart teknikal, reasoning trace accordion, dan widget interaktif.
@@ -21,11 +21,11 @@ Direktori ini memuat dokumentasi komprehensif mengenai seluruh fitur, arsitektur
    - **Analyst Settings & BYOK API Key (`/settings`):** Bring Your Own Key Sectors API, live latency tester, dan kuota server demo.
 
 3. [**02_TECHNICAL_ARCHITECTURE.md**](file:///d:/Projects/Web%20Shi/sectors-hackathon/exploration/ideation/have-built/02_TECHNICAL_ARCHITECTURE.md) — **Arsitektur Teknis & Engine Kuantitatif Deterministik**
-   - Diagram alur orkestrasi agent (Planner $\rightarrow$ Tool Pipeline $\rightarrow$ Deterministik Quant Engine $\rightarrow$ Grounded Synthesizer).
-   - **Piotroski F-Score (Model 9 Kriteria Akuntansi):** Profitabilitas, struktur modal/likuiditas, dan efisiensi operasi.
-   - **P/E Historical Standard Deviation Bands:** Formula Mean P/E, standar deviasi ($\sigma$), batas bands $+2\sigma$ hingga $-2\sigma$, dan persentase gap.
+   - Diagram alur orkestrasi agent (Deterministic Hybrid Planner $\rightarrow$ Tool Pipeline $\rightarrow$ Deterministik Quant Engine $\rightarrow$ Groq Synthesizer).
+   - **Piotroski F-Score (Model 9 Kriteria Akuntansi Ketat):** Profitabilitas, struktur modal/likuiditas, dan efisiensi operasi tanpa inflasi skor semu.
+   - **P/E Historical Standard Deviation Bands:** Formula Mean P/E, standar deviasi ($\sigma$), batas bands $+2\sigma$ hingga $-2\sigma$, dan status valuasi bertingkat.
    - Pipeline pengenalan grafik teknikal multimodal (Gemini Vision).
-   - Skema database asinkron SQLite (users, sessions, messages, credits, keys).
+   - Dual-Mode Storage Architecture (Neon PostgreSQL + Automatic Local SQLite Fallback).
 
 4. [**03_EXTERNAL_INTEGRATIONS.md**](file:///d:/Projects/Web%20Shi/sectors-hackathon/exploration/ideation/have-built/03_EXTERNAL_INTEGRATIONS.md) — **Integrasi Ekosistem Eksternal & Notion Sync**
    - **1-Click Notion Sync:** Alur ekspor Institutional Investment Memo, schema properti database Notion, dan format blok kaya (toggle, callout, table).

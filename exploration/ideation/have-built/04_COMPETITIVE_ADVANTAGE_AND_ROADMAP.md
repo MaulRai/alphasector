@@ -33,8 +33,10 @@ Berikut adalah bukti konkret bahwa **AlphaSector** memenuhi dan melampaui kualif
    - Terminal obrolan dengan *Reasoning Trace Accordion* (milidetik latensi & konsumsi kredit).
    - Tabel komparasi *Peer Battle* dengan lencana *Best-in-Class* dinamis.
    - *Floating Dock* screener untuk peluncuran battle instan.
-4. **State Management & Memory Mandiri:**
-   Riwayat percakapan multi-turn, kluster logo emiten, data sesi, serta kuota kredit disimpan di database SQLite backend mandiri, independen dari platform pihak ketiga.
+4. **State Management & Memory Mandiri (Dual-Mode DB):**
+   Riwayat percakapan multi-turn, kluster logo emiten, data sesi, serta kuota kredit dikelola secara mandiri oleh arsitektur dual-mode (Neon PostgreSQL + SQLite fallback), independen dari platform pihak ketiga dan siap diuji tanpa dependensi rumit.
+5. **Minimalist Direct Orchestration (Zero Framework Bloat):**
+   Alih-alih membungkus dependensi raksasa seperti LangChain yang lambat dan sulit didebug, pipeline dibangun secara *direct-to-API* (Groq + Gemini Vision) dengan latensi eksekusi rendah dan *trace* proses berpikir yang 100% transparan bagi pengguna.
 
 ---
 

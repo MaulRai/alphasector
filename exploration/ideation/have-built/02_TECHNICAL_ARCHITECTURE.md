@@ -18,14 +18,14 @@ sequenceDiagram
     participant Tools as Tool Execution Pipeline
     participant Sectors as Sectors Financial API v2
     participant Quant as Deterministic Quant Engine
-    participant Synth as Synthesizer (Grounded LLM)
-    participant DB as SQLite Session & Key Store
+    participant Synth as Synthesizer (Groq LLM)
+    participant DB as Dual DB (Postgres / Local SQLite)
 
     User->>UI: Input Kueri / Upload Chart
     UI->>Orch: POST /api/agent/query (query, session_id, image)
     Orch->>DB: Ambil Riwayat Percakapan & BYOK Key
-    Orch->>Plan: Evaluasi Intent & Susun Tool Plan
-    Plan-->>Orch: Tool Execution Plan (Target Endpoints & Tickers)
+    Orch->>Plan: Evaluasi Intent & Ekstraksi Parameter
+    Plan-->>Orch: Structured Execution Plan (Target Endpoints & Tickers)
     
     rect rgb(20, 28, 48)
         note right of Orch: Paralel / Targeted Data Fetching
@@ -37,7 +37,7 @@ sequenceDiagram
 
     rect rgb(18, 38, 32)
         note right of Orch: Komputasi Deterministik (Python Quant Engine)
-        Orch->>Quant: Hitung Piotroski F-Score (9 Kriteria)
+        Orch->>Quant: Hitung Piotroski F-Score (9 Kriteria Akuntansi Ketat)
         Orch->>Quant: Hitung P/E Historical Standard Deviation Bands (+/- 2 SD)
         Orch->>Quant: Hitung Peer Gap % & Best-in-Class Badges
         Quant-->>Orch: Computed Quant Metrics
@@ -55,7 +55,7 @@ sequenceDiagram
 ## 2. 🧠 Modul Pipeline Backend
 
 ### A. Intent Planner (`backend/app/agent/planner.py`)
-Menerima kueri bahasa natural pengguna (dan opsional gambar chart) lalu mengklasifikasikan intent menjadi salah satu dari 5 kategori:
+Berbeda dengan pendekatan LLM generik yang lambat dan rentan halusinasi routing, AlphaSector mengadopsi **Deterministic Hybrid Rule-Based & Regex Classifier**. Dengan latensi super cepat (<5ms), Planner membedah kueri pengguna dan mengekstrak kode saham (format 4 huruf IDX) serta parameter numerik (`min_roe`, `max_pe`) secara deterministik ke dalam salah satu dari 5 kategori intent:
 1. `SINGLE_COMPANY`: Riset mendalam terhadap 1 emiten spesifik.
 2. `PEER_BATTLE`: Komparasi multi-emiten (2-4 emiten).
 3. `SCREENER`: Pencarian/penyaringan saham berdasarkan kriteria metrik finansial.
@@ -133,11 +133,17 @@ AlphaSector mendukung masukan gambar grafik candlestick atau screenshot broker s
 
 ---
 
-## 5. 💾 Database & State Management
+## 5. 💾 Database & State Management (Dual-Mode Storage Architecture)
 
-Aplikasi menggunakan **SQLite** asinkron (`aiosqlite`) dengan skema tabel yang efisien:
-- `users`: Data autentikasi analis (email, full name, password hash).
-- `chat_sessions`: Metadata sesi obrolan, timestamp interaksi terakhir, dan daftar emiten terkait.
-- `chat_messages`: Riwayat percakapan multi-turn (role `user` vs `assistant`, payload reasoning trace, dan widget data).
-- `user_credits`: Pengelolaan kuota demo server (50 kredit per akun analis).
-- `custom_api_keys`: Penyimpanan personal BYOK Sectors API Key terenkripsi.
+AlphaSector mengimplementasikan **Dual-Mode Database Architecture** yang menggabungkan keandalan cloud production dan kemudahan evaluasi lokal:
+1. **Primary Production Mode (Neon PostgreSQL):**
+   Saat `DATABASE_URL` tersedia, sistem menggunakan pool PostgreSQL Neon Cloud dengan keamanan SSL dan koneksi asinkron terisolasi.
+2. **Automatic Local Fallback Mode (SQLite Engine):**
+   Jika `DATABASE_URL` tidak didefinisikan atau jaringan eksternal terputus, backend secara otomatis (*seamlessly*) mengalihkan penyimpanan ke database SQLite lokal (`alphasector.db`). Hal ini menjamin evaluator/juri yang menjalankan *clone-and-run* dapat langsung menguji aplikasi tanpa hambatan konfigurasi database eksternal.
+
+Skema entitas yang didukung penuh pada kedua mode:
+- `users`: Autentikasi analis, kuota demo credits, dan personal BYOK Sectors Key.
+- `chat_sessions`: Metadata sesi percakapan, emiten terkait, dan timestamp.
+- `chat_messages`: Riwayat percakapan multi-turn, reasoning trace JSON, dan widget data.
+- `sectors_api_cache`: Cache persisten 24 jam untuk optimasi kuota Sectors API.
+- `ai_interaction_logs`: Log observabilitas dan audit teknis seluruh inferensi model.
