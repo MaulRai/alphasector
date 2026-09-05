@@ -58,29 +58,29 @@
 .glass-panel-interactive:hover {
   background: rgba(15, 23, 42, 0.88);
   border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.65), 0 0 20px -2px rgba(16, 185, 129, 0.12);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.6);
   transform: translateY(-2px);
 }
 
 .glow-emerald {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.5);
 }
 
 .glow-cyan {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.5);
 }
 
 /* Impeccable True-Depth Elevation */
 .shadow-craft-sm {
-  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.5), 0 1px 3px -1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.4);
 }
 
 .shadow-craft-md {
-  box-shadow: 0 10px 20px -4px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.5);
 }
 
 .shadow-craft-lg {
-  box-shadow: 0 16px 22px -8px rgba(0, 0, 0, 0.7), 0 8px 12px -4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.6);
 }
 
 /* Custom scrollbar */

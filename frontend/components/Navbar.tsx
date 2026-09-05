@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center: Main Navigation Bar */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800/80 shadow-inner backdrop-blur-md">
+          <nav className="hidden md:flex items-center gap-1 p-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = item.href === '/' 
@@ -115,8 +115,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   href={item.href}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                      ? 'bg-emerald-500/15 text-emerald-300 font-semibold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                   }`}
                 >
                   {item.isCustomLogo ? (
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {hasActiveReport && onOpenDossier && pathname !== '/copilot' && (
               <button
                 onClick={onOpenDossier}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all hover:scale-105 shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition-all hover:scale-105"
               >
                 <BookOpen className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Dossier</span>
@@ -146,12 +146,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* User Profile / Auth State */}
             {mounted ? (
               isAuthenticated && user ? (
-                <div className="flex items-center gap-2 pl-1 border-l border-slate-800">
+                <div className="flex items-center gap-2 pl-1 border-l border-slate-800/80">
                   <div 
-                    className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800"
+                    className="flex items-center gap-2 px-2.5 py-1 text-slate-200"
                     title={`${user.full_name} (${user.email})`}
                   >
-                    <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                    <div className="flex h-5 w-5 items-center justify-center rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
                       {getInitials(user.full_name || 'AN')}
                     </div>
                     <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate hidden sm:inline">
@@ -162,7 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Link
                     href="/settings"
                     title="Pengaturan & Sectors API Key (Settings)"
-                    className="p-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 transition-all text-xs"
+                    className="p-1.5 rounded-lg hover:bg-slate-800/70 text-slate-400 hover:text-emerald-400 transition-colors text-xs"
                   >
                     <Settings className="h-3.5 w-3.5" />
                   </Link>
@@ -170,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <Link
                   href="/copilot"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/30 text-slate-300 hover:text-white text-xs font-semibold transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-800/70 text-slate-300 hover:text-white text-xs font-semibold transition-all"
                 >
                   <LogIn className="h-3.5 w-3.5 text-emerald-400" />
                   <span>Masuk</span>

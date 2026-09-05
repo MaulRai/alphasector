@@ -100,7 +100,7 @@ ${report.synthesis.disclaimer}
         isOpen
           ? 'w-full sm:w-[480px] lg:w-[540px] opacity-100 border-l border-slate-800'
           : 'w-0 opacity-0 pointer-events-none border-l-0'
-      } shrink-0 bg-[#0a0d16] flex flex-col h-full overflow-hidden shadow-2xl relative z-30 transition-all duration-300 ease-out`}
+      } shrink-0 bg-[#0a0d16] flex flex-col h-full overflow-hidden relative z-30 transition-all duration-300 ease-out`}
     >
       
       {/* Panel Top Header (Claude Style) */}
@@ -173,7 +173,7 @@ ${report.synthesis.disclaimer}
             onClick={() => setActiveTab('preview')}
             className={`px-3 py-1 rounded-lg transition-all ${
               activeTab === 'preview'
-                ? 'bg-emerald-500/20 text-emerald-300 shadow-sm border border-emerald-500/30'
+                ? 'bg-emerald-500/20 text-emerald-300 font-semibold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -183,7 +183,7 @@ ${report.synthesis.disclaimer}
             onClick={() => setActiveTab('library')}
             className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
               activeTab === 'library'
-                ? 'bg-emerald-500/20 text-emerald-300 shadow-sm border border-emerald-500/30'
+                ? 'bg-emerald-500/20 text-emerald-300 font-semibold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >

@@ -67,7 +67,7 @@ export default function LandingPage() {
           >
             <Link
               href="/copilot"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-black/70"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
             >
               <span>Buka AlphaAgent Workspace</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -120,7 +120,7 @@ export default function LandingPage() {
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Dirancang Khusus untuk Analisis Pasar Modal Indonesia
               </h2>
-              <p className="text-sm sm:text-base text-slate-400">
+              <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
                 Kombinasi data finansial resmi berlisensi dan AI Agent berkecepatan tinggi tanpa halusinasi angka.
               </p>
             </div>
@@ -131,7 +131,7 @@ export default function LandingPage() {
             
             {/* Feature 1: Peer Battle */}
             <RevealOnScroll direction="up" delayMs={0}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full shadow-lg">
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -165,7 +165,7 @@ export default function LandingPage() {
 
             {/* Feature 2: Smart Money Flow */}
             <RevealOnScroll direction="up" delayMs={150}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-amber-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full shadow-lg">
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-amber-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -199,7 +199,7 @@ export default function LandingPage() {
 
             {/* Feature 3: Screener Pro */}
             <RevealOnScroll direction="up" delayMs={300}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-emerald-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full shadow-lg">
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-emerald-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -298,7 +298,7 @@ export default function LandingPage() {
 
           {/* Visual Showcase Graphic */}
           <RevealOnScroll direction="right" delayMs={200}>
-            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] overflow-hidden shadow-craft-lg">
+            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] overflow-hidden">
               <div className="relative h-80 sm:h-96 w-full">
                 <Image
                   src="/images/landing/digital-dossier.jpeg"
@@ -449,7 +449,7 @@ export default function LandingPage() {
       {/* 6. GRAND BOTTOM BANNER / CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
         <RevealOnScroll direction="up">
-          <div className="relative rounded-3xl border border-slate-800 bg-[#0a0f1d] p-8 sm:p-14 text-center overflow-hidden shadow-craft-lg hover:border-emerald-500/30 transition-all">
+          <div className="relative rounded-3xl border border-slate-800 bg-[#0a0f1d] p-8 sm:p-14 text-center overflow-hidden hover:border-emerald-500/30 transition-all">
             
             {/* Oversized Subtle Background Brand Logo Mark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
@@ -468,7 +468,7 @@ export default function LandingPage() {
               <div className="pt-3">
                 <Link
                   href="/copilot"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-craft-md hover:shadow-craft-lg"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
                 >
                   <span>Buka AlphaAgent Sekarang</span>
                   <ArrowRight className="h-4 w-4" />
