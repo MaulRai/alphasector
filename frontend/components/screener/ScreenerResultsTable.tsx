@@ -80,13 +80,13 @@ export const ScreenerResultsTable: React.FC<ScreenerResultsTableProps> = ({
                       {subsector}
                     </span>
                   </td>
-                  <td className="py-3 px-3.5 text-slate-200 font-mono whitespace-nowrap">
+                  <td className="py-3 px-3.5 text-slate-200 font-mono tabular-nums whitespace-nowrap">
                     {c.market_cap ? formatTrillion(c.market_cap) : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="py-3 px-3.5 text-slate-200 font-mono whitespace-nowrap">
+                  <td className="py-3 px-3.5 text-slate-200 font-mono tabular-nums whitespace-nowrap">
                     {c.pe ? `${Number(c.pe).toFixed(1)}x` : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="py-3 px-3.5 text-slate-200 font-mono whitespace-nowrap">
+                  <td className="py-3 px-3.5 text-slate-200 font-mono tabular-nums whitespace-nowrap">
                     {c.pb || c.pbv ? `${Number(c.pb || c.pbv).toFixed(1)}x` : <span className="text-slate-500">-</span>}
                   </td>
                   <td className="py-3 px-3.5 text-right whitespace-nowrap">

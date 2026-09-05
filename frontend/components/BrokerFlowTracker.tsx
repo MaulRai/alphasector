@@ -122,7 +122,7 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-xs text-slate-400 font-medium">Buyer Concentration</div>
-            <div className="text-sm font-bold text-emerald-400">
+            <div className="text-sm font-bold font-mono tabular-nums text-emerald-400">
               {buyerConcentration ?? 50}%
             </div>
           </div>
@@ -144,7 +144,7 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
             <span className="flex items-center gap-1.5">
               <ArrowUpRight className="h-4 w-4" /> Top Net Buyers (Akumulasi)
             </span>
-            <span className="text-[10px] text-slate-500">Broker Exchange Member</span>
+            <span className="text-[10px] text-slate-400">Broker Exchange Member</span>
           </div>
           <div className="space-y-2">
             {topBuyers.length > 0 ? (
@@ -171,19 +171,19 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
                             </span>
                           )}
                         </div>
-                        <div className="text-[10px] text-slate-500 capitalize">
+                        <div className="text-[10px] text-slate-400 capitalize">
                           {brokerInfo.cohort} cohort
                         </div>
                       </div>
                     </div>
-                    <span className="font-mono font-bold text-emerald-400 shrink-0 text-xs">
+                    <span className="font-mono tabular-nums font-bold text-emerald-400 shrink-0 text-xs">
                       {displayVal}
                     </span>
                   </div>
                 );
               })
             ) : (
-              <div className="text-xs text-slate-500 py-3 text-center">Data buyer tidak tersedia</div>
+              <div className="text-xs text-slate-400 py-3 text-center">Data buyer tidak tersedia</div>
             )}
           </div>
         </div>
@@ -194,7 +194,7 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
             <span className="flex items-center gap-1.5">
               <ArrowDownRight className="h-4 w-4" /> Top Net Sellers (Distribusi)
             </span>
-            <span className="text-[10px] text-slate-500">Broker Exchange Member</span>
+            <span className="text-[10px] text-slate-400">Broker Exchange Member</span>
           </div>
           <div className="space-y-2">
             {topSellers.length > 0 ? (
@@ -221,12 +221,12 @@ export const BrokerFlowTracker: React.FC<BrokerFlowTrackerProps> = ({ brokerSumm
                             </span>
                           )}
                         </div>
-                        <div className="text-[10px] text-slate-500 capitalize">
+                        <div className="text-[10px] text-slate-400 capitalize">
                           {brokerInfo.cohort} cohort
                         </div>
                       </div>
                     </div>
-                    <span className="font-mono font-bold text-red-400 shrink-0 text-xs">
+                    <span className="font-mono tabular-nums font-bold text-red-400 shrink-0 text-xs">
                       {displayVal}
                     </span>
                   </div>

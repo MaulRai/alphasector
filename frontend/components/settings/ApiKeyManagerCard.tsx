@@ -60,7 +60,7 @@ export const ApiKeyManagerCard: React.FC<ApiKeyManagerCardProps> = ({
         <div className="p-4 sm:p-5 rounded-2xl bg-[#080d1a] border border-slate-800/90 space-y-3">
           <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-slate-300 font-semibold">Sisa Kuota Demo Server:</span>
-            <span className="font-mono font-bold text-emerald-400">
+            <span className="font-mono tabular-nums font-bold text-emerald-400">
               {credits} / 50 Credit
             </span>
           </div>

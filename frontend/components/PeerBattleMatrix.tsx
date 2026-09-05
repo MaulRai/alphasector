@@ -88,13 +88,13 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                 </td>
 
                 {/* Market Cap */}
-                <td className="py-4 px-4 text-slate-300 whitespace-nowrap">
+                <td className="py-4 px-4 text-slate-300 whitespace-nowrap font-mono tabular-nums">
                   {c.market_cap ? `Rp ${(Number(c.market_cap) / 1e12).toFixed(1)} T` : '-'}
                 </td>
 
                 {/* PE */}
                 <td className="py-4 px-4 whitespace-nowrap">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono tabular-nums ${
                     c.is_lowest_pe 
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
                       : 'text-slate-200'
@@ -105,7 +105,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
 
                 {/* PBV */}
                 <td className="py-4 px-4 whitespace-nowrap">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono tabular-nums ${
                     c.is_lowest_pbv 
                       ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' 
                       : 'text-slate-200'
@@ -116,7 +116,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
 
                 {/* ROE */}
                 <td className="py-4 px-4 whitespace-nowrap">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono tabular-nums ${
                     c.is_highest_roe 
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
                       : 'text-slate-200'
@@ -129,7 +129,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                 <td className="py-4 px-4 whitespace-nowrap">
                   {c.piotroski?.score !== null && c.piotroski?.score !== undefined ? (
                     <div className="flex items-center gap-1.5 whitespace-nowrap">
-                      <span className={`px-2 py-0.5 rounded-lg text-xs font-bold font-mono shrink-0 ${
+                      <span className={`px-2 py-0.5 rounded-lg text-xs font-bold font-mono tabular-nums shrink-0 ${
                         c.piotroski.score >= 8
                           ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                           : c.piotroski.score >= 5
@@ -163,7 +163,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                         {c.pe_band.status}
                       </span>
                       {c.pe_band.discount_pct !== null && c.pe_band.discount_pct !== undefined && (
-                        <span className="text-[10px] font-semibold opacity-90 leading-tight mt-0.5 whitespace-nowrap">
+                        <span className="text-[10px] font-mono tabular-nums font-semibold opacity-90 leading-tight mt-0.5 whitespace-nowrap">
                           ({c.pe_band.discount_pct > 0 ? '+' : ''}{c.pe_band.discount_pct}%)
                         </span>
                       )}
@@ -174,7 +174,7 @@ export const PeerBattleMatrix: React.FC<PeerBattleMatrixProps> = ({ matrix }) =>
                 </td>
 
                 {/* DER */}
-                <td className="py-4 px-4 text-slate-300">
+                <td className="py-4 px-4 text-slate-300 font-mono tabular-nums">
                   {formatVal(c.der, 2, 'x')}
                 </td>
 

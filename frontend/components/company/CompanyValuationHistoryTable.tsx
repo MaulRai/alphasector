@@ -42,23 +42,23 @@ export const CompanyValuationHistoryTable: React.FC<CompanyValuationHistoryTable
           <tbody className="divide-y divide-slate-800/60 font-medium">
             {histVal.map((v: any, idx: number) => (
               <tr key={idx} className="hover:bg-slate-800/30">
-                <td className="py-2.5 px-3 font-bold text-white">{v.year || '-'}</td>
-                <td className="py-2.5 px-3 text-emerald-400 font-bold">
+                <td className="py-2.5 px-3 font-bold text-white font-mono tabular-nums">{v.year || '-'}</td>
+                <td className="py-2.5 px-3 text-emerald-400 font-bold font-mono tabular-nums">
                   {v.pe !== null && v.pe !== undefined ? `${Number(v.pe).toFixed(2)}x` : '-'}
                 </td>
-                <td className="py-2.5 px-3 text-slate-400">
+                <td className="py-2.5 px-3 text-slate-400 font-mono tabular-nums">
                   {v.pe_peer_avg !== null && v.pe_peer_avg !== undefined ? `${Number(v.pe_peer_avg).toFixed(2)}x` : '-'}
                 </td>
-                <td className="py-2.5 px-3 text-cyan-400 font-bold">
+                <td className="py-2.5 px-3 text-cyan-400 font-bold font-mono tabular-nums">
                   {v.pb !== null && v.pb !== undefined ? `${Number(v.pb).toFixed(2)}x` : '-'}
                 </td>
-                <td className="py-2.5 px-3 text-slate-400">
+                <td className="py-2.5 px-3 text-slate-400 font-mono tabular-nums">
                   {v.pb_peer_avg !== null && v.pb_peer_avg !== undefined ? `${Number(v.pb_peer_avg).toFixed(2)}x` : '-'}
                 </td>
-                <td className="py-2.5 px-3 text-slate-300">
+                <td className="py-2.5 px-3 text-slate-300 font-mono tabular-nums">
                   {v.ps !== null && v.ps !== undefined ? `${Number(v.ps).toFixed(2)}x` : '-'}
                 </td>
-                <td className="py-2.5 px-3 text-slate-300">
+                <td className="py-2.5 px-3 text-slate-300 font-mono tabular-nums">
                   {v.pcf !== null && v.pcf !== undefined ? `${Number(v.pcf).toFixed(2)}x` : '-'}
                 </td>
               </tr>
