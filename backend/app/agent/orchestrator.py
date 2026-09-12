@@ -181,6 +181,9 @@ class AgentOrchestrator:
         foreign_flows: Dict[str, Any] = {}
         screener_data: Optional[Any] = None
         segments_data: Dict[str, Any] = {}
+        insider_filings_data: Dict[str, Any] = {}
+        shareholders_data: Dict[str, Any] = {}
+        suspensions_data: Optional[Any] = None
 
         # Prepare async tasks
         async def execute_single_step(step: Dict[str, Any]):
@@ -201,6 +204,18 @@ class AgentOrchestrator:
                 t = step["ticker"]
                 data, log = await tool_executor.fetch_company_segments(t, api_key=custom_api_key)
                 return ("SEGMENTS", t, data, log)
+            elif action == "FETCH_INSIDER_FILINGS":
+                t = step.get("ticker") or (tickers[0] if tickers else context_ticker)
+                data, log = await tool_executor.fetch_insider_filings(symbol=t, limit=15, api_key=custom_api_key)
+                return ("INSIDER", t, data, log)
+            elif action == "FETCH_SHAREHOLDERS_COMPOSITION":
+                t = step.get("ticker") or (tickers[0] if tickers else context_ticker) or "BBCA"
+                data, log = await tool_executor.fetch_shareholders_composition(t, api_key=custom_api_key)
+                return ("SHAREHOLDERS", t, data, log)
+            elif action == "FETCH_SUSPENSIONS":
+                t = step.get("ticker") or (tickers[0] if tickers else context_ticker)
+                data, log = await tool_executor.fetch_suspensions(symbol=t, limit=20, api_key=custom_api_key)
+                return ("SUSPENSIONS", t or "MARKET", data, log)
             elif action in ("SCREEN_MARKET", "RUN_SCREENER"):
                 q_text = step.get("query", query)
                 data, log = await tool_executor.screen_market(q_text, api_key=custom_api_key)
@@ -311,6 +326,49 @@ class AgentOrchestrator:
                     phase=ExecutionPhase.FETCHING,
                     title="Fetch Institutional Broker Leaders",
                     detail=f"Retrieved institutional transaction volume ranking in {log.latency_ms}ms",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+            elif kind == "INSIDER":
+                if data: insider_filings_data[sym or "MARKET"] = data
+                raw_filings = data.get("results") if isinstance(data, dict) else data
+                count = len(raw_filings) if isinstance(raw_filings, list) else 0
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title=f"Fetch Insider Filings ({sym or 'BEI'})",
+                    detail=f"Retrieved {count} official director/commissioner transaction filings from BEI/KSEI in {log.latency_ms}ms",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+            elif kind == "SHAREHOLDERS":
+                if data: shareholders_data[sym] = data
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title=f"Fetch Institutional Ownership Breakdown ({sym})",
+                    detail=f"Retrieved KSEI registry breakdown (Dapen, Reksadana, Asuransi, Ritel) in {log.latency_ms}ms",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                ))
+                step_counter += 1
+
+            elif kind == "SUSPENSIONS":
+                suspensions_data = data
+                raw_sus = data.get("results") if isinstance(data, dict) else data
+                count = len(raw_sus) if isinstance(raw_sus, list) else 0
+                trace.append(ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title=f"Fetch BEI Suspension Radar & UMA Notices ({sym})",
+                    detail=f"Retrieved {count} regulatory suspension records & official exchange letters in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 ))
@@ -499,7 +557,10 @@ class AgentOrchestrator:
             reports=reports,
             peer_matrix=peer_matrix,
             broker_summary=analyzed_broker,
-            screener_data={"results": screener_items} if screener_items else None
+            screener_data={"results": screener_items} if screener_items else None,
+            insider_filings=insider_filings_data,
+            shareholders_data=shareholders_data,
+            suspensions_data=suspensions_data
         )
 
         trace.append(ReasoningStep(

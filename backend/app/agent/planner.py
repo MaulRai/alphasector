@@ -16,6 +16,20 @@ SCREENER_KEYWORDS = [
     "efficient", "efisiensi", "karyawan", "undervalued", "murah", "mahal", "sektor", "sector"
 ]
 COMMODITY_KEYWORDS = ["nikel", "nickel", "emas", "gold", "batubara", "coal", "tembaga", "copper", "timah", "tin", "komoditas", "commodity", "tambang"]
+INSIDER_KEYWORDS = [
+    "insider", "orang dalam", "direksi", "komisaris", "pengendali", "filing", "filings",
+    "transaksi direksi", "transaksi komisaris", "keterbukaan", "disclosure", "deal tracker",
+    "serok", "borong", "lepas saham"
+]
+INSTITUTIONAL_KEYWORDS = [
+    "dapen", "dana pensiun", "reksadana", "reksa dana", "mutual fund", "asuransi", "insurance",
+    "kepemilikan institusi", "pemegang saham ksei", "struktur pemegang",
+    "ritel vs institusi", "lokal vs asing"
+]
+SUSPENSION_KEYWORDS = [
+    "suspensi", "suspension", "gembok", "uma", "unusual market activity", "disuspensi",
+    "bursa gembok", "surat pengumuman", "status perdagangan"
+]
 
 # Comprehensive stopword list of common 4-letter Indonesian and English words that are NOT tickers
 STOPWORDS_4 = {
@@ -97,6 +111,12 @@ class AgentPlanner:
             intent = AgentIntent.PEER_BATTLE_COMPARISON
         elif len(tickers) >= 2:
             intent = AgentIntent.PEER_BATTLE_COMPARISON
+        elif contains_keyword(query, INSIDER_KEYWORDS) and len(tickers) >= 1:
+            intent = AgentIntent.INSIDER_FORENSIC_RADAR
+        elif contains_keyword(query, INSTITUTIONAL_KEYWORDS) and len(tickers) >= 1:
+            intent = AgentIntent.INSTITUTIONAL_OWNERSHIP
+        elif contains_keyword(query, SUSPENSION_KEYWORDS):
+            intent = AgentIntent.REGULATORY_SUSPENSION_RADAR
         elif contains_keyword(query, BROKER_KEYWORDS) and len(tickers) >= 1:
             intent = AgentIntent.SMART_MONEY_RADAR
         elif contains_keyword(query, COMMODITY_KEYWORDS) and len(tickers) <= 1:
@@ -129,6 +149,40 @@ class AgentPlanner:
                 "action": "FETCH_BROKER_SUMMARY",
                 "ticker": ticker,
                 "description": f"Fetch top accumulating/distributing brokers for {ticker}"
+            })
+
+        elif intent == AgentIntent.INSIDER_FORENSIC_RADAR:
+            ticker = tickers[0]
+            steps.append({
+                "action": "FETCH_INSIDER_FILINGS",
+                "ticker": ticker,
+                "description": f"Fetch official BEI/KSEI insider disclosure filings for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_BROKER_SUMMARY",
+                "ticker": ticker,
+                "description": f"Fetch top accumulating/distributing brokers for {ticker} to correlate with insider flow"
+            })
+
+        elif intent == AgentIntent.INSTITUTIONAL_OWNERSHIP:
+            ticker = tickers[0]
+            steps.append({
+                "action": "FETCH_SHAREHOLDERS_COMPOSITION",
+                "ticker": ticker,
+                "description": f"Fetch KSEI institutional shareholder decomposition (Dapen, Reksadana, Asuransi, Ritel) for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_FOREIGN_FLOW",
+                "ticker": ticker,
+                "description": f"Fetch historical net foreign flow for {ticker}"
+            })
+
+        elif intent == AgentIntent.REGULATORY_SUSPENSION_RADAR:
+            target_sym = tickers[0] if tickers else None
+            steps.append({
+                "action": "FETCH_SUSPENSIONS",
+                "ticker": target_sym,
+                "description": f"Fetch BEI suspension radar & UMA notices for {target_sym or 'entire market'}"
             })
             
         elif intent == AgentIntent.PEER_BATTLE_COMPARISON:

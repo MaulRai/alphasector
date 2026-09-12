@@ -224,5 +224,27 @@ class AgentToolExecutor:
             )
             return None, log
 
+    @staticmethod
+    async def fetch_suspensions(symbol: Optional[str] = None, limit: int = 20, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        mcp = get_sectors_mcp_client(api_key)
+        try:
+            data, ms, status = await mcp.fetch_suspensions(symbol=symbol, limit=limit)
+            log = ToolCallLog(
+                endpoint="/v2/suspensions/",
+                params={"symbol": symbol, "limit": limit},
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched BEI suspensions & UMA radar for {symbol or 'market'}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="/v2/suspensions/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching suspensions: {str(e)}"
+            )
+            return None, log
+
 tool_executor = AgentToolExecutor()
 
