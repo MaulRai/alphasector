@@ -131,6 +131,17 @@ class AgentPlanner:
             intent = AgentIntent.GENERAL_FINANCIAL_QUERY
 
         # 2. Build Plan Steps (DAG)
+        steps = AgentPlanner.build_steps_for_intent(intent, tickers, query, context_ticker)
+        return intent, tickers, steps
+
+    @staticmethod
+    def build_steps_for_intent(
+        intent: AgentIntent,
+        tickers: List[str],
+        query: str = "",
+        context_ticker: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Build DAG execution tool steps given a resolved intent and list of tickers."""
         steps: List[Dict[str, Any]] = []
         
         if intent == AgentIntent.SINGLE_TICKER_DEEP_DIVE and tickers:
@@ -152,43 +163,45 @@ class AgentPlanner:
             })
 
         elif intent == AgentIntent.INSIDER_FORENSIC_RADAR:
-            ticker = tickers[0]
-            steps.append({
-                "action": "FETCH_REPORT",
-                "ticker": ticker,
-                "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
-            })
-            steps.append({
-                "action": "FETCH_INSIDER_FILINGS",
-                "ticker": ticker,
-                "description": f"Fetch official BEI/KSEI insider disclosure filings for {ticker}"
-            })
-            steps.append({
-                "action": "FETCH_BROKER_SUMMARY",
-                "ticker": ticker,
-                "description": f"Fetch top accumulating/distributing brokers for {ticker} to correlate with insider flow"
-            })
+            ticker = tickers[0] if tickers else context_ticker
+            if ticker:
+                steps.append({
+                    "action": "FETCH_REPORT",
+                    "ticker": ticker,
+                    "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
+                })
+                steps.append({
+                    "action": "FETCH_INSIDER_FILINGS",
+                    "ticker": ticker,
+                    "description": f"Fetch official BEI/KSEI insider disclosure filings for {ticker}"
+                })
+                steps.append({
+                    "action": "FETCH_BROKER_SUMMARY",
+                    "ticker": ticker,
+                    "description": f"Fetch top accumulating/distributing brokers for {ticker} to correlate with insider flow"
+                })
 
         elif intent == AgentIntent.INSTITUTIONAL_OWNERSHIP:
-            ticker = tickers[0]
-            steps.append({
-                "action": "FETCH_REPORT",
-                "ticker": ticker,
-                "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
-            })
-            steps.append({
-                "action": "FETCH_SHAREHOLDERS_COMPOSITION",
-                "ticker": ticker,
-                "description": f"Fetch KSEI institutional shareholder decomposition (Dapen, Reksadana, Asuransi, Ritel) for {ticker}"
-            })
-            steps.append({
-                "action": "FETCH_FOREIGN_FLOW",
-                "ticker": ticker,
-                "description": f"Fetch historical net foreign flow for {ticker}"
-            })
+            ticker = tickers[0] if tickers else context_ticker
+            if ticker:
+                steps.append({
+                    "action": "FETCH_REPORT",
+                    "ticker": ticker,
+                    "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
+                })
+                steps.append({
+                    "action": "FETCH_SHAREHOLDERS_COMPOSITION",
+                    "ticker": ticker,
+                    "description": f"Fetch KSEI institutional shareholder decomposition (Dapen, Reksadana, Asuransi, Ritel) for {ticker}"
+                })
+                steps.append({
+                    "action": "FETCH_FOREIGN_FLOW",
+                    "ticker": ticker,
+                    "description": f"Fetch historical net foreign flow for {ticker}"
+                })
 
         elif intent == AgentIntent.REGULATORY_SUSPENSION_RADAR:
-            target_sym = tickers[0] if tickers else None
+            target_sym = tickers[0] if tickers else context_ticker
             if target_sym:
                 steps.append({
                     "action": "FETCH_REPORT",
@@ -213,7 +226,6 @@ class AgentPlanner:
                 "tickers": tickers[:4],
                 "description": f"Compute valuation and profitability comparison matrix across {', '.join(tickers[:4])}"
             })
-
 
         elif intent == AgentIntent.SMART_MONEY_RADAR:
             if tickers:
@@ -274,8 +286,9 @@ class AgentPlanner:
                 "description": "Fetch top gainers & losers for market momentum context"
             })
 
-        return intent, tickers, steps
+        return steps
 
     classify_and_plan = plan
 
 planner = AgentPlanner()
+

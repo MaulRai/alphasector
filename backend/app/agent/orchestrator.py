@@ -1,5 +1,7 @@
 import asyncio
 import time
+import json
+import logging
 from datetime import datetime
 from typing import Optional, List, Dict, Any, Callable, Awaitable
 
@@ -16,6 +18,10 @@ from app.agent.comparator import comparator
 from app.agent.synthesizer import AgentSynthesizer
 from app.sectors.client import sectors_client
 from app.core.gemini_rotator import gemini_rotator
+from app.core.groq_rotator import groq_rotator
+from app.core.config import settings
+
+logger = logging.getLogger("orchestrator")
 
 class AgentOrchestrator:
     """
@@ -26,6 +32,124 @@ class AgentOrchestrator:
     3. Deterministic Financial Ratio & Peer Matrix Computation
     4. Bahasa Indonesia Synthesis with Groq (120b)
     """
+
+    SEMANTIC_ROUTER_SYSTEM = (
+        "Anda adalah Autonomous Intent & Tool Routing Arbiter untuk AlphaSector (Autonomous Equity Research Agent di Bursa Efek Indonesia/IDX).\n\n"
+        "TUGAS:\n"
+        "Klasifikasikan apakah pertanyaan user membutuhkan LIVE DATA TOOLS (mengambil data pasar modal baru via Sectors API) atau CUKUP CONVERSATIONAL SYNTHESIS (menjawab konsep edukasi umum atau mensintesis konteks percakapan sebelumnya tanpa data baru).\n\n"
+        "OUTPUT HARUS FORMAT JSON SAJA:\n"
+        "{\n"
+        '  "requires_live_tools": true | false,\n'
+        '  "intent": "PEER_BATTLE_COMPARISON" | "SINGLE_TICKER_DEEP_DIVE" | "MARKET_SCREENING_DISCOVERY" | "INSIDER_FORENSIC_RADAR" | "INSTITUTIONAL_OWNERSHIP" | "REGULATORY_SUSPENSION_RADAR" | "SMART_MONEY_RADAR" | "COMMODITY_MACRO_IMPACT" | "GENERAL_FINANCIAL_QUERY",\n'
+        '  "target_tickers": ["TICKER1", "TICKER2"],\n'
+        '  "resolved_context_ticker": "TICKER" | null,\n'
+        '  "reasoning": "Alasan ringkas 1 kalimat"\n'
+        "}\n\n"
+        "ATURAN PENTING:\n"
+        "1. requires_live_tools = TRUE jika user menanyakan hal baru yang belum ada di chat:\n"
+        "   - Evaluasi, valuasi, rasio, fundamental, atau grafik emiten baru.\n"
+        "   - Dampak komoditas terhadap emiten (misal tembaga ke INCO).\n"
+        "   - Skrining saham berdasarkan kriteria tertentu.\n"
+        "   - Aksi transaksi orang dalam (insider) atau kepemilikan institusional (dapen/reksadana).\n"
+        "   - Suspensi bursa atau status UMA.\n"
+        "   - Referensi implisit ke emiten di chat sebelumnya yang menanyakan indikator rasio/data baru (misal 'bagaimana rasio NPL bank pertama tadi').\n\n"
+        "2. requires_live_tools = FALSE jika user TIDAK butuh data baru dari bursa:\n"
+        "   - Meminta format ulang data dari chat sebelumnya (contoh: 'buatkan tabel ringkasan', 'tabel pros/cons', 'tabel perbandingan', 'ringkas dalam 3 poin').\n"
+        "   - Meminta opini strategi atau perbandingan kualitatif dari emiten yang SUDAH dibahas di riwayat percakapan sebelumnya.\n"
+        "   - Bertanya definisi konsep finansial atau edukasi ('apa itu PBV', 'arti Piotroski F-Score').\n"
+        "   KUNCI: Jika emiten sudah dibahas di riwayat chat dan user HANYA meminta tabel, ringkasan, atau rekomendasi atas data tersebut, MAKA requires_live_tools HARUS FALSE!"
+    )
+
+    async def _semantic_route(
+        self,
+        query: str,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        context_ticker: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Classify user intent using LLM Semantic Router with automatic fallback to heuristics."""
+        if groq_rotator.has_keys():
+            messages = [{"role": "system", "content": self.SEMANTIC_ROUTER_SYSTEM}]
+            if conversation_history:
+                for turn in conversation_history[-4:]:
+                    content = turn.get("content", "")
+                    if content:
+                        messages.append({"role": turn.get("role", "user"), "content": content[:300]})
+            messages.append({"role": "user", "content": query})
+
+            try:
+                raw_res = await groq_rotator.generate_chat_completion(
+                    messages=messages,
+                    model=settings.GROQ_MODEL,
+                    temperature=0.0,
+                    max_tokens=512
+                )
+                clean_json = raw_res.strip()
+                if "```json" in clean_json:
+                    clean_json = clean_json.split("```json")[1].split("```")[0].strip()
+                elif "```" in clean_json:
+                    clean_json = clean_json.split("```")[1].split("```")[0].strip()
+
+                parsed = json.loads(clean_json)
+                intent_str = parsed.get("intent", "GENERAL_FINANCIAL_QUERY")
+                try:
+                    intent_enum = AgentIntent(intent_str)
+                except ValueError:
+                    intent_enum = AgentIntent.GENERAL_FINANCIAL_QUERY
+
+                tickers = parsed.get("target_tickers", [])
+                if not tickers and parsed.get("resolved_context_ticker"):
+                    tickers = [parsed["resolved_context_ticker"]]
+
+                return {
+                    "requires_live_tools": bool(parsed.get("requires_live_tools", True)),
+                    "intent": intent_enum,
+                    "target_tickers": tickers,
+                    "reasoning": parsed.get("reasoning", "")
+                }
+            except Exception as err:
+                logger.warning(f"Semantic router fallback to heuristic due to: {err}")
+
+        # Fallback to heuristic
+        detected_tickers = planner.parse_tickers(query, context_ticker)
+        query_lower = query.lower().strip()
+        screening_verbs = ["screen", "screener", "filter", "cari saham", "temukan saham", "top saham", "saham terbaik", "saham dividen"]
+        is_screening = any(v in query_lower for v in screening_verbs)
+        is_commodity = any(k in query_lower for k in ["komoditas", "minyak", "emas", "batubara", "nikel", "tembaga", "cpo", "timah", "gas"])
+        is_insider = any(k in query_lower for k in ["insider", "orang dalam", "direksi", "komisaris", "filing", "filings"])
+        is_institutional = any(k in query_lower for k in ["dapen", "dana pensiun", "reksadana", "mutual fund", "asuransi", "ksei"])
+        is_suspension = any(k in query_lower for k in ["suspensi", "suspension", "gembok", "uma", "unusual market activity"])
+        
+        has_analytical = (
+            len(detected_tickers) > 0 or 
+            is_screening or 
+            is_commodity or 
+            is_insider or 
+            is_institutional or 
+            is_suspension
+        )
+        conversational_markers = [
+            "buatkan tabel", "tabel ringkas", "tabel perbandingan", "tabel pros", "pros", "cons",
+            "kelebihan", "kekurangan", "alokasi", "simulasi", "rangkum", "ringkas", "kesimpulan",
+            "saran", "rekomendasi alokasi", "tersebut", "tadi", "di atas", "keduanya", "semuanya",
+            "apa itu", "arti dari"
+        ]
+        is_conv_marker = any(m in query_lower for m in conversational_markers)
+
+        if conversation_history and not has_analytical and is_conv_marker:
+            return {
+                "requires_live_tools": False,
+                "intent": AgentIntent.GENERAL_FINANCIAL_QUERY,
+                "target_tickers": [],
+                "reasoning": "Heuristic fallback: conversational synthesis over existing context"
+            }
+
+        intent, fallback_tickers, _ = planner.classify_and_plan(query, context_ticker)
+        return {
+            "requires_live_tools": True,
+            "intent": intent,
+            "target_tickers": fallback_tickers,
+            "reasoning": "Heuristic fallback: active market research"
+        }
 
     async def execute(
         self, 
@@ -110,75 +234,48 @@ class AgentOrchestrator:
             effective_query = f"{query}\n\n[KONTEKS OBSERVASI VISUAL DARI GAMBAR TERLAMPIR (GEMINI FLASH VISION)]:\n{visual_context}"
 
         # -------------------------------------------------------------
-        # 0. HYBRID INTENT ARBITER (For Multi-Turn Sessions)
+        # 0. SEMANTIC INTENT ROUTING & ARBITER
         # -------------------------------------------------------------
-        if conversation_history and len(conversation_history) > 0:
-            query_lower = query.lower().strip()
-            
-            # Markers indicating a pure conversational discussion referencing past context
-            conversational_markers = [
-                "buatkan tabel", "tabel ringkas", "tabel perbandingan", "tabel pros", "pros", "cons",
-                "kelebihan", "kekurangan", "alokasi", "simulasi", "rangkum", "ringkas", "kesimpulan",
-                "saran", "rekomendasi alokasi", "tersebut", "tadi", "di atas", "keduanya", "semuanya",
-                "keenam", "ketiga", "keempat", "kelima", "analisiskan poin", "apa itu", "arti dari"
-            ]
-            is_conversational_marker = any(m in query_lower for m in conversational_markers)
+        route = await self._semantic_route(query, conversation_history, context_ticker)
 
-            detected_tickers = planner.parse_tickers(query)
-            screening_verbs = ["screen", "screener", "filter", "cari saham", "temukan saham", "top saham", "saham terbaik", "saham dividen"]
-            is_screening_intent = any(v in query_lower for v in screening_verbs)
-            is_commodity_intent = any(k in query_lower for k in ["komoditas", "minyak", "emas", "batubara", "nikel", "tembaga", "cpo", "timah", "gas", "bauxite", "bauksit"])
-            is_insider_intent = any(k in query_lower for k in ["insider", "orang dalam", "direksi", "komisaris", "filing", "filings"])
-            is_institutional_intent = any(k in query_lower for k in ["dapen", "dana pensiun", "reksadana", "mutual fund", "asuransi", "ksei"])
-            is_suspension_intent = any(k in query_lower for k in ["suspensi", "suspension", "gembok", "uma", "unusual market activity"])
-
-            has_analytical_intent = (
-                len(detected_tickers) > 0 or 
-                is_screening_intent or 
-                is_commodity_intent or 
-                is_insider_intent or 
-                is_institutional_intent or 
-                is_suspension_intent
+        if not route["requires_live_tools"]:
+            conv_step = ReasoningStep(
+                id=f"step-{step_counter}",
+                step_number=step_counter,
+                phase=ExecutionPhase.SYNTHESIZING,
+                title="Conversational Financial Reasoning",
+                detail=route.get("reasoning") or "Formulating direct structured response based on active multi-turn research context",
+                timestamp=datetime.now().strftime("%H:%M:%S")
+            )
+            await record_step(conv_step, 1)
+            synthesis_result = await AgentSynthesizer.synthesize_conversational(
+                query=effective_query,
+                conversation_history=conversation_history
+            )
+            total_ms = int((time.time() - start_time) * 1000)
+            return AgentQueryResponse(
+                query=query,
+                intent=AgentIntent.GENERAL_FINANCIAL_QUERY,
+                session_id=session_id,
+                primary_ticker=context_ticker,
+                comparison_tickers=[],
+                reasoning_trace=trace,
+                metrics_summary=None,
+                peer_matrix=None,
+                broker_summary=None,
+                synthesis=synthesis_result,
+                visual_context=visual_context,
+                suggested_followups=[],
+                total_execution_time_ms=total_ms,
+                credits_consumed=1
             )
 
-            # If user has a clear analytical intent (tickers, commodity, forensic, screener), ALWAYS run full agent DAG!
-            # Only use fast conversational mode if it's purely conversational with no analytical intents.
-            if not has_analytical_intent and is_conversational_marker:
-                conv_step = ReasoningStep(
-                    id=f"step-{step_counter}",
-                    step_number=step_counter,
-                    phase=ExecutionPhase.SYNTHESIZING,
-                    title="Conversational Financial Reasoning",
-                    detail="Formulating direct structured response based on active multi-turn research context",
-                    timestamp=datetime.now().strftime("%H:%M:%S")
-                )
-                await record_step(conv_step, 1)
-                synthesis_result = await AgentSynthesizer.synthesize_conversational(
-                    query=effective_query,
-                    conversation_history=conversation_history
-                )
-                total_ms = int((time.time() - start_time) * 1000)
-                return AgentQueryResponse(
-                    query=query,
-                    intent=AgentIntent.GENERAL_FINANCIAL_QUERY,
-                    session_id=session_id,
-                    primary_ticker=context_ticker,
-                    comparison_tickers=[],
-                    reasoning_trace=trace,
-                    metrics_summary=None,
-                    peer_matrix=None,
-                    broker_summary=None,
-                    synthesis=synthesis_result,
-                    visual_context=visual_context,
-                    suggested_followups=[],
-                    total_execution_time_ms=total_ms,
-                    credits_consumed=1
-                )
-
         # -------------------------------------------------------------
-        # 1. PLANNING PHASE
+        # 1. PLANNING PHASE (Semantic-Driven DAG Execution)
         # -------------------------------------------------------------
-        intent, tickers, planned_steps = planner.classify_and_plan(query, context_ticker)
+        intent = route["intent"]
+        tickers = route["target_tickers"]
+        planned_steps = planner.build_steps_for_intent(intent, tickers, query, context_ticker)
         
         target_label = ", ".join(tickers) if tickers else "Market-Wide"
 
