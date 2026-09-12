@@ -74,41 +74,41 @@
 * **Kamera / Visual**:
   - Cut cepat berbasis ketukan drum (*beat-cut*) ke mode `/battle`.
   - Preset **The Big 4 Banks** (`BBCA`, `BBRI`, `BMRI`, `BBNI`) diaktifkan. Matriks 4 bank tersaji berdampingan.
-  - Transisi kilat ke profil emiten `ASII`.
+  - Transisi kilat ke profil emiten komoditas `ADRO`.
   - Kamera menyorot kartu **Piotroski F-Score**: angka **"7/9 PRIMA"** dengan perisai hijau menyala.
-  - Pan menyamping ke grafik **P/E Historical Standard Deviation Band**: garis mean dan deviasi standar menunjukkan status **"UNDERVALUED (-18.4%)"**.
+  - Scroll kilat ke kartu **Minerba Deep Intelligence**: sorot meteran **"Strip Ratio: 3.9x"** dan **"Cadangan JORC: 996.2 Mt"**.
 * **Kinetic Typography (Teks Pop-Up Layar)**:
   - `[0:21]` **"THE BIG 4 BANKS SHOWDOWN"** (Split 4 warna)
   - `[0:24]` **"PIOTROSKI 9-CRITERIA (7/9 PRIMA)"** (Hijau neon)
-  - `[0:28]` **"P/E HISTORICAL BAND: -18.4% UNDERVALUED"** (Kartu statistik)
+  - `[0:28]` **"ESDM MINERBA: STRIP RATIO 3.9x & CADANGAN JORC"** (Aksen Emas)
   - `[0:30]` **"100% DETERMINISTIC • NO LLM HALLUCINATION"** (Stempel kualitas)
 * **Audio SFX & BGM**:
   - SFX: *Drum roll hit*, suara *pedang beradu (sword clank)* saat masuk ke Peer Battle, *laser chime* saat kartu Piotroski disorot.
 * **Voiceover (VO Indonesia)**:
-  > *"Bukan sekadar rangkuman AI biasa. Mesin kuantitatif kami menghitung skor Piotroski sembilan kriteria dan pita valuasi historis dengan matematika deterministik bebas halusinasi!"*
+  > *"Bukan sekadar rangkuman AI biasa. Mesin kuantitatif kami menghitung skor Piotroski sembilan kriteria, pita valuasi, hingga data cadangan tambang Ditjen Minerba ESDM secara presisi!"*
 * **English Subtitle**:
-  > *"Not just generic AI fluff. Our deterministic quant engine calculates 9-criteria Piotroski F-Scores and valuation bands with zero hallucination!"*
+  > *"Not just generic AI fluff. Our engine computes 9-criteria Piotroski F-Scores, valuation bands, and official ESDM mining reserves with mathematical precision!"*
 
 ---
 
-### [0:32 - 0:44] SCENE 4: SMART MONEY & INSTITUTIONAL FLOW
+### [0:32 - 0:44] SCENE 4: SMART MONEY 2.0 & FORENSIC RADAR
 * **Durasi**: 12 Detik (Detik 32 - 44)
 * **Kamera / Visual**:
   - Transisi geser dinamis (*slide wipe*) ke rute `/smart-money`.
-  - Ticker `TLKM` dipilih. Tampilkan tabel broker institusi (broker asing dan domestik).
-  - Zoom tajam ke meteran berpendar amber emas: **"Buyer Concentration: 74%"**.
+  - Ticker `TLKM` dipilih. Tampilkan tabel broker institusi (Top 5 Buyer vs Seller).
+  - Klik tab **Insider Filings**: tampilkan lencana hijau **"INSIDER BUY / ACCUMULATION"** Direksi beserta link surat resmi BEI.
   - Tampilkan diagram batang hijau menjulang dari grafik **Net Foreign Flow** yang mengonfirmasi aliran masuk dana asing.
 * **Kinetic Typography (Teks Pop-Up Layar)**:
-  - `[0:33]` **"SMART MONEY RADAR"** (Aksen Emas Amber)
-  - `[0:36]` **"74% BUYER CONCENTRATION"** (Angka berputar naik)
-  - `[0:40]` **"FOREIGN FLOW ACCUMULATION"** (Grafik hijau tumbuh)
+  - `[0:33]` **"SMART MONEY 2.0 RADAR"** (Aksen Emas Amber)
+  - `[0:36]` **"INSIDER BUY / DIREKSI ACCUMULATION"** (Badge Hijau)
+  - `[0:40]` **"KSEI INSTITUTIONAL & FOREIGN FLOW"** (Grafik tumbuh)
 * **Audio SFX & BGM**:
-  - SFX: Suara *radar sonar ping*, *coin/cash register 'ka-ching'* saat angka 74% muncul, suara deru aliran arus kas.
+  - SFX: Suara *radar sonar ping*, *coin/cash register 'ka-ching'* saat data insider muncul, suara deru aliran arus kas.
   - BGM: Bassline makin padat dan bertenaga.
 * **Voiceover (VO Indonesia)**:
-  > *"Lacak ke mana uang besar bergerak. Deteksi akumulasi broker bandar dan pergerakan aliran dana investor asing secara objektif dan real-time."*
+  > *"Lacak jejak uang besar: deteksi akumulasi broker bandar, aliran dana asing, hingga transaksi orang dalam atau Insider Filings bersurat resmi BEI secara real-time!"*
 * **English Subtitle**:
-  > *"Track where smart money moves. Detect institutional broker accumulation and real-time foreign capital flows with mathematical precision."*
+  > *"Track where smart money moves: detect broker accumulation, foreign flows, and insider director filings with official IDX disclosure letters in real time!"*
 
 ---
 

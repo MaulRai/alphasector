@@ -13,13 +13,15 @@
 
 ## 1. Timeline & Structure Overview
 
+## 1. Timeline & Structure Overview
+
 | Segment | Timestamp | Duration | Core Feature & Focus | UI Route |
 | :--- | :--- | :--- | :--- | :--- |
-| **Segment 1** | 0:00 - 0:35 | 35s | **The High-Stakes Problem & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, fragmented PDFs, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segment 2** | 0:35 - 1:20 | 45s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
-| **Segment 3** | 1:20 - 1:55 | 35s | **Deterministic Quant Engine & Battle Mode**<br>4-way comparison at `/battle`, 9-criteria Piotroski F-Score & historical P/E SD bands without LLM hallucinations. | `/battle`<br>`/company/ASII` |
-| **Segment 4** | 1:55 - 2:30 | 35s | **Market Intelligence & 1-Click Institutional Notion Sync**<br>Smart money radar at `/smart-money`, floating dock at `/screener`, 1-click Wall Street-grade Notion memo export. | `/smart-money`<br>`/screener`<br>Notion Modal |
-| **Segment 5** | 2:30 - 3:00 | 30s | **The Future of Equity Research & Closing**<br>Product vision, democratizing institutional research, analytical ethics & call-to-action. | Workspace Showcase<br>Wrap-up |
+| **Segment 1** | 0:00 - 0:30 | 30s | **The Problem & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, fragmented PDFs, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
+| **Segment 2** | 0:30 - 1:10 | 40s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
+| **Segment 3** | 1:10 - 1:50 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle`, Stanford 9-criteria Piotroski F-Score, P/E Bands, plus Strip Ratio & JORC Reserves at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
+| **Segment 4** | 1:50 - 2:30 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
+| **Segment 5** | 2:30 - 3:00 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
 
 ---
 
@@ -27,55 +29,54 @@
 
 ---
 
-### SEGMENT 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:35)
-* **Duration**: 35 Seconds
-* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), introduce AlphaSector, and seamlessly open instant access to a unified research workspace.
+### SEGMENT 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:30)
+* **Duration**: 30 Seconds
+* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), introduce AlphaSector, and open instant access to a unified research workspace.
 
 #### Visual Screen Actions & Clicks:
-1. **[0:00 - 0:07] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
-2. **[0:07 - 0:15] Smooth Transition**: Smooth zoom-in cut directly to AlphaSector’s Landing Page (`localhost:3000`). Highlight the Deep Obsidian theme (`#07090e`) with vibrant neon emerald and cyan glows. Cursor hovers gently over the hero headline: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
-3. **[0:15 - 0:25] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Alpha Agent Workspace, Peer Battle Terminal, Screener Pro, Smart Money Radar, and Notion Sync).
-4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Click the navigation button toward `/alpha-agent`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
+1. **[0:00 - 0:06] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
+2. **[0:06 - 0:14] Smooth Transition**: Smooth zoom-in cut directly to AlphaSector’s Landing Page (`localhost:3000`). Highlight the Deep Obsidian theme (`#07090e`) with vibrant neon emerald and cyan glows. Cursor hovers gently over the hero headline: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
+3. **[0:14 - 0:22] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Alpha Agent Workspace, Peer Battle Terminal, Screener Pro, Smart Money 2.0, Minerba Suite, and Notion Sync).
+4. **[0:22 - 0:30] AuthGate & 1-Click Login**: Click the navigation button toward `/alpha-agent`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
 
 #### On-Screen Graphics & English Text Overlays:
 * `[0:02]` **Title Card**: `"900+ IDX Stocks • Hundreds of PDF Pages • Hours of Manual Research"`
 * `[0:05]` **Persona Overlay**: **Built for**: *Indonesian Retail Investors & Equity Research Analysts*
-* `[0:10]` **Brand Badge**: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
-* `[0:27]` **Highlight Banner**: **Instant Terminal Access** — *Unified Institutional Workspace*
+* `[0:08]` **Brand Badge**: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
+* `[0:24]` **Highlight Banner**: **Instant Terminal Access** — *Unified Institutional Workspace*
 
 #### Audio Design:
-* BGM: Low-hum ambient mystery synth for the first 7 seconds, swelling into an upbeat modern tech corporate groove (115 BPM) as AlphaSector appears.
+* BGM: Low-hum ambient mystery synth for the first 6 seconds, swelling into an upbeat modern tech corporate groove (115 BPM) as AlphaSector appears.
 * SFX: Rapid paper rustling/keystrokes initially, followed by a crisp *digital whoosh* into AlphaSector, and an affirming *success chime* upon 1-click login.
 
 #### Verbatim English Voiceover Narration:
-> *"Analyzing over nine hundred publicly listed companies on the Indonesia Stock Exchange is an exhausting challenge. Research analysts and retail investors are forced to comb through hundreds of dense, fragmented PDF disclosures, calculate valuation multiples by hand, and speculate blindly on institutional capital flows.*
+> *"Analyzing over nine hundred publicly listed companies on the Indonesia Stock Exchange is an exhausting challenge. Analysts and retail investors are trapped in hundreds of dense, fragmented PDF disclosures and error-prone manual calculations.*
 > 
-> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API—turning raw market telemetry and dense filings into instant, institutional-grade intelligence in a single unified workspace."*
+> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API. With instant one-click access, an institutional-grade research workspace is ready in seconds."*
 
 ---
 
-### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:35 - 1:20)
-* **Duration**: 45 Seconds
+### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:30 - 1:10)
+* **Duration**: 40 Seconds
 * **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-step agent reasoning, dynamic DAG planning, parallel Sectors API calls, and grounded institutional synthesis on `/alpha-agent`.
 
 #### Visual Screen Actions & Clicks:
-1. **[0:35 - 0:42] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
+1. **[0:30 - 0:38] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
    `"Compare the valuation and financial health of BBRI vs BMRI"` and hit **Enter**.
-2. **[0:42 - 0:58] Live Thinking Trace Inspection**: The `LiveThinkingTrace` and `AgentThinkingTrace` components expand immediately. Cursor highlights the dynamic autonomous execution stages:
-   - **Phase 1 (PLANNING)**: Intent classified as `PEER_BATTLE_COMPARISON`, targets set to `BBRI` and `BMRI`, financial stopwords parsed.
+2. **[0:38 - 0:52] Live Thinking Trace Inspection**: The `LiveThinkingTrace` and `AgentThinkingTrace` components expand immediately. Cursor highlights the dynamic autonomous execution stages:
+   - **Phase 1 (PLANNING)**: Intent classified as `PEER_BATTLE_COMPARISON`, targets set to `BBRI` and `BMRI`.
    - **Phase 2 (FETCHING)**: Concurrent execution via `asyncio.gather` to Sectors API endpoints: `GET /company/report/BBRI` (~320ms) and `GET /company/report/BMRI` (~310ms).
    - **Phase 3 (COMPARING)**: Real-time mathematical ratio delta computation.
    - **Phase 4 (SYNTHESIZING)**: Groq LPU inference drafting grounded institutional findings.
    - Highlight latency & credit badge: `(1,520ms • 2 cr)`.
-3. **[0:58 - 1:12] PeerBattleMatrix Presentation**: Scroll down to the side-by-side `PeerBattleMatrix`. Highlight key metrics: P/E, PBV, ROE, Net Profit Margin, and glowing green best-in-class badges (`bg-emerald-500/10 text-emerald-400`).
-4. **[1:12 - 1:20] Autonomous Synthesis & Research Dossier**: Highlight the **Valuation Verdict** and **Key Findings**. Click the button on the right panel to slide open the **Research Dossier Artifact** drawer.
+3. **[0:52 - 1:02] PeerBattleMatrix Presentation**: Scroll down to the side-by-side `PeerBattleMatrix`. Highlight key metrics: P/E, PBV, ROE, Net Profit Margin, and glowing green best-in-class badges (`bg-emerald-500/10 text-emerald-400`).
+4. **[1:02 - 1:10] Autonomous Synthesis & Research Dossier**: Highlight the **Valuation Verdict** and **Key Findings**. Click the button on the right panel to slide open the **Research Dossier Artifact** drawer.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[0:38]` **Prompt Callout**: `"Compare the valuation and financial health of BBRI vs BMRI"`
-* `[0:45]` **Architecture Box**: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
-* `[0:52]` **Telemetry Badge**: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
-* `[1:05]` **Feature Tag**: **Peer Battle Matrix & Grounded Institutional Synthesis**
-* `[1:15]` **Artifact Callout**: **Interactive Research Dossier Drawer**
+* `[0:32]` **Prompt Callout**: `"Compare the valuation and financial health of BBRI vs BMRI"`
+* `[0:40]` **Architecture Box**: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
+* `[0:48]` **Telemetry Badge**: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
+* `[0:56]` **Feature Tag**: **Peer Battle Matrix & Grounded Institutional Synthesis**
 
 #### Audio Design:
 * BGM: Modern rhythmic synth bassline driving analytical momentum.
@@ -84,95 +85,95 @@
 #### Verbatim English Voiceover Narration:
 > *"In the Alpha Agent workspace, analysts simply ask in plain language. Notice this live Thinking Trace: AlphaSector is not a superficial prompt wrapper.*
 > 
-> *Our backend orchestrator autonomously classifies user intent, constructs a dynamic Directed Acyclic Graph, and dispatches parallel asynchronous calls to Sectors API in just hundreds of milliseconds.*
+> *Our orchestrator autonomously classifies user intent, constructs a dynamic Directed Acyclic Graph, and dispatches parallel asynchronous calls to Sectors API in just hundreds of milliseconds.*
 > 
 > *The result is a rigorous, side-by-side comparative matrix across competing companies—highlighting multiples, margins, and capital efficiency—paired with an objective, hallucination-free institutional synthesis stored instantly as an interactive Research Dossier."*
 
 ---
 
-### SEGMENT 3: Deterministic Quant Engine & Battle Mode (1:20 - 1:55)
-* **Duration**: 35 Seconds
-* **Objective**: Prove quantitative supremacy through pure deterministic computation: Stanford 9-criteria Piotroski F-Score and historical P/E standard deviation bands without LLM calculation hallucinations.
+### SEGMENT 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:10 - 1:50)
+* **Duration**: 40 Seconds
+* **Objective**: Prove quantitative supremacy through pure deterministic computation (Piotroski & P/E Bands) and unveil the **Minerba Deep Intelligence Suite** (official Ministry of Energy and Mineral Resources / ESDM data) on Company 360°.
 
 #### Visual Screen Actions & Clicks:
-1. **[1:20 - 1:28] Navigate to `/battle`**: Click **"Peer Battle"** in the top Navbar. The `/battle` arena opens. Click the preset button: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`). The ticker dock instantly populates.
-2. **[1:28 - 1:35] Execute 4-Way Showdown**: Click the cyan button **"Run Peer Battle"**. In ~450ms, the full 4-way comparative table populates with unified historical metrics.
-3. **[1:35 - 1:44] Drill Down to `/company/ASII`**: Click or search ticker `ASII` to open the Company 360° Profile. Scroll down to the **Deterministic Financial Intelligence Panel**.
-4. **[1:44 - 1:55] Highlight Piotroski F-Score & P/E Band**:
-   - Spotlight the **Piotroski F-Score (Score: 7/9 PRIMA)** card. Highlight the 9 audited criteria (Profitability, Leverage, Operating Efficiency).
-   - Spotlight the **P/E Historical Standard Deviation Band** chart. Highlight the `UNDERVALUED` status at an explicit `-18.4%` discount to its 5-year mean.
-   - Pan across Astra's business segment revenue breakdown (Automotive, Financial Services, Heavy Equipment & Mining).
+1. **[1:10 - 1:18] Navigate to `/battle`**: Click **"Peer Battle"** in the top Navbar. Click the preset button: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click the cyan button **"Run Peer Battle"**. In ~450ms, the full 4-way comparative table populates with unified historical metrics.
+2. **[1:18 - 1:28] Drill Down to `/company/ADRO`**: Search or open commodity titan `ADRO` to view the Company 360° Profile. Scroll to the **Deterministic Quant Panel**:
+   - Highlight the **Piotroski F-Score (Score: 7/9 PRIMA)** card across 9 accounting criteria.
+   - Highlight the **P/E Historical Standard Deviation Band** showing the undervaluation discount.
+3. **[1:28 - 1:50] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll down to the **`MiningOperationalCard`**:
+   - Highlight the **Strip Ratio Meter**: `3.9x` tagged as **Low-Cost Producer** (highly efficient overburden removal).
+   - Highlight **JORC/KCMI Reserves**: Total `996.2 Mt` (Proven & Probable Reserves vs Total Resources).
+   - Highlight **Reserve Life Index**: Automatic mine lifespan calculation (**~15.4 Years**).
+   - Highlight official coal quality specifications: Calorific Value (4,843 kcal/kg), Moisture, and Low Sulphur (<1%).
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:24]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (BBCA, BBRI, BMRI, BBNI)*
-* `[1:32]` **Tech Callout**: **4-Way Parallel Sectors Ingestion** (~450ms)
-* `[1:41]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Operating Efficiency*
-* `[1:48]` **Metric Tag**: **Historical P/E Band**: *Mean P/E vs Current P/E (-18.4% Discount Undervalued)*
+* `[1:12]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
+* `[1:20]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Operating Efficiency*
+* `[1:30]` **ESDM Badge**: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
+* `[1:38]` **Metric Callouts**: **Strip Ratio 3.9x** (Low-Cost Leader) • **JORC Reserves 996.2 Mt** • **Reserve Life ~15.4 Years**
 
 #### Audio Design:
 * BGM: Percussion tightens, conveying mathematical precision and institutional authority.
-* SFX: Fast swoosh between routes, followed by a resonant *sub-bass hit* when spotlighting the 7/9 Piotroski card.
+* SFX: Fast swoosh between routes, followed by a resonant *sub-bass hit* on Piotroski and a delicate chime as Minerba metrics appear.
 
 #### Verbatim English Voiceover Narration:
-> *"Switching to Peer Battle mode highlights AlphaSector’s core edge: our **Deterministic Quant Engine**. We never outsource financial arithmetic to probabilistic LLM hallucinations.*
+> *"In Peer Battle and Company Profiles, our edge lies in our **Deterministic Quant Engine**—computing Piotroski health scores and historical valuation bands mathematically without LLM hallucinations.*
 > 
-> *On any company profile, our engine calculates Piotroski health scores and historical valuation bands deterministically—instantly revealing whether a stock is fundamentally sound and trading at a discount."*
+> *For commodity and energy sectors powering one-third of IDX liquidity, AlphaSector unveils the **Minerba Deep Intelligence Suite**: integrating official Ministry of Energy and Mineral Resources (ESDM) data to evaluate Strip Ratios, JORC reserves, and mine life expectancy in seconds."*
 
 ---
 
-### SEGMENT 4: Market Intelligence & 1-Click Institutional Notion Sync (1:55 - 2:30)
-* **Duration**: 35 Seconds
-* **Objective**: Showcase smart money institutional flow tracking on `/smart-money`, NLP filtering on `/screener`, and 1-click Wall Street-grade Notion memorandum export.
+### SEGMENT 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:50 - 2:30)
+* **Duration**: 40 Seconds
+* **Objective**: Showcase **Smart Money 2.0** with its 4-pillar forensic radar and 1-click Wall Street-grade Notion memorandum export.
 
 #### Visual Screen Actions & Clicks:
-1. **[1:55 - 2:05] Smart Money Radar (`/smart-money`)**: Navigate to `/smart-money`. Display the national **Top Institutional Brokers Leaderboard**. Select ticker `TLKM`.
-2. **[2:05 - 2:12] Broker Flow & Buyer Concentration**: Spotlight the **Broker Flow Tracker**: Top 5 Accumulators vs Distributors with lot volumes, average price, and the glowing golden metric: **"Buyer Concentration: 74%"** alongside green **Net Foreign Flow** bars confirming whale inflows.
-3. **[2:12 - 2:20] Screener Pro & Battle Dock (`/screener`)**: Open `/screener`. Type the NLP query: *"Find companies with the highest revenue growth"*. The table filters dynamically. Check two companies, then highlight the floating **ScreenerBattleDock** ready to launch them into battle with one click: **"Battle Selected Peers (2)"**.
-4. **[2:20 - 2:30] 1-Click Notion Sync**: Return to the company modal and click the **"Sync to Notion"** button with the `N` logo. The `NotionExportModal` opens showing a rich preview. Click **"Sync Memo to Notion"**. In 1 second, a green checkmark appears with the button **"Open Memo in Notion"**. Switch to the Notion tab displaying a fully formatted Wall Street-style investment memo (Callouts, Metric Tables, Piotroski bullets, and Disclaimers).
+1. **[1:50 - 1:58] Smart Money 2.0 (`/smart-money`)**: Navigate to `/smart-money`. Highlight the **Global 900+ Stock Selector** (select `TLKM`). Pan across the 4-pillar forensic switcher tabs.
+2. **[1:58 - 2:12] Explore the 4 Forensic Pillars**:
+   - **Pillar 1 (Bandarmology)**: Click analyze, showcasing Top 5 Accumulator vs Distributor brokers and Net Foreign Flow.
+   - **Pillar 2 (Insider Filings)**: Switch to the *Insider Filings* tab, spotlighting **`INSIDER BUY / ACCUMULATION`** flags by Directors/Commissioners with transaction prices and official **IDX Disclosure PDF Links**.
+   - **Pillar 3 (Institutional Ownership)**: Switch to *Institutional Ownership*, revealing exact KSEI custodian breakdowns: Pension Funds (BPJS-TK/Taspen), Mutual Funds, Insurance, Corporate vs Retail, with Local vs Foreign macro ratio bars.
+   - **Pillar 4 (Suspensions Radar)**: Brief click on *IDX Suspensions Radar* monitoring trade halts and Unusual Market Activity (UMA).
+3. **[2:12 - 2:30] 1-Click Institutional Notion Sync**: Click the **"Sync to Notion"** button with the `N` logo. The `NotionExportModal` opens. Click **"Sync Memo to Notion"**. In 1 second, a success checkmark appears. Switch to the Notion tab displaying a fully structured Wall Street investment memo (Executive Summary, Valuation Multiples, and Compliance Disclaimers).
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:58]` **Radar Card**: **Smart Money & Bandarmology Radar** — *Broker Flow & Foreign Net Inflow*
-* `[2:06]` **Data Callout**: **74% Buyer Concentration** • *Institutional Whale Accumulation Detected*
-* `[2:14]` **Feature Tag**: **Screener Pro NLP & Floating Battle Dock**
-* `[2:24]` **Integration Box**: **1-Click Institutional Notion Sync** — *Wall Street-Grade Investment Memo*
+* `[1:52]` **Radar Card**: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
+* `[2:02]` **Compliance Badge**: **Insider Filings & KSEI Ownership** • *Official IDX Disclosure PDFs*
+* `[2:14]` **Integration Box**: **1-Click Institutional Notion Sync** — *Wall Street-Grade Investment Memo*
 
 #### Audio Design:
 * BGM: Dynamic, steady tech flow.
-* SFX: Soft radar ping on Smart Money, crisp click on the Notion button, and a pleasant success chime upon sync completion.
+* SFX: Soft radar sweep on Smart Money, crisp click on the Notion button, and a pleasant success chime upon sync completion.
 
 #### Verbatim English Voiceover Narration:
-> *"For active market participants, our Smart Money radar tracks institutional broker flows and foreign capital in real time, detecting institutional buyer concentration and foreign inflows to confirm large-scale accumulation.*
+> *"Our **Smart Money 2.0** tracks institutional footprints through a 4-pillar Forensic Radar: Bandarmology broker flows, insider filings with official IDX disclosure PDFs, real KSEI institutional ownership breakdown including pension and mutual funds, and exchange suspension alerts.*
 > 
-> *In Screener Pro, investors filter hundreds of equities with natural language and beam them directly into Peer Battle using our interactive floating dock.*
-> 
-> *Best of all, any research dossier can be exported in one click directly into Notion as a Wall Street-grade investment memo—complete with executive summaries, valuation multiples, and financial health scores."*
+> *All research can be exported with a single click directly into Notion Workspaces as a Wall Street-caliber investment memorandum—fully ready for investment committees."*
 
 ---
 
 ### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
 * **Duration**: 30 Seconds
-* **Objective**: Close the walkthrough with the commanding authority of a modern FinTech product launch: unifying the end-to-end workflow (Alpha Agent, Battle, Smart Money, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
+* **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Battle, Minerba, Smart Money 2.0, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from the intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, the Smart Money radar, and the polished Notion investment memorandum. Seamless UI motion demonstrates a complete, battle-tested product.
+1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, the ESDM Minerba cards, the Smart Money 2.0 forensic radar, and the Notion memo.
 2. **[2:40 - 2:48] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
-3. **[2:48 - 3:00] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/alphasector`), and the *Sectors Hackathon 2026* badge.
+3. **[2:48 - 3:00] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/sectors-hackathon`), and the *Sectors Hackathon 2026* badge.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[2:32]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine*
+* `[2:32]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine • Minerba Suite*
 * `[2:42]` **Assurance Badge**: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
-* `[2:50]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/alphasector`
+* `[2:50]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
 
 #### Audio Design:
 * BGM: Contemporary melodic synth crescendo reaching its triumphant peak at 2:50, resolving into an upbeat final chord with a pristine reverb tail.
 * SFX: Subtle sub-bass impact on the AlphaSector logo reveal, paired with a delicate chime as the GitHub repository link appears.
 
 #### Verbatim English Voiceover Narration:
-> *"From dissecting hundreds of financial filings to delivering actionable investment theses, AlphaSector turns days of manual equity research into seconds of clarity.*
+> *"AlphaSector turns days of manual Indonesian equity research into seconds of clarity. By combining autonomous agent reasoning, deterministic quantitative math, and responsible market forensic intelligence without automated trading—we democratize institutional research for everyone.*
 > 
-> *By pairing autonomous multi-step reasoning with deterministic quantitative math and responsible analytics, we're putting institutional-grade research into the hands of every investor.*
-> 
-> *AlphaSector: Smarter research, sharper decisions. Try the live demo and explore the code on GitHub!"*
+> *AlphaSector: Smarter research, sharper decisions. Explore the code today on GitHub!"*
 
 ---
 
