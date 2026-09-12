@@ -146,7 +146,7 @@ export function InstitutionalOwnershipCard({ initialTicker }: InstitutionalOwner
             <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
               Institutional Breakdown: Dapen, Reksadana & Asuransi
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-semibold font-mono">
-                MCP MONTHLY
+                KSEI REGISTRY
               </span>
             </h3>
           </div>

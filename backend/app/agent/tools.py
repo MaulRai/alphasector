@@ -164,7 +164,7 @@ class AgentToolExecutor:
         try:
             data, ms, status = await mcp.fetch_filings(symbol=symbol, limit=limit)
             log = ToolCallLog(
-                endpoint="mcp://fetch-filings",
+                endpoint="/v2/filings/",
                 params={"symbol": symbol, "limit": limit},
                 status=status,
                 latency_ms=ms,
@@ -173,7 +173,7 @@ class AgentToolExecutor:
             return data, log
         except Exception as e:
             log = ToolCallLog(
-                endpoint="mcp://fetch-filings",
+                endpoint="/v2/filings/",
                 status=500,
                 latency_ms=0,
                 description=f"Error fetching insider filings: {str(e)}"
@@ -186,7 +186,7 @@ class AgentToolExecutor:
         try:
             data, ms, status = await mcp.fetch_shareholders_composition(symbol=symbol)
             log = ToolCallLog(
-                endpoint="mcp://fetch-shareholders-composition",
+                endpoint=f"/v2/company/shareholders/{symbol.upper()}/",
                 params={"symbol": symbol},
                 status=status,
                 latency_ms=ms,
@@ -195,7 +195,7 @@ class AgentToolExecutor:
             return data, log
         except Exception as e:
             log = ToolCallLog(
-                endpoint="mcp://fetch-shareholders-composition",
+                endpoint=f"/v2/company/shareholders/{symbol.upper()}/",
                 status=500,
                 latency_ms=0,
                 description=f"Error fetching shareholders composition: {str(e)}"
@@ -208,7 +208,7 @@ class AgentToolExecutor:
         try:
             data, ms, status = await mcp.fetch_mining_performance(ticker_or_slug=ticker)
             log = ToolCallLog(
-                endpoint="mcp://fetch-mining-company-performance",
+                endpoint=f"/v2/mining/performance/{ticker.upper()}/",
                 params={"ticker": ticker},
                 status=status,
                 latency_ms=ms,
@@ -217,7 +217,7 @@ class AgentToolExecutor:
             return data, log
         except Exception as e:
             log = ToolCallLog(
-                endpoint="mcp://fetch-mining-company-performance",
+                endpoint=f"/v2/mining/performance/{ticker.upper()}/",
                 status=500,
                 latency_ms=0,
                 description=f"Error fetching mining performance: {str(e)}"
