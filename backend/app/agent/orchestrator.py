@@ -115,9 +115,8 @@ class AgentOrchestrator:
         if conversation_history and len(conversation_history) > 0:
             query_lower = query.lower().strip()
             
-            # 1. Markers indicating a pure conversational discussion / table / advice
+            # Markers indicating a pure conversational discussion referencing past context
             conversational_markers = [
-                "jelaskan", "kenapa", "mengapa", "bagaimana", "apakah", "menurutmu", "pendapat",
                 "buatkan tabel", "tabel ringkas", "tabel perbandingan", "tabel pros", "pros", "cons",
                 "kelebihan", "kekurangan", "alokasi", "simulasi", "rangkum", "ringkas", "kesimpulan",
                 "saran", "rekomendasi alokasi", "tersebut", "tadi", "di atas", "keduanya", "semuanya",
@@ -125,24 +124,26 @@ class AgentOrchestrator:
             ]
             is_conversational_marker = any(m in query_lower for m in conversational_markers)
 
-            # 2. Extract any newly mentioned stock tickers in the query
             detected_tickers = planner.parse_tickers(query)
-
-            # 3. Check if user is asking for a fresh market-wide screening / filtering
             screening_verbs = ["screen", "screener", "filter", "cari saham", "temukan saham", "top saham", "saham terbaik", "saham dividen"]
-            is_screening_intent = any(v in query_lower for v in screening_verbs) and len(detected_tickers) == 0
+            is_screening_intent = any(v in query_lower for v in screening_verbs)
+            is_commodity_intent = any(k in query_lower for k in ["komoditas", "minyak", "emas", "batubara", "nikel", "tembaga", "cpo", "timah", "gas", "bauxite", "bauksit"])
+            is_insider_intent = any(k in query_lower for k in ["insider", "orang dalam", "direksi", "komisaris", "filing", "filings"])
+            is_institutional_intent = any(k in query_lower for k in ["dapen", "dana pensiun", "reksadana", "mutual fund", "asuransi", "ksei"])
+            is_suspension_intent = any(k in query_lower for k in ["suspensi", "suspension", "gembok", "uma", "unusual market activity"])
 
-            # 4. Check if user is introducing 2+ distinct tickers for a brand new Peer Battle
-            is_peer_battle_intent = len(detected_tickers) >= 2 and not is_conversational_marker
+            has_analytical_intent = (
+                len(detected_tickers) > 0 or 
+                is_screening_intent or 
+                is_commodity_intent or 
+                is_insider_intent or 
+                is_institutional_intent or 
+                is_suspension_intent
+            )
 
-            # 5. Check explicit command keywords
-            explicit_triggers = ["jalankan riset baru", "buat dosir baru", "full battle", "deep dive baru", "riset lengkap"]
-            is_explicit_command = any(t in query_lower for t in explicit_triggers)
-
-            # Determine whether to run Full Agentic DAG or Fast Conversational Response
-            should_run_full_agentic = (is_peer_battle_intent or is_screening_intent or is_explicit_command) and not is_conversational_marker
-
-            if not should_run_full_agentic:
+            # If user has a clear analytical intent (tickers, commodity, forensic, screener), ALWAYS run full agent DAG!
+            # Only use fast conversational mode if it's purely conversational with no analytical intents.
+            if not has_analytical_intent and is_conversational_marker:
                 conv_step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
@@ -248,6 +249,10 @@ class AgentOrchestrator:
             elif action == "FETCH_TOP_MOVERS":
                 data, log = await tool_executor.fetch_top_movers(api_key=custom_api_key)
                 return ("TOP_MOVERS", "TOP_MOVERS", data, log)
+            elif action == "FETCH_MINING_PERFORMANCE":
+                t = step.get("ticker") or (tickers[0] if tickers else context_ticker) or "INCO"
+                data, log = await tool_executor.fetch_mining_performance(t, api_key=custom_api_key)
+                return ("MINING", t, data, log)
             elif action == "FETCH_TOP_INSTITUTIONAL_BROKERS":
                 data, log = await tool_executor.fetch_top_institutional_brokers(api_key=custom_api_key)
                 return ("TOP_BROKERS", "TOP_BROKERS", data, log)
@@ -403,6 +408,19 @@ class AgentOrchestrator:
                     phase=ExecutionPhase.FETCHING,
                     title=f"Fetch BEI Suspension Radar & UMA Notices ({sym})",
                     detail=f"Retrieved {count} regulatory suspension records & official exchange letters in {log.latency_ms}ms",
+                    tool_call=log,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                )
+                await record_step(step)
+                step_counter += 1
+
+            elif kind == "MINING":
+                step = ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=ExecutionPhase.FETCHING,
+                    title=f"Fetch Mining Performance & Sites ({sym})",
+                    detail=f"Retrieved operational mining metrics, reserves, and production sites in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
                 )

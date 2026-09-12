@@ -178,7 +178,19 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
               </div>
             ) : (!report?.peer_matrix && !report?.broker_summary && (!report?.synthesis?.key_findings || report.synthesis.key_findings.length === 0)) ? (
               /* Conversational Follow-Up Mode: Clean Markdown Bubble with Custom Tables */
-              <div className="w-full space-y-2 animate-card-reveal">
+              <div className="w-full space-y-4 animate-card-reveal">
+                {/* Live/Completed Thinking Trace Accordion */}
+                {report?.reasoning_trace && report.reasoning_trace.length > 0 && (
+                  <div className="animate-card-reveal">
+                    <AgentThinkingTrace
+                      steps={report.reasoning_trace}
+                      totalTimeMs={report.total_execution_time_ms}
+                      creditsConsumed={report.credits_consumed}
+                      isLoading={false}
+                    />
+                  </div>
+                )}
+
                 <div className="p-4 sm:p-5 rounded-2xl rounded-tl-none bg-[#0d121e]/90 border border-slate-800 shadow-xl glass-panel text-slate-200">
                   <MarkdownRenderer content={msg.content || report?.synthesis?.executive_summary || ''} />
                 </div>

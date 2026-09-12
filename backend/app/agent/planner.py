@@ -123,7 +123,7 @@ class AgentPlanner:
             intent = AgentIntent.COMMODITY_MACRO_IMPACT
         elif contains_keyword(query, SCREENER_KEYWORDS) and len(tickers) == 0:
             intent = AgentIntent.MARKET_SCREENING_DISCOVERY
-        elif len(tickers) == 1 and not contains_keyword(query, ["jelaskan", "mengapa", "kenapa", "bagaimana", "tabel", "pros", "cons", "kelebihan", "kekurangan", "menurutmu", "pendapat", "alokasi", "simulasi", "rangkum", "ringkas"]):
+        elif len(tickers) == 1 and not contains_keyword(query, ["buatkan tabel", "tabel ringkas", "rangkum poin", "tadi", "di atas", "sebelumnya"]):
             intent = AgentIntent.SINGLE_TICKER_DEEP_DIVE
         elif len(tickers) == 0:
             intent = AgentIntent.GENERAL_FINANCIAL_QUERY
@@ -235,19 +235,32 @@ class AgentPlanner:
                 })
 
         elif intent == AgentIntent.COMMODITY_MACRO_IMPACT:
-            steps.append({
-                "action": "FETCH_COMMODITY_PRICES",
-                "description": "Fetch historical commodity price trends"
-            })
-            steps.append({
-                "action": "FETCH_MINING_SITES",
-                "description": "Fetch mining sites & reserves data"
-            })
-            if tickers:
+            target_t = tickers[0] if tickers else context_ticker
+            if target_t:
                 steps.append({
                     "action": "FETCH_REPORT",
-                    "ticker": tickers[0],
-                    "description": f"Fetch company report for mining emiten {tickers[0]}"
+                    "ticker": target_t,
+                    "description": f"Fetch fundamental overview & commodity exposure for {target_t}"
+                })
+                steps.append({
+                    "action": "FETCH_SEGMENTS",
+                    "ticker": target_t,
+                    "description": f"Fetch revenue & cost segments for {target_t}"
+                })
+                steps.append({
+                    "action": "FETCH_MINING_PERFORMANCE",
+                    "ticker": target_t,
+                    "description": f"Fetch mining operational performance, sites, and reserves for {target_t}"
+                })
+            else:
+                steps.append({
+                    "action": "SCREEN_MARKET",
+                    "query": query,
+                    "description": "Screen IDX universe for commodity & mining producers"
+                })
+                steps.append({
+                    "action": "FETCH_TOP_MOVERS",
+                    "description": "Fetch top gainers & losers for market momentum context"
                 })
 
         else: # MARKET_SCREENING_DISCOVERY / GENERAL
