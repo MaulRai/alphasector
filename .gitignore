@@ -59,4 +59,5 @@ backend/.cache/
 .ai-reference/
 .agents/
 .unused_artifacts/
+demo-materials/
 ORIGINAL_REQUEST.md

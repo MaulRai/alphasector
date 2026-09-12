@@ -29,7 +29,7 @@
 
 ### SEGMEN 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:35)
 * **Durasi**: 35 Detik
-* **Tujuan**: Membuka dengan problem nyata di pasar modal Indonesia (900+ emiten BEI, PDF tebal, data terfragmentasi), memperkenalkan solusi AlphaSector, dan mendemonstrasikan kemudahan akses instan bagi juri tanpa hambatan registrasi.
+* **Tujuan**: Membuka dengan problem nyata di pasar modal Indonesia (900+ emiten BEI, PDF tebal, data terfragmentasi), memperkenalkan AlphaSector, dan membuka akses instan ke terminal riset terpadu.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
 1. **[0:00 - 0:07] B-Roll / Layar Monitor**: Tampilkan layar dengan belasan tab browser terbuka berisi PDF laporan keuangan BEI yang rumit, lembar spreadsheet penuh angka, dan grafik harga yang terpisah-pisah. Kursor bergerak cepat menunjukkan rasa frustrasi analisis manual.
@@ -39,8 +39,9 @@
 
 #### On-Screen Graphics & Teks Overlay:
 * `[0:02]` Text Card: **"900+ Saham BEI • Ratusan Halaman PDF • Jam-Jaman Riset Manual"**
+* `[0:05]` Persona Overlay: **Built for**: *Investor Ritel & Analis Riset Ekuitas Indonesia*
 * `[0:10]` Brand Card: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
-* `[0:27]` Badge Highlight: **Zero-Friction Access** — *Pre-seeded Pro Analyst Account (50 Demo Credits)*
+* `[0:27]` Badge Highlight: **Instant Terminal Access** — *Unified Institutional Workspace*
 
 #### Audio Design:
 * BGM: Low-hum ambient synth misterius di awal, berubah menjadi upbeat tech corporate groove bertempo 115 BPM saat AlphaSector muncul.
@@ -49,12 +50,12 @@
 #### Narasi Suara (Verbatim Indonesian Voiceover):
 > *"Menganalisis lebih dari sembilan ratus emiten di Bursa Efek Indonesia adalah pekerjaan yang melelahkan. Analis dan investor ritel terpaksa membedah ratusan halaman PDF laporan keuangan yang terfragmentasi, menghitung rasio valuasi secara manual, dan menebak pergerakan dana institusi secara spekulatif.*
 > 
-> *Inilah **AlphaSector**: Terminal riset ekuitas otonom pertama yang dirancang khusus untuk pasar modal Indonesia bertenaga Sectors Financial API. Tanpa friksi, juri dapat langsung mengevaluasi sistem ini hanya dengan satu klik akun demo terverifikasi."*
+> *Inilah **AlphaSector**: Terminal riset ekuitas otonom pertama yang dirancang khusus untuk pasar modal Indonesia bertenaga Sectors Financial API—mengubah data mentah dan laporan keuangan yang rumit menjadi kejelasan analitis berstandar institusi dalam satu ruang kerja terpadu."*
 
 #### English Subtitles:
 > *"Analyzing over 900 companies on the Indonesia Stock Exchange is exhausting. Analysts and retail investors must comb through fragmented financial PDFs, calculate valuation multiples manually, and speculate on institutional flows.*
 > 
-> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market powered by Sectors Financial API. Evaluators can instantly test the full suite with a single click using our verified demo account."*
+> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API—turning raw market telemetry and dense filings into instant, institutional-grade intelligence in a single unified workspace."*
 
 ---
 
@@ -89,14 +90,14 @@
 > 
 > *Sistem kami secara mandiri mengklasifikasikan intensi, merancang Directed Acyclic Graph atau DAG, lalu mengeksekusi Sectors API secara paralel via asynchronous gather dalam hitungan ratusan milidetik.*
 > 
-> *Hasilnya adalah matriks komparasi presisi antara BBRI dan BMRI—lengkap dengan perbandingan laba, margin, efisiensi modal, serta sintesis naratif institusional berbahasa Indonesia yang objektif, bebas halusinasi, dan tersimpan rapi sebagai Research Dossier interaktif."*
+> *Hasilnya adalah matriks komparasi presisi antar-emiten kompetitor—lengkap dengan perbandingan laba, margin, efisiensi modal, serta sintesis naratif institusional berbahasa Indonesia yang objektif, bebas halusinasi, dan tersimpan rapi sebagai Research Dossier interaktif."*
 
 #### English Subtitles:
 > *"In the Alpha Agent workspace, analysts simply ask in natural language. Notice this Thinking Trace: AlphaSector is not a simple prompt wrapper.*
 > 
 > *Our orchestrator autonomously classifies intent, builds a Directed Acyclic Graph (DAG), and executes Sectors API endpoints concurrently via asyncio.gather within hundreds of milliseconds.*
 > 
-> *The output is a rigorous side-by-side matrix of BBRI vs BMRI—covering multiples, margins, and capital efficiency—paired with an institutional Bahasa Indonesia synthesis stored as an interactive Research Dossier."*
+> *The output is a rigorous side-by-side comparative matrix across competing companies—covering multiples, margins, and capital efficiency—paired with an institutional synthesis stored as an interactive Research Dossier."*
 
 ---
 
@@ -126,16 +127,12 @@
 #### Narasi Suara (Verbatim Indonesian Voiceover):
 > *"Masuk ke mode Peer Battle. Di sinilah keunggulan utama AlphaSector: **Deterministic Quant Engine**. Kami menolak menyerahkan perhitungan angka finansial kepada halusinasi LLM.*
 > 
-> *Pada halaman profil 360 Astra International ASII misalnya, sistem kami menghitung Piotroski F-Score dari sembilan kriteria akuntansi Stanford secara deterministik—memberikan skor tujuh dari sembilan berpredikat prima.*
-> 
-> *Sistem juga menghitung pita deviasi standar P/E historis lima tahun secara matematis, membuktikan bahwa saham saat ini diperdagangkan pada diskon delapan belas koma empat persen di bawah rata-rata historisnya."*
+> *Di profil emiten, mesin kuantitatif kami menghitung skor kesehatan Piotroski dan pita valuasi historis secara deterministik—menunjukkan seketika apakah suatu saham sehat secara fundamental dan sedang terdiskon."*
 
 #### English Subtitles:
 > *"Entering Peer Battle mode highlights AlphaSector's core edge: our **Deterministic Quant Engine**. We never delegate mathematical computations to LLM hallucinations.*
 > 
-> *On Astra International's 360° profile, our engine calculates the Stanford 9-criteria Piotroski F-Score deterministically, awarding a robust 7 out of 9 rating.*
-> 
-> *It also computes 5-year historical P/E standard deviation bands, mathematically proving the stock trades at an 18.4% discount below its historical mean."*
+> *On any company profile, our engine calculates Piotroski health scores and historical valuation bands deterministically—instantly revealing whether a stock is fundamentally sound and trading at a discount."*
 
 ---
 
@@ -160,14 +157,14 @@
 * SFX: *Radar ping* halus saat membuka Smart Money, *crisp mouse click* saat menekan tombol Notion, dan nada *pleasant success chime* saat sinkronisasi Notion selesai.
 
 #### Narasi Suara (Verbatim Indonesian Voiceover):
-> *"Bagi pelaku pasar, fitur Smart Money melacak aliran dana bandar dan investor asing secara real-time. Sistem mendeteksi konsentrasi pembeli sebesar tujuh puluh empat persen pada emiten TLKM, mengonfirmasi akumulasi institusi.*
+> *"Bagi pelaku pasar, fitur Smart Money melacak aliran dana bandar dan investor asing secara real-time. Sistem mendeteksi tingkat konsentrasi pembeli dan aliran dana asing secara transparan untuk mengonfirmasi pola akumulasi institusi.*
 > 
 > *Di Screener Pro, investor dapat memfilter ratusan saham dengan bahasa natural, lalu mengirimkannya langsung ke Peer Battle melalui floating dock interaktif.*
 > 
 > *Dan luar biasanya: seluruh hasil analisis ini dapat diekspor langsung dalam satu klik ke Notion Workspace dalam bentuk memorandum investasi berstandar institusi global—lengkap dengan ringkasan eksekutif, tabel valuasi, dan skor kesehatan finansial."*
 
 #### English Subtitles:
-> *"For market practitioners, our Smart Money radar tracks institutional broker flows and foreign capital in real time, detecting a 74% buyer concentration in TLKM to confirm institutional accumulation.*
+> *"For market practitioners, our Smart Money radar tracks institutional broker flows and foreign capital in real time, detecting institutional buyer concentration and foreign inflows to confirm large-scale accumulation.*
 > 
 > *In Screener Pro, investors filter hundreds of stocks with natural language and beam them directly into Peer Battle using our interactive floating dock.*
 > 

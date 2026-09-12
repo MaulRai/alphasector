@@ -29,7 +29,7 @@
 
 ### SEGMENT 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:35)
 * **Duration**: 35 Seconds
-* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), introduce AlphaSector, and demonstrate zero-friction evaluator onboarding.
+* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), introduce AlphaSector, and seamlessly open instant access to a unified research workspace.
 
 #### Visual Screen Actions & Clicks:
 1. **[0:00 - 0:07] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
@@ -39,8 +39,9 @@
 
 #### On-Screen Graphics & English Text Overlays:
 * `[0:02]` **Title Card**: `"900+ IDX Stocks • Hundreds of PDF Pages • Hours of Manual Research"`
+* `[0:05]` **Persona Overlay**: **Built for**: *Indonesian Retail Investors & Equity Research Analysts*
 * `[0:10]` **Brand Badge**: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
-* `[0:27]` **Highlight Banner**: **Zero-Friction Access** — *Pre-seeded Pro Analyst Account (50 Demo Credits)*
+* `[0:27]` **Highlight Banner**: **Instant Terminal Access** — *Unified Institutional Workspace*
 
 #### Audio Design:
 * BGM: Low-hum ambient mystery synth for the first 7 seconds, swelling into an upbeat modern tech corporate groove (115 BPM) as AlphaSector appears.
@@ -49,7 +50,7 @@
 #### Verbatim English Voiceover Narration:
 > *"Analyzing over nine hundred publicly listed companies on the Indonesia Stock Exchange is an exhausting challenge. Research analysts and retail investors are forced to comb through hundreds of dense, fragmented PDF disclosures, calculate valuation multiples by hand, and speculate blindly on institutional capital flows.*
 > 
-> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API. With zero friction, evaluators can immediately test the full platform with a single click using our verified demo analyst account."*
+> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API—turning raw market telemetry and dense filings into instant, institutional-grade intelligence in a single unified workspace."*
 
 ---
 
@@ -85,7 +86,7 @@
 > 
 > *Our backend orchestrator autonomously classifies user intent, constructs a dynamic Directed Acyclic Graph, and dispatches parallel asynchronous calls to Sectors API in just hundreds of milliseconds.*
 > 
-> *The result is a rigorous, side-by-side comparative matrix between BBRI and BMRI—highlighting multiples, margins, and capital efficiency—paired with an objective, hallucination-free institutional synthesis stored instantly as an interactive Research Dossier."*
+> *The result is a rigorous, side-by-side comparative matrix across competing companies—highlighting multiples, margins, and capital efficiency—paired with an objective, hallucination-free institutional synthesis stored instantly as an interactive Research Dossier."*
 
 ---
 
@@ -115,9 +116,7 @@
 #### Verbatim English Voiceover Narration:
 > *"Switching to Peer Battle mode highlights AlphaSector’s core edge: our **Deterministic Quant Engine**. We never outsource financial arithmetic to probabilistic LLM hallucinations.*
 > 
-> *On Astra International’s 360-degree company profile, our engine deterministically evaluates the complete Stanford nine-criteria Piotroski model—awarding a robust seven out of nine rating.*
-> 
-> *It simultaneously plots five-year historical P/E standard deviation bands, mathematically proving that the stock trades at an eighteen point four percent discount below its historical mean."*
+> *On any company profile, our engine calculates Piotroski health scores and historical valuation bands deterministically—instantly revealing whether a stock is fundamentally sound and trading at a discount."*
 
 ---
 
@@ -142,7 +141,7 @@
 * SFX: Soft radar ping on Smart Money, crisp click on the Notion button, and a pleasant success chime upon sync completion.
 
 #### Verbatim English Voiceover Narration:
-> *"For active market participants, our Smart Money radar tracks institutional broker flows and foreign capital in real time. Here, it flags a seventy-four percent buyer concentration in Telkom, confirming whale accumulation.*
+> *"For active market participants, our Smart Money radar tracks institutional broker flows and foreign capital in real time, detecting institutional buyer concentration and foreign inflows to confirm large-scale accumulation.*
 > 
 > *In Screener Pro, investors filter hundreds of equities with natural language and beam them directly into Peer Battle using our interactive floating dock.*
 > 
