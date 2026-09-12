@@ -234,7 +234,7 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ la
         return <Calculator className="h-4 w-4 text-amber-400 animate-pulse" />;
       case 'sparkles':
       case 'file':
-        return <Sparkles className="h-4 w-4 text-emerald-400 animate-spin" style={{ animationDuration: '4s' }} />;
+        return <Sparkles className="h-4 w-4 text-emerald-400 animate-pulse" style={{ animationDuration: '1.2s' }} />;
       default:
         return <RefreshCw className="h-4 w-4 text-emerald-400 animate-spin" />;
     }
