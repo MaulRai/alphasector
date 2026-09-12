@@ -71,7 +71,7 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <ShieldCheck className="h-4 w-4" />
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
@@ -121,7 +121,7 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Filings"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-emerald-400' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-amber-400' : ''}`} />
           </button>
         </div>
       </div>
@@ -130,7 +130,7 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
       <div className="flex items-center justify-between text-[11px] text-slate-400">
         <span>
           Menampilkan <strong className="text-slate-200">{filings.length}</strong> transaksi terbaru
-          {ticker && <> untuk emiten <strong className="text-emerald-400">{ticker}</strong></>}
+          {ticker && <> untuk emiten <strong className="text-amber-400">{ticker}</strong></>}
         </span>
         {latencyMs > 0 && (
           <span className="font-mono text-slate-500">Latency: {latencyMs}ms</span>
@@ -140,7 +140,7 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
       {/* Loading State */}
       {isLoading && (
         <div className="py-12 text-center space-y-2">
-          <RefreshCw className="h-6 w-6 text-emerald-400 animate-spin mx-auto" />
+          <RefreshCw className="h-6 w-6 text-amber-400 animate-spin mx-auto" />
           <p className="text-xs text-slate-400">Mengambil dokumen keterbukaan transaksi orang dalam...</p>
         </div>
       )}

@@ -171,7 +171,7 @@ export default function SmartMoneyPage() {
               onClick={() => setActiveTab('insider')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'insider'
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-black shadow-lg shadow-emerald-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -183,7 +183,7 @@ export default function SmartMoneyPage() {
               onClick={() => setActiveTab('institutional')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'institutional'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-lg shadow-cyan-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -195,7 +195,7 @@ export default function SmartMoneyPage() {
               onClick={() => setActiveTab('suspensions')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'suspensions'
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >

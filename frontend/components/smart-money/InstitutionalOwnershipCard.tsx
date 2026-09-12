@@ -132,7 +132,7 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <Landmark className="h-4 w-4" />
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
@@ -158,7 +158,7 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
               placeholder="Cari atau ganti emiten..."
               showActionButton={false}
               showSearchIcon={true}
-              accentColor="cyan"
+              accentColor="amber"
             />
           </div>
 
@@ -168,7 +168,7 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Data"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-cyan-400' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-amber-400' : ''}`} />
           </button>
         </div>
       </div>
@@ -176,7 +176,7 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
       {/* Loading State */}
       {isLoading && (
         <div className="py-12 text-center space-y-2">
-          <RefreshCw className="h-6 w-6 text-cyan-400 animate-spin mx-auto" />
+          <RefreshCw className="h-6 w-6 text-amber-400 animate-spin mx-auto" />
           <p className="text-xs text-slate-400">Memproses dekomposisi data pemegang saham {ticker}...</p>
         </div>
       )}
