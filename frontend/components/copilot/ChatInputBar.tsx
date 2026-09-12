@@ -131,7 +131,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
       </form>
 
       <div className="text-[10px] text-slate-500 text-center mt-2 flex items-center justify-center gap-2 flex-wrap">
-        <span>Sesi terenkripsi & tersimpan lokal</span>
+        <span>Sesi terenkripsi</span>
         <span className="text-slate-700">•</span>
         <span className="inline-flex items-center gap-1.5 text-slate-400 font-medium">
           <Image
