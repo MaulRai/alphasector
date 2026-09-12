@@ -18,11 +18,12 @@ export function useChatSessions({
   onInitialQueryTrigger,
 }: UseChatSessionsOptions) {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessionSearch, setSessionSearch] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isFetchingHistory, setIsFetchingHistory] = useState(false);
+  const [isFetchingHistory, setIsFetchingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Deletion modal state
@@ -51,6 +52,7 @@ export function useChatSessions({
   const handleCreateNewSession = useCallback(() => {
     setActiveSessionId(null);
     setMessages([]);
+    setIsFetchingHistory(false);
     setError(null);
   }, []);
 
@@ -95,8 +97,14 @@ export function useChatSessions({
     let isMounted = true;
 
     const init = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsLoadingSessions(false);
+        setIsFetchingHistory(false);
+        return;
+      }
       try {
+        setIsLoadingSessions(true);
+        setIsFetchingHistory(true);
         const res = await fetchUserChatSessions();
         if (!isMounted) return;
         const userSessions = res.sessions || [];
@@ -108,12 +116,20 @@ export function useChatSessions({
           initialQueryExecuted.current = true;
           setActiveSessionId(null);
           setMessages([]);
+          setIsFetchingHistory(false);
           await onInitialQueryTrigger(initialQueryParam);
         } else if (userSessions.length > 0 && !activeSessionId) {
           await handleSelectSession(userSessions[0].id);
+        } else {
+          setIsFetchingHistory(false);
         }
       } catch (err) {
         console.error('Failed to init sessions:', err);
+        setIsFetchingHistory(false);
+      } finally {
+        if (isMounted) {
+          setIsLoadingSessions(false);
+        }
       }
     };
 
@@ -134,6 +150,7 @@ export function useChatSessions({
   return {
     sessions,
     setSessions,
+    isLoadingSessions,
     activeSessionId,
     setActiveSessionId,
     messages,

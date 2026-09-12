@@ -135,6 +135,28 @@
   }
 }
 
+.shimmer-item {
+  background: linear-gradient(
+    90deg, 
+    rgba(30, 41, 59, 0.4) 0%, 
+    rgba(51, 65, 85, 0.7) 50%, 
+    rgba(30, 41, 59, 0.4) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+
+.shimmer-card {
+  background: linear-gradient(
+    90deg, 
+    rgba(13, 18, 30, 0.8) 0%, 
+    rgba(22, 31, 51, 0.9) 50%, 
+    rgba(13, 18, 30, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 2.2s ease-in-out infinite;
+}
+
 @keyframes float-slow {
   0%, 100% {
     transform: translateY(0);

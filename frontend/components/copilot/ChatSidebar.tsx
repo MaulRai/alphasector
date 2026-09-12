@@ -13,6 +13,7 @@ interface ChatSidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   sessions: ChatSession[];
+  isLoading?: boolean;
   activeSessionId: string | null;
   sessionSearch: string;
   onSearchChange: (val: string) => void;
@@ -26,6 +27,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   isOpen,
   onToggle,
   sessions,
+  isLoading = false,
   activeSessionId,
   sessionSearch,
   onSearchChange,
@@ -85,7 +87,28 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
       {/* Sessions List */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
-        {filteredSessions.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-1.5 p-0.5">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800/40 bg-slate-900/30 overflow-hidden relative"
+              >
+                <div className="h-7 w-7 rounded-lg shrink-0 shimmer-item opacity-75" />
+                <div className="flex-1 space-y-2 min-w-0">
+                  <div 
+                    className="h-3 rounded-md shimmer-item opacity-80" 
+                    style={{ width: `${60 + (i % 4) * 10}%` }} 
+                  />
+                  <div 
+                    className="h-2 rounded-sm shimmer-item opacity-50" 
+                    style={{ width: '38%' }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredSessions.length === 0 ? (
           <div className="py-8 text-center px-4 text-xs text-slate-500">
             <MessageSquare className="h-6 w-6 mx-auto mb-2 opacity-30 text-slate-400" />
             <p>Belum ada sesi riset tersimpan.</p>
@@ -163,7 +186,11 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="truncate">{user?.full_name || 'Demo Analyst'}</span>
         </div>
-        <span className="font-mono text-slate-500">{sessions.length} Sesi</span>
+        {isLoading ? (
+          <div className="h-3 w-12 rounded shimmer-item opacity-60" />
+        ) : (
+          <span className="font-mono text-slate-500">{sessions.length} Sesi</span>
+        )}
       </div>
     </aside>
   );

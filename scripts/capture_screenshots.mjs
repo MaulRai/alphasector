@@ -10,11 +10,13 @@ if (!fs.existsSync(outDir)) {
 }
 
 async function run() {
-  console.log('Logging in as demo@alphasector.id via backend API...');
+  const email = process.env.SECTORS_ADMIN_EMAIL || process.env.TEST_AUTH_EMAIL || 'demo@alphasector.id';
+  const password = process.env.SECTORS_ADMIN_PASSWORD || process.env.TEST_AUTH_PASSWORD || 'alphasector123';
+  console.log(`Authenticating via backend API as ${email}...`);
   const loginRes = await fetch('http://localhost:8000/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'demo@alphasector.id', password: 'alphasector123' })
+    body: JSON.stringify({ email, password })
   });
 
   if (!loginRes.ok) {

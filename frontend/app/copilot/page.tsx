@@ -111,6 +111,7 @@ function CopilotWorkspace() {
   const {
     sessions,
     setSessions,
+    isLoadingSessions,
     activeSessionId,
     setActiveSessionId,
     messages,
@@ -119,6 +120,7 @@ function CopilotWorkspace() {
     setSessionSearch,
     isSidebarOpen,
     setIsSidebarOpen,
+    isFetchingHistory,
     error,
     setError,
     sessionToDelete,
@@ -220,6 +222,7 @@ function CopilotWorkspace() {
           isOpen={isSidebarOpen}
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
           sessions={sessions}
+          isLoading={isLoadingSessions}
           activeSessionId={activeSessionId}
           sessionSearch={sessionSearch}
           onSearchChange={setSessionSearch}
@@ -243,16 +246,22 @@ function CopilotWorkspace() {
               </button>
               
               <div className="flex items-center gap-2 truncate">
-                <span className="text-xs font-bold text-slate-300 truncate">
-                  {activeSessionId 
-                    ? sessions.find((s) => s.id === activeSessionId)?.title || 'Sesi Riset Aktif'
-                    : 'Sesi Riset Baru'
-                  }
-                </span>
-                {activeSessionId && (
-                  <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
-                    Room Terhubung
-                  </span>
+                {(isFetchingHistory || isLoadingSessions) && !activeSessionId ? (
+                  <div className="h-3.5 w-36 rounded-md shimmer-item opacity-75" />
+                ) : (
+                  <>
+                    <span className="text-xs font-bold text-slate-300 truncate">
+                      {activeSessionId 
+                        ? sessions.find((s) => s.id === activeSessionId)?.title || 'Sesi Riset Aktif'
+                        : 'Sesi Riset Baru'
+                      }
+                    </span>
+                    {activeSessionId && (
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                        Room Terhubung
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -277,6 +286,7 @@ function CopilotWorkspace() {
           <ChatMessageList
             messages={messages}
             isLoading={isLoading}
+            isFetchingHistory={isFetchingHistory || isLoadingSessions}
             error={error}
             onSendMessage={handleSendMessage}
             onOpenArtifact={(artId) => {
