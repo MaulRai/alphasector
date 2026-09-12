@@ -96,7 +96,7 @@ export const ApiKeyManagerCard: React.FC<ApiKeyManagerCardProps> = ({
             type={showKey ? 'text' : 'password'}
             value={apiKeyInput}
             onChange={(e) => onApiKeyChange(e.target.value)}
-            placeholder="Contoh: dbae3d04c9d166167ef3462d80155e5..."
+            placeholder="Contoh: 7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c..."
             className="w-full pl-4 pr-11 py-3 text-xs sm:text-sm bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
           />
           <button

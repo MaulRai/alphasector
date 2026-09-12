@@ -57,3 +57,5 @@ logs/
 backend/.cache/
 
 .ai-reference/
+.agents/
+ORIGINAL_REQUEST.md
