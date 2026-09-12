@@ -115,6 +115,26 @@ export async function queryAgentStream(
   let buffer = '';
   let finalResponse: AgentQueryResponse | null = null;
 
+  // Step queue to pace ultra-fast steps so each is visible for at least 0.25s (250ms)
+  const stepQueue: Array<{ step: any; totalSteps: number }> = [];
+  let isProcessingQueue = false;
+
+  const processQueue = async () => {
+    if (isProcessingQueue) return;
+    isProcessingQueue = true;
+
+    while (stepQueue.length > 0) {
+      const nextItem = stepQueue.shift();
+      if (nextItem && onStep) {
+        onStep(nextItem.step, nextItem.totalSteps);
+        // Show each fleeting step for at least 0.25s (250ms)
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+    }
+
+    isProcessingQueue = false;
+  };
+
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -133,7 +153,9 @@ export async function queryAgentStream(
         const payload = JSON.parse(jsonStr);
         if (payload.type === 'step') {
           if (onStep && payload.step) {
-            onStep(payload.step, payload.total_steps);
+            stepQueue.push({ step: payload.step, totalSteps: payload.total_steps });
+            // Start queue processor in background if not already running
+            processQueue();
           }
         } else if (payload.type === 'done') {
           finalResponse = payload.response;
@@ -147,6 +169,11 @@ export async function queryAgentStream(
         console.warn('Failed to parse SSE payload chunk:', chunk, err);
       }
     }
+  }
+
+  // Ensure any queued steps finish displaying for their full 0.25s before resolving
+  while (stepQueue.length > 0 || isProcessingQueue) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
   }
 
   if (!finalResponse) {

@@ -516,7 +516,7 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({
         {/* Micro Progress Bar at the bottom of the card */}
         <div className="w-full h-1 bg-slate-800/80 rounded-full overflow-hidden mt-3.5">
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 ease-out"
+            className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-300 ease-out"
             style={{ width: `${displayStep.progressPercent}%` }}
           />
         </div>
