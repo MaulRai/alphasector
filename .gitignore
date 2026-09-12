@@ -61,3 +61,4 @@ backend/.cache/
 .unused_artifacts/
 demo-materials/
 ORIGINAL_REQUEST.md
+backend/scratch
