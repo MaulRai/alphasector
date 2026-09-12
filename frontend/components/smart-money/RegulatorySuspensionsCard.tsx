@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchSuspensions } from '@/lib/api';
-import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, Search, FileText, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, FileText, CheckCircle2 } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 export function RegulatorySuspensionsCard() {
   const [suspensions, setSuspensions] = useState<any[]>([]);
@@ -64,21 +65,38 @@ export function RegulatorySuspensionsCard() {
 
         {/* Ticker Search & Refresh */}
         <div className="flex items-center gap-2">
-          <form onSubmit={handleFilter} className="relative flex items-center">
-            <input
-              type="text"
-              value={tickerFilter}
-              onChange={(e) => setTickerFilter(e.target.value)}
-              placeholder="Cari emiten (misal: JARR)..."
-              className="w-44 sm:w-52 px-3 py-1.5 pl-8 text-xs rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
+          <div className="w-56 sm:w-64">
+            <TickerAutocompleteInput
+              onSelectTicker={(selected) => {
+                const clean = selected.toUpperCase().trim();
+                setTickerFilter(clean);
+                loadSuspensions(clean);
+              }}
+              selectedTickers={tickerFilter ? [tickerFilter] : []}
+              placeholder="Filter emiten (misal: JARR)..."
+              showActionButton={false}
+              showSearchIcon={true}
+              accentColor="amber"
             />
-            <Search className="h-3.5 w-3.5 text-slate-500 absolute left-2.5 pointer-events-none" />
-          </form>
+          </div>
+
+          {tickerFilter && (
+            <button
+              onClick={() => {
+                setTickerFilter('');
+                loadSuspensions('');
+              }}
+              className="px-2.5 py-2 text-[11px] font-medium rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
+              title="Reset Tampilkan Semua Suspensi"
+            >
+              Semua
+            </button>
+          )}
 
           <button
             onClick={() => loadSuspensions(tickerFilter)}
             disabled={isLoading}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Suspensions"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-amber-400' : ''}`} />

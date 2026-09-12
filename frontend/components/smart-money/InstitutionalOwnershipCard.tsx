@@ -2,16 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchShareholdersComposition } from '@/lib/api';
-import { Building2, PieChart, RefreshCw, AlertCircle, Users, Landmark, Briefcase, Shield, Search } from 'lucide-react';
+import { Building2, PieChart, RefreshCw, AlertCircle, Users, Landmark, Briefcase, Shield } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 interface InstitutionalOwnershipCardProps {
   initialTicker: string;
+  onTickerChange?: (ticker: string) => void;
 }
 
-export function InstitutionalOwnershipCard({ initialTicker }: InstitutionalOwnershipCardProps) {
+export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: InstitutionalOwnershipCardProps) {
   const [ticker, setTicker] = useState(initialTicker || 'BBCA');
-  const [searchInput, setSearchInput] = useState(initialTicker || 'BBCA');
   const [compositionData, setCompositionData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,15 +35,6 @@ export function InstitutionalOwnershipCard({ initialTicker }: InstitutionalOwner
       setError(err.message || `Gagal memuat komposisi pemegang saham ${sym}`);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const clean = searchInput.trim().toUpperCase();
-    if (clean) {
-      setTicker(clean);
-      loadComposition(clean);
     }
   };
 
@@ -154,21 +146,26 @@ export function InstitutionalOwnershipCard({ initialTicker }: InstitutionalOwner
 
         {/* Ticker Search & Refresh */}
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearch} className="relative flex items-center">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Ganti Emiten (misal: BBCA)..."
-              className="w-44 sm:w-52 px-3 py-1.5 pl-8 text-xs rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
+          <div className="w-56 sm:w-64">
+            <TickerAutocompleteInput
+              onSelectTicker={(selected) => {
+                const clean = selected.toUpperCase().trim();
+                setTicker(clean);
+                loadComposition(clean);
+                onTickerChange?.(clean);
+              }}
+              selectedTickers={[ticker]}
+              placeholder="Cari atau ganti emiten..."
+              showActionButton={false}
+              showSearchIcon={true}
+              accentColor="cyan"
             />
-            <Search className="h-3.5 w-3.5 text-slate-500 absolute left-2.5 pointer-events-none" />
-          </form>
+          </div>
 
           <button
             onClick={() => loadComposition(ticker)}
             disabled={isLoading}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Data"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-cyan-400' : ''}`} />

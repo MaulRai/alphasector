@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchInsiderFilings } from '@/lib/api';
-import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, Search, FileText } from 'lucide-react';
+import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, FileText } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 interface FilingResult {
   title: string;
@@ -16,11 +17,11 @@ interface FilingResult {
 
 interface InsiderFilingsCardProps {
   initialTicker?: string;
+  onTickerChange?: (ticker: string) => void;
 }
 
-export function InsiderFilingsCard({ initialTicker }: InsiderFilingsCardProps) {
+export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFilingsCardProps) {
   const [ticker, setTicker] = useState(initialTicker || '');
-  const [searchInput, setSearchInput] = useState(initialTicker || '');
   const [filings, setFilings] = useState<FilingResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,13 +55,6 @@ export function InsiderFilingsCard({ initialTicker }: InsiderFilingsCardProps) {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const clean = searchInput.trim().toUpperCase();
-    setTicker(clean);
-    loadFilings(clean);
-  };
-
   const isBuyFiling = (title: string, body: string) => {
     const text = (title + ' ' + body).toLowerCase();
     return text.includes('buy') || text.includes('beli') || text.includes('purchas') || text.includes('akumulasi');
@@ -91,21 +85,40 @@ export function InsiderFilingsCard({ initialTicker }: InsiderFilingsCardProps) {
 
         {/* Ticker Search & Refresh */}
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearch} className="relative flex items-center">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Filter Ticker (misal: BBCA)..."
-              className="w-44 sm:w-52 px-3 py-1.5 pl-8 text-xs rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
+          <div className="w-56 sm:w-64">
+            <TickerAutocompleteInput
+              onSelectTicker={(selected) => {
+                const clean = selected.toUpperCase().trim();
+                setTicker(clean);
+                loadFilings(clean);
+                onTickerChange?.(clean);
+              }}
+              selectedTickers={ticker ? [ticker] : []}
+              placeholder="Cari atau ganti emiten..."
+              showActionButton={false}
+              showSearchIcon={true}
+              accentColor="amber"
             />
-            <Search className="h-3.5 w-3.5 text-slate-500 absolute left-2.5 pointer-events-none" />
-          </form>
+          </div>
+
+          {ticker && (
+            <button
+              onClick={() => {
+                setTicker('');
+                loadFilings('');
+                onTickerChange?.('');
+              }}
+              className="px-2.5 py-2 text-[11px] font-medium rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
+              title="Reset Tampilkan Semua Transaksi Bursa"
+            >
+              Semua
+            </button>
+          )}
 
           <button
             onClick={() => loadFilings(ticker)}
             disabled={isLoading}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Filings"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin text-emerald-400' : ''}`} />

@@ -336,14 +336,20 @@ export default function SmartMoneyPage() {
           {/* TAB 2: INSIDER FILINGS (DIREKSI & KOMISARIS) */}
           {activeTab === 'insider' && (
             <div className="space-y-6">
-              <InsiderFilingsCard initialTicker={ticker} />
+              <InsiderFilingsCard
+                initialTicker={ticker}
+                onTickerChange={(newTicker) => setTicker(newTicker)}
+              />
             </div>
           )}
 
           {/* TAB 3: INSTITUTIONAL OWNERSHIP (DAPEN, REKSADANA, ASURANSI) */}
           {activeTab === 'institutional' && (
             <div className="space-y-6">
-              <InstitutionalOwnershipCard initialTicker={ticker} />
+              <InstitutionalOwnershipCard
+                initialTicker={ticker}
+                onTickerChange={(newTicker) => setTicker(newTicker)}
+              />
             </div>
           )}
 
