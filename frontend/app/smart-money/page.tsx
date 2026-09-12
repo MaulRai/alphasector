@@ -19,7 +19,7 @@ import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
-const POPULAR_TICKERS = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'AMMN', 'BREN', 'ADRO'];
+const POPULAR_TICKERS = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'BUMI', 'ADRO', 'ANTM', 'GOTO', 'AMMN', 'BREN', 'CUAN', 'MEDC', 'PTBA'];
 
 export default function SmartMoneyPage() {
   const router = useRouter();
@@ -95,7 +95,7 @@ export default function SmartMoneyPage() {
 
             {/* Quick Popular Ticker Chips */}
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-slate-500 font-medium mr-1">Pilih Emiten:</span>
+              <span className="text-xs text-slate-500 font-medium mr-1">Emiten Populer:</span>
               {POPULAR_TICKERS.map((sym) => (
                 <button
                   key={sym}
@@ -113,6 +113,43 @@ export default function SmartMoneyPage() {
                   {sym}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Global Ticker Selector Bar across all tabs */}
+          <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-4 sm:p-5 mb-6 glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <CompanyLogo symbol={ticker} size="lg" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold text-white">{ticker}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                    900+ Saham BEI Tersedia
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">
+                  Cari & analisis data smart money untuk <strong>seluruh 900+ emiten</strong> di Bursa Efek Indonesia
+                </p>
+              </div>
+            </div>
+
+            {/* Global Autocomplete Input */}
+            <div className="w-full sm:w-80">
+              <TickerAutocompleteInput
+                onSelectTicker={(selected) => {
+                  setTicker(selected);
+                  setBrokerSummary(null);
+                  setAgentReport(null);
+                  setError(null);
+                }}
+                selectedTickers={[ticker]}
+                maxSelected={2}
+                disabled={isLoading}
+                placeholder="Cari emiten apa saja (misal: BUMI, PTBA)..."
+                showActionButton={false}
+                showSearchIcon={true}
+                accentColor="amber"
+              />
             </div>
           </div>
 
@@ -170,62 +207,30 @@ export default function SmartMoneyPage() {
           {/* TAB 1: BANDARMOLOGY & BROKER FLOW */}
           {activeTab === 'bandarmology' && (
             <>
-              {/* Ticker Search & Execution Bar */}
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 mb-8 glass-panel space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <CompanyLogo symbol={ticker} size="lg" />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl font-bold text-white">{ticker}</span>
-                      </div>
-                      <p className="text-xs text-slate-400">Pilih kode saham di atas atau ketik kode baru</p>
-                    </div>
-                  </div>
-
-                  {/* Ticker Autocomplete Search Bar */}
-                  <TickerAutocompleteInput
-                    onSelectTicker={(selected) => {
-                      setTicker(selected);
-                      setBrokerSummary(null);
-                      setAgentReport(null);
-                      setError(null);
-                    }}
-                    selectedTickers={[ticker]}
-                    maxSelected={2}
-                    disabled={isLoading}
-                    placeholder="Cari atau ganti emiten (misal: BBCA)..."
-                    showActionButton={false}
-                    showSearchIcon={true}
-                    accentColor="amber"
-                  />
+              {/* Action Trigger Row */}
+              <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-4 sm:p-5 mb-8 glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <Zap className="h-4 w-4 text-amber-400 shrink-0" />
+                  <span>Sintesis Bandarmology otomatis: Top 5 Broker Akumulasi vs Distribusi & Net Foreign Flow</span>
                 </div>
 
-                {/* Action Trigger Row */}
-                <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                    <Zap className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                    <span>1 Sectors API • 1 AI Synthesis</span>
-                  </div>
-
-                  <button
-                    onClick={() => executeSmartMoneyAnalysis(ticker)}
-                    disabled={isLoading || !ticker}
-                    className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
-                  >
-                    {isLoading ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                        <span>Menganalisis Flow {ticker}...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="h-4 w-4 fill-black" />
-                        <span>Jalankan Analisis Smart Money ({ticker})</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+                <button
+                  onClick={() => executeSmartMoneyAnalysis(ticker)}
+                  disabled={isLoading || !ticker}
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer shrink-0"
+                >
+                  {isLoading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <span>Menganalisis Flow {ticker}...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-4 w-4 fill-black" />
+                      <span>Jalankan Analisis Smart Money ({ticker})</span>
+                    </>
+                  )}
+                </button>
               </div>
 
               {/* Error Alert */}
