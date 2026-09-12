@@ -16,9 +16,12 @@
 [![Groq LPU](https://img.shields.io/badge/LLM_Inference-Groq_LPU_(120B_/_70B)-F05A28?style=for-the-badge)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision_Perception-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
 [![Notion Export](https://img.shields.io/badge/Institutional_Sync-Notion_API-000000?style=for-the-badge&logo=notion&logoColor=white)](https://developers.notion.com/)
+[![Vercel Deployment](https://img.shields.io/badge/Production_Live-alphasector.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://alphasector.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[**Live Application**](http://localhost:3000) • [**Swagger API Docs**](http://localhost:8000/docs) • [**Judging Video Script (ID)**](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [**Judging Video Script (EN)**](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md) • [**Submission Package**](docs/submission/SUBMISSION_PACKAGE.md)
+[🌐 **Deployed Application (Vercel)**](https://alphasector.vercel.app/) • [💻 **Local Terminal**](http://localhost:3000) • [**Swagger API Docs**](http://localhost:8000/docs) • [**Judging Video Script (ID)**](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [**Judging Video Script (EN)**](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md) • [**Submission Package**](docs/submission/SUBMISSION_PACKAGE.md)
+
+> 🚀 **Live Production Deployment**: AlphaSector is deployed and live at [**https://alphasector.vercel.app/**](https://alphasector.vercel.app/). Hackathon judges can test the full terminal immediately with 1-click instant demo access!
 
 </div>
 
@@ -143,6 +146,9 @@ AlphaSector provides a cohesive suite of specialized equity research tools acces
 ## 🚀 Frictionless Local Run Guide (Zero-Config Bootup)
 
 AlphaSector is engineered for **instant zero-configuration evaluation**. If PostgreSQL or API keys are not supplied, the backend seamlessly falls back to a local SQLite database (`backend/alphasector.db`), seeds a verified analyst account, and executes deterministic offline synthesis if external LLM endpoints are unreachable.
+
+> 💡 **Prefer Zero-Installation Cloud Access?**  
+> Explore the live production deployment directly at [**https://alphasector.vercel.app/**](https://alphasector.vercel.app/) — pre-configured with 1-Click Demo Login and full terminal capabilities.
 
 ### System Requirements:
 - **Node.js**: `v18.17+` (Verified on `v22.16.0`)

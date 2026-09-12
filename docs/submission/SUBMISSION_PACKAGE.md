@@ -20,6 +20,7 @@ AlphaSector is an autonomous institutional equity research terminal engineered s
 | **Project Name** | Rule 08 | **Verified** | `AlphaSector` |
 | **Tagline / Headline** | Rule 08 | **Verified** | `Autonomous Equity Research Agent for Indonesian Capital Markets` |
 | **Public Repository Link** | Rule 08 | **Ready** | `https://github.com/MaulRai/alphasector` *(Maintained public $\ge 90$ days)* |
+| **Live Web Application** | Rule 08 | **Live** | `https://alphasector.vercel.app/` *(Zero-friction 1-click access)* |
 | **1-Sentence Problem Statement** | Rule 08 | **Complete** | Formatted in Section 1 (Bahasa Indonesia & English) |
 | **3-Minute Judging Video** | Rule 08 & 09 | **Complete** | `[LINK_3MIN_JUDGING_VIDEO]` (Scripts: [ID](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [EN](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md)) |
 | **1-Minute Teaser Video** | Rule 08 & 09 | **Complete** | `[LINK_1MIN_TEASER_VIDEO]` (Scripts: [ID](docs/submission/TEASER_VIDEO_SCRIPT.md) • [EN](docs/submission/TEASER_VIDEO_SCRIPT_EN.md)) |
