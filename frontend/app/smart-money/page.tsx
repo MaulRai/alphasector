@@ -158,7 +158,7 @@ export default function SmartMoneyPage() {
               onClick={() => setActiveTab('suspensions')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'suspensions'
-                  ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/20'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
