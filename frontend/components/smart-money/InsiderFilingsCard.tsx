@@ -82,9 +82,6 @@ export function InsiderFilingsCard({ initialTicker }: InsiderFilingsCardProps) {
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
               Insider Deal Tracker (Direksi & Komisaris)
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold font-mono">
-                IDX REALTIME
-              </span>
             </h3>
           </div>
           <p className="text-xs text-slate-400">

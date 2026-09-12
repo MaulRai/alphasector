@@ -55,9 +55,6 @@ export function RegulatorySuspensionsCard() {
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
               BEI Suspension & UMA Watchdog
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold font-mono">
-                RADAR LIVE
-              </span>
             </h3>
           </div>
           <p className="text-xs text-slate-400">

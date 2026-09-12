@@ -83,9 +83,6 @@ export function MiningOperationalCard({ ticker }: MiningOperationalCardProps) {
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
               Minerba Deep Intelligence: Rigor Operasional & Cadangan Tambang
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold font-mono">
-                ESDM MINERBA
-              </span>
             </h3>
           </div>
           <p className="text-xs sm:text-sm text-slate-400">
