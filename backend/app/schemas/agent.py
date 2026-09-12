@@ -65,6 +65,9 @@ class AgentQueryResponse(BaseModel):
     metrics_summary: Optional[Dict[str, Any]] = None
     peer_matrix: Optional[List[Dict[str, Any]]] = None
     broker_summary: Optional[Dict[str, Any]] = None
+    insider_filings: Optional[List[Dict[str, Any]]] = None
+    shareholders_summary: Optional[Dict[str, Any]] = None
+    suspensions_data: Optional[List[Dict[str, Any]]] = None
     synthesis: SynthesisResult
     visual_context: Optional[str] = None
     suggested_followups: List[str] = []

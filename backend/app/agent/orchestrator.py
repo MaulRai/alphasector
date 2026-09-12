@@ -596,29 +596,57 @@ class AgentOrchestrator:
             }
 
         if intent == AgentIntent.PEER_BATTLE_COMPARISON:
-            # Only peer matrix for side-by-side comparison (No 360 overview, no smart money tracker)
             effective_peer_matrix = peer_matrix if (peer_matrix and len(peer_matrix) > 1) else peer_matrix
             broker_info = None
             metrics_summary = None
         elif intent == AgentIntent.SMART_MONEY_RADAR:
-            # Only smart money broker info (No peer battle table, no 360 card)
             effective_peer_matrix = None
             metrics_summary = None
         elif intent == AgentIntent.MARKET_SCREENING_DISCOVERY:
-            # Only filtered peer universe
             effective_peer_matrix = peer_matrix
             broker_info = None
             metrics_summary = None
         elif intent in (AgentIntent.SINGLE_TICKER_DEEP_DIVE, AgentIntent.COMPANY_DEEP_DIVE):
-            # Single company 360 card with complete metric fields
             if peer_matrix and len(peer_matrix) > 0:
                 metrics_summary = peer_matrix[0]
             effective_peer_matrix = None
+        elif intent in (AgentIntent.INSTITUTIONAL_OWNERSHIP, AgentIntent.INSIDER_FORENSIC_RADAR):
+            # Retain company overview for ticker context, and broker flow if relevant
+            if peer_matrix and len(peer_matrix) > 0:
+                metrics_summary = peer_matrix[0]
+            effective_peer_matrix = None
+        elif intent == AgentIntent.REGULATORY_SUSPENSION_RADAR:
+            if primary_ticker and peer_matrix and len(peer_matrix) > 0:
+                metrics_summary = peer_matrix[0]
+            effective_peer_matrix = None
+            broker_info = None
         else: # GENERAL or fallback
             if peer_matrix and len(peer_matrix) > 1:
                 effective_peer_matrix = peer_matrix
             elif peer_matrix and len(peer_matrix) == 1:
                 metrics_summary = peer_matrix[0]
+
+        # Clean forensic payloads for frontend visualization
+        clean_insider_filings = None
+        if insider_filings_data:
+            first_key = next(iter(insider_filings_data))
+            raw_f = insider_filings_data[first_key]
+            if isinstance(raw_f, dict) and "results" in raw_f:
+                clean_insider_filings = raw_f["results"]
+            elif isinstance(raw_f, list):
+                clean_insider_filings = raw_f
+
+        clean_shareholders_summary = None
+        if shareholders_data:
+            first_key = next(iter(shareholders_data))
+            clean_shareholders_summary = shareholders_data[first_key]
+
+        clean_suspensions = None
+        if suspensions_data:
+            if isinstance(suspensions_data, dict) and "results" in suspensions_data:
+                clean_suspensions = suspensions_data["results"]
+            elif isinstance(suspensions_data, list):
+                clean_suspensions = suspensions_data
 
         return AgentQueryResponse(
             query=query,
@@ -630,6 +658,9 @@ class AgentOrchestrator:
             metrics_summary=metrics_summary,
             peer_matrix=effective_peer_matrix,
             broker_summary=broker_info,
+            insider_filings=clean_insider_filings,
+            shareholders_summary=clean_shareholders_summary,
+            suspensions_data=clean_suspensions,
             synthesis=synthesis_result,
             visual_context=visual_context,
             suggested_followups=synthesis_result.suggested_followups if synthesis_result else [],

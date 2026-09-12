@@ -3,6 +3,9 @@ export type AgentIntent =
   | 'PEER_BATTLE_COMPARISON'
   | 'MARKET_SCREENING_DISCOVERY'
   | 'SMART_MONEY_RADAR'
+  | 'INSIDER_FORENSIC_RADAR'
+  | 'INSTITUTIONAL_OWNERSHIP'
+  | 'REGULATORY_SUSPENSION_RADAR'
   | 'COMMODITY_MACRO_IMPACT'
   | 'GENERAL_FINANCIAL_QUERY';
 
@@ -119,6 +122,9 @@ export interface AgentQueryResponse {
   metrics_summary?: PeerCompanyMetric;
   peer_matrix?: PeerCompanyMetric[];
   broker_summary?: BrokerSummaryInfo;
+  insider_filings?: any[];
+  shareholders_summary?: any;
+  suspensions_data?: any[];
   synthesis: SynthesisResult;
   visual_context?: string | null;
   suggested_followups?: string[];

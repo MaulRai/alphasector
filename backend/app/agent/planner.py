@@ -154,6 +154,11 @@ class AgentPlanner:
         elif intent == AgentIntent.INSIDER_FORENSIC_RADAR:
             ticker = tickers[0]
             steps.append({
+                "action": "FETCH_REPORT",
+                "ticker": ticker,
+                "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
+            })
+            steps.append({
                 "action": "FETCH_INSIDER_FILINGS",
                 "ticker": ticker,
                 "description": f"Fetch official BEI/KSEI insider disclosure filings for {ticker}"
@@ -167,6 +172,11 @@ class AgentPlanner:
         elif intent == AgentIntent.INSTITUTIONAL_OWNERSHIP:
             ticker = tickers[0]
             steps.append({
+                "action": "FETCH_REPORT",
+                "ticker": ticker,
+                "description": f"Fetch fundamental overview and valuation multiples for {ticker}"
+            })
+            steps.append({
                 "action": "FETCH_SHAREHOLDERS_COMPOSITION",
                 "ticker": ticker,
                 "description": f"Fetch KSEI institutional shareholder decomposition (Dapen, Reksadana, Asuransi, Ritel) for {ticker}"
@@ -179,6 +189,12 @@ class AgentPlanner:
 
         elif intent == AgentIntent.REGULATORY_SUSPENSION_RADAR:
             target_sym = tickers[0] if tickers else None
+            if target_sym:
+                steps.append({
+                    "action": "FETCH_REPORT",
+                    "ticker": target_sym,
+                    "description": f"Fetch fundamental overview and risk profile for {target_sym}"
+                })
             steps.append({
                 "action": "FETCH_SUSPENSIONS",
                 "ticker": target_sym,
