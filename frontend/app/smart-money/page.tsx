@@ -123,9 +123,6 @@ export default function SmartMoneyPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold text-white">{ticker}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
-                    900+ Saham BEI Tersedia
-                  </span>
                 </div>
                 <p className="text-xs text-slate-400">
                   Cari & analisis data smart money untuk <strong>seluruh 900+ emiten</strong> di Bursa Efek Indonesia
