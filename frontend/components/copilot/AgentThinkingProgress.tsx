@@ -4,8 +4,17 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 import { Cpu, Database, Calculator, FileText, Sparkles, RefreshCw } from 'lucide-react';
 
+export interface LiveThinkingStep {
+  step_number: number;
+  phase: 'PLANNING' | 'FETCHING' | 'COMPARING' | 'SYNTHESIZING' | 'ERROR' | string;
+  title: string;
+  detail: string;
+}
+
 interface AgentThinkingProgressProps {
   lastQuery?: string;
+  liveStep?: LiveThinkingStep | null;
+  totalSteps?: number;
 }
 
 interface StepConfig {
@@ -19,7 +28,11 @@ interface StepConfig {
   icon: 'cpu' | 'database' | 'calculator' | 'file' | 'sparkles';
 }
 
-export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ lastQuery = '' }) => {
+export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ 
+  lastQuery = '',
+  liveStep = null,
+  totalSteps
+}) => {
   const [elapsedMs, setElapsedMs] = useState(0);
 
   // Setup interval to track elapsed time while loading
@@ -374,6 +387,59 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ la
   }, [elapsedMs, steps]);
 
   const currentStep = steps[currentStepIndex];
+
+  // Compute final displayStep: prioritizing real liveStep pushed directly from server
+  const displayStep = useMemo(() => {
+    if (liveStep) {
+      const num = liveStep.step_number;
+      const total = totalSteps && totalSteps >= num ? totalSteps : num;
+      const title = liveStep.title.startsWith('Step ') ? liveStep.title : `Step ${num}: ${liveStep.title}`;
+      
+      let phaseClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      let icon: StepConfig['icon'] = 'sparkles';
+
+      if (liveStep.phase === 'PLANNING') {
+        phaseClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+        icon = 'cpu';
+      } else if (liveStep.phase === 'FETCHING') {
+        phaseClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        icon = 'database';
+      } else if (liveStep.phase === 'COMPARING') {
+        phaseClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+        icon = 'calculator';
+      } else if (liveStep.phase === 'ERROR') {
+        phaseClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+        icon = 'file';
+      }
+
+      const progressPercent = Math.min(96, Math.max(18, Math.round((num / total) * 96)));
+
+      return {
+        key: `live-${num}`,
+        number: num,
+        total,
+        title,
+        phase: liveStep.phase,
+        detail: liveStep.detail,
+        phaseClass,
+        icon,
+        progressPercent,
+      };
+    }
+
+    return {
+      key: `sim-${currentStepIndex}`,
+      number: currentStep.number,
+      total: steps.length,
+      title: currentStep.title,
+      phase: currentStep.phase,
+      detail: currentStep.detail,
+      phaseClass: currentStep.phaseClass,
+      icon: currentStep.icon,
+      progressPercent: currentStep.progressPercent,
+    };
+  }, [liveStep, totalSteps, currentStep, currentStepIndex, steps.length]);
+
   const elapsedSec = (elapsedMs / 1000).toFixed(1);
 
   const renderIcon = (iconName: StepConfig['icon']) => {
@@ -408,7 +474,7 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ la
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 font-medium">
-            Step {currentStep.number} dari {steps.length}
+            Step {displayStep.number} dari {displayStep.total}
           </span>
           <span className="flex space-x-1">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '0ms' }} />
@@ -423,25 +489,25 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ la
         <div className="flex items-start gap-3.5">
           {/* Phase Icon Bubble */}
           <div className="h-9 w-9 rounded-xl bg-slate-900/90 border border-slate-700/60 flex items-center justify-center shrink-0 shadow-inner mt-0.5">
-            {renderIcon(currentStep.icon)}
+            {renderIcon(displayStep.icon)}
           </div>
 
           {/* Vertical Transition Container */}
           <div className="flex-1 min-w-0 overflow-hidden relative min-h-[44px] flex flex-col justify-center">
             <div
-              key={currentStepIndex}
+              key={displayStep.key}
               className="animate-step-vertical-fade flex flex-col gap-1 w-full"
             >
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs sm:text-sm font-bold text-white tracking-wide">
-                  {currentStep.title}
+                  {displayStep.title}
                 </span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${currentStep.phaseClass}`}>
-                  {currentStep.phase}
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${displayStep.phaseClass}`}>
+                  {displayStep.phase}
                 </span>
               </div>
               <p className="text-xs text-slate-300/90 leading-relaxed truncate">
-                {currentStep.detail}
+                {displayStep.detail}
               </p>
             </div>
           </div>
@@ -451,7 +517,7 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({ la
         <div className="w-full h-1 bg-slate-800/80 rounded-full overflow-hidden mt-3.5">
           <div
             className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 ease-out"
-            style={{ width: `${currentStep.progressPercent}%` }}
+            style={{ width: `${displayStep.progressPercent}%` }}
           />
         </div>
       </div>

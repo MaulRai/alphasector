@@ -14,11 +14,13 @@ import {
   Sparkles, ArrowRight, FileText, RefreshCw, AlertCircle, Settings,
   PieChart, Users, AlertTriangle, ShieldAlert, Briefcase, UserCheck, TrendingUp, TrendingDown
 } from 'lucide-react';
-import { AgentThinkingProgress } from './AgentThinkingProgress';
+import { AgentThinkingProgress, LiveThinkingStep } from './AgentThinkingProgress';
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
   isLoading: boolean;
+  liveThinkingStep?: LiveThinkingStep | null;
+  liveTotalSteps?: number;
   isFetchingHistory?: boolean;
   error: string | null;
   onSendMessage: (query: string) => void;
@@ -30,6 +32,8 @@ interface ChatMessageListProps {
 export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   messages,
   isLoading,
+  liveThinkingStep = null,
+  liveTotalSteps,
   isFetchingHistory = false,
   error,
   onSendMessage,
@@ -1119,7 +1123,11 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
 
       {/* Dynamic Step-Aware Loading State with Vertical Fade Animation */}
       {isLoading && (
-        <AgentThinkingProgress lastQuery={lastUserQuery} />
+        <AgentThinkingProgress 
+          lastQuery={lastUserQuery}
+          liveStep={liveThinkingStep}
+          totalSteps={liveTotalSteps}
+        />
       )}
 
       {/* Error & Quota Alert */}

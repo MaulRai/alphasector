@@ -1,7 +1,7 @@
 import asyncio
 import time
 from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Callable, Awaitable
 
 from app.schemas.agent import (
     AgentQueryResponse,
@@ -35,13 +35,27 @@ class AgentOrchestrator:
         custom_api_key: Optional[str] = None,
         conversation_history: Optional[List[Dict[str, str]]] = None,
         image_base64: Optional[str] = None,
-        image_mime_type: Optional[str] = None
+        image_mime_type: Optional[str] = None,
+        on_step: Optional[Callable[[ReasoningStep, int], Awaitable[None]]] = None
     ) -> AgentQueryResponse:
         start_time = time.time()
         trace: List[ReasoningStep] = []
         step_counter = 1
         credits_used = 0
         visual_context: Optional[str] = None
+        total_steps_estimate = 4
+
+        async def record_step(step: ReasoningStep, current_total: Optional[int] = None):
+            nonlocal total_steps_estimate
+            if current_total is not None:
+                total_steps_estimate = current_total
+            effective_total = max(total_steps_estimate, step.step_number)
+            trace.append(step)
+            if on_step:
+                try:
+                    await on_step(step, effective_total)
+                except Exception as step_err:
+                    print(f"[Warning] on_step callback failed: {step_err}")
 
         # -------------------------------------------------------------
         # -1. MULTIMODAL VISION PERCEPTION PHASE (Gemini Flash)
@@ -67,25 +81,27 @@ class AgentOrchestrator:
                     if related_img_tickers:
                         detail_msg += f" (Peers: {', '.join(related_img_tickers)})"
 
-                    trace.append(ReasoningStep(
+                    step = ReasoningStep(
                         id=f"step-{step_counter}",
                         step_number=step_counter,
                         phase=ExecutionPhase.FETCHING,
                         title="Multimodal Financial Vision Perception",
                         detail=detail_msg,
                         timestamp=datetime.now().strftime("%H:%M:%S")
-                    ))
+                    )
+                    await record_step(step, 5)
                     step_counter += 1
             except Exception as vision_err:
                 print(f"[Warning] Gemini vision analysis failed: {vision_err}")
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.ERROR,
                     title="Multimodal Vision Warning",
                     detail=f"Could not parse image context: {vision_err}",
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step, 5)
                 step_counter += 1
 
         # Enrich query with visual context if available
@@ -127,14 +143,15 @@ class AgentOrchestrator:
             should_run_full_agentic = (is_peer_battle_intent or is_screening_intent or is_explicit_command) and not is_conversational_marker
 
             if not should_run_full_agentic:
-                trace.append(ReasoningStep(
+                conv_step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.SYNTHESIZING,
                     title="Conversational Financial Reasoning",
                     detail="Formulating direct structured response based on active multi-turn research context",
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(conv_step, 1)
                 synthesis_result = await AgentSynthesizer.synthesize_conversational(
                     query=effective_query,
                     conversation_history=conversation_history
@@ -163,14 +180,22 @@ class AgentOrchestrator:
         intent, tickers, planned_steps = planner.classify_and_plan(query, context_ticker)
         
         target_label = ", ".join(tickers) if tickers else "Market-Wide"
-        trace.append(ReasoningStep(
+
+        # Dynamically calculate exact total steps for real-time live execution
+        has_enrich = (intent == AgentIntent.MARKET_SCREENING_DISCOVERY)
+        has_math = (intent != AgentIntent.REGULATORY_SUSPENSION_RADAR)
+        has_broker_analysis = any(s.get("action") == "FETCH_BROKER_SUMMARY" for s in planned_steps)
+        calculated_total = 1 + len(planned_steps) + (1 if has_enrich else 0) + (1 if has_math else 0) + (1 if has_broker_analysis else 0) + 1
+
+        plan_step = ReasoningStep(
             id=f"step-{step_counter}",
             step_number=step_counter,
             phase=ExecutionPhase.PLANNING,
             title="Intent Classification & Plan Generation",
             detail=f"Intent: {intent.value} | Target Tickers: {target_label} | Planned Steps: {len(planned_steps)}",
             timestamp=datetime.now().strftime("%H:%M:%S")
-        ))
+        )
+        await record_step(plan_step, calculated_total)
         step_counter += 1
 
         # -------------------------------------------------------------
@@ -238,7 +263,7 @@ class AgentOrchestrator:
 
             if kind == "REPORT":
                 if data: reports.append(data)
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -246,12 +271,13 @@ class AgentOrchestrator:
                     detail=f"Retrieved fundamental overview, valuation multiples, and financials for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "BROKER":
                 if data: broker_summaries[sym] = data
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -259,12 +285,13 @@ class AgentOrchestrator:
                     detail=f"Retrieved top accumulating & distributing brokers for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "FOREIGN":
                 if data: foreign_flows[sym] = data
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -272,12 +299,13 @@ class AgentOrchestrator:
                     detail=f"Retrieved historical net foreign broker inflow for {sym}",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "SEGMENTS":
                 if data: segments_data[sym] = data
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -285,7 +313,8 @@ class AgentOrchestrator:
                     detail=f"Retrieved business revenue & cost breakdown for {sym}",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "SCREENER":
@@ -296,7 +325,7 @@ class AgentOrchestrator:
                 elif isinstance(data, list):
                     raw_items = data
                 emiten_count = len(raw_items) if isinstance(raw_items, list) else 1
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -304,11 +333,12 @@ class AgentOrchestrator:
                     detail=f"Screened IDX universe matching criteria ({emiten_count} emitens retrieved) in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "TOP_MOVERS":
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -316,11 +346,12 @@ class AgentOrchestrator:
                     detail=f"Retrieved 7-day gainers/losers leaderboard in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "TOP_BROKERS":
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -328,14 +359,15 @@ class AgentOrchestrator:
                     detail=f"Retrieved institutional transaction volume ranking in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "INSIDER":
                 if data: insider_filings_data[sym or "MARKET"] = data
                 raw_filings = data.get("results") if isinstance(data, dict) else data
                 count = len(raw_filings) if isinstance(raw_filings, list) else 0
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -343,12 +375,13 @@ class AgentOrchestrator:
                     detail=f"Retrieved {count} official director/commissioner transaction filings from BEI/KSEI in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "SHAREHOLDERS":
                 if data: shareholders_data[sym] = data
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -356,14 +389,15 @@ class AgentOrchestrator:
                     detail=f"Retrieved KSEI registry breakdown (Dapen, Reksadana, Asuransi, Ritel) in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
             elif kind == "SUSPENSIONS":
                 suspensions_data = data
                 raw_sus = data.get("results") if isinstance(data, dict) else data
                 count = len(raw_sus) if isinstance(raw_sus, list) else 0
-                trace.append(ReasoningStep(
+                step = ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
@@ -371,7 +405,8 @@ class AgentOrchestrator:
                     detail=f"Retrieved {count} regulatory suspension records & official exchange letters in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
-                ))
+                )
+                await record_step(step)
                 step_counter += 1
 
         # Extract clean list of screener items
@@ -408,14 +443,15 @@ class AgentOrchestrator:
                         r.get("overview", {}).get("symbol", "").replace(".JK", "").upper()
                         for r in reports if r.get("overview", {}).get("symbol")
                     ]
-                    trace.append(ReasoningStep(
+                    step = ReasoningStep(
                         id=f"step-{step_counter}",
                         step_number=step_counter,
                         phase=ExecutionPhase.FETCHING,
                         title="Auto-Enrich Top Screened Emitens",
                         detail=f"Retrieved fundamental valuation, financial ratios, and multiples for top {len(reports)} screened picks ({', '.join(tickers)})",
                         timestamp=datetime.now().strftime("%H:%M:%S")
-                    ))
+                    )
+                    await record_step(step)
                     step_counter += 1
 
         # -------------------------------------------------------------
@@ -465,14 +501,15 @@ class AgentOrchestrator:
                                     break
                         p["tags"] = new_tags
 
-            trace.append(ReasoningStep(
+            step = ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
                 title="Deterministic Financial Intelligence Engine",
                 detail=f"Computed Piotroski F-Score (0-9), Historical P/E Standard Deviation Bands, and Best-in-Class metrics across {len(peer_matrix)} emitens",
                 timestamp=datetime.now().strftime("%H:%M:%S")
-            ))
+            )
+            await record_step(step)
             step_counter += 1
         elif screener_items and len(screener_items) > 0:
             # Construct peer matrix from screened companies if reports enrichment unavailable
@@ -513,14 +550,15 @@ class AgentOrchestrator:
                     })
             if not tickers and extracted_tickers:
                 tickers = extracted_tickers
-            trace.append(ReasoningStep(
+            step = ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
                 title="Screened Peer Universe Ranking & Multiples",
                 detail=f"Assembled fundamental multiples, valuations, and criteria metrics across {len(peer_matrix)} screened emitens",
                 timestamp=datetime.now().strftime("%H:%M:%S")
-            ))
+            )
+            await record_step(step)
             step_counter += 1
 
         # Determine valid primary ticker from peer_matrix with real data
@@ -533,14 +571,15 @@ class AgentOrchestrator:
 
         if primary_ticker and primary_ticker in broker_summaries:
             analyzed_broker = comparator.analyze_broker_sentiment(broker_summaries[primary_ticker])
-            trace.append(ReasoningStep(
+            step = ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
                 phase=ExecutionPhase.COMPARING,
                 title=f"Smart Money Concentration Analysis ({primary_ticker})",
                 detail=f"Classified broker flow as {analyzed_broker.get('sentiment', 'NEUTRAL')} with {analyzed_broker.get('buyer_concentration', 0)}% buyer concentration",
                 timestamp=datetime.now().strftime("%H:%M:%S")
-            ))
+            )
+            await record_step(step)
             step_counter += 1
         elif broker_summaries:
             first_valid_broker = next((sym for sym in broker_summaries if broker_summaries[sym]), None)
@@ -550,6 +589,17 @@ class AgentOrchestrator:
         # -------------------------------------------------------------
         # 4. SYNTHESIS PHASE (LLM Structured Report Generation)
         # -------------------------------------------------------------
+        synth_step = ReasoningStep(
+            id=f"step-{step_counter}",
+            step_number=step_counter,
+            phase=ExecutionPhase.SYNTHESIZING,
+            title="Institutional Autonomous Synthesis",
+            detail=f"Synthesizing {target_label} intelligence, valuation verdict, and risk considerations...",
+            timestamp=datetime.now().strftime("%H:%M:%S")
+        )
+        await record_step(synth_step)
+        step_counter += 1
+
         synthesis_result: SynthesisResult = await AgentSynthesizer.synthesize(
             query=effective_query,
             intent=intent,
@@ -562,15 +612,6 @@ class AgentOrchestrator:
             shareholders_data=shareholders_data,
             suspensions_data=suspensions_data
         )
-
-        trace.append(ReasoningStep(
-            id=f"step-{step_counter}",
-            step_number=step_counter,
-            phase=ExecutionPhase.SYNTHESIZING,
-            title="Institutional Autonomous Synthesis",
-            detail=f"Generated executive verdict, key findings, and catalysts in Indonesian language",
-            timestamp=datetime.now().strftime("%H:%M:%S")
-        ))
 
         total_ms = int((time.time() - start_time) * 1000)
 

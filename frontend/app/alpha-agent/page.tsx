@@ -9,8 +9,9 @@ import { CopilotArtifactPanel, ArtifactItem } from '@/components/CopilotArtifact
 import { ChatSidebar } from '@/components/copilot/ChatSidebar';
 import { ChatMessageList } from '@/components/copilot/ChatMessageList';
 import { ChatInputBar } from '@/components/copilot/ChatInputBar';
-import { queryAgent, fetchUserChatSessions } from '@/lib/api';
+import { queryAgent, queryAgentStream, fetchUserChatSessions } from '@/lib/api';
 import { AgentQueryResponse, ChatMessage } from '@/lib/types';
+import { LiveThinkingStep } from '@/components/copilot/AgentThinkingProgress';
 import { useAuth } from '@/lib/auth-context';
 import { useChatSessions } from '@/hooks/useChatSessions';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -27,6 +28,8 @@ function CopilotWorkspace() {
 
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [liveThinkingStep, setLiveThinkingStep] = useState<LiveThinkingStep | null>(null);
+  const [liveTotalSteps, setLiveTotalSteps] = useState<number | undefined>(undefined);
   const [isDossierOpen, setIsDossierOpen] = useState(false);
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
@@ -58,6 +61,8 @@ function CopilotWorkspace() {
     }
     setError(null);
     setIsLoading(true);
+    setLiveThinkingStep(null);
+    setLiveTotalSteps(undefined);
 
     const defaultQuery = textToSend || (currentImg ? 'Jelaskan dan analisis konteks gambar finansial ini secara mendalam' : '');
 
@@ -74,12 +79,16 @@ function CopilotWorkspace() {
     setMessages((prev) => [...prev, optimisticUserMsg]);
 
     try {
-      const response: AgentQueryResponse = await queryAgent(
+      const response: AgentQueryResponse = await queryAgentStream(
         defaultQuery,
         undefined,
         activeSessionId || undefined,
         currentImg?.base64,
-        currentImg?.mimeType
+        currentImg?.mimeType,
+        (step, totalSteps) => {
+          setLiveThinkingStep(step);
+          setLiveTotalSteps(totalSteps);
+        }
       );
 
       if (response.session_id && response.session_id !== activeSessionId) {
@@ -104,6 +113,8 @@ function CopilotWorkspace() {
       setError(err.message || 'Gagal mengeksekusi penalaran agent.');
     } finally {
       setIsLoading(false);
+      setLiveThinkingStep(null);
+      setLiveTotalSteps(undefined);
     }
   };
 
@@ -281,6 +292,8 @@ function CopilotWorkspace() {
           <ChatMessageList
             messages={messages}
             isLoading={isLoading}
+            liveThinkingStep={liveThinkingStep}
+            liveTotalSteps={liveTotalSteps}
             isFetchingHistory={isFetchingHistory || isLoadingSessions}
             error={error}
             onSendMessage={handleSendMessage}

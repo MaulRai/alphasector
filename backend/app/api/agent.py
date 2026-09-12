@@ -1,6 +1,9 @@
+import json
+import asyncio
 from fastapi import APIRouter, HTTPException, Header
+from fastapi.responses import StreamingResponse
 from typing import Optional, List, Dict, Any
-from app.schemas.agent import AgentQueryRequest, AgentQueryResponse
+from app.schemas.agent import AgentQueryRequest, AgentQueryResponse, ReasoningStep
 from app.agent.orchestrator import agent_orchestrator
 from app.db.database import ResearchReportRepository, ChatRepository, UserRepository, AILogRepository
 from app.core.security import decode_access_token
@@ -225,6 +228,216 @@ async def execute_agent_query(
         except Exception as log_err:
             print(f"[Warning] Failed to log error interaction to DB: {log_err}")
         raise HTTPException(status_code=500, detail=f"Agent Execution Error: {str(e)}")
+
+
+@router.post("/query-stream")
+async def execute_agent_query_stream(
+    request: AgentQueryRequest,
+    authorization: Optional[str] = Header(None),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """
+    Execute autonomous multi-step reasoning query with real-time SSE event streaming.
+    Pushes each planned reasoning step live to the client as it is executed.
+    """
+    user_id = get_optional_user_id(authorization)
+    active_session_id = request.session_id
+    img_data_url = None
+    custom_key: Optional[str] = x_sectors_api_key.strip() if x_sectors_api_key else None
+
+    # 1. Process Image Upload early
+    if request.image_base64:
+        mime = request.image_mime_type or "image/png"
+        cloudinary_url = await cloudinary_service.upload_base64_image(
+            base64_data=request.image_base64,
+            mime_type=mime
+        )
+        img_data_url = cloudinary_url or f"data:{mime};base64,{request.image_base64}"
+
+    # 2. Determine effective Sectors API Key & Credit Quota
+    if user_id:
+        user_dict = UserRepository.get_by_id(user_id)
+        if not custom_key and user_dict and user_dict.get("custom_sectors_key"):
+            custom_key = user_dict["custom_sectors_key"].strip()
+        
+        if not custom_key:
+            credits = user_dict.get("demo_credits", 50) if user_dict else 50
+            if credits is not None and credits <= 0:
+                raise HTTPException(
+                    status_code=402,
+                    detail="KUOTA_HABIS: Kuota 50 credit demo server Anda telah habis. Silakan pasang Sectors API Key pribadi Anda di menu Settings (⚙️) untuk melanjutkan riset."
+                )
+            UserRepository.deduct_demo_credits(user_id, 1)
+
+    # 3. Ensure Chat Session Exists
+    if user_id and active_session_id:
+        session = ChatRepository.get_session(active_session_id, user_id)
+        if not session:
+            session_title = request.query[:45] + ("..." if len(request.query) > 45 else "")
+            ChatRepository.create_session(
+                user_id=user_id,
+                title=session_title,
+                primary_ticker=request.context_ticker,
+                session_id=active_session_id
+            )
+    elif user_id and not active_session_id:
+        session_title = request.query[:45] + ("..." if len(request.query) > 45 else "")
+        new_session = ChatRepository.create_session(
+            user_id=user_id,
+            title=session_title,
+            primary_ticker=request.context_ticker
+        )
+        active_session_id = new_session["id"]
+
+    # 4. Save User Message
+    if user_id and active_session_id:
+        ChatRepository.add_message(
+            session_id=active_session_id,
+            user_id=user_id,
+            role="user",
+            content=request.query,
+            image_url=img_data_url
+        )
+
+    # 5. Retrieve recent conversation history
+    conversation_history = []
+    if user_id and active_session_id:
+        try:
+            raw_msgs = ChatRepository.get_session_messages(active_session_id, user_id)
+            conversation_history = [
+                {"role": m["role"], "content": m["content"]}
+                for m in raw_msgs[:-1]
+                if m.get("content")
+            ][-6:]
+        except Exception as hist_err:
+            print(f"[Warning] Failed to fetch session history: {hist_err}")
+
+    async def event_generator():
+        queue = asyncio.Queue()
+
+        async def on_step_callback(step: ReasoningStep, total_steps: int):
+            await queue.put({
+                "type": "step",
+                "step": step.model_dump(),
+                "total_steps": total_steps
+            })
+
+        async def run_orchestration():
+            try:
+                response = await agent_orchestrator.execute(
+                    query=request.query,
+                    context_ticker=request.context_ticker,
+                    session_id=active_session_id,
+                    custom_api_key=custom_key,
+                    conversation_history=conversation_history,
+                    image_base64=request.image_base64,
+                    image_mime_type=request.image_mime_type,
+                    on_step=on_step_callback
+                )
+
+                # Persist assistant message and update session
+                if user_id and active_session_id:
+                    try:
+                        ChatRepository.add_message(
+                            session_id=active_session_id,
+                            user_id=user_id,
+                            role="assistant",
+                            content=response.synthesis.executive_summary,
+                            report_data=response.model_dump()
+                        )
+                        if response.primary_ticker:
+                            ChatRepository.update_session(
+                                session_id=active_session_id,
+                                user_id=user_id,
+                                primary_ticker=response.primary_ticker
+                            )
+                    except Exception as chat_err:
+                        print(f"[Warning] Failed to save chat message: {chat_err}")
+
+                # Archival into ResearchReportRepository
+                if user_id:
+                    try:
+                        ResearchReportRepository.create(
+                            user_id=user_id,
+                            query=request.query,
+                            intent=str(response.intent),
+                            primary_ticker=response.primary_ticker,
+                            comparison_tickers=response.comparison_tickers,
+                            report_data=response.model_dump(),
+                            total_execution_time_ms=response.total_execution_time_ms,
+                            credits_consumed=response.credits_consumed
+                        )
+                    except Exception as save_err:
+                        print(f"[Warning] Failed to persist report for user {user_id}: {save_err}")
+
+                # Telemetry Observability Log
+                try:
+                    sectors_tool_calls = [
+                        step.tool_call.model_dump()
+                        for step in response.reasoning_trace
+                        if getattr(step, "tool_call", None) is not None
+                    ]
+                    context_data = {
+                        "context_ticker": request.context_ticker,
+                        "detected_primary_ticker": response.primary_ticker,
+                        "has_image": bool(request.image_base64),
+                        "image_mime_type": request.image_mime_type if request.image_base64 else None,
+                        "history_turn_count": len(conversation_history),
+                        "visual_context_summary": response.visual_context,
+                        "custom_sectors_key_used": bool(custom_key),
+                    }
+                    estimated_cost = {
+                        "credits_consumed": response.credits_consumed,
+                        "sectors_tool_calls_count": len(sectors_tool_calls),
+                        "primary_model": settings.GROQ_MODEL,
+                        "vision_model": "gemini-2.5-flash" if request.image_base64 else None,
+                        "execution_time_ms": response.total_execution_time_ms,
+                        "pricing_mode": "byok_custom_key" if custom_key else "demo_server_quota",
+                    }
+                    AILogRepository.log_interaction(
+                        user_id=user_id,
+                        session_id=active_session_id,
+                        query=request.query,
+                        intent=str(response.intent),
+                        model_name=settings.GROQ_MODEL,
+                        tool_calls=sectors_tool_calls,
+                        reasoning_steps=[s.model_dump() for s in response.reasoning_trace],
+                        output_summary=response.synthesis.executive_summary[:500] if response.synthesis else "",
+                        latency_ms=response.total_execution_time_ms,
+                        context_data=context_data,
+                        estimated_cost=estimated_cost
+                    )
+                except Exception as log_err:
+                    print(f"[Warning] Failed to write AI observability log: {log_err}")
+
+                await queue.put({"type": "done", "response": response.model_dump()})
+            except Exception as exc:
+                print(f"[Agent Query Stream Exception] {exc}")
+                await queue.put({"type": "error", "detail": str(exc)})
+            finally:
+                await queue.put(None)
+
+        task = asyncio.create_task(run_orchestration())
+
+        try:
+            while True:
+                item = await queue.get()
+                if item is None:
+                    break
+                yield f"data: {json.dumps(item)}\n\n"
+        finally:
+            await task
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"
+        }
+    )
+
 
 @router.get("/logs")
 async def get_ai_interaction_logs(

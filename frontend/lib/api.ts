@@ -74,6 +74,88 @@ export async function queryAgent(
   return response.json();
 }
 
+export async function queryAgentStream(
+  query: string, 
+  contextTicker?: string, 
+  sessionId?: string,
+  imageBase64?: string | null,
+  imageMimeType?: string | null,
+  onStep?: (step: any, totalSteps: number) => void
+): Promise<AgentQueryResponse> {
+  const headers = getApiHeaders();
+
+  const response = await fetch(`${API_BASE_URL}/api/agent/query-stream`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      query,
+      context_ticker: contextTicker || null,
+      session_id: sessionId || null,
+      image_base64: imageBase64 || null,
+      image_mime_type: imageMimeType || null,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    let errorMsg = `Agent query failed (${response.status}): ${errorText}`;
+    try {
+      const parsed = JSON.parse(errorText);
+      if (parsed.detail) errorMsg = parsed.detail;
+    } catch {}
+    throw new Error(errorMsg);
+  }
+
+  const reader = response.body?.getReader();
+  if (!reader) {
+    return queryAgent(query, contextTicker, sessionId, imageBase64, imageMimeType);
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let finalResponse: AgentQueryResponse | null = null;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const chunks = buffer.split('\n\n');
+    buffer = chunks.pop() || '';
+
+    for (const chunk of chunks) {
+      const trimmed = chunk.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const jsonStr = trimmed.slice(5).trim();
+      if (!jsonStr) continue;
+
+      try {
+        const payload = JSON.parse(jsonStr);
+        if (payload.type === 'step') {
+          if (onStep && payload.step) {
+            onStep(payload.step, payload.total_steps);
+          }
+        } else if (payload.type === 'done') {
+          finalResponse = payload.response;
+        } else if (payload.type === 'error') {
+          throw new Error(payload.detail || 'Gagal mengeksekusi streaming penalaran agent.');
+        }
+      } catch (err: any) {
+        if (err.message && err.message.includes('Gagal')) {
+          throw err;
+        }
+        console.warn('Failed to parse SSE payload chunk:', chunk, err);
+      }
+    }
+  }
+
+  if (!finalResponse) {
+    throw new Error('Penalaran agent selesai tanpa hasil sintesis akhir.');
+  }
+
+  return finalResponse;
+}
+
 export async function fetchCompanyReport(symbol: string) {
   const cleanSymbol = symbol.toUpperCase().replace('.JK', '');
   const response = await fetch(`${API_BASE_URL}/api/sectors/company/${cleanSymbol}`, {
