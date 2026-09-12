@@ -353,7 +353,7 @@ export default function SmartMoneyPage() {
           {/* TAB 4: BEI SUSPENSIONS & UMA RADAR */}
           {activeTab === 'suspensions' && (
             <div className="space-y-6">
-              <RegulatorySuspensionsCard />
+              <RegulatorySuspensionsCard initialTicker={ticker} />
             </div>
           )}
         </AuthGate>

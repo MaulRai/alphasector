@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { fetchShareholdersComposition } from '@/lib/api';
 import { Building2, PieChart, RefreshCw, AlertCircle, Users, Landmark, Briefcase, Shield } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
-import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 interface InstitutionalOwnershipCardProps {
   initialTicker: string;
@@ -19,7 +18,9 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
   const [latencyMs, setLatencyMs] = useState<number>(0);
 
   useEffect(() => {
-    loadComposition(initialTicker || 'BBCA');
+    const nextTicker = initialTicker || 'BBCA';
+    setTicker(nextTicker);
+    loadComposition(nextTicker);
   }, [initialTicker]);
 
   const loadComposition = async (sym: string) => {
@@ -144,22 +145,11 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
           </p>
         </div>
 
-        {/* Ticker Search & Refresh */}
-        <div className="flex items-center gap-2">
-          <div className="w-56 sm:w-64">
-            <TickerAutocompleteInput
-              onSelectTicker={(selected) => {
-                const clean = selected.toUpperCase().trim();
-                setTicker(clean);
-                loadComposition(clean);
-                onTickerChange?.(clean);
-              }}
-              selectedTickers={[ticker]}
-              placeholder="Cari atau ganti emiten..."
-              showActionButton={false}
-              showSearchIcon={true}
-              accentColor="amber"
-            />
+        {/* Emiten Info & Refresh */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-2 text-xs">
+            <span className="text-slate-400">Data KSEI:</span>
+            <span className="font-bold text-amber-400">{ticker}</span>
           </div>
 
           <button

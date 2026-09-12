@@ -2,20 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchSuspensions } from '@/lib/api';
-import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, FileText, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, FileText, CheckCircle2, Globe } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
-import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
-export function RegulatorySuspensionsCard() {
+interface RegulatorySuspensionsCardProps {
+  initialTicker?: string;
+}
+
+export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensionsCardProps) {
   const [suspensions, setSuspensions] = useState<any[]>([]);
-  const [tickerFilter, setTickerFilter] = useState('');
+  const [scope, setScope] = useState<'all' | 'ticker'>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState(0);
 
   useEffect(() => {
-    loadSuspensions();
-  }, []);
+    if (scope === 'ticker' && initialTicker) {
+      loadSuspensions(initialTicker);
+    } else {
+      loadSuspensions();
+    }
+  }, [initialTicker, scope]);
 
   const loadSuspensions = async (sym?: string) => {
     setIsLoading(true);
@@ -40,11 +47,6 @@ export function RegulatorySuspensionsCard() {
     }
   };
 
-  const handleFilter = (e: React.FormEvent) => {
-    e.preventDefault();
-    loadSuspensions(tickerFilter);
-  };
-
   return (
     <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 glass-panel space-y-5">
       {/* Card Header */}
@@ -63,38 +65,34 @@ export function RegulatorySuspensionsCard() {
           </p>
         </div>
 
-        {/* Ticker Search & Refresh */}
-        <div className="flex items-center gap-2">
-          <div className="w-56 sm:w-64">
-            <TickerAutocompleteInput
-              onSelectTicker={(selected) => {
-                const clean = selected.toUpperCase().trim();
-                setTickerFilter(clean);
-                loadSuspensions(clean);
-              }}
-              selectedTickers={tickerFilter ? [tickerFilter] : []}
-              placeholder="Filter emiten (misal: JARR)..."
-              showActionButton={false}
-              showSearchIcon={true}
-              accentColor="amber"
-            />
+        {/* Scope Filter Switcher & Refresh */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800">
+            <button
+              onClick={() => setScope('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                scope === 'all'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Globe className="h-3 w-3" />
+              <span>Semua Suspensi BEI</span>
+            </button>
+            <button
+              onClick={() => setScope('ticker')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                scope === 'ticker'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>Status {initialTicker || 'Emiten'}</span>
+            </button>
           </div>
 
-          {tickerFilter && (
-            <button
-              onClick={() => {
-                setTickerFilter('');
-                loadSuspensions('');
-              }}
-              className="px-2.5 py-2 text-[11px] font-medium rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
-              title="Reset Tampilkan Semua Suspensi"
-            >
-              Semua
-            </button>
-          )}
-
           <button
-            onClick={() => loadSuspensions(tickerFilter)}
+            onClick={() => loadSuspensions(scope === 'ticker' ? initialTicker : undefined)}
             disabled={isLoading}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Suspensions"
@@ -107,7 +105,12 @@ export function RegulatorySuspensionsCard() {
       {/* Latency & Status Bar */}
       <div className="flex items-center justify-between text-[11px] text-slate-400">
         <span>
-          Menampilkan <strong className="text-slate-200">{suspensions.length}</strong> catatan suspensi terbaru di Bursa Efek Indonesia
+          Menampilkan <strong className="text-slate-200">{suspensions.length}</strong> catatan suspensi
+          {scope === 'ticker' && initialTicker ? (
+            <> untuk emiten <strong className="text-amber-400">{initialTicker}</strong></>
+          ) : (
+            <> aktif terbaru di Bursa Efek Indonesia</>
+          )}
         </span>
         {latencyMs > 0 && (
           <span className="font-mono text-slate-500">Latency: {latencyMs}ms</span>
@@ -136,7 +139,9 @@ export function RegulatorySuspensionsCard() {
           <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto" />
           <p className="text-sm font-semibold text-slate-300">Tidak ada catatan suspensi aktif</p>
           <p className="text-xs text-slate-500">
-            {tickerFilter ? `Emiten ${tickerFilter} dalam status perdagangan normal (tidak digembok).` : 'Tidak ditemukan catatan suspensi yang cocok.'}
+            {scope === 'ticker' && initialTicker
+              ? `Emiten ${initialTicker} dalam status perdagangan normal (tidak terkena suspensi/gembok bursa).`
+              : 'Tidak ditemukan catatan suspensi aktif di BEI saat ini.'}
           </p>
         </div>
       )}

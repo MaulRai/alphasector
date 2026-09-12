@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchInsiderFilings } from '@/lib/api';
-import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, FileText } from 'lucide-react';
+import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, FileText, Globe } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
-import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 
 interface FilingResult {
   title: string;
@@ -21,15 +20,19 @@ interface InsiderFilingsCardProps {
 }
 
 export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFilingsCardProps) {
-  const [ticker, setTicker] = useState(initialTicker || '');
+  const [scope, setScope] = useState<'ticker' | 'all'>('ticker');
   const [filings, setFilings] = useState<FilingResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState<number>(0);
 
   useEffect(() => {
-    loadFilings(initialTicker);
-  }, [initialTicker]);
+    if (scope === 'ticker' && initialTicker) {
+      loadFilings(initialTicker);
+    } else {
+      loadFilings('');
+    }
+  }, [initialTicker, scope]);
 
   const loadFilings = async (sym?: string) => {
     setIsLoading(true);
@@ -83,40 +86,34 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
           </p>
         </div>
 
-        {/* Ticker Search & Refresh */}
-        <div className="flex items-center gap-2">
-          <div className="w-56 sm:w-64">
-            <TickerAutocompleteInput
-              onSelectTicker={(selected) => {
-                const clean = selected.toUpperCase().trim();
-                setTicker(clean);
-                loadFilings(clean);
-                onTickerChange?.(clean);
-              }}
-              selectedTickers={ticker ? [ticker] : []}
-              placeholder="Cari atau ganti emiten..."
-              showActionButton={false}
-              showSearchIcon={true}
-              accentColor="amber"
-            />
+        {/* Scope Filter Switcher & Refresh */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800">
+            <button
+              onClick={() => setScope('ticker')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                scope === 'ticker'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>Hanya {initialTicker || 'Emiten'}</span>
+            </button>
+            <button
+              onClick={() => setScope('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                scope === 'all'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Globe className="h-3 w-3" />
+              <span>Semua Bursa</span>
+            </button>
           </div>
 
-          {ticker && (
-            <button
-              onClick={() => {
-                setTicker('');
-                loadFilings('');
-                onTickerChange?.('');
-              }}
-              className="px-2.5 py-2 text-[11px] font-medium rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
-              title="Reset Tampilkan Semua Transaksi Bursa"
-            >
-              Semua
-            </button>
-          )}
-
           <button
-            onClick={() => loadFilings(ticker)}
+            onClick={() => loadFilings(scope === 'ticker' ? initialTicker : '')}
             disabled={isLoading}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
             title="Refresh Filings"
@@ -130,7 +127,11 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
       <div className="flex items-center justify-between text-[11px] text-slate-400">
         <span>
           Menampilkan <strong className="text-slate-200">{filings.length}</strong> transaksi terbaru
-          {ticker && <> untuk emiten <strong className="text-amber-400">{ticker}</strong></>}
+          {scope === 'ticker' && initialTicker ? (
+            <> untuk emiten <strong className="text-amber-400">{initialTicker}</strong></>
+          ) : (
+            <> dari <strong className="text-amber-400">Seluruh Pasar Bursa BEI</strong></>
+          )}
         </span>
         {latencyMs > 0 && (
           <span className="font-mono text-slate-500">Latency: {latencyMs}ms</span>
@@ -159,8 +160,8 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
           <FileText className="h-8 w-8 text-slate-600 mx-auto" />
           <p className="text-sm font-semibold text-slate-300">Tidak ada pengumuman transaksi orang dalam</p>
           <p className="text-xs text-slate-500">
-            {ticker
-              ? `Belum ada pelaporan keterbukaan transaksi insider terbaru untuk ${ticker}. Coba cari emiten lain.`
+            {scope === 'ticker' && initialTicker
+              ? `Belum ada pelaporan keterbukaan transaksi insider terbaru untuk ${initialTicker}. Anda dapat mengklik "Semua Bursa" untuk melihat transaksi emiten lain.`
               : 'Belum ada pelaporan transaksi insider terbaru di bursa.'}
           </p>
         </div>
