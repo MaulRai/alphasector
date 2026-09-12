@@ -34,7 +34,7 @@
 #### Visual Screen Actions & Clicks:
 1. **[0:00 - 0:07] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
 2. **[0:07 - 0:15] Smooth Transition**: Smooth zoom-in cut directly to AlphaSector’s Landing Page (`localhost:3000`). Highlight the Deep Obsidian theme (`#07090e`) with vibrant neon emerald and cyan glows. Cursor hovers gently over the hero headline: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
-3. **[0:15 - 0:25] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Copilot Workspace, Peer Battle Terminal, Screener Pro, Smart Money Radar, and Notion Sync).
+3. **[0:15 - 0:25] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Alpha Agent Workspace, Peer Battle Terminal, Screener Pro, Smart Money Radar, and Notion Sync).
 4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Click the navigation button toward `/alpha-agent`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
 
 #### On-Screen Graphics & English Text Overlays:
@@ -81,7 +81,7 @@
 * SFX: Rapid mechanical keyboard clicks, gentle digital resonance during DAG execution, and a double-snap click when the matrix and drawer open.
 
 #### Verbatim English Voiceover Narration:
-> *"In the Copilot workspace, analysts simply ask in plain language. Notice this live Thinking Trace: AlphaSector is not a superficial prompt wrapper.*
+> *"In the Alpha Agent workspace, analysts simply ask in plain language. Notice this live Thinking Trace: AlphaSector is not a superficial prompt wrapper.*
 > 
 > *Our backend orchestrator autonomously classifies user intent, constructs a dynamic Directed Acyclic Graph, and dispatches parallel asynchronous calls to Sectors API in just hundreds of milliseconds.*
 > 
@@ -152,10 +152,10 @@
 
 ### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
 * **Duration**: 30 Seconds
-* **Objective**: Close the walkthrough with the commanding authority of a modern FinTech product launch: unifying the end-to-end workflow (Copilot, Battle, Smart Money, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
+* **Objective**: Close the walkthrough with the commanding authority of a modern FinTech product launch: unifying the end-to-end workflow (Alpha Agent, Battle, Smart Money, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from the intelligent Copilot reasoning, to the dynamic Peer Battle matrix, the Smart Money radar, and the polished Notion investment memorandum. Seamless UI motion demonstrates a complete, battle-tested product.
+1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from the intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, the Smart Money radar, and the polished Notion investment memorandum. Seamless UI motion demonstrates a complete, battle-tested product.
 2. **[2:40 - 2:48] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
 3. **[2:48 - 3:00] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/alphasector`), and the *Sectors Hackathon 2026* badge.
 

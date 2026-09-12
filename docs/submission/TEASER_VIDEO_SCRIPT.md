@@ -14,7 +14,7 @@
 
 ```
 [0:00 - 0:08] HOOK & THE PAIN ──────────► Ratusan PDF BEI ruwet, jam-jaman riset manual (Frustrasi)
-[0:08 - 0:20] COPILOT MULTI-STEP REASONING ► Prompt natural, DAG planning mandiri, Sectors API paralel
+[0:08 - 0:20] ALPHA AGENT MULTI-STEP REASONING ► Prompt natural, DAG planning mandiri, Sectors API paralel
 [0:20 - 0:32] DETERMINISTIC QUANT ENGINE ──► The Big 4 Banks, Piotroski 9-kriteria, Pita Valuasi P/E
 [0:32 - 0:44] SMART MONEY & FOREIGN FLOW ──► Lacak bandar institusi, 74% buyer concentration
 [0:44 - 0:54] 1-CLICK NOTION SYNC ───────► Memo investasi Wall-Street grade instan ke Notion
@@ -47,7 +47,7 @@
 
 ---
 
-### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS COPILOT
+### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS ALPHA AGENT
 * **Durasi**: 12 Detik (Detik 8 - 20)
 * **Kamera / Visual**:
   - Zoom dinamis ke bar prompt `/alpha-agent`.
@@ -56,7 +56,7 @@
   - Tunjukkan kartu DAG: *Classifying Intent -> Parallel Sectors API Fetch (320ms) -> Calculating Math*.
   - Seketika tabel **PeerBattleMatrix** meledak di layar dengan lencana hijau *Best P/E* dan *Best ROE*.
 * **Kinetic Typography (Teks Pop-Up Layar)**:
-  - `[0:09]` **"ALPHASECTOR COPILOT"** (Warna Cyan)
+  - `[0:09]` **"ALPHASECTOR ALPHA AGENT"** (Warna Cyan)
   - `[0:13]` **"MULTI-STEP DAG REASONING"** (Font Tech)
   - `[0:17]` **"PARALLEL SECTORS API"** (Badge kilat)
 * **Audio SFX & BGM**:

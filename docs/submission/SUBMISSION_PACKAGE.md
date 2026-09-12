@@ -71,10 +71,10 @@ Riset 900+ emiten BEI kini bebas dari repotnya baca ratusan halaman PDF laporan 
 Dibangun untuk #SectorsHackathon2026 Track 01 bertenaga @sectors_app! 🧵👇
 ```
 
-#### Tweet 2 / 4 (Core Architectural Innovations) — *[266 / 280 characters]*
+#### Tweet 2 / 4 (Core Architectural Innovations) — *[270 / 280 characters]*
 ```text
 ✨ 5 Inovasi AlphaSector:
-1️⃣ Copilot: Multi-step DAG & tool calling paralel
+1️⃣ Alpha Agent: Multi-step DAG & tool calling paralel
 2️⃣ Quant Engine: Piotroski F-Score (9 kriteria) & P/E Bands
 3️⃣ Peer Battle: Komparasi 4 emiten head-to-head
 4️⃣ Smart Money: Radar akumulasi broker
@@ -188,7 +188,7 @@ ALPHASECTOR PRE-SUBMISSION COMPLIANCE MATRIX (SECTORS HACKATHON 2026)
 | **3** | **90-Day Public Repo Guarantee** | **Rule 08** | GitHub repository `MaulRai/alphasector` set to Public. Dedicated guarantee to maintain public visibility through at least January 2027 (90 days post-announcement). | **PASSED (100%)** |
 | **4** | **Sectors App Onboarding Verification** | **Rule 03 & 04** | All participating team members registered and completed onboarding at `sectors.app` prior to writing code. 1,000 credits claimed via team page. | **PASSED (100%)** |
 | **5** | **Product-Works Gate & Core Workflow** | **Rule 06 & 09** | End-to-end working terminal verified across all 6 core features. Pre-seeded demo account (`demo@alphasector.id`) and local SQLite DB fallback ensure zero cold-start failures for judges. | **PASSED (100%)** |
-| **6** | **Automated Trading Prohibition Adherence** | **Rule 06 & Track 01** | Zero automated order routing or broker trading APIs. Strictly an analytical, scoring, and research copilot. | **PASSED (100%)** |
+| **6** | **Automated Trading Prohibition Adherence** | **Rule 06 & Track 01** | Zero automated order routing or broker trading APIs. Strictly an analytical, scoring, and research Alpha Agent. | **PASSED (100%)** |
 | **7** | **Track 01 Qualification Declaration** | **Track 01 Guideline** | Custom 5-Phase agent orchestrator, dynamic DAG planner, parallel tool executor, and deterministic quant engine. NOT a generic MCP wrapper client. | **PASSED (100%)** |
 | **8** | **Financial Advice Disclaimer** | **Rule 12** | Explicit disclaimers embedded in UI footers, Notion memo exports, README, video scripts, and social media post copy. | **PASSED (100%)** |
 
@@ -265,7 +265,7 @@ ALPHASECTOR PRE-SUBMISSION COMPLIANCE MATRIX (SECTORS HACKATHON 2026)
 #### Audit Gate 8: Code of Conduct & Financial Advice Disclaimer (Rule 12)
 - **Rule Clause**: *"Projects must not provide financial advice. Products must position themselves as information and analysis tools, not investment recommendations. Include a disclaimer where relevant."*
 - **Audit Findings**:
-  - All research dossiers, company deep dives, copilot chats, and Notion export memos feature mandatory regulatory disclaimers in Bahasa Indonesia and English.
+  - All research dossiers, company deep dives, Alpha Agent chats, and Notion export memos feature mandatory regulatory disclaimers in Bahasa Indonesia and English.
   - UI footer across every page explicitly states: *"AlphaSector adalah platform intelijen dan riset data keuangan, bukan penasihat investasi berlisensi. Semua output bersifat analitis."*
 - **Status**: **FULLY COMPLIANT**.
 

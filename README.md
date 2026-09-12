@@ -1,10 +1,10 @@
-# AlphaSector: Autonomous Equity Research Copilot for IDX
+# AlphaSector: Autonomous Equity Research Agent for IDX
 
 <div align="center">
 
 ![AlphaSector Banner](https://raw.githubusercontent.com/MaulRai/alphasector/main/frontend/public/banner.png)
 
-**Institutional-Grade Autonomous Equity Research Terminal & Quantitative Copilot for the Indonesian Capital Market (Bursa Efek Indonesia / IDX)**
+**Institutional-Grade Autonomous Equity Research Terminal & Quantitative Alpha Agent for the Indonesian Capital Market (Bursa Efek Indonesia / IDX)**
 
 [![Track](https://img.shields.io/badge/Sectors_Hackathon_2026-Track_01:_AI_Agents_%26_Assistants-059669?style=for-the-badge)](https://sectors.app)
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js_15_(App_Router)-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -133,7 +133,7 @@ AlphaSector provides a cohesive suite of specialized equity research tools acces
 | `/` | **Landing & Command Center** | Hero overview, real-time backend health check badge, core architecture showcase, and 1-click demo login. | `frontend/app/page.tsx` |
 | `/alpha-agent` | **Autonomous Agent Workspace** | Conversational equity research with **Live Thinking Trace accordion**, multimodal chart upload, trade ideas radar, and slide-out artifact panel. | `frontend/app/alpha-agent/page.tsx` |
 | `/battle` | **Peer Battle Terminal** | Head-to-head multi-emiten showdown with **PeerBattleMatrix**, Graham number fair values, best-in-class highlights, and Big 4 Banks presets. | `frontend/app/battle/page.tsx` |
-| `/screener` | **Screener Pro & Battle Dock** | Natural language (NLP) and SQL screening across 900+ tickers with the floating **ScreenerBattleDock** to dispatch screened stocks into battle or copilot. | `frontend/app/screener/page.tsx` |
+| `/screener` | **Screener Pro & Battle Dock** | Natural language (NLP) and SQL screening across 900+ tickers with the floating **ScreenerBattleDock** to dispatch screened stocks into battle or Alpha Agent. | `frontend/app/screener/page.tsx` |
 | `/company/[symbol]` | **Company 360° Profile** | Fundamental deep dive featuring the **9-Criteria Piotroski F-Score Card**, **Historical P/E SD Band Range**, revenue segments, and 1-click Notion sync. | `frontend/app/company/[symbol]/page.tsx` |
 | `/smart-money` | **Smart Money & Broker Flow** | Top Institutional Brokers leaderboard, accumulating vs distributing broker flow breakdown, buyer concentration meter, and net foreign flow charts. | `frontend/app/smart-money/page.tsx` |
 | `/settings` | **BYOK & Credit Manager** | Bring Your Own Key (BYOK) manager for Sectors API, live connection testing, and real-time 50 demo credit usage tracker. | `frontend/app/settings/page.tsx` |
@@ -279,7 +279,7 @@ To guarantee an effortless evaluation experience, the following five curated sce
   - Interactive multi-select checkboxes on each row.
   - Animated **ScreenerBattleDock** reveals at screen bottom:
     - Click *"Bandingkan di Peer Battle"* $\to$ routes selected tickers directly to `/battle`.
-    - Click *"Diskusikan di Copilot"* $\to$ opens a new research room initialized with the screened emiten universe.
+    - Click *"Diskusikan di Alpha Agent"* $\to$ opens a new research room initialized with the screened emiten universe.
 
 ---
 
@@ -455,6 +455,6 @@ In accordance with **Competition Rule 12** and Indonesian Financial Services Aut
 - **Development Team**: MaulRai (`alphasector`)
 
 <div align="center">
-<b>AlphaSector — The Autonomous Equity Research Copilot for IDX</b><br>
+<b>AlphaSector — The Autonomous Equity Research Agent for IDX</b><br>
 <i>Sectors Hackathon 2026 • Track 01: AI Agents & Assistants</i>
 </div>

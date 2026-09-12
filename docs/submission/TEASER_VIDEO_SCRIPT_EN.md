@@ -14,7 +14,7 @@
 
 ```
 [0:00 - 0:08] HOOK & THE PAIN ──────────► 900+ messy IDX PDFs, manual spreadsheet fatigue (Frustration)
-[0:08 - 0:20] COPILOT MULTI-STEP REASONING ► Natural language prompt, autonomous DAG, parallel Sectors API
+[0:08 - 0:20] ALPHA AGENT MULTI-STEP REASONING ► Natural language prompt, autonomous DAG, parallel Sectors API
 [0:20 - 0:32] DETERMINISTIC QUANT ENGINE ──► The Big 4 Banks, Piotroski 9-criteria, P/E Valuation Bands
 [0:32 - 0:44] SMART MONEY & FOREIGN FLOW ──► Track institutional footprints, 74% buyer concentration
 [0:44 - 0:54] 1-CLICK NOTION SYNC ───────► Instant Wall Street-grade investment memo export
@@ -45,7 +45,7 @@
 
 ---
 
-### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS COPILOT
+### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS ALPHA AGENT
 * **Duration**: 12 Seconds (Seconds 8 - 20)
 * **Visual Action**:
   - Dynamic punch-in zoom to the `/alpha-agent` prompt bar.
@@ -54,7 +54,7 @@
   - Show DAG execution cards: *Classifying Intent -> Parallel Sectors API Fetch (320ms) -> Mathematical Matrix*.
   - The **PeerBattleMatrix** erupts onto the screen with glowing *Best P/E* and *Best ROE* badges.
 * **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:09]` **"ALPHASECTOR COPILOT"** (Cyan glow)
+  - `[0:09]` **"ALPHASECTOR ALPHA AGENT"** (Cyan glow)
   - `[0:13]` **"MULTI-STEP DAG REASONING"** (Tech Monospace)
   - `[0:17]` **"PARALLEL SECTORS API"** (Lightning badge)
 * **Audio SFX & BGM**:

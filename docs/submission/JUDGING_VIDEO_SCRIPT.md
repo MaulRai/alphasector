@@ -34,7 +34,7 @@
 #### Detail Aksi Visual (Screen Actions & Clicks):
 1. **[0:00 - 0:07] B-Roll / Layar Monitor**: Tampilkan layar dengan belasan tab browser terbuka berisi PDF laporan keuangan BEI yang rumit, lembar spreadsheet penuh angka, dan grafik harga yang terpisah-pisah. Kursor bergerak cepat menunjukkan rasa frustrasi analisis manual.
 2. **[0:07 - 0:15] Transisi Cepat**: Transisi *smooth wipe* atau *zoom-in* langsung ke browser yang membuka Landing Page AlphaSector (`localhost:3000`). Sorot banner header berlatar *Deep Obsidian* (`#07090e`) dengan aksen neon emerald/cyan. Kursor melakukan *hover* halus pada tagline hero: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
-3. **[0:15 - 0:25] Jelajah Singkat**: Scroll lembut ke bawah memperlihatkan arsitektur 5 fitur utama (Copilot, Peer Battle, Screener Pro, Smart Money, Notion Sync).
+3. **[0:15 - 0:25] Jelajah Singkat**: Scroll lembut ke bawah memperlihatkan arsitektur 5 fitur utama (Alpha Agent, Peer Battle, Screener Pro, Smart Money, Notion Sync).
 4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Klik tombol navigasi menuju `/alpha-agent`. Modal `AuthGate` muncul elegan. Kursor langsung mengklik tombol hijau bercahaya: **"1-Click Demo Login (Akses Instan)"** (`demo@alphasector.id`). Dalam tempo kurang dari 1 detik, indikator login sukses dan workspace terbuka mulus.
 
 #### On-Screen Graphics & Teks Overlay:
@@ -85,14 +85,14 @@
 * SFX: Suara ketikan keyboard taktil cepat, *soft digital hum* saat DAG reasoning berjalan, dan *double snap click* saat tabel matriks dan drawer dossier terbuka.
 
 #### Narasi Suara (Verbatim Indonesian Voiceover):
-> *"Di halaman Copilot, analis cukup mengajukan pertanyaan dalam bahasa sehari-hari. Perhatikan komponen Thinking Trace ini: AlphaSector bukanlah sekadar wrapper prompt biasa.*
+> *"Di halaman Alpha Agent, analis cukup mengajukan pertanyaan dalam bahasa sehari-hari. Perhatikan komponen Thinking Trace ini: AlphaSector bukanlah sekadar wrapper prompt biasa.*
 > 
 > *Sistem kami secara mandiri mengklasifikasikan intensi, merancang Directed Acyclic Graph atau DAG, lalu mengeksekusi Sectors API secara paralel via asynchronous gather dalam hitungan ratusan milidetik.*
 > 
 > *Hasilnya adalah matriks komparasi presisi antara BBRI dan BMRI—lengkap dengan perbandingan laba, margin, efisiensi modal, serta sintesis naratif institusional berbahasa Indonesia yang objektif, bebas halusinasi, dan tersimpan rapi sebagai Research Dossier interaktif."*
 
 #### English Subtitles:
-> *"In Copilot, analysts simply ask in natural language. Notice this Thinking Trace: AlphaSector is not a simple prompt wrapper.*
+> *"In the Alpha Agent workspace, analysts simply ask in natural language. Notice this Thinking Trace: AlphaSector is not a simple prompt wrapper.*
 > 
 > *Our orchestrator autonomously classifies intent, builds a Directed Acyclic Graph (DAG), and executes Sectors API endpoints concurrently via asyncio.gather within hundreds of milliseconds.*
 > 
@@ -177,10 +177,10 @@
 
 ### SEGMEN 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
 * **Durasi**: 30 Detik
-* **Tujuan**: Menutup video dengan impresi kuat ala peluncuran produk FinTech modern: merangkul seluruh alur kerja terintegrasi (Copilot, Battle, Smart Money, Notion), menegaskan posisi sebagai terminal riset cerdas & bertanggung jawab (tanpa automated trading), dan memberikan call-to-action yang percaya diri.
+* **Tujuan**: Menutup video dengan impresi kuat ala peluncuran produk FinTech modern: merangkul seluruh alur kerja terintegrasi (Alpha Agent, Battle, Smart Money, Notion), menegaskan posisi sebagai terminal riset cerdas & bertanggung jawab (tanpa automated trading), dan memberikan call-to-action yang percaya diri.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[2:30 - 2:40] Unified Workspace Showcase**: Kamera melakukan *smooth zoom-out* sinematik memperlihatkan ekosistem AlphaSector yang saling terhubung: dari prompt Copilot yang cerdas, arena Peer Battle, radar Smart Money, hingga memo Notion yang rapi. Transisi antar-fitur bergerak halus membuktikan kelengkapan produk.
+1. **[2:30 - 2:40] Unified Workspace Showcase**: Kamera melakukan *smooth zoom-out* sinematik memperlihatkan ekosistem AlphaSector yang saling terhubung: dari penalaran Alpha Agent yang cerdas, arena Peer Battle, radar Smart Money, hingga memo Notion yang rapi. Transisi antar-fitur bergerak halus membuktikan kelengkapan produk.
 2. **[2:40 - 2:48] Responsible FinTech & Disclaimers**: Sorot sekilas kartu etika analitis di footer: menegaskan komitmen pada *pure decision-support intelligence* tanpa eksekusi transaksi otomatis (Rule 12).
 3. **[2:48 - 3:00] Hero Closing & Call-To-Action**: Transisi ke layar penutup Deep Obsidian. Logo AlphaSector berkilau di tengah layar, diikuti kemunculan teks tagline *"Smarter Research, Sharper Decisions"*, tautan repositori GitHub publik (`github.com/MaulRai/alphasector`), dan badge *Sectors Hackathon 2026*.
 
