@@ -26,6 +26,7 @@ interface ChatMessageListProps {
   onSendMessage: (query: string) => void;
   onOpenArtifact: (artifactId: string) => void;
   latestAssistantMsgRef: React.RefObject<HTMLDivElement | null>;
+  latestUserMsgRef?: React.RefObject<HTMLDivElement | null>;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -39,6 +40,7 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   onSendMessage,
   onOpenArtifact,
   latestAssistantMsgRef,
+  latestUserMsgRef,
   messagesEndRef,
 }) => {
   const lastUserQuery = [...messages].reverse().find(m => m.role === 'user')?.content || '';
@@ -144,11 +146,12 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
         const isUser = msg.role === 'user';
         const report = msg.report_data;
         const isLastAssistant = !isUser && index === messages.length - 1;
+        const isLastUser = isUser && (index === messages.length - 1 || index === messages.length - 2);
 
         return (
           <div
             key={msg.id || index}
-            ref={isLastAssistant ? latestAssistantMsgRef : null}
+            ref={isLastAssistant ? latestAssistantMsgRef : (isLastUser ? latestUserMsgRef : null)}
             className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-4xl mx-auto w-full scroll-mt-6`}
           >
             {/* Message Sender Header (Only for AlphaAgent Assistant) */}

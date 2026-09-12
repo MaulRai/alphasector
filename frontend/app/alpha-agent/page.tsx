@@ -37,6 +37,7 @@ function CopilotWorkspace() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
+  const latestUserMsgRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Hook 1: Multimodal image upload
@@ -149,19 +150,18 @@ function CopilotWorkspace() {
     onInitialQueryTrigger: handleSendMessage,
   });
 
-  // Natural scroll handling
+  // Stable view scroll handling: Keep view firmly at top, never force-scroll to bottom
   useEffect(() => {
-    if (isLoading) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    } else if (messages.length > 0) {
+    if (messages.length > 0) {
       const lastMsg = messages[messages.length - 1];
-      if (lastMsg.role === 'assistant') {
-        latestAssistantMsgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (lastMsg.role === 'user') {
+        // When user submits a prompt, smoothly bring the user's prompt to the top
+        latestUserMsgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      // When assistant message arrives or while loading: DO NOT SCROLL.
+      // View stays firmly at the top so the user can read seamlessly without jumping.
     }
-  }, [messages, isLoading]);
+  }, [messages]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -302,6 +302,7 @@ function CopilotWorkspace() {
               setIsArtifactPanelOpen(true);
             }}
             latestAssistantMsgRef={latestAssistantMsgRef}
+            latestUserMsgRef={latestUserMsgRef}
             messagesEndRef={messagesEndRef}
           />
 
