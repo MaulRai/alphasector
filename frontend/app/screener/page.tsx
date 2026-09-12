@@ -74,7 +74,7 @@ export default function ScreenerPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16">
         <AuthGate
           featureName="Screener Pro & Trade Ideas Radar"
-          featureDescription="Saring semesta 900+ saham BEI dengan query natural language (NLP) dan kriteria fundamental terstruktur dengan akun analis."
+          featureDescription="Identifikasi peluang investasi unggulan dari 900+ saham BEI melalui pencarian intuitif dan parameter fundamental komprehensif."
         >
           {/* Header */}
           <div className="mb-8 pb-6 border-b border-slate-800">
@@ -87,7 +87,7 @@ export default function ScreenerPage() {
               </h1>
             </div>
             <p className="text-sm text-slate-400">
-              Saring 900+ emiten di Bursa Efek Indonesia menggunakan bahasa natural (NLP) atau filter kriteria terstruktur berbasis data resmi Sectors API.
+              Temukan peluang investasi unggulan dari 900+ emiten di Bursa Efek Indonesia melalui pencarian intuitif berbasis tesis investasi maupun parameter fundamental terkurasi.
             </p>
           </div>
 

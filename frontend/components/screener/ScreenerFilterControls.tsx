@@ -123,14 +123,14 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs transition-all disabled:opacity-50 shrink-0 flex items-center justify-center gap-1.5"
           >
             <Play className="h-3.5 w-3.5 fill-black" />
-            <span>Saring dengan NLP</span>
+            <span>Jalankan Skrining</span>
           </button>
         </form>
 
         {/* Structured Filter Row */}
         <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-800/80 text-xs">
           <span className="text-slate-400 font-medium flex items-center gap-1">
-            <Filter className="h-3.5 w-3.5 text-emerald-400" /> Filter Terstruktur:
+            <Filter className="h-3.5 w-3.5 text-emerald-400" /> Filter Sektor & Urutan:
           </span>
 
           {/* Subsector Select */}
