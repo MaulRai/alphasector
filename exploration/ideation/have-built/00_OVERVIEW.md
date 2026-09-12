@@ -38,7 +38,7 @@ Aplikasi dibangun dengan Next.js 15 App Router dan FastAPI, terdiri dari modul-m
 
 ```mermaid
 graph TD
-    Landing["/ (Landing Page)<br/>Hero, Showcase, & Quick Stats"] --> Copilot["/copilot (AlphaAgent Workspace)<br/>Multi-turn Chat & Multimodal Chart"]
+    Landing["/ (Landing Page)<br/>Hero, Showcase, & Quick Stats"] --> Copilot["/alpha-agent (AlphaAgent Workspace)<br/>Multi-turn Chat & Multimodal Chart"]
     Landing --> Battle["/battle (Peer Battle Terminal)<br/>Head-to-Head 4 Emiten & Matrix"]
     Landing --> Screener["/screener (Trade Ideas & NLP Screener)<br/>Filter Multi-Faktor & Presets"]
     Landing --> Company["/company/[symbol] (Emiten 360° Profile)<br/>Multiples Historis, Segmen, & Notion Sync"]
@@ -49,7 +49,7 @@ graph TD
 | Route | Nama Fitur | Deskripsi Singkat |
 |---|---|---|
 | [`/`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/page.tsx) | **Landing & Product Showcase** | Antarmuka visual interaktif dengan statistik emiten BEI, arsitektur preview, dan value proposition. |
-| [`/copilot`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/copilot/page.tsx) | **AlphaAgent Workspace** | Terminal multi-turn AI copilot, pengenalan chart teknikal multimodal, *reasoning trace accordion*, dan widget interaktif. |
+| [`/alpha-agent`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/alpha-agent/page.tsx) | **AlphaAgent Workspace** | Terminal multi-turn AI copilot, pengenalan chart teknikal multimodal, *reasoning trace accordion*, dan widget interaktif. |
 | [`/battle`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/battle/page.tsx) | **Peer Battle Terminal** | Komparasi multi-emiten (hingga 4 emiten sekaligus) dengan penentuan *best-in-class* badge secara matematis. |
 | [`/screener`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/screener/page.tsx) | **Trade Ideas & Screener** | Penyaringan saham berbasis bahasa natural (NLP) dan preset tematik 1-klik (*Undervalued Titans, Dividend Aristocrats*). |
 | [`/company/[symbol]`](file:///d:/Projects/Web%20Shi/sectors-hackathon/frontend/app/company/%5Bsymbol%5D/page.tsx) | **Emiten 360° Profile & Dossier** | Halaman deep-dive komprehensif: valuasi tahunan, kontribusi segmen bisnis, broker summary, dan ekspor dossier. |

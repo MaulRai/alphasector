@@ -248,10 +248,10 @@ export default function SmartMoneyPage() {
                 <button
                   onClick={() => {
                     if (agentReport?.session_id) {
-                      router.push(`/copilot?session_id=${encodeURIComponent(agentReport.session_id)}`);
+                      router.push(`/alpha-agent?session_id=${encodeURIComponent(agentReport.session_id)}`);
                     } else {
                       const query = `Analisis smart money dan broker flow ${ticker}`;
-                      router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                      router.push(`/alpha-agent?initial_query=${encodeURIComponent(query)}`);
                     }
                   }}
                   className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"

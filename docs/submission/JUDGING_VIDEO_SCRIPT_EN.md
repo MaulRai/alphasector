@@ -16,10 +16,10 @@
 | Segment | Timestamp | Duration | Core Feature & Focus | UI Route |
 | :--- | :--- | :--- | :--- | :--- |
 | **Segment 1** | 0:00 - 0:35 | 35s | **The High-Stakes Problem & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, fragmented PDFs, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segment 2** | 0:35 - 1:20 | 45s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/copilot`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/copilot` |
+| **Segment 2** | 0:35 - 1:20 | 45s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
 | **Segment 3** | 1:20 - 1:55 | 35s | **Deterministic Quant Engine & Battle Mode**<br>4-way comparison at `/battle`, 9-criteria Piotroski F-Score & historical P/E SD bands without LLM hallucinations. | `/battle`<br>`/company/ASII` |
 | **Segment 4** | 1:55 - 2:30 | 35s | **Market Intelligence & 1-Click Institutional Notion Sync**<br>Smart money radar at `/smart-money`, floating dock at `/screener`, 1-click Wall Street-grade Notion memo export. | `/smart-money`<br>`/screener`<br>Notion Modal |
-| **Segment 5** | 2:30 - 3:00 | 30s | **Track 01 Qualification, Real-World Impact & Closing**<br>Rule 12 compliance (zero automated trading), custom DAG vs MCP wrapper, production readiness. | VS Code / Arch<br>Wrap-up |
+| **Segment 5** | 2:30 - 3:00 | 30s | **The Future of Equity Research & Closing**<br>Product vision, democratizing institutional research, analytical ethics & call-to-action. | Workspace Showcase<br>Wrap-up |
 
 ---
 
@@ -35,7 +35,7 @@
 1. **[0:00 - 0:07] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
 2. **[0:07 - 0:15] Smooth Transition**: Smooth zoom-in cut directly to AlphaSector’s Landing Page (`localhost:3000`). Highlight the Deep Obsidian theme (`#07090e`) with vibrant neon emerald and cyan glows. Cursor hovers gently over the hero headline: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
 3. **[0:15 - 0:25] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Copilot Workspace, Peer Battle Terminal, Screener Pro, Smart Money Radar, and Notion Sync).
-4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Click the navigation button toward `/copilot`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
+4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Click the navigation button toward `/alpha-agent`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
 
 #### On-Screen Graphics & English Text Overlays:
 * `[0:02]` **Title Card**: `"900+ IDX Stocks • Hundreds of PDF Pages • Hours of Manual Research"`
@@ -53,9 +53,9 @@
 
 ---
 
-### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/copilot` (0:35 - 1:20)
+### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:35 - 1:20)
 * **Duration**: 45 Seconds
-* **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-step agent reasoning, dynamic DAG planning, parallel Sectors API calls, and grounded institutional synthesis on `/copilot`.
+* **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-step agent reasoning, dynamic DAG planning, parallel Sectors API calls, and grounded institutional synthesis on `/alpha-agent`.
 
 #### Visual Screen Actions & Clicks:
 1. **[0:35 - 0:42] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
@@ -150,34 +150,30 @@
 
 ---
 
-### SEGMENT 5: Track 01 Qualification, Real-World Impact & Closing (2:30 - 3:00)
+### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
 * **Duration**: 30 Seconds
-* **Objective**: Reiterate complete Track 01 qualification (custom orchestrator, not an MCP wrapper, zero automated trading), ethical Rule 12 compliance, and a strong closing statement for the judging panel.
+* **Objective**: Close the walkthrough with the commanding authority of a modern FinTech product launch: unifying the end-to-end workflow (Copilot, Battle, Smart Money, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:30 - 2:40] Architecture & Track 01 Compliance**: Split screen showing AlphaSector and the clean VS Code backend repository:
-   - `backend/app/agent/orchestrator.py` & `planner.py` (Custom 5-Phase DAG Orchestrator).
-   - `financial_engine.py` (Deterministic Math Engine).
-   - `cache.py` (Two-tier Neon PostgreSQL + SQLite Cache).
-   - Next.js 15 App Router interface.
-2. **[2:40 - 2:50] Ethical Compliance & Disclaimers**: Scroll to the footer of the app and the Notion memo. Highlight the **Regulatory Financial Disclaimer** (Rule 12): certifying that AlphaSector is strictly an analytical decision-support tool with **zero automated trade execution**.
-3. **[2:50 - 3:00] Outro & Brand Identity**: Display the glowing AlphaSector logo against the deep obsidian canvas, flanked by *"Track 01: AI Agents & Assistants — Sectors Hackathon 2026"*, the public GitHub repo link, and a professional closing gratitude card.
+1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from the intelligent Copilot reasoning, to the dynamic Peer Battle matrix, the Smart Money radar, and the polished Notion investment memorandum. Seamless UI motion demonstrates a complete, battle-tested product.
+2. **[2:40 - 2:48] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
+3. **[2:48 - 3:00] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/alphasector`), and the *Sectors Hackathon 2026* badge.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[2:32]` **Architecture Callout**: **100% Track 01 Qualified**: *Custom Orchestrator • Python Math Engine • Not an MCP Wrapper*
-* `[2:42]` **Compliance Shield**: **Rule 12 Compliant**: *Zero Automated Trading • Strict Financial Disclaimer*
-* `[2:52]` **Closing Card**: **AlphaSector** — *Autonomous Equity Research for Indonesia* | *Sectors Hackathon 2026*
+* `[2:32]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine*
+* `[2:42]` **Assurance Badge**: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
+* `[2:50]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/alphasector`
 
 #### Audio Design:
-* BGM: Riser musical crescendo, resolving into a solid, triumphant final chord with a clean reverb tail.
-* SFX: Soft sub-bass drop on the AlphaSector closing logo reveal.
+* BGM: Contemporary melodic synth crescendo reaching its triumphant peak at 2:50, resolving into an upbeat final chord with a pristine reverb tail.
+* SFX: Subtle sub-bass impact on the AlphaSector logo reveal, paired with a delicate chime as the GitHub repository link appears.
 
 #### Verbatim English Voiceover Narration:
-> *"AlphaSector unequivocally satisfies every Track 01 requirement: we engineered a custom autonomous orchestrator rather than an MCP wrapper, powered by deterministic quantitative math, with zero automated trading to ensure strict regulatory compliance.*
+> *"From dissecting hundreds of financial filings to delivering actionable investment theses, AlphaSector turns days of manual equity research into seconds of clarity.*
 > 
-> *Backed by a two-tier caching architecture that safeguards API credits and a world-class Next.js 15 terminal UI, AlphaSector is ready to democratize Indonesian equity intelligence today.*
+> *By pairing autonomous multi-step reasoning with deterministic quantitative math and responsible analytics, we're putting institutional-grade research into the hands of every investor.*
 > 
-> *Thank you to the Sectors team and the esteemed judges. Let’s build the future of Indonesian capital markets together with AlphaSector!"*
+> *AlphaSector: Smarter research, sharper decisions. Try the live demo and explore the code on GitHub!"*
 
 ---
 

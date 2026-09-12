@@ -50,7 +50,7 @@
 ### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS COPILOT
 * **Durasi**: 12 Detik (Detik 8 - 20)
 * **Kamera / Visual**:
-  - Zoom dinamis ke bar prompt `/copilot`.
+  - Zoom dinamis ke bar prompt `/alpha-agent`.
   - Tangan mengetik kilat dengan animasi *speed-ramp*: `"Bandingkan valuasi BBRI vs BMRI"`.
   - Kursor menekan Enter -> Seketika komponen **LiveThinkingTrace** menyala dengan lampu biru dan ungu neon.
   - Tunjukkan kartu DAG: *Classifying Intent -> Parallel Sectors API Fetch (320ms) -> Calculating Math*.

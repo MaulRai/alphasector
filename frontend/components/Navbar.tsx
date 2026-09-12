@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'AlphaAgent', href: '/copilot', isCustomLogo: true },
+    { label: 'AlphaAgent', href: '/alpha-agent', isCustomLogo: true },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
     { label: 'Screener', href: '/screener', icon: Search },
@@ -132,8 +132,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right: Auth Profile Status & Dossier CTA */}
           <div className="flex items-center gap-2">
-            {/* Export Dossier CTA (Replaced by Artifacts panel on /copilot) */}
-            {hasActiveReport && onOpenDossier && pathname !== '/copilot' && (
+            {/* Export Dossier CTA (Replaced by Artifacts panel on /alpha-agent) */}
+            {hasActiveReport && onOpenDossier && pathname !== '/alpha-agent' && (
               <button
                 onClick={onOpenDossier}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition-all hover:scale-105"
@@ -169,7 +169,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               ) : (
                 <Link
-                  href="/copilot"
+                  href="/alpha-agent"
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-800/70 text-slate-300 hover:text-white text-xs font-semibold transition-all"
                 >
                   <LogIn className="h-3.5 w-3.5 text-emerald-400" />

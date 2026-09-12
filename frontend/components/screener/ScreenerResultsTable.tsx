@@ -94,7 +94,7 @@ export const ScreenerResultsTable: React.FC<ScreenerResultsTableProps> = ({
                       <button
                         onClick={() => {
                           const query = `Bedah prospek fundamental, valuasi, dan katalis emiten ${sym}`;
-                          router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+                          router.push(`/alpha-agent?initial_query=${encodeURIComponent(query)}`);
                         }}
                         className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/20 transition-all hover:scale-105 cursor-pointer"
                         title={`Tanya AlphaAgent tentang ${sym}`}

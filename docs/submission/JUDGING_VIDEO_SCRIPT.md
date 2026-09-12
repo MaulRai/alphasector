@@ -16,10 +16,10 @@
 | Segmen | Waktu | Durasi | Fokus & Fitur Utama | Rute UI |
 |---|---|---|---|---|
 | **Segmen 1** | 0:00 - 0:35 | 35 dtk | **The High-Stakes Problem & Zero-Friction Entry**<br>Information overload 900+ emiten BEI, data terfragmentasi, perkenalan AlphaSector & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segmen 2** | 0:35 - 1:20 | 45 dtk | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning di `/copilot`, visualisasi `AgentThinkingTrace`, pemanggilan paralel Sectors API, sintesis fundamental. | `/copilot` |
+| **Segmen 2** | 0:35 - 1:20 | 45 dtk | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning di `/alpha-agent`, visualisasi `AgentThinkingTrace`, pemanggilan paralel Sectors API, sintesis fundamental. | `/alpha-agent` |
 | **Segmen 3** | 1:20 - 1:55 | 35 dtk | **Deterministic Quant Engine & Peer Battle**<br>Mode adu emiten di `/battle`, kalkulasi 9 kriteria Piotroski F-Score & Pita Standar Deviasi P/E historis tanpa halusinasi LLM. | `/battle`<br>`/company/ASII` |
 | **Segmen 4** | 1:55 - 2:30 | 35 dtk | **Market Intelligence & 1-Click Institutional Notion Sync**<br>Radar broker bandarmologi di `/smart-money`, floating dock `/screener`, ekspor memo investasi institusional ke Notion. | `/smart-money`<br>`/screener`<br>Notion Modal |
-| **Segmen 5** | 2:30 - 3:00 | 30 dtk | **Track 01 Qualification, Real-World Impact & Closing**<br>Kepatuhan Rule 12 (tanpa automated trading), arsitektur kustom vs MCP wrapper, kesiapan produksi. | VS Code / Arch<br>Wrap-up |
+| **Segmen 5** | 2:30 - 3:00 | 30 dtk | **The Future of Equity Research & Closing**<br>Visi produk, demokratisasi riset institusional, etika analitis & call-to-action. | Workspace Showcase<br>Wrap-up |
 
 ---
 
@@ -35,7 +35,7 @@
 1. **[0:00 - 0:07] B-Roll / Layar Monitor**: Tampilkan layar dengan belasan tab browser terbuka berisi PDF laporan keuangan BEI yang rumit, lembar spreadsheet penuh angka, dan grafik harga yang terpisah-pisah. Kursor bergerak cepat menunjukkan rasa frustrasi analisis manual.
 2. **[0:07 - 0:15] Transisi Cepat**: Transisi *smooth wipe* atau *zoom-in* langsung ke browser yang membuka Landing Page AlphaSector (`localhost:3000`). Sorot banner header berlatar *Deep Obsidian* (`#07090e`) dengan aksen neon emerald/cyan. Kursor melakukan *hover* halus pada tagline hero: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
 3. **[0:15 - 0:25] Jelajah Singkat**: Scroll lembut ke bawah memperlihatkan arsitektur 5 fitur utama (Copilot, Peer Battle, Screener Pro, Smart Money, Notion Sync).
-4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Klik tombol navigasi menuju `/copilot`. Modal `AuthGate` muncul elegan. Kursor langsung mengklik tombol hijau bercahaya: **"1-Click Demo Login (Akses Instan)"** (`demo@alphasector.id`). Dalam tempo kurang dari 1 detik, indikator login sukses dan workspace terbuka mulus.
+4. **[0:25 - 0:35] AuthGate & 1-Click Login**: Klik tombol navigasi menuju `/alpha-agent`. Modal `AuthGate` muncul elegan. Kursor langsung mengklik tombol hijau bercahaya: **"1-Click Demo Login (Akses Instan)"** (`demo@alphasector.id`). Dalam tempo kurang dari 1 detik, indikator login sukses dan workspace terbuka mulus.
 
 #### On-Screen Graphics & Teks Overlay:
 * `[0:02]` Text Card: **"900+ Saham BEI • Ratusan Halaman PDF • Jam-Jaman Riset Manual"**
@@ -58,9 +58,9 @@
 
 ---
 
-### SEGMEN 2: Multi-Step Agent Reasoning & Tool Calling di `/copilot` (0:35 - 1:20)
+### SEGMEN 2: Multi-Step Agent Reasoning & Tool Calling di `/alpha-agent` (0:35 - 1:20)
 * **Durasi**: 45 Detik
-* **Tujuan**: Membuktikan kualifikasi Track 01 dengan memperlihatkan multi-step reasoning, dynamic DAG planning, parallel API fetching, dan sintesis fundamental institusional di route `/copilot`.
+* **Tujuan**: Membuktikan kualifikasi Track 01 dengan memperlihatkan multi-step reasoning, dynamic DAG planning, parallel API fetching, dan sintesis fundamental institusional di route `/alpha-agent`.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
 1. **[0:35 - 0:42] Input Natural Language Prompt**: Kursor berada di `ChatInputBar`. Ketik secara natural prompt komparasi:
@@ -175,41 +175,37 @@
 
 ---
 
-### SEGMEN 5: Track 01 Qualification, Real-World Impact & Closing (2:30 - 3:00)
+### SEGMEN 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
 * **Durasi**: 30 Detik
-* **Tujuan**: Menegaskan kepatuhan penuh terhadap aturan Track 01 (arsitektur kustom, bukan MCP wrapper, tanpa automated trading), tanggung jawab etis Rule 12, dan kalimat penutup yang berkesan bagi dewan juri.
+* **Tujuan**: Menutup video dengan impresi kuat ala peluncuran produk FinTech modern: merangkul seluruh alur kerja terintegrasi (Copilot, Battle, Smart Money, Notion), menegaskan posisi sebagai terminal riset cerdas & bertanggung jawab (tanpa automated trading), dan memberikan call-to-action yang percaya diri.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[2:30 - 2:40] Arsitektur Kode & Kualifikasi Track 01**: Split screen antara aplikasi AlphaSector dan VS Code / Diagram Arsitektur. Sorot struktur modular:
-   - `backend/app/agent/orchestrator.py` & `planner.py` (Custom 5-Phase DAG Orchestrator).
-   - `financial_engine.py` (Deterministic Math Engine).
-   - `cache.py` (Two-tier Neon PostgreSQL + SQLite Cache).
-   - Antarmuka Next.js 15 App Router.
-2. **[2:40 - 2:50] Kepatuhan Etis & Disclaimer**: Scroll ke footer aplikasi dan dokumen memo Notion. Sorot teks **Regulatory Investment Disclaimer** (Rule 12): menegaskan bahwa AlphaSector adalah platform riset analitis murni, tanpa rekomendasi berlisensi dan **tanpa eksekusi trading otomatis**.
-3. **[2:50 - 3:00] Penutup & Identitas Brand**: Tampilkan logo AlphaSector berkilau di atas latar gelap obsidian, diapit oleh teks *"Track 01: AI Agents & Assistants — Sectors Hackathon 2026"*, tautan repository GitHub publik, dan ucapan terima kasih profesional.
+1. **[2:30 - 2:40] Unified Workspace Showcase**: Kamera melakukan *smooth zoom-out* sinematik memperlihatkan ekosistem AlphaSector yang saling terhubung: dari prompt Copilot yang cerdas, arena Peer Battle, radar Smart Money, hingga memo Notion yang rapi. Transisi antar-fitur bergerak halus membuktikan kelengkapan produk.
+2. **[2:40 - 2:48] Responsible FinTech & Disclaimers**: Sorot sekilas kartu etika analitis di footer: menegaskan komitmen pada *pure decision-support intelligence* tanpa eksekusi transaksi otomatis (Rule 12).
+3. **[2:48 - 3:00] Hero Closing & Call-To-Action**: Transisi ke layar penutup Deep Obsidian. Logo AlphaSector berkilau di tengah layar, diikuti kemunculan teks tagline *"Smarter Research, Sharper Decisions"*, tautan repositori GitHub publik (`github.com/MaulRai/alphasector`), dan badge *Sectors Hackathon 2026*.
 
 #### On-Screen Graphics & Teks Overlay:
-* `[2:32]` Architecture Callout: **100% Track 01 Qualified**: *Custom Orchestrator • Python Math Engine • Not an MCP Wrapper*
-* `[2:42]` Compliance Shield: **Rule 12 Compliant**: *Zero Automated Trading • Strict Financial Disclaimer*
-* `[2:52]` Closing Card: **AlphaSector** — *Autonomous Equity Research for Indonesia* | *Sectors Hackathon 2026*
+* `[2:32]` Headline Card: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine*
+* `[2:42]` Assurance Badge: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
+* `[2:50]` Closing Hero: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/alphasector`
 
 #### Audio Design:
-* BGM: Riser musik crescendo megah, berakhir dengan harmoni akord final yang mantap dan *reverb fade-out* bersih.
-* SFX: *Sub-bass drop* halus pada logo closing AlphaSector.
+* BGM: Musik bertransisi ke riser modern yang megah dan bersemangat, mencapai puncak pada detik 2:50, lalu diakhiri dengan denting synth jernih dan reverb tail yang bersih.
+* SFX: *Sub-bass boom* halus saat logo AlphaSector muncul, diikuti *sparkle chime* saat link GitHub ditampilkan.
 
 #### Narasi Suara (Verbatim Indonesian Voiceover):
-> *"AlphaSector memenuhi seluruh kualifikasi Track 01 secara mutlak: kami membangun orkestrator otonom mandiri, bukan sekadar wrapper prompt MCP, dilengkapi komputasi kuantitatif presisi, dan sepenuhnya mematuhi regulasi tanpa eksekusi transaksi otomatis.*
+> *"Dari membedah ratusan laporan keuangan hingga menyusun tesis investasi yang siap dieksekusi, AlphaSector mentransformasi riset ekuitas Indonesia dari hitungan hari menjadi hitungan detik.*
 > 
-> *Didukung arsitektur cache dua tingkat yang menghemat kuota API dan antarmuka Next.js 15 berstandar terminal kelas dunia, AlphaSector siap mendemokratisasi riset pasar modal Indonesia hari ini.*
+> *Menggabungkan penalaran agen otonom, komputasi kuantitatif deterministik, dan prinsip analitis yang bertanggung jawab—kami menghadirkan kekuatan terminal riset institusi langsung ke tangan setiap investor.*
 > 
-> *Terima kasih kepada tim Sectors dan dewan juri. Mari bangun masa depan investasi Indonesia bersama AlphaSector!"*
+> *AlphaSector: Riset cerdas, keputusan terukur. Coba aplikasinya sekarang dan jelajahi kodenya di GitHub!"*
 
 #### English Subtitles:
-> *"AlphaSector fully qualifies for Track 01: custom agent orchestration rather than an MCP wrapper, precision deterministic quantitative computation, and strict regulatory compliance with zero automated trade execution.*
+> *"From dissecting hundreds of financial filings to delivering actionable investment theses, AlphaSector turns days of manual equity research into seconds of clarity.*
 > 
-> *Backed by a two-tier cache that conserves API credits and a world-class Next.js 15 terminal UI, AlphaSector is ready to democratize Indonesian equity research today.*
+> *By pairing autonomous multi-step reasoning with deterministic quantitative math and responsible analytics, we're putting institutional-grade research into the hands of every investor.*
 > 
-> *Thank you to the Sectors team and the esteemed judges. Let's build the future of Indonesian capital markets with AlphaSector!"*
+> *AlphaSector: Smarter research, sharper decisions. Try the live demo and explore the code on GitHub!"*
 
 ---
 

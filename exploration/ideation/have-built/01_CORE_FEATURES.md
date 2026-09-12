@@ -4,7 +4,7 @@ Dokumen ini membedah setiap modul dan kapabilitas fungsional yang telah dibangun
 
 ---
 
-## 1. 🤖 AlphaAgent Workspace (`/copilot`)
+## 1. 🤖 AlphaAgent Workspace (`/alpha-agent`)
 
 AlphaAgent Workspace adalah pusat komando riset interaktif berbasis multi-turn conversational AI. Antarmuka ini dirancang agar analis tidak hanya melihat teks pasif, melainkan berinteraksi dengan widget data aktif dan artefak analitik.
 

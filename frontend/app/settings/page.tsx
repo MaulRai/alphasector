@@ -119,7 +119,7 @@ export default function SettingsPage() {
   const handleConfirmLogout = () => {
     setIsLogoutModalOpen(false);
     logout();
-    router.push('/copilot');
+    router.push('/alpha-agent');
   };
 
   if (isAuthLoading) {
@@ -150,7 +150,7 @@ export default function SettingsPage() {
                 if (typeof window !== 'undefined' && window.history.length > 1) {
                   router.back();
                 } else {
-                  router.push('/copilot');
+                  router.push('/alpha-agent');
                 }
               }}
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer group"

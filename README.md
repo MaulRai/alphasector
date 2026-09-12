@@ -75,7 +75,7 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 | **Memory & State Management** | Persistent multi-turn research rooms, primary ticker bindings, contextual follow-up reasoning, and user authentication state. | `backend/app/api/chat.py`<br>`backend/app/db/database.py` |
 | **Deterministic Math Rigor** | Full 9-point Piotroski F-Score calculation and historical P/E standard deviation bands executed purely in Python—never hallucinated by an LLM. | `backend/app/agent/financial_engine.py` |
 | **Dual-Tier Credit Caching** | L1 In-Memory and L2 Database cache (24h TTL) saving Sectors API credits across repeated queries and peer battles. | `backend/app/sectors/cache.py` |
-| **Purpose-Built UI / UX** | High-craft dark obsidian Next.js 15 terminal featuring Live Thinking Trace accordions, Peer Battle Matrix, Screener Battle Dock, and Artifact Panel. | `frontend/app/copilot/`<br>`frontend/app/battle/`<br>`frontend/app/screener/` |
+| **Purpose-Built UI / UX** | High-craft dark obsidian Next.js 15 terminal featuring Live Thinking Trace accordions, Peer Battle Matrix, Screener Battle Dock, and Artifact Panel. | `frontend/app/alpha-agent/`<br>`frontend/app/battle/`<br>`frontend/app/screener/` |
 | **External Workflow Integration** | 1-Click Institutional Notion Sync transforming quantitative findings into a structured block tree in user workspaces. | `backend/app/services/notion_service.py` |
 | **Independent Viability** | Even if all LLMs are disconnected, AlphaSector's deterministic financial engine, screener, peer comparison matrix, and offline synthesis fallback continue operating flawlessly. | `backend/app/agent/synthesizer.py:318` |
 
@@ -131,7 +131,7 @@ AlphaSector provides a cohesive suite of specialized equity research tools acces
 | Route | Feature Module | Core Value & Capability | Codebase Location |
 |---|---|---|---|
 | `/` | **Landing & Command Center** | Hero overview, real-time backend health check badge, core architecture showcase, and 1-click demo login. | `frontend/app/page.tsx` |
-| `/copilot` | **Autonomous Agent Copilot** | Conversational equity research with **Live Thinking Trace accordion**, multimodal chart upload, trade ideas radar, and slide-out artifact panel. | `frontend/app/copilot/page.tsx` |
+| `/alpha-agent` | **Autonomous Agent Workspace** | Conversational equity research with **Live Thinking Trace accordion**, multimodal chart upload, trade ideas radar, and slide-out artifact panel. | `frontend/app/alpha-agent/page.tsx` |
 | `/battle` | **Peer Battle Terminal** | Head-to-head multi-emiten showdown with **PeerBattleMatrix**, Graham number fair values, best-in-class highlights, and Big 4 Banks presets. | `frontend/app/battle/page.tsx` |
 | `/screener` | **Screener Pro & Battle Dock** | Natural language (NLP) and SQL screening across 900+ tickers with the floating **ScreenerBattleDock** to dispatch screened stocks into battle or copilot. | `frontend/app/screener/page.tsx` |
 | `/company/[symbol]` | **Company 360° Profile** | Fundamental deep dive featuring the **9-Criteria Piotroski F-Score Card**, **Historical P/E SD Band Range**, revenue segments, and 1-click Notion sync. | `frontend/app/company/[symbol]/page.tsx` |
@@ -232,8 +232,8 @@ To guarantee an effortless evaluation experience, the following five curated sce
 
 ---
 
-### Scenario 1: Autonomous Multi-Step Peer Battle in `/copilot`
-* **Target Route**: `/copilot`
+### Scenario 1: Autonomous Multi-Step Peer Battle in `/alpha-agent`
+* **Target Route**: `/alpha-agent`
 * **User Intent**: Fundamental valuation showdown between two largest state-owned banks.
 * **Exact Prompt**:
   ```text

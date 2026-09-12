@@ -48,8 +48,8 @@
 ### [0:08 - 0:20] SCENE 2: THE AUTONOMOUS COPILOT
 * **Duration**: 12 Seconds (Seconds 8 - 20)
 * **Visual Action**:
-  - Dynamic punch-in zoom to the `/copilot` prompt bar.
-  - Typing speed-ramp: `"Compare valuation BBRI vs BMRI"`.
+  - Dynamic punch-in zoom to the `/alpha-agent` prompt bar.
+  - Hands type at hyper-speed with a speed-ramp effect: `"Compare the valuation of BBRI vs BMRI"`.
   - Cursor clicks Enter -> The **LiveThinkingTrace** instantly pulses with neon cyan and violet indicators.
   - Show DAG execution cards: *Classifying Intent -> Parallel Sectors API Fetch (320ms) -> Mathematical Matrix*.
   - The **PeerBattleMatrix** erupts onto the screen with glowing *Best P/E* and *Best ROE* badges.

@@ -9,11 +9,11 @@ Direktori ini memuat dokumentasi komprehensif mengenai seluruh fitur, arsitektur
 1. [**00_OVERVIEW.md**](file:///d:/Projects/Web%20Shi/sectors-hackathon/exploration/ideation/have-built/00_OVERVIEW.md) — **Ringkasan Eksekutif & Identitas Produk**
    - Problem statement dan latar belakang pasar modal Indonesia (IDX).
    - Kualifikasi Track 01 (AI Agents & Assistants) Sectors Hackathon 2026.
-   - Peta navigasi seluruh rute aplikasi (`/`, `/copilot`, `/battle`, `/screener`, `/company/[symbol]`, `/smart-money`, `/settings`).
+   - Peta navigasi seluruh rute aplikasi (`/`, `/alpha-agent`, `/battle`, `/screener`, `/company/[symbol]`, `/smart-money`, `/settings`).
    - Ringkasan tech stack (FastAPI, Next.js 15, Groq, Gemini Vision, Dual-Mode Postgres/SQLite, Sectors REST API v2).
 
 2. [**01_CORE_FEATURES.md**](file:///d:/Projects/Web%20Shi/sectors-hackathon/exploration/ideation/have-built/01_CORE_FEATURES.md) — **Dokumentasi Komprehensif Fitur Utama**
-   - **AlphaAgent Workspace (`/copilot`):** Multi-turn chat context, cluster logo emiten dinamis, analisis visual chart teknikal, reasoning trace accordion, dan widget interaktif.
+   - **AlphaAgent Workspace (`/alpha-agent`):** Multi-turn chat context, cluster logo emiten dinamis, analisis visual chart teknikal, reasoning trace accordion, dan widget interaktif.
    - **Peer Battle Terminal (`/battle`):** Komparasi head-to-head hingga 4 emiten, kalkulasi valuasi gap, best-in-class badges, dan handshake ke chat room baru.
    - **Trade Ideas & Multi-Factor Screener (`/screener`):** Natural language screener, 1-click trade presets, table emiten, dan floating battle dock.
    - **Emiten 360° Profile & Dossier (`/company/[symbol]`):** Valuasi historis tahunan, rincian omzet segmen bisnis, broker flow tracker, dan exportable dossier.

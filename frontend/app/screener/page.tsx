@@ -55,9 +55,9 @@ export default function ScreenerPage() {
       const query = getScreeningThesisQuery();
       const res = await queryAgent(query);
       if (res?.session_id) {
-        router.push(`/copilot?session_id=${encodeURIComponent(res.session_id)}`);
+        router.push(`/alpha-agent?session_id=${encodeURIComponent(res.session_id)}`);
       } else {
-        router.push(`/copilot?initial_query=${encodeURIComponent(query)}`);
+        router.push(`/alpha-agent?initial_query=${encodeURIComponent(query)}`);
       }
     } catch (err: any) {
       console.error('Failed to prepare chat room from screener:', err);

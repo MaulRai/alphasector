@@ -232,7 +232,7 @@ ALPHASECTOR PRE-SUBMISSION COMPLIANCE MATRIX (SECTORS HACKATHON 2026)
 #### Audit Gate 5: Product-Works Gate & Usability Weight (Rule 06 & 09)
 - **Rule Clause**: *"Projects must be a working prototype or MVP with a core workflow that functions end to end. Rough edges are acceptable; a product that does not work will not pass judging... Real-world usability carries the highest judging weight (40%)."*
 - **Audit Findings**:
-  - All 6 core routes (`/copilot`, `/battle`, `/screener`, `/company/[symbol]`, `/smart-money`, `/settings`) have been built, integrated, and locally verified.
+  - All 6 core routes (`/alpha-agent`, `/battle`, `/screener`, `/company/[symbol]`, `/smart-money`, `/settings`) have been built, integrated, and locally verified.
   - Backend provides complete test automation (`backend/test_backend.py`) covering all intent branches (`SINGLE_TICKER_DEEP_DIVE`, `PEER_BATTLE_COMPARISON`, `SMART_MONEY_RADAR`).
   - Frontend compiles with **zero TypeScript errors** (`tsc --noEmit`).
   - To prevent evaluation friction:

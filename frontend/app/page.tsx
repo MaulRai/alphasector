@@ -66,7 +66,7 @@ export default function LandingPage() {
             style={{ animationDelay: '400ms' }}
           >
             <Link
-              href="/copilot"
+              href="/alpha-agent"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
             >
               <span>Buka AlphaAgent Workspace</span>
@@ -467,7 +467,7 @@ export default function LandingPage() {
               </p>
               <div className="pt-3">
                 <Link
-                  href="/copilot"
+                  href="/alpha-agent"
                   className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
                 >
                   <span>Buka AlphaAgent Sekarang</span>
@@ -506,7 +506,7 @@ export default function LandingPage() {
           <div>
             <h3 className="font-bold text-slate-200 text-xs uppercase mb-3">Fitur Aplikasi</h3>
             <ul className="space-y-2 text-xs text-slate-400">
-              <li><Link href="/copilot" className="hover:text-emerald-400 transition-colors">AlphaAgent Terminal</Link></li>
+              <li><Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">AlphaAgent Terminal</Link></li>
               <li><Link href="/battle" className="hover:text-emerald-400 transition-colors">Peer Battle Terminal</Link></li>
               <li><Link href="/smart-money" className="hover:text-emerald-400 transition-colors">Smart Money Tracker</Link></li>
               <li><Link href="/screener" className="hover:text-emerald-400 transition-colors">Screener Pro (NLP & SQL)</Link></li>
