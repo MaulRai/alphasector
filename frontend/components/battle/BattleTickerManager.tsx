@@ -57,7 +57,8 @@ export const BattleTickerManager: React.FC<BattleTickerManagerProps> = ({
           maxSelected={4}
           disabled={isLoading}
           placeholder="Tambah kode emiten..."
-          buttonText="Tambah"
+          showActionButton={false}
+          showSearchIcon={true}
         />
       </div>
 
