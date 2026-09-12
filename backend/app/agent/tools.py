@@ -1,5 +1,6 @@
 from typing import Dict, Any, Optional, Tuple, List
 from app.sectors.client import get_sectors_client
+from app.sectors.mcp_client import get_sectors_mcp_client
 from app.schemas.agent import ToolCallLog
 
 class AgentToolExecutor:
@@ -157,4 +158,71 @@ class AgentToolExecutor:
             )
             return None, log
 
+    @staticmethod
+    async def fetch_insider_filings(symbol: Optional[str] = None, limit: int = 10, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        mcp = get_sectors_mcp_client(api_key)
+        try:
+            data, ms, status = await mcp.fetch_filings(symbol=symbol, limit=limit)
+            log = ToolCallLog(
+                endpoint="mcp://fetch-filings",
+                params={"symbol": symbol, "limit": limit},
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched insider filings for {symbol or 'market'}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="mcp://fetch-filings",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching insider filings: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_shareholders_composition(symbol: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        mcp = get_sectors_mcp_client(api_key)
+        try:
+            data, ms, status = await mcp.fetch_shareholders_composition(symbol=symbol)
+            log = ToolCallLog(
+                endpoint="mcp://fetch-shareholders-composition",
+                params={"symbol": symbol},
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched institutional shareholder decomposition for {symbol}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="mcp://fetch-shareholders-composition",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching shareholders composition: {str(e)}"
+            )
+            return None, log
+
+    @staticmethod
+    async def fetch_mining_performance(ticker: str, api_key: Optional[str] = None) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        mcp = get_sectors_mcp_client(api_key)
+        try:
+            data, ms, status = await mcp.fetch_mining_performance(ticker_or_slug=ticker)
+            log = ToolCallLog(
+                endpoint="mcp://fetch-mining-company-performance",
+                params={"ticker": ticker},
+                status=status,
+                latency_ms=ms,
+                description=f"Fetched mining strip ratio & JORC reserves for {ticker}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="mcp://fetch-mining-company-performance",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching mining performance: {str(e)}"
+            )
+            return None, log
+
 tool_executor = AgentToolExecutor()
+
