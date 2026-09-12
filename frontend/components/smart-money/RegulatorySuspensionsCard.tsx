@@ -11,7 +11,7 @@ interface RegulatorySuspensionsCardProps {
 
 export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensionsCardProps) {
   const [suspensions, setSuspensions] = useState<any[]>([]);
-  const [scope, setScope] = useState<'all' | 'ticker'>('all');
+  const [scope, setScope] = useState<'ticker' | 'all'>('ticker');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState(0);
@@ -69,6 +69,16 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800">
             <button
+              onClick={() => setScope('ticker')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                scope === 'ticker'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>Status {initialTicker || 'Emiten'}</span>
+            </button>
+            <button
               onClick={() => setScope('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                 scope === 'all'
@@ -78,16 +88,6 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
             >
               <Globe className="h-3 w-3" />
               <span>Semua Suspensi BEI</span>
-            </button>
-            <button
-              onClick={() => setScope('ticker')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                scope === 'ticker'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>Status {initialTicker || 'Emiten'}</span>
             </button>
           </div>
 
