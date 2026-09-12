@@ -411,3 +411,108 @@ export async function exportToNotion(payload: NotionExportPayload): Promise<{
   return res.json();
 }
 
+// --- FORENSIC & INSTITUTIONAL (MCP POWERED) ---
+
+export async function fetchInsiderFilings(symbol?: string, limit: number = 20, offset: number = 0): Promise<{
+  symbol?: string;
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+  if (symbol) params.append('symbol', symbol.toUpperCase().replace('.JK', ''));
+  const res = await fetch(`${API_BASE_URL}/api/sectors/filings?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchShareholdersComposition(symbol: string, year?: number): Promise<{
+  symbol: string;
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const cleanSym = symbol.toUpperCase().replace('.JK', '');
+  const params = new URLSearchParams();
+  if (year) params.append('year', String(year));
+  const res = await fetch(`${API_BASE_URL}/api/sectors/shareholders/${cleanSym}?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchSuspensions(symbol?: string, limit: number = 20, offset: number = 0): Promise<{
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+  if (symbol) params.append('symbol', symbol.toUpperCase().replace('.JK', ''));
+  const res = await fetch(`${API_BASE_URL}/api/sectors/suspensions?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+// --- MINING & COMMODITIES INTELLIGENCE (ESDM MINERBA POWERED) ---
+
+export async function fetchMiningPerformance(ticker: string, year?: number, commodityType?: string): Promise<{
+  ticker: string;
+  data: any;
+  latency_ms: number;
+  status: number;
+  message?: string;
+}> {
+  const headers = getApiHeaders();
+  const cleanSym = ticker.toUpperCase().replace('.JK', '');
+  const params = new URLSearchParams();
+  if (year) params.append('year', String(year));
+  if (commodityType) params.append('commodity_type', commodityType);
+  const res = await fetch(`${API_BASE_URL}/api/sectors/mining/performance/${cleanSym}?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchMiningOwnership(ticker: string): Promise<{
+  ticker: string;
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const cleanSym = ticker.toUpperCase().replace('.JK', '');
+  const res = await fetch(`${API_BASE_URL}/api/sectors/mining/ownership/${cleanSym}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchMiningLicenses(company?: string, commodityType?: string, province?: string, limit: number = 20): Promise<{
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (company) params.append('company', company);
+  if (commodityType) params.append('commodity_type', commodityType);
+  if (province) params.append('province', province);
+  const res = await fetch(`${API_BASE_URL}/api/sectors/mining/licenses?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchMiningCommodityPrice(commodity: string = 'Coal', startYear: number = 2020, endYear: number = 2025): Promise<{
+  commodity: string;
+  data: any;
+  latency_ms: number;
+  status: number;
+}> {
+  const headers = getApiHeaders();
+  const params = new URLSearchParams({ commodity, start_year: String(startYear), end_year: String(endYear) });
+  const res = await fetch(`${API_BASE_URL}/api/sectors/mining/commodity-price?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+

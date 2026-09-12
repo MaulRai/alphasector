@@ -12,6 +12,7 @@ import { NotionExportModal } from '@/components/NotionExportModal';
 import { CompanyValuationHistoryTable } from '@/components/company/CompanyValuationHistoryTable';
 import { CompanySegmentsCard } from '@/components/company/CompanySegmentsCard';
 import { CompanyAiSynthesisBanner } from '@/components/company/CompanyAiSynthesisBanner';
+import { MiningOperationalCard } from '@/components/company/MiningOperationalCard';
 import { useBackendHealth } from '@/hooks/useBackendHealth';
 import { fetchCompanyReport, fetchCompanySegments, fetchBrokerSummary, queryAgent } from '@/lib/api';
 import { AgentQueryResponse, PeerCompanyMetric } from '@/lib/types';
@@ -202,6 +203,9 @@ export default function Company360Page() {
                   creditsConsumed={agentReport.credits_consumed}
                 />
               )}
+
+              {/* Mining & Commodities Operational Rigor (Strip Ratio, JORC Reserves, Coal Specs) */}
+              <MiningOperationalCard ticker={symbol} />
 
               {/* Historical Valuation Multiples Table */}
               <CompanyValuationHistoryTable

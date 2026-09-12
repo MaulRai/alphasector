@@ -2,6 +2,7 @@ import asyncio
 from typing import Optional, Dict, Any, List
 from fastapi import APIRouter, HTTPException, Query, Header
 from app.sectors.client import get_sectors_client, sectors_client
+from app.sectors.mcp_client import get_sectors_mcp_client
 from app.core.config import settings
 
 router = APIRouter(prefix="/sectors", tags=["Sectors Financial API"])
@@ -259,3 +260,156 @@ async def verify_sectors_api_key(payload: dict):
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"API Key tidak valid atau dinonaktifkan: {str(e)}")
+
+# -----------------------------------------------------------------------------
+# FORENSIC & INSIDER ENDPOINTS (MCP POWERED)
+# -----------------------------------------------------------------------------
+
+@router.get("/filings")
+async def get_insider_filings(
+    symbol: Optional[str] = Query(None, description="Ticker symbol (e.g. BBCA, BUMI)"),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    transaction_type: Optional[str] = Query(None, description="Buy, Sell, etc."),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch insider transactions filed by Directors, Commissioners, and Controlling Shareholders."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_filings(
+        symbol=symbol,
+        transaction_type=transaction_type,
+        limit=limit,
+        offset=offset
+    )
+    return {
+        "symbol": symbol,
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+@router.get("/shareholders/{symbol}")
+async def get_shareholders_composition(
+    symbol: str,
+    year: Optional[int] = Query(None, description="Year (e.g. 2024, 2025, 2026)"),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch monthly institutional breakdown (Pension Funds/Dapen, Mutual Funds, Insurance, Corporates, Retail Local vs Foreign)."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_shareholders_composition(symbol=symbol, year=year)
+    return {
+        "symbol": symbol.upper(),
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+@router.get("/suspensions")
+async def get_suspensions(
+    symbol: Optional[str] = Query(None, description="Ticker symbol to check"),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch BEI trade halt / suspension radar and Unusual Market Activity (UMA) notices with official exchange letters."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_suspensions(symbol=symbol, limit=limit, offset=offset)
+    return {
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+# -----------------------------------------------------------------------------
+# MINING & ENERGY DEEP INTELLIGENCE (ESDM MINERBA POWERED)
+# -----------------------------------------------------------------------------
+
+@router.get("/mining/performance/{ticker}")
+async def get_mining_performance(
+    ticker: str,
+    year: Optional[int] = Query(None, description="Year (e.g. 2024)"),
+    commodity_type: Optional[str] = Query(None, description="Coal, Nickel, Gold, etc."),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch strip ratio, JORC/KCMI proven/probable reserves, resources, and production capacity."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_mining_performance(
+        ticker_or_slug=ticker,
+        year=year,
+        commodity_type=commodity_type
+    )
+    if status == 404 or not data:
+        return {
+            "ticker": ticker.upper(),
+            "data": None,
+            "message": f"No mining operational performance record found for {ticker.upper()}",
+            "status": 404,
+            "latency_ms": ms
+        }
+    return {
+        "ticker": ticker.upper(),
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+@router.get("/mining/ownership/{ticker}")
+async def get_mining_ownership(
+    ticker: str,
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch mining conglomerate holding structure."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_mining_ownership(ticker_or_slug=ticker)
+    return {
+        "ticker": ticker.upper(),
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+@router.get("/mining/licenses")
+async def get_mining_licenses(
+    company: Optional[str] = Query(None, description="Company name or keyword"),
+    commodity_type: Optional[str] = Query(None, description="Commodity type"),
+    province: Optional[str] = Query(None, description="Province in Indonesia"),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch official ESDM Ditjen Minerba IUP/WIUP licenses, expiry dates, and concession areas."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_mining_licenses(
+        company=company,
+        commodity_type=commodity_type,
+        province=province,
+        limit=limit,
+        offset=offset
+    )
+    return {
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
+@router.get("/mining/commodity-price")
+async def get_mining_commodity_price(
+    commodity: str = Query("Coal", description="Commodity name (Coal, Nickel, Gold, Copper)"),
+    start_year: int = Query(2020, ge=2000, le=2030),
+    end_year: int = Query(2025, ge=2000, le=2030),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """Fetch benchmark historical commodity prices."""
+    mcp_client = get_sectors_mcp_client(x_sectors_api_key)
+    data, ms, status = await mcp_client.fetch_mining_commodity_price(
+        commodity_name=commodity,
+        start_year=start_year,
+        end_year=end_year
+    )
+    return {
+        "commodity": commodity,
+        "data": data,
+        "latency_ms": ms,
+        "status": status
+    }
+
