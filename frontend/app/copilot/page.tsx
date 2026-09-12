@@ -256,11 +256,6 @@ function CopilotWorkspace() {
                         : 'Sesi Riset Baru'
                       }
                     </span>
-                    {activeSessionId && (
-                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
-                        Room Terhubung
-                      </span>
-                    )}
                   </>
                 )}
               </div>
