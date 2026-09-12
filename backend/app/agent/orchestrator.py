@@ -275,7 +275,12 @@ class AgentOrchestrator:
 
             elif kind == "SCREENER":
                 screener_data = data
-                emiten_count = len(data) if isinstance(data, list) else 1
+                raw_items = []
+                if isinstance(data, dict):
+                    raw_items = data.get("results") or data.get("data") or data.get("companies") or []
+                elif isinstance(data, list):
+                    raw_items = data
+                emiten_count = len(raw_items) if isinstance(raw_items, list) else 1
                 trace.append(ReasoningStep(
                     id=f"step-{step_counter}",
                     step_number=step_counter,
@@ -311,6 +316,50 @@ class AgentOrchestrator:
                 ))
                 step_counter += 1
 
+        # Extract clean list of screener items
+        screener_items = []
+        if isinstance(screener_data, dict):
+            raw_s = screener_data.get("results") or screener_data.get("data") or screener_data.get("companies") or []
+            screener_items = raw_s if isinstance(raw_s, list) else []
+        elif isinstance(screener_data, list):
+            screener_items = screener_data
+
+        # Auto-enrich screener results: concurrently fetch full fundamental reports for top 4 screened emitens
+        if screener_items and not reports:
+            top_screener_tickers = []
+            for item in screener_items:
+                if isinstance(item, dict):
+                    sym = item.get("symbol", "").replace(".JK", "").upper().strip()
+                    if sym and sym not in top_screener_tickers and len(sym) == 4:
+                        top_screener_tickers.append(sym)
+                if len(top_screener_tickers) >= 4:
+                    break
+
+            if top_screener_tickers:
+                enrich_results = await asyncio.gather(*[
+                    tool_executor.fetch_company_report(t, api_key=custom_api_key)
+                    for t in top_screener_tickers
+                ])
+                for r_data, r_log in enrich_results:
+                    if r_data:
+                        reports.append(r_data)
+                        credits_used += 1
+
+                if reports:
+                    tickers = [
+                        r.get("overview", {}).get("symbol", "").replace(".JK", "").upper()
+                        for r in reports if r.get("overview", {}).get("symbol")
+                    ]
+                    trace.append(ReasoningStep(
+                        id=f"step-{step_counter}",
+                        step_number=step_counter,
+                        phase=ExecutionPhase.FETCHING,
+                        title="Auto-Enrich Top Screened Emitens",
+                        detail=f"Retrieved fundamental valuation, financial ratios, and multiples for top {len(reports)} screened picks ({', '.join(tickers)})",
+                        timestamp=datetime.now().strftime("%H:%M:%S")
+                    ))
+                    step_counter += 1
+
         # -------------------------------------------------------------
         # 3. COMPARISON & RATIO ENGINE (Deterministic Math)
         # -------------------------------------------------------------
@@ -319,6 +368,45 @@ class AgentOrchestrator:
 
         if reports:
             peer_matrix = comparator.build_peer_matrix(reports)
+
+            # Map screener criteria values to tags in peer_matrix if available
+            if screener_items:
+                screener_map = {}
+                for item in screener_items:
+                    if isinstance(item, dict):
+                        s = item.get("symbol", "").replace(".JK", "").upper().strip()
+                        if s:
+                            screener_map[s] = item
+
+                for p in peer_matrix:
+                    sym = p.get("symbol")
+                    if sym in screener_map:
+                        sc_item = screener_map[sym]
+                        qv = sc_item.get("query_values") or {}
+                        existing_tags = p.get("tags") or []
+                        new_tags = list(existing_tags)
+                        if "esg_score" in qv:
+                            new_tags.append(f"ESG Score: {qv['esg_score']}")
+                        elif "(earnings[2025]/employee_num)" in qv:
+                            val = qv["(earnings[2025]/employee_num)"]
+                            val_m = round(val / 1_000_000_000, 1) if val > 1_000_000_000 else round(val / 1_000_000, 1)
+                            new_tags.append(f"Laba/Karyawan: Rp {val_m} M")
+                        elif "employee_num" in qv and "earnings[2025]" in qv:
+                            val = qv["earnings[2025]"] / max(qv["employee_num"], 1)
+                            val_m = round(val / 1_000_000_000, 1)
+                            new_tags.append(f"Laba/Karyawan: Rp {val_m} M")
+                        elif "revenue_growth_yoy" in qv:
+                            new_tags.append(f"YoY Growth: +{qv['revenue_growth_yoy']}%")
+                        elif "major_shareholder_pct" in qv:
+                            new_tags.append(f"Major Owner: {qv['major_shareholder_pct']}%")
+                        else:
+                            for k, v in qv.items():
+                                if isinstance(v, (int, float)) and not k.startswith("("):
+                                    clean_k = k.replace("_", " ").title()
+                                    new_tags.append(f"{clean_k}: {v}")
+                                    break
+                        p["tags"] = new_tags
+
             trace.append(ReasoningStep(
                 id=f"step-{step_counter}",
                 step_number=step_counter,
@@ -328,15 +416,30 @@ class AgentOrchestrator:
                 timestamp=datetime.now().strftime("%H:%M:%S")
             ))
             step_counter += 1
-        elif isinstance(screener_data, list) and len(screener_data) > 0:
-            # Construct peer matrix from screened companies
+        elif screener_items and len(screener_items) > 0:
+            # Construct peer matrix from screened companies if reports enrichment unavailable
             peer_matrix = []
             extracted_tickers = []
-            for item in screener_data[:6]:
+            for item in screener_items[:6]:
                 if isinstance(item, dict):
-                    sym = item.get("symbol", "").replace(".JK", "").upper()
+                    sym = item.get("symbol", "").replace(".JK", "").upper().strip()
                     if sym:
                         extracted_tickers.append(sym)
+                    qv = item.get("query_values") or {}
+                    tag_list = []
+                    if "esg_score" in qv:
+                        tag_list.append(f"ESG Score: {qv['esg_score']}")
+                    elif "(earnings[2025]/employee_num)" in qv:
+                        val = qv["(earnings[2025]/employee_num)"]
+                        val_m = round(val / 1_000_000_000, 1) if val > 1_000_000_000 else round(val / 1_000_000, 1)
+                        tag_list.append(f"Laba/Karyawan: Rp {val_m} M")
+                    elif item.get("esg_score"):
+                        tag_list.append(f"ESG: {item['esg_score']}")
+                    elif item.get("revenue_growth_yoy"):
+                        tag_list.append(f"YoY Growth: +{item['revenue_growth_yoy']}%")
+                    elif item.get("major_shareholder_pct"):
+                        tag_list.append(f"Major Owner: {item['major_shareholder_pct']}%")
+
                     peer_matrix.append({
                         "symbol": sym,
                         "company_name": item.get("company_name", sym),
@@ -348,12 +451,7 @@ class AgentOrchestrator:
                         "pbv": item.get("pbv") or item.get("pb"),
                         "roe": item.get("roe"),
                         "npm": item.get("net_profit_margin") or item.get("npm"),
-                        "tags": (
-                            [f"ESG: {item['esg_score']}"] if item.get("esg_score")
-                            else [f"YoY Growth: +{item['revenue_growth_yoy']}%"] if item.get("revenue_growth_yoy")
-                            else [f"Major Owner: {item['major_shareholder_pct']}%"] if item.get("major_shareholder_pct")
-                            else []
-                        )
+                        "tags": tag_list
                     })
             if not tickers and extracted_tickers:
                 tickers = extracted_tickers
@@ -401,7 +499,7 @@ class AgentOrchestrator:
             reports=reports,
             peer_matrix=peer_matrix,
             broker_summary=analyzed_broker,
-            screener_data={"companies": screener_data} if screener_data else None
+            screener_data={"results": screener_items} if screener_items else None
         )
 
         trace.append(ReasoningStep(

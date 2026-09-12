@@ -133,7 +133,10 @@ class AgentSynthesizer:
     ) -> SynthesisResult:
         screener_list = []
         if isinstance(screener_data, dict):
-            screener_list = screener_data.get("companies") or screener_data.get("results") or screener_data.get("data") or []
+            raw_val = screener_data.get("results") or screener_data.get("data") or screener_data.get("companies") or []
+            if isinstance(raw_val, dict):
+                raw_val = raw_val.get("results") or raw_val.get("data") or []
+            screener_list = raw_val if isinstance(raw_val, list) else []
         elif isinstance(screener_data, list):
             screener_list = screener_data
 
@@ -152,7 +155,13 @@ class AgentSynthesizer:
             "ATURAN MUTLAK:\n"
             "1. Tulis seluruh analisis dalam Bahasa Indonesia profesional dan lugas.\n"
             "2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON yang diberikan tanpa halusinasi.\n"
-            "3. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' (Historical PE Standard Deviation Band) di dalam peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit di 'key_findings' dan 'valuation_verdict' sebagai bukti ketajaman riset deterministik institusi.\n"
+            "3. PANDUAN KHUSUS SESUAI INTENT:\n"
+            "   a. Jika intent adalah 'MARKET_SCREENING_DISCOVERY' (Pencarian & Skrining Saham):\n"
+            "      - Jelaskan dengan gamblang emiten peringkat teratas (#1, #2, #3, dst.) dan MENGAPA mereka menduduki peringkat teratas berdasarkan kriteria pencarian (seperti rasio laba per karyawan, pertumbuhan revenue YoY, porsi kepemilikan pengendali saham, atau skor ESG).\n"
+            "      - Bandingkan fundamental para pemenang ini menggunakan data 'peer_matrix' (valuasi PE, PBV, ROE, dan F-Score).\n"
+            "      - Di 'valuation_verdict', berikan putusan rekomendasi emiten terbaik (Top Pick) yang menawarkan perpaduan paling seimbang antara kriteria skrining dan valuasi yang menarik/rasional.\n"
+            "      - Di 'key_findings', cantumkan metrik spesifik pemenang skrining (misal nominal laba/karyawan, persentase kepemilikan saham, atau skor ESG).\n"
+            "   b. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' (Historical PE Standard Deviation Band) di dalam peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit di 'key_findings' dan 'valuation_verdict'.\n"
             "4. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam untuk membantu analis mendalami riset ini lebih lanjut.\n"
             "5. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
             "{\n"
@@ -233,7 +242,41 @@ class AgentSynthesizer:
         """Deterministic high-quality fallback generator when LLM is unavailable or offline."""
         
         followups = []
-        if peer_matrix and len(peer_matrix) >= 2:
+        if intent == AgentIntent.MARKET_SCREENING_DISCOVERY and peer_matrix:
+            top_symbols = [p.get("symbol") for p in peer_matrix if p.get("symbol")]
+            lowest_pe = next((p for p in peer_matrix if p.get("is_lowest_pe")), peer_matrix[0])
+            highest_roe = next((p for p in peer_matrix if p.get("is_highest_roe")), peer_matrix[0])
+            top_pick = peer_matrix[0]
+
+            tag_part = f" dengan {top_pick['tags'][0]}" if top_pick.get("tags") else ""
+            exec_summary = (
+                f"Screener otonom berhasil menyaring emiten terbaik di IDX yang memenuhi kriteria: '{query}'. "
+                f"Peringkat teratas dipimpin oleh {top_pick.get('symbol')} ({top_pick.get('company_name')}){tag_part}, "
+                f"diikuti oleh {', '.join(top_symbols[1:4])}. "
+                f"Dari sisi valuasi komparatif, {lowest_pe.get('symbol')} menawarkan PE paling atraktif ({lowest_pe.get('pe', '-')}x), "
+                f"sementara {highest_roe.get('symbol')} mencatatkan efisiensi modal terbaik dengan ROE {highest_roe.get('roe', '-')}%, "
+                f"menjadikan kelompok saham ini kandidat watchlist strategis."
+            )
+
+            key_findings = []
+            for p in peer_matrix[:4]:
+                tag_info = f" • {', '.join(p['tags'])}" if p.get("tags") else ""
+                key_findings.append(
+                    f"{p.get('symbol')}: PE {p.get('pe', '-')}x, PBV {p.get('pbv', '-')}x, ROE {p.get('roe', '-')}%, MCap Rp {p.get('market_cap', 0):,}{tag_info}"
+                )
+
+            valuation_verdict = (
+                f"Rekomendasi Top Pick skrining jatuh pada {top_pick.get('symbol')} berdasarkan keunggulan kriteria utama, "
+                f"dengan {lowest_pe.get('symbol')} sebagai alternatif defensif berkat valuasi paling terdiskon (PE {lowest_pe.get('pe', '-')}x)."
+            )
+
+            followups = [
+                f"Bandingkan detail segmen bisnis {top_symbols[0]} vs {top_symbols[1] if len(top_symbols)>1 else 'kompetitor'}",
+                f"Bagaimana tren akumulasi broker institusi pada {top_symbols[0]} dalam 1 bulan terakhir?",
+                f"Cek riwayat pembagian dividen dan free cash flow untuk {lowest_pe.get('symbol')}"
+            ]
+
+        elif peer_matrix and len(peer_matrix) >= 2:
             lowest_pe = next((p for p in peer_matrix if p.get("is_lowest_pe")), peer_matrix[0])
             highest_roe = next((p for p in peer_matrix if p.get("is_highest_roe")), peer_matrix[0])
             
@@ -293,9 +336,14 @@ class AgentSynthesizer:
                 f"Bagaimana rincian lini bisnis dan segmen pendapatan {p['symbol']}?"
             ]
             
-        elif screener_data and "results" in screener_data:
-            results = screener_data.get("results", [])
-            top_symbols = [x.get("symbol") for x in results[:5]]
+        elif screener_data:
+            raw_s = []
+            if isinstance(screener_data, dict):
+                raw_s = screener_data.get("results") or screener_data.get("data") or screener_data.get("companies") or []
+            elif isinstance(screener_data, list):
+                raw_s = screener_data
+            results = raw_s if isinstance(raw_s, list) else []
+            top_symbols = [x.get("symbol", "").replace(".JK", "") for x in results[:5] if x.get("symbol")]
             exec_summary = (
                 f"Hasil screening pasar modal berhasil menemukan {len(results)} emiten yang memenuhi kriteria pencarian: '{query}'. "
                 f"Top emiten teratas meliputi: {', '.join(top_symbols)}."
