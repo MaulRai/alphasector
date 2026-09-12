@@ -15,6 +15,8 @@ interface TickerAutocompleteInputProps {
   className?: string;
   showActionButton?: boolean;
   showSearchIcon?: boolean;
+  showItemPlusIcon?: boolean;
+  singleSelect?: boolean;
   accentColor?: 'cyan' | 'amber';
 }
 
@@ -28,6 +30,8 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
   className = '',
   showActionButton = true,
   showSearchIcon = false,
+  showItemPlusIcon = true,
+  singleSelect = false,
   accentColor = 'cyan',
 }) => {
 
@@ -68,7 +72,8 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
   }, []);
 
   const handleSelect = (symbol: string) => {
-    if (disabled || (selectedTickers.length >= maxSelected && !normalizedSelected.includes(symbol.toUpperCase()))) {
+    if (disabled) return;
+    if (!singleSelect && selectedTickers.length >= maxSelected && !normalizedSelected.includes(symbol.toUpperCase())) {
       return;
     }
     onSelectTicker(symbol.toUpperCase().trim());
@@ -107,7 +112,7 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
     }
   };
 
-  const isLimitReached = selectedTickers.length >= maxSelected;
+  const isLimitReached = !singleSelect && selectedTickers.length >= maxSelected;
   const isAmber = accentColor === 'amber';
 
   return (
@@ -202,9 +207,11 @@ export const TickerAutocompleteInput: React.FC<TickerAutocompleteInputProps> = (
                     </div>
                   </div>
 
-                  <div className="p-1 rounded bg-slate-800/60 text-slate-400 shrink-0">
-                    <Plus className={`h-3 w-3 ${isAmber ? 'text-amber-400' : 'text-cyan-400'}`} />
-                  </div>
+                  {showItemPlusIcon && (
+                    <div className="p-1 rounded bg-slate-800/60 text-slate-400 shrink-0">
+                      <Plus className={`h-3 w-3 ${isAmber ? 'text-amber-400' : 'text-cyan-400'}`} />
+                    </div>
+                  )}
                 </button>
               ))
             ) : (

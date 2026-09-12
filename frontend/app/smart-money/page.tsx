@@ -140,7 +140,8 @@ export default function SmartMoneyPage() {
                   setError(null);
                 }}
                 selectedTickers={[ticker]}
-                maxSelected={2}
+                singleSelect={true}
+                showItemPlusIcon={false}
                 disabled={isLoading}
                 placeholder="Cari emiten apa saja (misal: BUMI, PTBA)..."
                 showActionButton={false}
