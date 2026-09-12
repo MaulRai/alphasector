@@ -13,6 +13,7 @@ import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { 
   Sparkles, ArrowRight, FileText, RefreshCw, AlertCircle, Settings
 } from 'lucide-react';
+import { AgentThinkingProgress } from './AgentThinkingProgress';
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
@@ -35,6 +36,8 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
   latestAssistantMsgRef,
   messagesEndRef,
 }) => {
+  const lastUserQuery = [...messages].reverse().find(m => m.role === 'user')?.content || '';
+
   return (
     <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-6 space-y-6">
       {/* If Fetching History for Last / Active Session: Render Shimmering Skeleton */}
@@ -618,27 +621,9 @@ export const ChatMessageList: React.FC<ChatMessageListProps> = ({
         );
       })}
 
-      {/* Clean & Simple Loading State */}
+      {/* Dynamic Step-Aware Loading State with Vertical Fade Animation */}
       {isLoading && (
-        <div className="flex flex-col items-start max-w-4xl mx-auto w-full animate-card-reveal">
-          <div className="flex items-center gap-2 mb-1.5 text-[11px] text-slate-400">
-            <div className="p-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-              <AlphaAgentLogo size={16} />
-            </div>
-            <span className="font-semibold text-emerald-400">AlphaAgent</span>
-          </div>
-          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl rounded-tl-none bg-[#0d121e]/90 border border-slate-800 text-xs text-slate-300 shadow-xl glass-panel">
-            <RefreshCw className="h-3.5 w-3.5 text-emerald-400 animate-spin shrink-0" />
-            <span className="text-slate-300 font-medium">
-              AlphaAgent sedang menganalisis pasar & menyusun data...
-            </span>
-            <span className="flex space-x-1.5 ml-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '0ms' }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '200ms' }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '400ms' }} />
-            </span>
-          </div>
-        </div>
+        <AgentThinkingProgress lastQuery={lastUserQuery} />
       )}
 
       {/* Error & Quota Alert */}
