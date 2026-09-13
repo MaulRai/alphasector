@@ -19,6 +19,7 @@ import {
   RefreshCw, PanelLeftClose, PanelLeft, FileText
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
+import { parseContextFromClipboard, PastedContextItem, MAX_PASTED_CONTEXTS } from '@/lib/contextClipboard';
 
 function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
@@ -34,6 +35,7 @@ function CopilotWorkspace() {
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
+  const [pastedContexts, setPastedContexts] = useState<PastedContextItem[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
@@ -49,13 +51,42 @@ function CopilotWorkspace() {
     handlePaste,
   } = useImageUpload();
 
+  const handleRemovePastedContext = (id: string) => {
+    setPastedContexts(prev => prev.filter(c => c.id !== id));
+  };
+
+  const handlePasteWithContext = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const clipboardText = e.clipboardData?.getData('text');
+    if (clipboardText && clipboardText.includes('[ALPHASECTOR_CONTEXT_START]')) {
+      const parsed = parseContextFromClipboard(clipboardText);
+      if (parsed) {
+        e.preventDefault();
+        setPastedContexts(prev => {
+          if (prev.some(item => item.id === parsed.id || (item.type === parsed.type && item.ticker === parsed.ticker && item.title === parsed.title))) {
+            return prev;
+          }
+          if (prev.length >= MAX_PASTED_CONTEXTS) {
+            return [...prev.slice(1), parsed];
+          }
+          return [...prev, parsed];
+        });
+        return;
+      }
+    }
+
+    handlePaste(e);
+  };
+
   // Send message handler (declared before hook for initial trigger callback)
   const handleSendMessage = async (queryText: string) => {
     const textToSend = queryText.trim();
-    if ((!textToSend && !attachedImage) || isLoading) return;
+    if ((!textToSend && !attachedImage && pastedContexts.length === 0) || isLoading) return;
 
     const currentImg = attachedImage;
+    const currentContexts = [...pastedContexts];
+
     handleClearImage();
+    setPastedContexts([]);
     setInputQuery('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -65,7 +96,28 @@ function CopilotWorkspace() {
     setLiveThinkingStep(null);
     setLiveTotalSteps(undefined);
 
-    const defaultQuery = textToSend || (currentImg ? 'Jelaskan dan analisis konteks gambar finansial ini secara mendalam' : '');
+    let fullQuery = textToSend;
+    if (currentContexts.length > 0) {
+      const contextBlocks = currentContexts.map((ctx, idx) => 
+        `[LAMPIRAN DATA #${idx + 1}: ${ctx.title}]\nRingkasan: ${ctx.summary}\nDetail:\n${ctx.details}`
+      ).join('\n\n');
+
+      if (!fullQuery) {
+        fullQuery = `Analisis secara mendalam dan berikan pandangan strategis atas konteks data berikut:\n\n${contextBlocks}`;
+      } else {
+        fullQuery = `${fullQuery}\n\n--- KONTEKS DATA RESMI TERLAMPIR ---\n${contextBlocks}`;
+      }
+    } else if (!fullQuery && currentImg) {
+      fullQuery = 'Jelaskan dan analisis konteks gambar finansial ini secara mendalam';
+    }
+
+    const displayContent = textToSend 
+      ? (currentContexts.length > 0 
+          ? `${textToSend}\n\n📎 *[Pasted Context: ${currentContexts.map(c => c.title).join(', ')}]*`
+          : textToSend)
+      : (currentContexts.length > 0 
+          ? `Tolong analisis konteks data terlampir:\n\n📎 *[Pasted Context: ${currentContexts.map(c => c.title).join(', ')}]*`
+          : 'Jelaskan dan analisis konteks gambar finansial ini secara mendalam');
 
     // Optimistically append user message
     const optimisticUserMsg: ChatMessage = {
@@ -73,7 +125,7 @@ function CopilotWorkspace() {
       session_id: activeSessionId || 'temp',
       user_id: user?.id || 1,
       role: 'user',
-      content: defaultQuery,
+      content: displayContent,
       image_url: currentImg?.previewUrl,
       created_at: new Date().toISOString()
     };
@@ -81,7 +133,7 @@ function CopilotWorkspace() {
 
     try {
       const response: AgentQueryResponse = await queryAgentStream(
-        defaultQuery,
+        fullQuery,
         undefined,
         activeSessionId || undefined,
         currentImg?.base64,
@@ -316,8 +368,10 @@ function CopilotWorkspace() {
             onRemoveImage={handleClearImage}
             fileInputRef={fileInputRef}
             onImageSelect={handleFileChange}
-            onPaste={handlePaste}
+            onPaste={handlePasteWithContext}
             textareaRef={textareaRef}
+            pastedContexts={pastedContexts}
+            onRemovePastedContext={handleRemovePastedContext}
           />
         </section>
 

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchShareholdersComposition } from '@/lib/api';
-import { Building2, PieChart, RefreshCw, AlertCircle, Users, Landmark, Briefcase, Shield } from 'lucide-react';
+import { Building2, PieChart, RefreshCw, AlertCircle, Users, Landmark, Briefcase, Shield, Copy, Check } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { encodeContextForClipboard } from '@/lib/contextClipboard';
 
 interface InstitutionalOwnershipCardProps {
   initialTicker: string;
@@ -16,6 +17,7 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState<number>(0);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const nextTicker = initialTicker || 'BBCA';
@@ -127,6 +129,34 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
     return num.toLocaleString();
   };
 
+  const handleCopyContext = () => {
+    if (!breakdown) return;
+    const summary = `Dekomposisi Kepemilikan Saham KSEI ${ticker} (${breakdown.date}): Asing ${breakdown.foreignPct.toFixed(1)}% vs Domestik ${breakdown.localPct.toFixed(1)}%.`;
+    const details = [
+      `Emiten: ${ticker}`,
+      `Tanggal Data: ${breakdown.date}`,
+      `Total Saham Beredar: ${formatBillion(breakdown.totalShares)}`,
+      `- Dana Pensiun (Dapen): ${breakdown.pension.pct.toFixed(2)}% (${formatBillion(breakdown.pension.shares)} lbr | Domestik: ${formatBillion(breakdown.pension.localShares)}, Asing: ${formatBillion(breakdown.pension.foreignShares)})`,
+      `- Reksadana (Mutual Fund): ${breakdown.mutual.pct.toFixed(2)}% (${formatBillion(breakdown.mutual.shares)} lbr | Domestik: ${formatBillion(breakdown.mutual.localShares)}, Asing: ${formatBillion(breakdown.mutual.foreignShares)})`,
+      `- Asuransi (Insurance): ${breakdown.insurance.pct.toFixed(2)}% (${formatBillion(breakdown.insurance.shares)} lbr | Domestik: ${formatBillion(breakdown.insurance.localShares)}, Asing: ${formatBillion(breakdown.insurance.foreignShares)})`,
+      `- Korporasi / Perusahaan: ${breakdown.corporate.pct.toFixed(2)}% (${formatBillion(breakdown.corporate.shares)} lbr)`,
+      `- Individu / Ritel: ${breakdown.individual.pct.toFixed(2)}% (${formatBillion(breakdown.individual.shares)} lbr)`,
+      `- Asing vs Domestik: Asing ${breakdown.foreignPct.toFixed(1)}%, Domestik ${breakdown.localPct.toFixed(1)}%`
+    ].join('\n');
+
+    const payloadText = encodeContextForClipboard({
+      type: 'INSTITUTIONAL_OWNERSHIP',
+      title: `Kepemilikan Institusi KSEI ${ticker}`,
+      ticker: ticker,
+      summary,
+      details
+    });
+
+    navigator.clipboard.writeText(payloadText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 glass-panel space-y-6">
       {/* Card Header */}
@@ -146,11 +176,35 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
         </div>
 
         {/* Emiten Info & Refresh */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-2 text-xs">
             <span className="text-slate-400">Data KSEI:</span>
             <span className="font-bold text-amber-400">{ticker}</span>
           </div>
+
+          {/* Salin Konteks Button */}
+          <button
+            onClick={handleCopyContext}
+            disabled={!breakdown || isLoading}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+              copied
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                : 'bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border-purple-500/30 active:scale-95'
+            }`}
+            title="Salin ringkasan dekomposisi institusi KSEI untuk dijadikan konteks di AlphaAgent"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Tersalin!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3.5 w-3.5 text-purple-400" />
+                <span>Salin Konteks</span>
+              </>
+            )}
+          </button>
 
           <button
             onClick={() => loadComposition(ticker)}

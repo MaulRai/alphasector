@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchInsiderFilings } from '@/lib/api';
-import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, FileText, Globe } from 'lucide-react';
+import { ShieldCheck, TrendingUp, TrendingDown, ExternalLink, RefreshCw, AlertCircle, FileText, Globe, Copy, Check } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { encodeContextForClipboard } from '@/lib/contextClipboard';
 
 interface FilingResult {
   title: string;
@@ -58,6 +59,27 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
     }
   };
 
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyContext = () => {
+    if (!filings || filings.length === 0) return;
+    const tickerLabel = scope === 'ticker' && initialTicker ? initialTicker.toUpperCase() : 'Bursa BEI';
+    const topFilings = filings.slice(0, 5);
+    const summaryList = topFilings.map((f, i) => `${i + 1}. [${f.symbol || tickerLabel}] ${f.title}: ${f.body.slice(0, 150)}...`).join('\n');
+
+    const payloadText = encodeContextForClipboard({
+      type: 'INSIDER_FILINGS',
+      title: `Insider Filings ${tickerLabel}`,
+      ticker: scope === 'ticker' ? initialTicker : undefined,
+      summary: `Ditemukan ${filings.length} transaksi orang dalam resmi BEI/KSEI untuk ${tickerLabel}.`,
+      details: summaryList
+    });
+
+    navigator.clipboard.writeText(payloadText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const isBuyFiling = (title: string, body: string) => {
     const text = (title + ' ' + body).toLowerCase();
     return text.includes('buy') || text.includes('beli') || text.includes('purchas') || text.includes('akumulasi');
@@ -86,8 +108,8 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
           </p>
         </div>
 
-        {/* Scope Filter Switcher & Refresh */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Scope Filter Switcher, Copy Context & Refresh */}
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800">
             <button
               onClick={() => setScope('ticker')}
@@ -111,6 +133,30 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
               <span>Semua Bursa</span>
             </button>
           </div>
+
+          {/* Salin Konteks Button */}
+          <button
+            onClick={handleCopyContext}
+            disabled={filings.length === 0 || isLoading}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+              copied
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/30 active:scale-95'
+            }`}
+            title="Salin ringkasan data ini untuk ditempelkan (Ctrl+V) ke chat AlphaAgent"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Konteks Tersalin!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3.5 w-3.5 text-cyan-400" />
+                <span>Salin Konteks</span>
+              </>
+            )}
+          </button>
 
           <button
             onClick={() => loadFilings(scope === 'ticker' ? initialTicker : '')}

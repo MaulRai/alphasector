@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchSuspensions } from '@/lib/api';
-import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, FileText, CheckCircle2, Globe } from 'lucide-react';
+import { AlertTriangle, Lock, RefreshCw, ExternalLink, ShieldAlert, FileText, CheckCircle2, Globe, Copy, Check } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
+import { encodeContextForClipboard } from '@/lib/contextClipboard';
 
 interface RegulatorySuspensionsCardProps {
   initialTicker?: string;
@@ -15,6 +16,7 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (scope === 'ticker' && initialTicker) {
@@ -47,6 +49,25 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
     }
   };
 
+  const handleCopyContext = () => {
+    if (!suspensions || suspensions.length === 0) return;
+    const scopeLabel = scope === 'ticker' && initialTicker ? initialTicker.toUpperCase() : 'BEI (Semua)';
+    const topItems = suspensions.slice(0, 5);
+    const details = topItems.map((s, i) => `${i + 1}. [${s.symbol || 'BEI'}] ${s.title || 'Pengumuman Bursa'}: ${s.description || s.body || ''}`.slice(0, 200)).join('\n');
+
+    const payloadText = encodeContextForClipboard({
+      type: 'REGULATORY_SUSPENSIONS',
+      title: `Radar Suspensi & UMA BEI (${scopeLabel})`,
+      ticker: scope === 'ticker' ? initialTicker : undefined,
+      summary: `Terdeteksi ${suspensions.length} catatan suspensi / UMA bursa aktif untuk ${scopeLabel}.`,
+      details
+    });
+
+    navigator.clipboard.writeText(payloadText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 sm:p-6 glass-panel space-y-5">
       {/* Card Header */}
@@ -65,8 +86,8 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
           </p>
         </div>
 
-        {/* Scope Filter Switcher & Refresh */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Scope Filter Switcher, Salin Konteks & Refresh */}
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800">
             <button
               onClick={() => setScope('ticker')}
@@ -90,6 +111,30 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
               <span>Semua Suspensi BEI</span>
             </button>
           </div>
+
+          {/* Salin Konteks Button */}
+          <button
+            onClick={handleCopyContext}
+            disabled={suspensions.length === 0 || isLoading}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+              copied
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                : 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/30 active:scale-95'
+            }`}
+            title="Salin ringkasan suspensi & UMA bursa untuk dijadikan konteks di AlphaAgent"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Tersalin!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3.5 w-3.5 text-rose-400" />
+                <span>Salin Konteks</span>
+              </>
+            )}
+          </button>
 
           <button
             onClick={() => loadSuspensions(scope === 'ticker' ? initialTicker : undefined)}

@@ -2,8 +2,9 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { Paperclip, RefreshCw, Send, X } from 'lucide-react';
+import { Paperclip, RefreshCw, Send, X, FileText } from 'lucide-react';
 import { AttachedImageData } from '@/hooks/useImageUpload';
+import { PastedContextItem } from '@/lib/contextClipboard';
 
 interface ChatInputBarProps {
   inputQuery: string;
@@ -16,6 +17,8 @@ interface ChatInputBarProps {
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPaste: (e: React.ClipboardEvent<HTMLTextAreaElement>) => void;
   textareaRef?: React.RefObject<HTMLTextAreaElement | null>;
+  pastedContexts?: PastedContextItem[];
+  onRemovePastedContext?: (id: string) => void;
 }
 
 export const ChatInputBar: React.FC<ChatInputBarProps> = ({
@@ -29,6 +32,8 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   onImageSelect,
   onPaste,
   textareaRef,
+  pastedContexts = [],
+  onRemovePastedContext,
 }) => {
   const localTextareaRef = useRef<HTMLTextAreaElement>(null);
   const activeTextareaRef = textareaRef || localTextareaRef;
@@ -51,28 +56,72 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
 
   return (
     <div className="p-3 sm:p-4 border-t border-slate-800/80 bg-[#080b13]/95 backdrop-blur-md shrink-0">
-      {/* Image Preview Chip if attached */}
-      {attachedImage && (
-        <div className="max-w-4xl mx-auto mb-2 flex items-center justify-between px-3 py-2 rounded-xl bg-[#0d121e] border border-emerald-500/40 text-xs text-slate-200 animate-card-reveal">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={attachedImage.previewUrl}
-              alt="Preview"
-              className="h-8 w-8 object-cover rounded-lg border border-slate-700 shrink-0"
-            />
-            <div className="truncate">
-              <span className="font-semibold text-emerald-400 block truncate">{attachedImage.fileName}</span>
+      {/* Attachments & Pasted Contexts Bar - Horizontal stackable (menyamping) */}
+      {(attachedImage || (pastedContexts && pastedContexts.length > 0)) && (
+        <div className="max-w-4xl mx-auto mb-2 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+          {/* Attached Image (if any) */}
+          {attachedImage && (
+            <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0d121e] border border-emerald-500/40 text-xs text-slate-200 animate-card-reveal shrink-0 max-w-[280px] sm:max-w-[320px]">
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={attachedImage.previewUrl}
+                  alt="Preview"
+                  className="h-8 w-8 object-cover rounded-lg border border-slate-700 shrink-0"
+                />
+                <div className="truncate">
+                  <span className="font-semibold text-emerald-400 block truncate">{attachedImage.fileName}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={onRemoveImage}
+                className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 transition-colors shrink-0 ml-2 cursor-pointer"
+                title="Hapus gambar"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
-          </div>
-          <button
-            type="button"
-            onClick={onRemoveImage}
-            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 transition-colors shrink-0 ml-2"
-            title="Hapus gambar"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          )}
+
+          {/* Pasted Contexts (stacked horizontally, wise limit 3) */}
+          {pastedContexts.map((ctx) => (
+            <div
+              key={ctx.id}
+              className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0d121e] border border-emerald-500/40 text-xs text-slate-200 animate-card-reveal shrink-0 max-w-[280px] sm:max-w-[340px] shadow-sm hover:border-emerald-500/60 transition-all"
+              title={`${ctx.title}\n${ctx.summary}`}
+            >
+              <div className="flex items-center gap-2.5 overflow-hidden min-w-0 mr-1.5">
+                <div className={`p-1.5 rounded-lg shrink-0 ${
+                  ctx.type === 'INSIDER_FILINGS'
+                    ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
+                    : ctx.type === 'INSTITUTIONAL_OWNERSHIP'
+                    ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
+                    : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                }`}>
+                  <FileText className="h-4 w-4" />
+                </div>
+                <div className="truncate min-w-0">
+                  <span className="font-semibold text-emerald-400 block truncate text-xs">
+                    Pasted Context: {ctx.title}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block truncate">
+                    {ctx.summary}
+                  </span>
+                </div>
+              </div>
+              {onRemovePastedContext && (
+                <button
+                  type="button"
+                  onClick={() => onRemovePastedContext(ctx.id)}
+                  className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 transition-colors shrink-0 ml-1 cursor-pointer"
+                  title="Hapus konteks ini"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
@@ -95,7 +144,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading}
           title="Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 10MB • Bisa juga langsung Ctrl+V)"
-          className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5"
+          className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5 cursor-pointer"
         >
           <Paperclip className="h-4 w-4" />
         </button>
@@ -108,7 +157,13 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           onChange={handleTextareaChange}
           onKeyDown={handleKeyDown}
           onPaste={onPaste}
-          placeholder={attachedImage ? "Tanyakan analisis gambar ini ke AlphaAgent..." : "Tanyakan analisis emiten ke AlphaAgent..."}
+          placeholder={
+            attachedImage
+              ? "Tanyakan analisis gambar ini ke AlphaAgent..."
+              : pastedContexts.length > 0
+              ? `Tanyakan analisis terkait ${pastedContexts.length} konteks tersalin ini ke AlphaAgent...`
+              : "Tanyakan analisis emiten ke AlphaAgent..."
+          }
           className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1.5 resize-none overflow-y-auto max-h-[84px] leading-relaxed my-auto"
           disabled={isLoading}
         />
@@ -116,8 +171,8 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading || (!inputQuery.trim() && !attachedImage)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0 mb-0.5 ml-1.5"
+          disabled={isLoading || (!inputQuery.trim() && !attachedImage && pastedContexts.length === 0)}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0 mb-0.5 ml-1.5 cursor-pointer"
         >
           {isLoading ? (
             <RefreshCw className="h-3.5 w-3.5 animate-spin" />
