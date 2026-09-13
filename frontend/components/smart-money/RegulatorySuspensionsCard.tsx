@@ -82,7 +82,7 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
             </h3>
           </div>
           <p className="text-xs text-slate-400">
-            Radar emiten yang sedang digembok atau terkena suspensi Unusual Market Activity (UMA) oleh Bursa Efek Indonesia beserta surat resmi bursa.
+            Radar penghentian sementara (suspensi) perdagangan efek dan pemantauan Unusual Market Activity (UMA) oleh Bursa Efek Indonesia beserta tautan pengumuman resmi bursa.
           </p>
         </div>
 
@@ -185,7 +185,7 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
           <p className="text-sm font-semibold text-slate-300">Tidak ada catatan suspensi aktif</p>
           <p className="text-xs text-slate-500">
             {scope === 'ticker' && initialTicker
-              ? `Emiten ${initialTicker} dalam status perdagangan normal (tidak terkena suspensi/gembok bursa).`
+              ? `Emiten ${initialTicker} dalam status perdagangan normal (tidak sedang dikenakan suspensi bursa).`
               : 'Tidak ditemukan catatan suspensi aktif di BEI saat ini.'}
           </p>
         </div>

@@ -184,7 +184,7 @@ class AgentSynthesizer:
             "   d. Jika intent adalah 'REGULATORY_SUSPENSION_RADAR' (Radar Suspensi BEI & UMA):\n"
             "      - Evaluasi status pengawasan bursa dari 'suspensions_radar'. JANGAN hanya menyebutkan deretan kode ticker mentah!\n"
             "      - WAJIB berikan ulasan komprehensif untuk emiten yang disuspensi: sebutkan kode ticker, tanggal suspensi, nomor surat resmi BEI, dan klasifikasi alasan (misal: 'Suspensi Cooling Down akibat lonjakan harga kumulatif' vs 'Suspensi Going Concern / kelangsungan usaha').\n"
-            "      - Telaah risiko likuiditas dan prosedur pembukaan gembok suspensi bursa.\n"
+            "      - Telaah risiko likuiditas dan prosedur pembukaan suspensi (unsuspension) perdagangan bursa.\n"
             "   e. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' di peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit.\n"
             "4. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam (misalnya mengecek transaksi insider Direksi/Komisaris, kepemilikan Dana Pensiun & Reksadana KSEI, atau status suspensi BEI & radar UMA).\n"
             "5. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
@@ -315,7 +315,7 @@ class AgentSynthesizer:
             target = tickers[0] if tickers else "Bursa Efek Indonesia"
             exec_summary = (
                 f"Radar suspensi regulasi BEI dan Unusual Market Activity (UMA) telah dievaluasi untuk {target}. "
-                f"Pemeriksaan mencakup status gembok perdagangan, surat pengumuman resmi bursa, dan potensi risiko likuiditas bagi investor."
+                f"Pemeriksaan mencakup status penghentian sementara (suspensi) perdagangan efek, surat pengumuman resmi bursa, dan potensi risiko likuiditas bagi investor."
             )
             key_findings = [
                 f"Cakupan Radar: {target}",

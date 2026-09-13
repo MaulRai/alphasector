@@ -545,11 +545,11 @@ export default function LandingPage() {
                     BEI Suspension & UMA
                   </h3>
                   <p className="text-xs font-semibold text-rose-400 mt-0.5">
-                    Saham Gembok & Surat Bursa
+                    Suspensi Perdagangan & Keterbukaan Bursa
                   </p>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Sistem radar emiten yang sedang digembok atau terkena suspensi Unusual Market Activity (UMA) oleh Bursa Efek Indonesia, lengkap dengan tautan surat resmi bursa.
+                  Sistem radar penghentian sementara (suspensi) perdagangan efek dan pemantauan Unusual Market Activity (UMA) oleh Bursa Efek Indonesia, lengkap dengan tautan pengumuman resmi bursa.
                 </p>
                 <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
                   <div className="flex items-center gap-2">
