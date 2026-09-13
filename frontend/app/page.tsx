@@ -19,93 +19,75 @@ export default function LandingPage() {
       {/* Navigation */}
       <Navbar />
 
-      {/* 1. HERO SECTION WITH FADING CITY IDX BACKGROUND */}
-      <section className="relative pt-20 pb-28 md:pt-32 md:pb-40 px-4 sm:px-6 lg:px-8 w-full text-center overflow-hidden">
+      {/* 1. HERO SECTION WITH ISOMETRIC ARCHITECTURE ILLUSTRATION */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 lg:px-8 w-full bg-black overflow-hidden border-b border-slate-800/80">
         
-        {/* Full Hero Background Image: City with IDX Building */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
-          <Image
-            src="/images/landing/city-with-idx-building.jpg"
-            alt="IDX Jakarta City Background"
-            fill
-            className="object-cover object-top opacity-30 scale-105 transition-transform duration-1000 ease-out"
-            priority
-          />
-          {/* Vertical Fading Overlay: Transparent at top -> Dark in middle -> Fully #07090e at bottom */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#07090e]/40 via-[#07090e]/80 to-[#07090e]" />
+        {/* Subtle Ambient Radial Glow */}
+        <div className="absolute top-0 right-0 w-[500px] lg:w-[700px] h-[500px] bg-slate-900/40 blur-[130px] pointer-events-none select-none rounded-full" />
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
           
-          {/* Ambient Radial Lighting */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[280px] bg-slate-800/20 blur-[120px] rounded-full" />
-        </div>
-
-        {/* Hero Content with Staggered Fade-in Animations */}
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6 pt-4">
-          
-          {/* Main Headline */}
-          <h1 
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.15] animate-fade-in-up"
-            style={{ animationDelay: '100ms' }}
-          >
-            <span className="block">Autonomous Agentic AI</span>
-            <span className="block mt-1 sm:mt-2 text-emerald-400">
-              Pasar Modal Indonesia
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p 
-            className="text-base sm:text-xl text-slate-200 max-w-xl mx-auto leading-relaxed font-normal animate-fade-in-up"
-            style={{ animationDelay: '300ms' }}
-          >
-            Bukan sekadar chatbot pembungkus. AlphaSector mengeksekusi multi-step reasoning, 
-            kalkulasi deterministik valuasi gap, dan pelacakan aliran dana institusi secara otonom.
-          </p>
-
-          {/* CTA Buttons */}
-          <div 
-            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-4 animate-fade-in-up"
-            style={{ animationDelay: '400ms' }}
-          >
-            <Link
-              href="/alpha-agent"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
+          {/* Left Column: Title, Subtitle, 2 CTA */}
+          <div className="lg:col-span-6 xl:col-span-6 space-y-6 text-left pt-4 lg:pt-0">
+            
+            {/* Main Headline */}
+            <h1 
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-[1.08] animate-fade-in-up"
+              style={{ animationDelay: '100ms' }}
             >
-              <span>Buka AlphaAgent Workspace</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+              <span className="block">Autonomous</span>
+              <span className="block text-white">Agentic AI.</span>
+              <span className="block text-emerald-400 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-2 sm:mt-3">
+                Pasar Modal Indonesia
+              </span>
+            </h1>
 
-            <Link
-              href="/battle"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 text-slate-200 font-semibold text-sm transition-all backdrop-blur-md"
+            {/* Subtitle */}
+            <p 
+              className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-xl leading-relaxed font-normal animate-fade-in-up"
+              style={{ animationDelay: '250ms' }}
             >
-              <span>Coba Peer Battle</span>
-            </Link>
+              Bukan sekadar chatbot pembungkus. AlphaSector mengeksekusi multi-step reasoning, 
+              kalkulasi deterministik valuasi gap, dan pelacakan aliran dana institusi secara otonom.
+            </p>
+
+            {/* 2 CTA Buttons */}
+            <div 
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2 animate-fade-in-up"
+              style={{ animationDelay: '350ms' }}
+            >
+              <Link
+                href="/alpha-agent"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/20 group"
+              >
+                <span>Buka AlphaAgent Workspace</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+
+              <Link
+                href="/battle"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold text-sm transition-all backdrop-blur-md"
+              >
+                <span>Coba Peer Battle</span>
+              </Link>
+            </div>
+
           </div>
 
-          {/* Quick Metrics Ticker Line */}
+          {/* Right Column: Isometric Architecture Illustration at Top Right */}
           <div 
-            className="pt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs text-slate-400 font-medium animate-fade-in-up"
-            style={{ animationDelay: '500ms' }}
+            className="lg:col-span-6 xl:col-span-6 relative flex items-center justify-center lg:justify-end animate-fade-in-up"
+            style={{ animationDelay: '300ms' }}
           >
-            <div className="flex items-center gap-2 hover:text-emerald-300 transition-colors">
-              <Database className="h-4 w-4 text-emerald-400" />
-              <span>900+ Emiten BEI</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-cyan-300 transition-colors">
-              <BarChart3 className="h-4 w-4 text-cyan-400" />
-              <span>Multiples Valuasi & Peer Gap</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-amber-300 transition-colors">
-              <Users className="h-4 w-4 text-amber-400" />
-              <span>Smart Money & Foreign Flow</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-purple-300 transition-colors">
-              <ShieldCheck className="h-4 w-4 text-purple-400" />
-              <span>Insider Deals & KSEI Breakdown</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-teal-300 transition-colors">
-              <Sparkles className="h-4 w-4 text-teal-400" />
-              <span>Autonomous AI Synthesis</span>
+            <div className="relative w-full max-w-[620px] lg:max-w-[700px] aspect-[16/10] lg:scale-110 lg:origin-right">
+              <Image
+                src="/images/landing/landing-illu.png"
+                alt="AlphaSector Agentic AI Architecture"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain object-right-top"
+                priority
+              />
             </div>
           </div>
 
