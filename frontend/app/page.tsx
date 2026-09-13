@@ -441,7 +441,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <Link
-                href="/smart-money"
+                href="/smart-money?tab=insider"
                 className="inline-flex items-center justify-between text-xs font-bold text-cyan-400 hover:text-cyan-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Lihat Transaksi Insider</span>
@@ -489,7 +489,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <Link
-                href="/smart-money"
+                href="/smart-money?tab=institutional"
                 className="inline-flex items-center justify-between text-xs font-bold text-purple-400 hover:text-purple-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Cek Dekomposisi KSEI</span>
@@ -537,7 +537,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <Link
-                href="/smart-money"
+                href="/smart-money?tab=suspensions"
                 className="inline-flex items-center justify-between text-xs font-bold text-rose-400 hover:text-rose-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Buka Radar Suspensi BEI</span>

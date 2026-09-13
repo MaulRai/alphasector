@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -21,16 +21,49 @@ import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 
 const POPULAR_TICKERS = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'BUMI', 'ADRO', 'ANTM', 'GOTO', 'AMMN', 'BREN', 'CUAN', 'MEDC', 'PTBA'];
 
-export default function SmartMoneyPage() {
+function SmartMoneyWorkspace() {
   const router = useRouter();
-  const [ticker, setTicker] = useState('TLKM');
-  const [activeTab, setActiveTab] = useState<'bandarmology' | 'insider' | 'institutional' | 'suspensions'>('bandarmology');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const tickerParam = searchParams.get('ticker') || searchParams.get('symbol');
+
+  const [ticker, setTicker] = useState(() => {
+    if (tickerParam) return tickerParam.trim().toUpperCase().replace('.JK', '');
+    return 'TLKM';
+  });
+
+  const [activeTab, setActiveTab] = useState<'bandarmology' | 'insider' | 'institutional' | 'suspensions'>(() => {
+    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions'].includes(tabParam)) {
+      return tabParam as any;
+    }
+    return 'bandarmology';
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [brokerSummary, setBrokerSummary] = useState<any>(null);
   const [topBrokers, setTopBrokers] = useState<any[]>([]);
   const [agentReport, setAgentReport] = useState<AgentQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { backendOnline } = useBackendHealth();
+
+  useEffect(() => {
+    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+    if (tickerParam) {
+      setTicker(tickerParam.trim().toUpperCase().replace('.JK', ''));
+    }
+  }, [tabParam, tickerParam]);
+
+  const handleTabChange = (newTab: 'bandarmology' | 'insider' | 'institutional' | 'suspensions') => {
+    setActiveTab(newTab);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', newTab);
+      if (ticker) url.searchParams.set('ticker', ticker);
+      window.history.replaceState(null, '', url.pathname + url.search);
+    }
+  };
 
   useEffect(() => {
     loadTopBrokers();
@@ -154,7 +187,7 @@ export default function SmartMoneyPage() {
           {/* Institutional Smart Money Tabs Switcher */}
           <div className="flex flex-wrap items-center gap-2 mb-6 p-1.5 rounded-2xl bg-slate-950/80 border border-slate-800/90 w-fit">
             <button
-              onClick={() => setActiveTab('bandarmology')}
+              onClick={() => handleTabChange('bandarmology')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'bandarmology'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
@@ -166,7 +199,7 @@ export default function SmartMoneyPage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('insider')}
+              onClick={() => handleTabChange('insider')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'insider'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
@@ -178,7 +211,7 @@ export default function SmartMoneyPage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('institutional')}
+              onClick={() => handleTabChange('institutional')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'institutional'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
@@ -190,7 +223,7 @@ export default function SmartMoneyPage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('suspensions')}
+              onClick={() => handleTabChange('suspensions')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'suspensions'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
@@ -360,6 +393,18 @@ export default function SmartMoneyPage() {
         </AuthGate>
       </main>
     </div>
+  );
+}
+
+export default function SmartMoneyPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen w-full bg-[#07090e] text-slate-100 flex items-center justify-center">
+        <RefreshCw className="h-6 w-6 text-amber-400 animate-spin" />
+      </div>
+    }>
+      <SmartMoneyWorkspace />
+    </Suspense>
   );
 }
 
