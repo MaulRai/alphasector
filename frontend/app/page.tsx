@@ -404,13 +404,29 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Card 1: Insider Deal Tracker */}
           <RevealOnScroll direction="up" delayMs={0}>
-            <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5">
-              <div className="space-y-4">
+            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+              
+              {/* Faded corner image graphic in top-right with diagonal fade */}
+              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                <Image
+                  src="/images/landing/Insider Deal Tracker.jpeg"
+                  alt="Insider Deal Tracker Preview"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                />
+                {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+              </div>
+
+              <div className="space-y-4 relative z-10">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 group-hover:scale-105 transition-transform">
+                  <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
                     <ShieldCheck className="h-5 w-5" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-cyan-300 border border-cyan-500/30 backdrop-blur-md shadow-sm">
                     Keterbukaan BEI
                   </span>
                 </div>
@@ -442,7 +458,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/smart-money?tab=insider"
-                className="inline-flex items-center justify-between text-xs font-bold text-cyan-400 hover:text-cyan-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
+                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-cyan-400 hover:text-cyan-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Lihat Transaksi Insider</span>
                 <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
@@ -452,13 +468,29 @@ export default function LandingPage() {
 
           {/* Card 2: Institutional Breakdown KSEI */}
           <RevealOnScroll direction="up" delayMs={150}>
-            <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-purple-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5">
-              <div className="space-y-4">
+            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-purple-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+              
+              {/* Faded corner image graphic in top-right with diagonal fade */}
+              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                <Image
+                  src="/images/landing/Institutional Breakdown.png"
+                  alt="Institutional Breakdown KSEI Preview"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                />
+                {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+              </div>
+
+              <div className="space-y-4 relative z-10">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 group-hover:scale-105 transition-transform">
+                  <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
                     <Landmark className="h-5 w-5" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-purple-300 border border-purple-500/30 backdrop-blur-md shadow-sm">
                     Data Riil KSEI
                   </span>
                 </div>
@@ -490,7 +522,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/smart-money?tab=institutional"
-                className="inline-flex items-center justify-between text-xs font-bold text-purple-400 hover:text-purple-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
+                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-purple-400 hover:text-purple-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Cek Dekomposisi KSEI</span>
                 <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
@@ -500,13 +532,29 @@ export default function LandingPage() {
 
           {/* Card 3: BEI Suspension & UMA Watchdog */}
           <RevealOnScroll direction="up" delayMs={300}>
-            <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-rose-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5">
-              <div className="space-y-4">
+            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-rose-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+              
+              {/* Faded corner image graphic in top-right with diagonal fade */}
+              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                <Image
+                  src="/images/landing/BEI Suspension UMA.jpeg"
+                  alt="BEI Suspension & UMA Preview"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                />
+                {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+              </div>
+
+              <div className="space-y-4 relative z-10">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 group-hover:scale-105 transition-transform">
+                  <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
                     <Lock className="h-5 w-5" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/20">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-rose-300 border border-rose-500/30 backdrop-blur-md shadow-sm">
                     Radar Risiko BEI
                   </span>
                 </div>
@@ -538,7 +586,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/smart-money?tab=suspensions"
-                className="inline-flex items-center justify-between text-xs font-bold text-rose-400 hover:text-rose-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
+                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-rose-400 hover:text-rose-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
               >
                 <span>Buka Radar Suspensi BEI</span>
                 <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
