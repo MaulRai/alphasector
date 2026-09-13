@@ -422,14 +422,8 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
-                    <ShieldCheck className="h-5 w-5" />
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-cyan-300 border border-cyan-500/30 backdrop-blur-md shadow-sm">
-                    Keterbukaan BEI
-                  </span>
-                </div>
+                {/* Top spacer gap */}
+                <div className="h-10 sm:h-12" aria-hidden="true" />
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
                     Insider Deal Tracker
@@ -486,14 +480,8 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
-                    <Landmark className="h-5 w-5" />
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-purple-300 border border-purple-500/30 backdrop-blur-md shadow-sm">
-                    Data Riil KSEI
-                  </span>
-                </div>
+                {/* Top spacer gap */}
+                <div className="h-10 sm:h-12" aria-hidden="true" />
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
                     Institutional Breakdown
@@ -550,14 +538,8 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 group-hover:scale-105 transition-transform backdrop-blur-sm">
-                    <Lock className="h-5 w-5" />
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-rose-300 border border-rose-500/30 backdrop-blur-md shadow-sm">
-                    Radar Risiko BEI
-                  </span>
-                </div>
+                {/* Top spacer gap */}
+                <div className="h-10 sm:h-12" aria-hidden="true" />
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-rose-300 transition-colors">
                     BEI Suspension & UMA
