@@ -20,32 +20,32 @@ export default function LandingPage() {
       <Navbar />
 
       {/* 1. HERO SECTION WITH ISOMETRIC ARCHITECTURE ILLUSTRATION */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 lg:px-8 w-full bg-black overflow-hidden border-b border-slate-800/80">
+      <section className="relative pt-20 pb-12 md:pt-28 md:pb-16 px-4 sm:px-6 lg:px-8 w-full bg-gradient-to-b from-black via-black to-[#090d16] overflow-hidden">
         
         {/* Subtle Ambient Radial Glow */}
-        <div className="absolute top-0 right-0 w-[500px] lg:w-[700px] h-[500px] bg-slate-900/40 blur-[130px] pointer-events-none select-none rounded-full" />
+        <div className="absolute top-0 right-0 w-[500px] lg:w-[700px] h-[500px] bg-slate-900/30 blur-[130px] pointer-events-none select-none rounded-full" />
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start relative z-10 min-h-[460px] lg:min-h-[520px]">
           
-          {/* Left Column: Title, Subtitle, 2 CTA */}
-          <div className="lg:col-span-6 xl:col-span-6 space-y-6 text-left pt-4 lg:pt-0">
+          {/* Left Column: Top-Left Aligned Title, Subtitle, 2 CTA */}
+          <div className="lg:col-span-5 xl:col-span-5 space-y-4 text-left pt-2 lg:pt-4">
             
-            {/* Main Headline */}
+            {/* Main Headline (Scaled down to fit elegantly in top-left corner) */}
             <h1 
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-[1.08] animate-fade-in-up"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12] animate-fade-in-up"
               style={{ animationDelay: '100ms' }}
             >
               <span className="block">Autonomous</span>
               <span className="block text-white">Agentic AI.</span>
-              <span className="block text-emerald-400 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-2 sm:mt-3">
+              <span className="block text-emerald-400 text-xl sm:text-2xl lg:text-3xl font-bold mt-1.5 sm:mt-2">
                 Pasar Modal Indonesia
               </span>
             </h1>
 
             {/* Subtitle */}
             <p 
-              className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-xl leading-relaxed font-normal animate-fade-in-up"
-              style={{ animationDelay: '250ms' }}
+              className="text-xs sm:text-sm lg:text-base text-slate-300 max-w-md leading-relaxed font-normal animate-fade-in-up"
+              style={{ animationDelay: '200ms' }}
             >
               Bukan sekadar chatbot pembungkus. AlphaSector mengeksekusi multi-step reasoning, 
               kalkulasi deterministik valuasi gap, dan pelacakan aliran dana institusi secara otonom.
@@ -53,20 +53,20 @@ export default function LandingPage() {
 
             {/* 2 CTA Buttons */}
             <div 
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2 animate-fade-in-up"
-              style={{ animationDelay: '350ms' }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 animate-fade-in-up"
+              style={{ animationDelay: '300ms' }}
             >
               <Link
                 href="/alpha-agent"
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/20 group"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs sm:text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/20 group"
               >
                 <span>Buka AlphaAgent Workspace</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
 
               <Link
                 href="/battle"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold text-sm transition-all backdrop-blur-md"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold text-xs sm:text-sm transition-all backdrop-blur-md"
               >
                 <span>Coba Peer Battle</span>
               </Link>
@@ -74,29 +74,35 @@ export default function LandingPage() {
 
           </div>
 
-          {/* Right Column: Isometric Architecture Illustration at Top Right */}
+          {/* Right Column: Isometric Architecture Illustration Positioned at Bottom Right */}
           <div 
-            className="lg:col-span-6 xl:col-span-6 relative flex items-center justify-center lg:justify-end animate-fade-in-up"
+            className="lg:col-span-7 xl:col-span-7 relative flex items-end justify-center lg:justify-end self-end w-full animate-fade-in-up mt-4 lg:mt-0"
             style={{ animationDelay: '300ms' }}
           >
-            <div className="relative w-full max-w-[620px] lg:max-w-[700px] aspect-[16/10] lg:scale-110 lg:origin-right">
+            <div className="relative w-full max-w-[620px] lg:max-w-[760px] aspect-[16/10] lg:scale-105 lg:origin-bottom-right">
               <Image
                 src="/images/landing/landing-illu.png"
                 alt="AlphaSector Agentic AI Architecture"
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain object-right-top"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                className="object-contain object-right-bottom"
                 priority
               />
+              {/* Subtle bottom vignette to ensure bottom-right illustration merges into section transition */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#090d16] via-transparent to-transparent opacity-80 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-50 pointer-events-none" />
             </div>
           </div>
 
         </div>
 
+        {/* Seamless Full-Width Bottom Fading Mask into Section 2 (No harsh border line) */}
+        <div className="absolute inset-x-0 bottom-0 h-32 sm:h-40 bg-gradient-to-b from-transparent via-[#090d16]/70 to-[#090d16] pointer-events-none z-20" />
+
       </section>
 
       {/* 2. CORE CAPABILITIES (Rich Visual Grid) */}
-      <section className="py-20 border-t border-slate-800/80 bg-[#090d16] px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-[#090d16] px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
           <RevealOnScroll direction="up">
