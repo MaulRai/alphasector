@@ -406,14 +406,14 @@ export default function LandingPage() {
           <RevealOnScroll direction="up" delayMs={0}>
             <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
-              {/* Faded corner image graphic in top-right with diagonal fade */}
-              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+              {/* Faded corner image graphic centered on canvas subject */}
+              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
                 <Image
                   src="/images/landing/Insider Deal Tracker.jpeg"
                   alt="Insider Deal Tracker Preview"
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  sizes="(max-width: 768px) 50vw, 30vw"
+                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
                 <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
@@ -464,14 +464,14 @@ export default function LandingPage() {
           <RevealOnScroll direction="up" delayMs={150}>
             <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-purple-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
-              {/* Faded corner image graphic in top-right with diagonal fade */}
-              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+              {/* Faded corner image graphic centered on canvas subject */}
+              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
                 <Image
                   src="/images/landing/Institutional Breakdown.png"
                   alt="Institutional Breakdown KSEI Preview"
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  sizes="(max-width: 768px) 50vw, 30vw"
+                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
                 <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
@@ -522,14 +522,14 @@ export default function LandingPage() {
           <RevealOnScroll direction="up" delayMs={300}>
             <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-rose-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
-              {/* Faded corner image graphic in top-right with diagonal fade */}
-              <div className="absolute top-0 right-0 w-48 sm:w-56 h-40 sm:h-48 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+              {/* Faded corner image graphic centered on canvas subject */}
+              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
                 <Image
                   src="/images/landing/BEI Suspension UMA.jpeg"
                   alt="BEI Suspension & UMA Preview"
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover object-top-right opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  sizes="(max-width: 768px) 50vw, 30vw"
+                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
                 <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
