@@ -88,18 +88,15 @@ export default function LandingPage() {
                 className="object-contain object-right-bottom"
                 priority
               />
-              {/* Subtle bottom vignette to ensure bottom-right illustration merges into section transition */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#090d16] via-transparent to-transparent opacity-80 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-50 pointer-events-none" />
             </div>
           </div>
 
         </div>
 
-        {/* Seamless Full-Width Bottom Fading Mask into Section 2 (No harsh border line) */}
-        <div className="absolute inset-x-0 bottom-0 h-32 sm:h-40 bg-gradient-to-b from-transparent via-[#090d16]/70 to-[#090d16] pointer-events-none z-20" />
-
       </section>
+
+      {/* Seamless Transition Zone Between Section 1 (Black) and Section 2 (#090d16) */}
+      <div className="w-full h-24 sm:h-32 bg-gradient-to-b from-black via-[#04060b] to-[#090d16] pointer-events-none" />
 
       {/* 2. CORE CAPABILITIES (Rich Visual Grid) */}
       <section className="py-20 bg-[#090d16] px-4 sm:px-6 lg:px-8">
