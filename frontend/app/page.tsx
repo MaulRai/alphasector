@@ -376,7 +376,7 @@ export default function LandingPage() {
               <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-teal-500/40 transition-all text-center space-y-2 hover:scale-105">
                 <div className="text-2xl font-black text-teal-400 font-mono tabular-nums">&lt;6s</div>
                 <div className="text-xs font-bold text-white">Agent Latency</div>
-                <p className="text-xs text-slate-400">Parallel execution bertenaga LPU Groq 120B</p>
+                <p className="text-xs text-slate-400">Eksekusi paralel multi-agent berkecepatan tinggi</p>
               </div>
             </RevealOnScroll>
           </div>
@@ -694,8 +694,8 @@ export default function LandingPage() {
                 <span>Sectors Financial API v2</span>
               </li>
               <li>Autonomous Agent Orchestrator</li>
-              <li>Groq LPU Inference</li>
-              <li>Next.js 16 & FastAPI</li>
+              <li>Ultra-Low Latency Inference Engine</li>
+              <li>Modern Full-Stack Architecture</li>
             </ul>
           </div>
 

@@ -139,7 +139,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({
               <ul className="space-y-2 text-xs text-slate-200">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>Autonomous Multi-Step AlphaAgent & LPU Reasoning</span>
+                  <span>Autonomous Multi-Step AlphaAgent Reasoning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-cyan-400 shrink-0" />
