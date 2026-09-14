@@ -716,7 +716,7 @@ export default function LandingPage() {
                     Seamless Context Handoff ke AlphaAgent
                   </h4>
                   <p className="text-xs text-slate-300">
-                    Salin konteks riset dari Smart Money, tekan <span className="font-mono text-emerald-300 font-semibold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30">Ctrl+V</span> di AlphaAgent untuk evaluasi instan.
+                    Bawa temuan riset dari Smart Money langsung ke AlphaAgent sebagai konteks instan untuk analisis mendalam.
                   </p>
                 </div>
               </div>
