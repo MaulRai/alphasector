@@ -33,13 +33,14 @@
 3. [Architecture: Custom Agent vs Generic MCP Wrapper](#-architecture-custom-agent-vs-generic-mcp-wrapper)
 4. [Completed Feature Navigation Index](#-completed-feature-navigation-index)
 5. [Frictionless Local Run Guide (Zero-Config Bootup)](#-frictionless-local-run-guide-zero-config-bootup)
-6. [Judge Usability & Zero-Friction Hardening (5 Curated Scenarios)](#-judge-usability--zero-friction-hardening-5-curated-scenarios)
+6. [Judge Usability & Zero-Friction Hardening (6 Curated Scenarios)](#-judge-usability--zero-friction-hardening-6-curated-scenarios)
 7. [Deterministic Quantitative Finance Engine](#-deterministic-quantitative-finance-engine)
 8. [Smart Money & Bandarmology Telemetry](#-smart-money--bandarmology-telemetry)
-9. [Institutional Notion Sync Pipeline](#-institutional-notion-sync-pipeline)
-10. [Resilience, Caching & Fallback Architecture](#-resilience-caching--fallback-architecture)
-11. [Repository Hygiene & Code Freeze Compliance](#-repository-hygiene--code-freeze-compliance)
-12. [Mandatory Financial Disclaimer & Regulatory Compliance](#-mandatory-financial-disclaimer--regulatory-compliance)
+9. [Market News Intelligence & Bursa Caching Engine](#-market-news-intelligence--bursa-caching-engine)
+10. [Institutional Notion Sync Pipeline](#-institutional-notion-sync-pipeline)
+11. [Resilience, Caching & Fallback Architecture](#-resilience-caching--fallback-architecture)
+12. [Repository Hygiene & Code Freeze Compliance](#-repository-hygiene--code-freeze-compliance)
+13. [Mandatory Financial Disclaimer & Regulatory Compliance](#-mandatory-financial-disclaimer--regulatory-compliance)
 
 ---
 
@@ -135,6 +136,7 @@ AlphaSector provides a cohesive suite of specialized equity research tools acces
 |---|---|---|---|
 | `/` | **Landing & Command Center** | Hero overview, real-time backend health check badge, core architecture showcase, and 1-click demo login. | `frontend/app/page.tsx` |
 | `/alpha-agent` | **Autonomous Agent Workspace** | Conversational equity research with **Live Thinking Trace accordion**, multimodal chart upload, trade ideas radar, and slide-out artifact panel. | `frontend/app/alpha-agent/page.tsx` |
+| `/news` | **Market News & Sentiments** | Real-time IDX curated financial news powered by Sectors API v2, 2-hour exchange-hours cache, smart filtering, and 1-click **Analisis AI** to AlphaAgent. | `frontend/app/news/page.tsx` |
 | `/battle` | **Peer Battle Terminal** | Head-to-head multi-emiten showdown with **PeerBattleMatrix**, Graham number fair values, best-in-class highlights, and Big 4 Banks presets. | `frontend/app/battle/page.tsx` |
 | `/screener` | **Screener Pro & Battle Dock** | Natural language (NLP) and SQL screening across 900+ tickers with the floating **ScreenerBattleDock** to dispatch screened stocks into battle or Alpha Agent. | `frontend/app/screener/page.tsx` |
 | `/company/[symbol]` | **Company 360° Profile** | Fundamental deep dive featuring the **9-Criteria Piotroski F-Score Card**, **Historical P/E SD Band Range**, revenue segments, and 1-click Notion sync. | `frontend/app/company/[symbol]/page.tsx` |
@@ -313,6 +315,22 @@ To guarantee an effortless evaluation experience, the following five curated sce
 
 ---
 
+### Scenario 6: Real-Time Market News & Instant AI Impact Analysis in `/news`
+* **Target Route**: `/news`
+* **User Intent**: Explore breaking IDX corporate actions, filter by sentiment or emiten, and trigger in-depth AI fundamental analysis on market events.
+* **Action**:
+  - Filter news by ticker (e.g. `BBCA`, `BREN`, `TLKM`) using the autocomplete bar or popular emiten chips (featuring `CompanyLogo` branding).
+  - Filter by market tags (e.g., `Bullish`, `Bearish`, `Dividend`, `Management`, `Expansion`).
+  - Click the **hyperlinked article title** to directly inspect the original news source.
+  - Click **"Analisis AI"** on any news card.
+* **Expected Output**:
+  - **Instant Agent Dispatch**: AlphaSector immediately navigates to `/alpha-agent` carrying complete news context (headline, body summary, source, and ticker).
+  - **Dedicated Room Execution**: Initiates a dedicated research room without falling back to past chat sessions.
+  - **Multi-Dimensional AI Impact Assessment**: Produces structured findings on sentiment impact, fundamental business implications, revenue/earnings transmissibility, and investor strategic actions.
+  - **Shared Bursa Cache Efficiency**: Responses are served with 2-hour multi-user cache efficiency strictly optimized during IDX trading hours (08:30 – 16:30 WIB), maximizing credit savings across hackathon evaluators.
+
+---
+
 ## 🧮 Deterministic Quantitative Finance Engine
 
 Large Language Models frequently hallucinate financial arithmetic, miscalculate financial ratios, and fabricate statistical standard deviations. AlphaSector eliminates this risk by delegating all quantitative computations to a dedicated deterministic Python module (`backend/app/agent/financial_engine.py`).
@@ -386,6 +404,29 @@ In the Indonesian equity market, price action is heavily dictated by institution
   $$\text{Buyer Concentration \%} = \frac{\sum \text{Top 3 Buyers}}{\sum \text{Top 3 Buyers} + \sum \text{Top 3 Sellers}} \times 100\%$$
 - **Net Foreign Flow Tracking**: Ingestion of daily foreign buy vs foreign sell volumes over 7, 30, and 90-day timeframes.
 - **Top Broker Ranking**: Real-time gross transaction value across national securities houses (`YU`, `CC`, `AK`, `ZP`, etc.).
+- **Regulatory Suspensions & UMA Tracking**: Proactive surveillance of exchange-suspended stocks and Unusual Market Activity (UMA) notices.
+- **Insider Filings & Major Shareholders**: Ingestion of executive share transactions and institutional shareholding percentages.
+- **Visual Emitten Logo Consistency**: Standardized `CompanyLogo` branding across all interactive popular ticker filter chips.
+
+---
+
+## 📰 Market News Intelligence & Bursa Caching Engine
+
+Beyond financial statements and quantitative ratios, equity price volatility is heavily influenced by corporate news catalysts and regulatory disclosures. AlphaSector features an autonomous **Market News & Sentiments Terminal** (`/news`) powered directly by the official **Sectors Financial API v2 News Engine** (`GET /v2/news/`):
+
+### 1. Architectural Blueprint & Credit Optimization
+- **Two-Tier Shared Cache (L1 Memory + L2 Neon Postgres / SQLite)**: All news requests across users share a unified cache layer with a **2-hour TTL**, dramatically cutting external API calls.
+- **Bursa Hours Guard (08:30 – 16:30 WIB)**: Automatic live news synchronization is strictly bound to Indonesia Stock Exchange (IDX) trading hours. Off-market visits are served 100% from cache with zero credit consumption.
+- **Strict Chronological Ordering**: Articles are guaranteed sorted descending by release timestamp (newest first).
+- **Anti-Overload Pagination**: Limited to 5 articles per page (`ITEMS_PER_PAGE = 5`) for fast page loads and focused analyst reading.
+- **Direct Source Hyperlinks**: Every news title is an active hyperlink with external link indicators opening verified news sources in a new tab.
+
+### 2. 1-Click "Analisis AI" Autonomous Pipeline
+Each news card features a dedicated **Analisis AI** trigger:
+1. **Automated Context Extraction**: Compiles the article headline, news excerpt/body, release timestamp, source publication, and ticker symbol.
+2. **Contextual Dispatch to AlphaAgent**: Navigates to `/alpha-agent?initial_query=...&ticker=...` and initiates a fresh research room.
+3. **Session Handshake Guard**: The session management engine (`useChatSessions.ts`) guarantees that incoming news queries immediately trigger agent reasoning without falling back to past chat histories.
+4. **Structured Multi-Angle Synthesis**: Evaluates market sentiment (bullish/bearish/neutral), business revenue transmissibility, quarterly earnings risk, and clear strategic action recommendations for investors.
 
 ---
 
