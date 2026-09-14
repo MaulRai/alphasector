@@ -420,10 +420,15 @@ export default function LandingPage() {
             </div>
           </RevealOnScroll>
 
-          {/* x.ai Inspired Cybernetic Metrics Board with Single Traveling Neon */}
+          {/* x.ai Inspired Cybernetic Metrics Board with 3 Traveling Neons (Top, Middle, Bottom) */}
           <RevealOnScroll direction="up" delayMs={150}>
             <div className="relative border-t border-slate-800/80 overflow-hidden backdrop-blur-[2px]">
               
+              {/* Top Border Line Traveling Laser Beam */}
+              <div className="absolute top-0 inset-x-0 h-[1px] pointer-events-none">
+                <div className="neon-beam-top" />
+              </div>
+
               {/* Numbers Row (3 Columns, Center Aligned) */}
               <div className="grid grid-cols-3 divide-x divide-slate-800/80 text-center">
                 
@@ -452,8 +457,8 @@ export default function LandingPage() {
 
               {/* Prominent Center Horizontal Grid Line with Single Traveling Neon Laser Beam */}
               <div className="relative w-full h-[1px] bg-slate-800/90">
-                {/* Single Pristine Neon Beam (Cyan/White) */}
-                <div className="neon-beam-primary pointer-events-none" />
+                {/* Single Laser Beam (Cyan/White) */}
+                <div className="neon-beam-middle pointer-events-none" />
               </div>
 
               {/* Labels Row (3 Columns, Center Aligned) */}
@@ -491,8 +496,10 @@ export default function LandingPage() {
 
               </div>
 
-              {/* Bottom Border Line */}
-              <div className="relative w-full h-[1px] bg-slate-800/80" />
+              {/* Bottom Border Line with Traveling Neon Laser Beam */}
+              <div className="relative w-full h-[1px] bg-slate-800/80">
+                <div className="neon-beam-bottom pointer-events-none" />
+              </div>
 
             </div>
           </RevealOnScroll>
