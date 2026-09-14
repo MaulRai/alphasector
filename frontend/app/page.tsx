@@ -469,21 +469,23 @@ export default function LandingPage() {
                 </div>
               </RevealOnScroll>
 
-              {/* Rotated 3D End-to-End Loop Graphic filling bottom-right emptiness */}
-              <div className="relative flex justify-end items-end pt-4 sm:pt-6 pointer-events-none select-none">
-                {/* Subtle Emerald Ambient Glow */}
-                <div className="absolute right-4 bottom-2 w-36 h-36 bg-emerald-500/20 blur-3xl rounded-full pointer-events-none" />
-                
-                <div className="relative w-36 sm:w-44 lg:w-52 aspect-square transform rotate-[18deg] hover:rotate-[10deg] transition-transform duration-700 ease-out opacity-90 drop-shadow-[0_20px_35px_rgba(16,185,129,0.25)]">
-                  <Image
-                    src="/images/landing/end-to-end.png"
-                    alt="End-to-End Circular Loop"
-                    fill
-                    sizes="(max-width: 1024px) 180px, 220px"
-                    className="object-contain"
-                  />
+              {/* Rotated 3D End-to-End Loop Graphic with slide-in from right animation */}
+              <RevealOnScroll direction="left" delayMs={200} className="w-full flex justify-end">
+                <div className="relative flex justify-end items-end pt-4 sm:pt-6 pointer-events-none select-none">
+                  {/* Subtle Emerald Ambient Glow */}
+                  <div className="absolute right-4 bottom-2 w-36 h-36 bg-emerald-500/20 blur-3xl rounded-full pointer-events-none" />
+                  
+                  <div className="relative w-36 sm:w-44 lg:w-52 aspect-square transform rotate-[18deg] hover:rotate-[10deg] transition-transform duration-700 ease-out opacity-90 drop-shadow-[0_20px_35px_rgba(16,185,129,0.25)]">
+                    <Image
+                      src="/images/landing/end-to-end.png"
+                      alt="End-to-End Circular Loop"
+                      fill
+                      sizes="(max-width: 1024px) 180px, 220px"
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
-              </div>
+              </RevealOnScroll>
             </div>
 
           </div>
