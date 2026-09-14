@@ -47,7 +47,7 @@ export default function LandingPage() {
               className="text-xs sm:text-sm lg:text-base text-slate-300 max-w-md leading-relaxed font-normal animate-fade-in-up"
               style={{ animationDelay: '200ms' }}
             >
-              Bukan sekadar chatbot pembungkus. AlphaSector mengeksekusi multi-step reasoning, 
+              Bukan sekadar wrapper chatbot. AlphaSector mengeksekusi multi-step reasoning, 
               kalkulasi deterministik valuasi gap, dan pelacakan aliran dana institusi secara otonom.
             </p>
 
