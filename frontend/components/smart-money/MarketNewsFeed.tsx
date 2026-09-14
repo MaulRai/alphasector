@@ -46,7 +46,6 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
   const [selectedTag, setSelectedTag] = useState<string>('Semua');
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [copiedAll, setCopiedAll] = useState(false);
 
   // Load tag helper list once
   useEffect(() => {
@@ -153,28 +152,6 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
     router.push(`/alpha-agent?ticker=${sym}&prompt=${encodeURIComponent(`Analisis dampak berita: "${article.title}" terhadap prospek fundamental dan harga saham ${sym}.`)}`);
   };
 
-  const handleCopyCurrentPageNews = () => {
-    if (!paginatedArticles || paginatedArticles.length === 0) return;
-    const summaryList = paginatedArticles.map((a, i) => {
-      const s = a.symbols?.join(', ') || 'IDX';
-      const timeStr = formatTimeAgo(a.timestamp);
-      return `${i + 1}. [${s} • ${timeStr}] ${a.title}\nRingkasan: ${a.body.slice(0, 130)}...`;
-    }).join('\n\n');
-
-    const tickerLabel = initialTicker ? initialTicker.toUpperCase() : 'Pasar IDX';
-    const payloadText = encodeContextForClipboard({
-      type: 'MARKET_NEWS',
-      title: `Kompilasi 5 Berita Terkini (${tickerLabel} - Halaman ${currentPage})`,
-      ticker: initialTicker,
-      summary: `5 Berita Terkini (${tickerLabel} - Hal ${currentPage}):`,
-      details: summaryList,
-    });
-
-    navigator.clipboard.writeText(payloadText);
-    setCopiedAll(true);
-    setTimeout(() => setCopiedAll(false), 2000);
-  };
-
   // Format relative time helper
   const formatTimeAgo = (isoString?: string) => {
     if (!isoString) return '-';
@@ -209,34 +186,20 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
   return (
     <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 md:p-7 shadow-2xl space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              <Newspaper className="h-5 w-5" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
-              Feed Berita & Sentimen Terkini
-            </h2>
+      <div className="border-b border-slate-800/80 pb-5">
+        <div className="flex items-center gap-2 mb-1.5">
+          <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <Newspaper className="h-5 w-5" />
           </div>
-          <p className="text-xs text-slate-400">
-            {initialTicker 
-              ? `Berita terverifikasi Bursa Efek Indonesia untuk emiten ${initialTicker.toUpperCase()}`
-              : 'Berita terverifikasi Bursa Efek Indonesia untuk seluruh emiten di pasar modal'}
-          </p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
+            Feed Berita & Sentimen Terkini
+          </h2>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2.5 self-start sm:self-center">
-          <button
-            onClick={handleCopyCurrentPageNews}
-            disabled={paginatedArticles.length === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/50 hover:to-indigo-600/50 text-blue-300 border border-blue-500/30 transition-all disabled:opacity-50 cursor-pointer"
-          >
-            {copiedAll ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
-            <span>{copiedAll ? 'Tersalin!' : `Salin ${paginatedArticles.length} Berita ke AlphaAgent`}</span>
-          </button>
-        </div>
+        <p className="text-xs text-slate-400">
+          {initialTicker 
+            ? `Berita terverifikasi Bursa Efek Indonesia untuk emiten ${initialTicker.toUpperCase()}`
+            : 'Berita terverifikasi Bursa Efek Indonesia untuk seluruh emiten di pasar modal'}
+        </p>
       </div>
 
       {/* Tag & Search Filters */}
