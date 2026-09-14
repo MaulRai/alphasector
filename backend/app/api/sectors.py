@@ -413,3 +413,50 @@ async def get_mining_commodity_price(
         "status": status
     }
 
+@router.get("/news")
+async def get_market_news(
+    symbols: Optional[str] = Query(None, description="Comma-separated ticker symbols e.g. BBCA,BBRI"),
+    sector: Optional[str] = Query(None, description="Sector slug"),
+    sub_sector: Optional[str] = Query(None, description="Subsector slug"),
+    tags: Optional[str] = Query(None, description="Comma-separated tag slugs e.g. Bullish,dividend"),
+    keyword: Optional[str] = Query(None, description="Keyword search in title"),
+    start: Optional[str] = Query(None, description="Start date YYYY-MM-DD"),
+    end: Optional[str] = Query(None, description="End date YYYY-MM-DD"),
+    limit: int = Query(20, ge=1, le=30, description="Items per page (max 30)"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+    force_refresh: bool = Query(False, description="Bypass cache if within trading hours"),
+    x_sectors_api_key: Optional[str] = Header(None)
+):
+    """
+    Fetch IDX market news with shared caching, 2-hour update interval, and market hours enforcement (08:30-16:30 WIB).
+    """
+    client = get_sectors_client(x_sectors_api_key)
+    try:
+        result = await client.get_news(
+            symbols=symbols,
+            sector=sector,
+            sub_sector=sub_sector,
+            tags=tags,
+            keyword=keyword,
+            start=start,
+            end=end,
+            limit=limit,
+            offset=offset,
+            force_refresh=force_refresh
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/news/tags")
+async def get_news_tags(x_sectors_api_key: Optional[str] = Header(None)):
+    """Fetch available news tag slugs for filtering."""
+    client = get_sectors_client(x_sectors_api_key)
+    try:
+        data, ms, status = await client.get_news_tags()
+        # Deduplicate and sort tags
+        unique_tags = sorted(list(set(data))) if isinstance(data, list) else data
+        return {"data": unique_tags, "latency_ms": ms}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

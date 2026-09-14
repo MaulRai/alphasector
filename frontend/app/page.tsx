@@ -1022,6 +1022,11 @@ export default function LandingPage() {
                 </Link>
               </li>
               <li>
+                <Link href="/smart-money?tab=news" className="hover:text-blue-400 transition-colors">
+                  Market News &amp; Sentiment Radar
+                </Link>
+              </li>
+              <li>
                 <Link href="/battle" className="hover:text-emerald-400 transition-colors">
                   Peer Battle Matrix (H2H)
                 </Link>

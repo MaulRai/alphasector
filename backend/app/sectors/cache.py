@@ -46,6 +46,37 @@ class DatabaseApiCache:
 
         return None
 
+    def get_with_metadata(self, key: str) -> Optional[Dict[str, Any]]:
+        current_time = time.time()
+        # 1. Check in-memory L1 cache
+        if key in self._memory_store:
+            entry = self._memory_store[key]
+            is_expired = current_time > entry["expires_at"]
+            return {
+                "data": entry["value"],
+                "status_code": 200,
+                "created_at": None,
+                "expires_at": entry["expires_at"],
+                "is_expired": is_expired,
+                "source": "memory"
+            }
+
+        # 2. Check Neon PostgreSQL Database L2 cache
+        try:
+            entry = SectorsCacheRepository.get_with_metadata(key)
+            if entry:
+                if not entry["is_expired"]:
+                    self._memory_store[key] = {
+                        "value": entry["data"],
+                        "expires_at": current_time + min(self.default_ttl, 3600)
+                    }
+                entry["source"] = "database"
+                return entry
+        except Exception as e:
+            logger.warning(f"Database cache get_with_metadata error for key '{key[:30]}': {e}")
+
+        return None
+
     def set(
         self, 
         key: str, 

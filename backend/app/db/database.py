@@ -828,6 +828,58 @@ class SectorsCacheRepository:
             conn.close()
 
     @staticmethod
+    def get_with_metadata(cache_key: str) -> Optional[Dict[str, Any]]:
+        mode = detect_db_mode()
+        conn = get_db_connection()
+        try:
+            if mode == "postgres":
+                cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                cursor.execute("""
+                    SELECT response_data, status_code, created_at, expires_at,
+                           (expires_at <= CURRENT_TIMESTAMP) AS is_expired
+                    FROM sectors_api_cache
+                    WHERE cache_key = %s
+                """, (cache_key,))
+                row = cursor.fetchone()
+                if not row:
+                    return None
+                return {
+                    "data": row["response_data"],
+                    "status_code": row["status_code"],
+                    "created_at": row["created_at"].isoformat() if hasattr(row["created_at"], "isoformat") else str(row["created_at"]),
+                    "expires_at": row["expires_at"].isoformat() if hasattr(row["expires_at"], "isoformat") else str(row["expires_at"]),
+                    "is_expired": bool(row["is_expired"])
+                }
+            else:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT response_data, status_code, created_at, expires_at,
+                           (expires_at <= datetime('now')) AS is_expired
+                    FROM sectors_api_cache
+                    WHERE cache_key = ?
+                """, (cache_key,))
+                row = cursor.fetchone()
+                if not row:
+                    return None
+                resp_data = row[0]
+                if resp_data and isinstance(resp_data, str):
+                    try:
+                        resp_data = json.loads(resp_data)
+                    except Exception:
+                        pass
+                return {
+                    "data": resp_data,
+                    "status_code": row[1],
+                    "created_at": str(row[2]),
+                    "expires_at": str(row[3]),
+                    "is_expired": bool(row[4])
+                }
+        except Exception:
+            return None
+        finally:
+            conn.close()
+
+    @staticmethod
     def set(
         cache_key: str, 
         data: Any, 

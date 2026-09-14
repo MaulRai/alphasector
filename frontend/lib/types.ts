@@ -167,3 +167,54 @@ export interface AuthResponse {
   token_type: string;
   user: User;
 }
+
+export interface NewsDimension {
+  future?: number;
+  dividend?: number;
+  ownership?: number;
+  technical?: number;
+  valuation?: number;
+  financials?: number;
+  management?: number;
+  sustainability?: number;
+}
+
+export interface NewsArticle {
+  title: string;
+  body: string;
+  source: string;
+  thumbnail?: string | null;
+  timestamp: string;
+  sector?: string;
+  sub_sector?: string[];
+  tags?: string[];
+  symbols?: string[];
+  dimension?: NewsDimension;
+}
+
+export interface NewsPagination {
+  total_count: number;
+  showing: number;
+  limit: number;
+  offset: number;
+  has_next: boolean;
+  has_previous: boolean;
+  next_offset?: number | null;
+  previous_offset?: number | null;
+}
+
+export interface NewsApiResponse {
+  data: {
+    results: NewsArticle[];
+    pagination: NewsPagination;
+  };
+  cached: boolean;
+  is_stale: boolean;
+  is_market_hours: boolean;
+  market_status: string;
+  source: string;
+  notice?: string;
+  last_updated?: string;
+  latency_ms?: number;
+  credit_used: number;
+}

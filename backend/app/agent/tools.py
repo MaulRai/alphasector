@@ -244,6 +244,32 @@ class AgentToolExecutor:
                 latency_ms=0,
                 description=f"Error fetching suspensions: {str(e)}"
             )
+    @staticmethod
+    async def fetch_market_news(
+        symbols: Optional[str] = None, 
+        tags: Optional[str] = None, 
+        limit: int = 10, 
+        api_key: Optional[str] = None
+    ) -> Tuple[Optional[Dict[str, Any]], ToolCallLog]:
+        client = get_sectors_client(api_key)
+        try:
+            res = await client.get_news(symbols=symbols, tags=tags, limit=limit)
+            data = res.get("data")
+            log = ToolCallLog(
+                endpoint="/v2/news/",
+                params={"symbols": symbols, "tags": tags, "limit": limit},
+                status=200,
+                latency_ms=res.get("latency_ms", 0),
+                description=f"Fetched latest market news & sentiment for {symbols or 'market universe'}"
+            )
+            return data, log
+        except Exception as e:
+            log = ToolCallLog(
+                endpoint="/v2/news/",
+                status=500,
+                latency_ms=0,
+                description=f"Error fetching market news: {str(e)}"
+            )
             return None, log
 
 tool_executor = AgentToolExecutor()

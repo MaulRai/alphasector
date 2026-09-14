@@ -1,4 +1,4 @@
-import { AgentQueryResponse, ChatSession, ChatMessage } from './types';
+import { AgentQueryResponse, ChatSession, ChatMessage, NewsApiResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -620,6 +620,45 @@ export async function fetchMiningCommodityPrice(commodity: string = 'Coal', star
   const headers = getApiHeaders();
   const params = new URLSearchParams({ commodity, start_year: String(startYear), end_year: String(endYear) });
   const res = await fetch(`${API_BASE_URL}/api/sectors/mining/commodity-price?${params.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export interface MarketNewsParams {
+  symbols?: string;
+  sector?: string;
+  sub_sector?: string;
+  tags?: string;
+  keyword?: string;
+  start?: string;
+  end?: string;
+  limit?: number;
+  offset?: number;
+  force_refresh?: boolean;
+}
+
+export async function fetchMarketNews(params: MarketNewsParams = {}): Promise<NewsApiResponse> {
+  const headers = getApiHeaders();
+  const searchParams = new URLSearchParams();
+  if (params.symbols) searchParams.append('symbols', params.symbols);
+  if (params.sector) searchParams.append('sector', params.sector);
+  if (params.sub_sector) searchParams.append('sub_sector', params.sub_sector);
+  if (params.tags) searchParams.append('tags', params.tags);
+  if (params.keyword) searchParams.append('keyword', params.keyword);
+  if (params.start) searchParams.append('start', params.start);
+  if (params.end) searchParams.append('end', params.end);
+  if (params.limit) searchParams.append('limit', String(params.limit));
+  if (params.offset) searchParams.append('offset', String(params.offset));
+  if (params.force_refresh) searchParams.append('force_refresh', 'true');
+
+  const res = await fetch(`${API_BASE_URL}/api/sectors/news?${searchParams.toString()}`, { headers });
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export async function fetchNewsTags(): Promise<{ data: string[]; latency_ms: number }> {
+  const headers = getApiHeaders();
+  const res = await fetch(`${API_BASE_URL}/api/sectors/news/tags`, { headers });
   if (!res.ok) throw new Error(`HTTP error ${res.status}`);
   return res.json();
 }
