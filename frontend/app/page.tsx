@@ -386,13 +386,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. SECTORS API DATA ENGINE (Unified Donker Navy) */}
-      <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-5xl mx-auto text-center space-y-12 relative z-10">
+      {/* 3. SECTORS API DATA ENGINE (x.ai Inspired Cyber Grid & Traveling Neon Beams) */}
+      <section className="py-28 sm:py-36 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        
+        {/* Cybernetic Geometric Grid Background ("kotak-kotak") */}
+        <div className="absolute inset-0 bg-grid-cyber mask-radial-fade opacity-85 pointer-events-none select-none" />
+
+        {/* Ambient Subtle Radial Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full" />
+
+        <div className="max-w-6xl mx-auto text-center relative z-10 space-y-16 sm:space-y-20">
           
+          {/* Header */}
           <RevealOnScroll direction="up">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-semibold text-slate-300">
+            <div className="space-y-4 max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-300 shadow-sm backdrop-blur-md">
                 <div className="relative h-4 w-4">
                   <Image
                     src="/images/sectors-icon.png"
@@ -403,49 +411,117 @@ export default function LandingPage() {
                 </div>
                 <span>Sectors Financial Data Engine</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
                 Ditenagai Ekosistem Sectors Financial API v2
               </h2>
-              <p className="text-sm text-slate-400 max-w-xl mx-auto">
-                Akurasi data pasar modal adalah prioritas mutlak. Seluruh analisis berakar langsung dari endpoint resmi Sectors API.
+              <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                Akurasi data pasar modal adalah prioritas mutlak. Seluruh analisis berakar langsung dari endpoint resmi Sectors API dengan throughput deterministik tinggi.
               </p>
             </div>
           </RevealOnScroll>
 
-          {/* Integration Arc Nodes with Staggered Delays */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <RevealOnScroll direction="up" delayMs={0}>
-              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-emerald-500/40 transition-all text-center space-y-2 hover:scale-105">
-                <div className="text-2xl font-black text-emerald-400 font-mono tabular-nums">70+</div>
-                <div className="text-xs font-bold text-white">REST Endpoints</div>
-                <p className="text-xs text-slate-400">Valuasi, laporan, dividen, dan pergerakan harga</p>
+          {/* x.ai Inspired Cybernetic Metrics Board with Traveling Neon */}
+          <RevealOnScroll direction="up" delayMs={150}>
+            <div className="relative border-t border-slate-800/80 overflow-hidden backdrop-blur-[2px]">
+              
+              {/* Top Border Line Traveling Pulse */}
+              <div className="absolute top-0 inset-x-0 h-[1px] pointer-events-none">
+                <div className="neon-beam-tertiary" />
               </div>
-            </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delayMs={100}>
-              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-cyan-500/40 transition-all text-center space-y-2 hover:scale-105">
-                <div className="text-2xl font-black text-cyan-400 font-mono tabular-nums">900+</div>
-                <div className="text-xs font-bold text-white">Emiten BEI</div>
-                <p className="text-xs text-slate-400">Cakupan semesta seluruh saham terdaftar di Indonesia</p>
-              </div>
-            </RevealOnScroll>
+              {/* Numbers Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-800/80 text-left">
+                
+                {/* Stat 1 */}
+                <div className="p-5 sm:p-7 lg:p-9 group">
+                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-emerald-300 transition-colors">
+                    70+
+                  </div>
+                </div>
 
-            <RevealOnScroll direction="up" delayMs={200}>
-              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-amber-500/40 transition-all text-center space-y-2 hover:scale-105">
-                <div className="text-2xl font-black text-amber-400 font-mono tabular-nums">100+</div>
-                <div className="text-xs font-bold text-white">Anggota Bursa</div>
-                <p className="text-xs text-slate-400">Data konsentrasi broker dan pergerakan asing</p>
-              </div>
-            </RevealOnScroll>
+                {/* Stat 2 */}
+                <div className="p-5 sm:p-7 lg:p-9 group">
+                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-cyan-300 transition-colors">
+                    900+
+                  </div>
+                </div>
 
-            <RevealOnScroll direction="up" delayMs={300}>
-              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-teal-500/40 transition-all text-center space-y-2 hover:scale-105">
-                <div className="text-2xl font-black text-teal-400 font-mono tabular-nums">&lt;6s</div>
-                <div className="text-xs font-bold text-white">Agent Latency</div>
-                <p className="text-xs text-slate-400">Eksekusi paralel multi-agent berkecepatan tinggi</p>
+                {/* Stat 3 */}
+                <div className="p-5 sm:p-7 lg:p-9 group">
+                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-amber-300 transition-colors">
+                    100+
+                  </div>
+                </div>
+
+                {/* Stat 4 */}
+                <div className="p-5 sm:p-7 lg:p-9 group">
+                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-teal-300 transition-colors">
+                    &lt;6s
+                  </div>
+                </div>
+
               </div>
-            </RevealOnScroll>
-          </div>
+
+              {/* Prominent Center Horizontal Grid Line with Traveling Neon Laser Beams */}
+              <div className="relative w-full h-[1px] bg-slate-800/90">
+                {/* Primary Neon Beam (Cyan/White) */}
+                <div className="neon-beam-primary pointer-events-none" />
+                {/* Secondary Neon Beam (Emerald/Cyan) */}
+                <div className="neon-beam-secondary pointer-events-none" />
+              </div>
+
+              {/* Labels Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-800/80 text-left">
+                
+                {/* Label 1 */}
+                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                  <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                    REST Endpoints
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    Valuasi, dividen, dan pergerakan harga historis
+                  </p>
+                </div>
+
+                {/* Label 2 */}
+                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                  <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                    Emiten BEI
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    Cakupan semesta seluruh saham terdaftar di BEI
+                  </p>
+                </div>
+
+                {/* Label 3 */}
+                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                  <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                    Anggota Bursa
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    Data konsentrasi broker dan kepemilikan KSEI
+                  </p>
+                </div>
+
+                {/* Label 4 */}
+                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                  <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                    Agent Latency
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    Eksekusi paralel otonom multi-agent super cepat
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Bottom Border Line */}
+              <div className="relative w-full h-[1px] bg-slate-800/80">
+                <div className="neon-beam-tertiary pointer-events-none" />
+              </div>
+
+            </div>
+          </RevealOnScroll>
 
         </div>
       </section>
