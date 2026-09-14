@@ -455,8 +455,8 @@ export default function LandingPage() {
               </RevealOnScroll>
             </div>
 
-            {/* Right Column (40% ratio / 4 of 10): Title + Description (Align Top, No CTA) */}
-            <div className="order-1 lg:order-2 lg:col-span-4 w-full pt-1 lg:pt-2">
+            {/* Right Column (40% ratio / 4 of 10): Title + Description + Rotated Loop Graphic (Align Top, No CTA) */}
+            <div className="order-1 lg:order-2 lg:col-span-4 w-full pt-1 lg:pt-2 flex flex-col justify-between self-stretch">
               <RevealOnScroll direction="left">
                 <div className="space-y-3">
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
@@ -468,6 +468,22 @@ export default function LandingPage() {
                   </p>
                 </div>
               </RevealOnScroll>
+
+              {/* Rotated 3D End-to-End Loop Graphic filling bottom-right emptiness */}
+              <div className="relative flex justify-end items-end pt-4 sm:pt-6 pointer-events-none select-none">
+                {/* Subtle Emerald Ambient Glow */}
+                <div className="absolute right-4 bottom-2 w-36 h-36 bg-emerald-500/20 blur-3xl rounded-full pointer-events-none" />
+                
+                <div className="relative w-36 sm:w-44 lg:w-52 aspect-square transform rotate-[18deg] hover:rotate-[10deg] transition-transform duration-700 ease-out opacity-90 drop-shadow-[0_20px_35px_rgba(16,185,129,0.25)]">
+                  <Image
+                    src="/images/landing/end-to-end.png"
+                    alt="End-to-End Circular Loop"
+                    fill
+                    sizes="(max-width: 1024px) 180px, 220px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
             </div>
 
           </div>
