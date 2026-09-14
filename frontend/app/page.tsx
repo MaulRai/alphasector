@@ -9,7 +9,7 @@ import {
   Sparkles, ArrowRight, Swords, Users, Search, 
   Building2, ShieldCheck, TrendingUp, Zap, Database, 
   BarChart3, CheckCircle2, ChevronRight, PieChart, Layers, Play,
-  Landmark, Lock, AlertTriangle, FileText
+  Landmark, Lock, AlertTriangle
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -553,24 +553,12 @@ export default function LandingPage() {
       <section ref={smartSectionRef} className="relative min-h-[240vh] lg:min-h-[270vh] bg-[#080e1e]">
         {/* Sticky viewport frame holding both columns during scroll progression */}
         <div className="sticky top-16 md:top-20 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full min-h-[calc(100vh-4rem)] flex flex-col justify-center">
-          
-          <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8 space-y-2">
-            <span className="text-xs font-bold text-cyan-400 tracking-wider uppercase">
-              Market Surveillance &amp; Smart Money Suite
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-              Deteksi Jejak Smart Money &amp; Keterbukaan Informasi BEI
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Mulai dari transaksi Direksi &amp; Komisaris, dekomposisi pemegang saham riil KSEI, hingga radar suspensi bursa — seluruh insight dapat disalin langsung sebagai konteks ke AlphaAgent.
-            </p>
-          </div>
 
-          {/* Split Layout: Card Transisi di Kiri + Video Demo Holding di Kanan */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Split Layout: Card Transisi di Kiri + Header Leburan & Video Lega di Kanan */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Column: 1 Card at a Time with Smooth Upward Fading Transitions */}
-            <div className="lg:col-span-6 flex flex-col space-y-3">
+            <div className="order-2 lg:order-1 lg:col-span-6 flex flex-col space-y-3">
               
               {/* Step Switcher Pills & Counter */}
               <div className="flex items-center justify-between gap-2">
@@ -826,36 +814,27 @@ export default function LandingPage() {
 
             </div>
 
-            {/* Right Column: Sticky Video Demo Holding in Place */}
-            <div className="lg:col-span-6">
-              <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-[#0a1122] to-[#070b16] p-5 sm:p-6 space-y-5 shadow-2xl shadow-emerald-950/20">
-                
-                {/* Header: Concise Text + Action Buttons */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                      <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm sm:text-base font-bold text-white mb-0.5">
-                        Seamless Context Handoff ke AlphaAgent
-                      </h4>
-                      <p className="text-xs text-slate-300 leading-relaxed">
-                        Bawa temuan riset dari Smart Money langsung ke AlphaAgent sebagai konteks instan untuk analisis mendalam.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+            {/* Right Column: Combined Headline, Context Handoff & Wide Video */}
+            <div className="order-1 lg:order-2 lg:col-span-6 flex flex-col space-y-4">
+              
+              {/* Peleburan Dua Group Text: Header Section + Context Handoff + CTA Buttons */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <span className="text-xs font-bold text-cyan-400 tracking-wider uppercase">
+                    Market Surveillance &amp; Smart Money Suite
+                  </span>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
                     <Link
                       href="/smart-money"
-                      className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
+                      className="inline-flex items-center justify-center px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
                     >
                       <span>Buka Smart Money</span>
                     </Link>
                     <Link
                       href="/alpha-agent"
-                      className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
                     >
                       <span>Coba di AlphaAgent</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -863,35 +842,43 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Video Demo Mockup Player */}
-                <div className="relative rounded-xl border border-slate-800/90 bg-[#060a14] overflow-hidden shadow-2xl">
-                  {/* Window Header Bar */}
-                  <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-rose-500/80" />
-                      <div className="w-2 h-2 rounded-full bg-amber-500/80" />
-                      <div className="w-2 h-2 rounded-full bg-emerald-500/80" />
-                    </div>
-                    <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
-                      Smart Money → AlphaAgent Context Handoff Demo
-                    </div>
-                    <div className="w-8" />
-                  </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  Deteksi Jejak Smart Money &amp; Keterbukaan Informasi BEI
+                </h2>
+                
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  Mulai dari transaksi Direksi &amp; Komisaris, dekomposisi pemegang saham riil KSEI, hingga radar suspensi bursa — seluruh insight dapat disalin langsung sebagai konteks ke AlphaAgent.
+                </p>
+              </div>
 
-                  {/* Video Element */}
-                  <div className="relative aspect-video w-full bg-black">
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover object-center"
-                      src="/images/landing/vids/copy-context-demo.webm"
-                    />
+              {/* Video Mockup Window: Lega tanpa pembungkus frame luar tebal */}
+              <div className="relative rounded-2xl border border-slate-800 bg-[#060a14] overflow-hidden shadow-2xl shadow-cyan-950/20 w-full">
+                {/* Clean Window Title Bar */}
+                <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
                   </div>
+                  <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
+                    Smart Money → AlphaAgent Context Handoff Demo
+                  </div>
+                  <div className="w-8" />
                 </div>
 
+                {/* Video Element */}
+                <div className="relative aspect-video w-full bg-black">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover object-center"
+                    src="/images/landing/vids/copy-context-demo.webm"
+                  />
+                </div>
               </div>
+
             </div>
 
           </div>
