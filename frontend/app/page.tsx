@@ -757,7 +757,7 @@ export default function LandingPage() {
                   Deteksi Jejak Smart Money &amp; Keterbukaan Informasi BEI
                 </h2>
                 
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                   Mulai dari transaksi Direksi &amp; Komisaris, dekomposisi pemegang saham riil KSEI, hingga radar suspensi bursa — seluruh insight dapat disalin langsung sebagai konteks ke AlphaAgent.
                 </p>
 
