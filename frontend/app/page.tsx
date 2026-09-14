@@ -701,26 +701,21 @@ export default function LandingPage() {
           </RevealOnScroll>
         </div>
 
-        {/* Seamless Context Handoff Feature Banner with Video Demo */}
+        {/* Seamless Context Handoff Feature Banner with Video Demo (75% Centered) */}
         <RevealOnScroll direction="up" delayMs={400}>
-          <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-[#0a1122] to-[#070b16] p-5 sm:p-7 space-y-6 shadow-2xl shadow-emerald-950/20">
+          <div className="w-full lg:w-3/4 max-w-4xl mx-auto rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-[#0a1122] to-[#070b16] p-4 sm:p-6 space-y-5 shadow-2xl shadow-emerald-950/20">
             
             {/* Header: Concise Text + Action Buttons */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                  <FileText className="h-5 w-5" />
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-                      Workflow Baru
-                    </span>
-                    <h4 className="text-base sm:text-lg font-bold text-white">
-                      Seamless Context Handoff ke AlphaAgent
-                    </h4>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-300">
+                  <h4 className="text-sm sm:text-base font-bold text-white mb-0.5">
+                    Seamless Context Handoff ke AlphaAgent
+                  </h4>
+                  <p className="text-xs text-slate-300">
                     Salin konteks riset dari Smart Money, tekan <span className="font-mono text-emerald-300 font-semibold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30">Ctrl+V</span> di AlphaAgent untuk evaluasi instan.
                   </p>
                 </div>
@@ -729,13 +724,13 @@ export default function LandingPage() {
               <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                 <Link
                   href="/smart-money"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
                 >
                   <span>Buka Smart Money</span>
                 </Link>
                 <Link
                   href="/alpha-agent"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
                 >
                   <span>Coba di AlphaAgent</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -746,16 +741,16 @@ export default function LandingPage() {
             {/* Video Demo Mockup Player */}
             <div className="relative rounded-xl border border-slate-800/90 bg-[#060a14] overflow-hidden shadow-2xl">
               {/* Window Header Bar */}
-              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800/80">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-rose-500/80" />
+                  <div className="w-2 h-2 rounded-full bg-amber-500/80" />
+                  <div className="w-2 h-2 rounded-full bg-emerald-500/80" />
                 </div>
-                <div className="text-[11px] font-mono text-slate-400 font-medium">
+                <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
                   Smart Money → AlphaAgent Context Handoff Demo
                 </div>
-                <div className="w-10" />
+                <div className="w-8" />
               </div>
 
               {/* Video Element */}
