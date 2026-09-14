@@ -524,250 +524,257 @@ export default function LandingPage() {
           </div>
         </RevealOnScroll>
 
-        {/* 3 Pillar Cards for New Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Card 1: Insider Deal Tracker */}
-          <RevealOnScroll direction="up" delayMs={0}>
-            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-cyan-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
-              
-              {/* Faded corner image graphic centered on canvas subject */}
-              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
-                <Image
-                  src="/images/landing/Insider Deal Tracker.jpeg"
-                  alt="Insider Deal Tracker Preview"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
-                />
-                {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                {/* Top spacer gap */}
-                <div className="h-10 sm:h-12" aria-hidden="true" />
-                <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
-                    Insider Deal Tracker
-                  </h3>
-                  <p className="text-xs font-semibold text-cyan-400 mt-0.5">
-                    Transaksi Direksi & Komisaris
-                  </p>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Laporan keterbukaan resmi BEI/KSEI atas transaksi pembelian dan pelepasan saham oleh jajaran direksi, komisaris, dan pengendali untuk mendeteksi sinyal keyakinan manajemen emiten.
-                </p>
-                <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-                    <span>Klasifikasi Beli vs Jual otomatis</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-                    <span>Riwayat nominal & tanggal transaksi</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-                    <span>One-click Salin Konteks ke AlphaAgent</span>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/smart-money?tab=insider"
-                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-cyan-400 hover:text-cyan-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
-              >
-                <span>Lihat Transaksi Insider</span>
-                <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </RevealOnScroll>
-
-          {/* Card 2: Institutional Breakdown KSEI */}
-          <RevealOnScroll direction="up" delayMs={150}>
-            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-purple-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
-              
-              {/* Faded corner image graphic centered on canvas subject */}
-              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
-                <Image
-                  src="/images/landing/Institutional Breakdown.png"
-                  alt="Institutional Breakdown KSEI Preview"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
-                />
-                {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                {/* Top spacer gap */}
-                <div className="h-10 sm:h-12" aria-hidden="true" />
-                <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
-                    Institutional Breakdown
-                  </h3>
-                  <p className="text-xs font-semibold text-purple-400 mt-0.5">
-                    Dapen, Reksadana & Asuransi
-                  </p>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Dekomposisi kepemilikan saham riil dari KSEI setiap bulan. Ketahui akumulasi dana pensiun (smart money jangka panjang) dan asuransi vs posisi spekulatif ritel.
-                </p>
-                <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                    <span>Rasio Asing vs Domestik akurat</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                    <span>6 kategori entitas pemegang saham</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                    <span>One-click Salin Konteks ke AlphaAgent</span>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/smart-money?tab=institutional"
-                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-purple-400 hover:text-purple-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
-              >
-                <span>Cek Dekomposisi KSEI</span>
-                <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </RevealOnScroll>
-
-          {/* Card 3: BEI Suspension & UMA Watchdog */}
-          <RevealOnScroll direction="up" delayMs={300}>
-            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-rose-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
-              
-              {/* Faded corner image graphic centered on canvas subject */}
-              <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
-                <Image
-                  src="/images/landing/BEI Suspension UMA.jpeg"
-                  alt="BEI Suspension & UMA Preview"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
-                />
-                {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                {/* Top spacer gap */}
-                <div className="h-10 sm:h-12" aria-hidden="true" />
-                <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-rose-300 transition-colors">
-                    BEI Suspension & UMA
-                  </h3>
-                  <p className="text-xs font-semibold text-rose-400 mt-0.5">
-                    Suspensi Perdagangan & Keterbukaan Bursa
-                  </p>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Sistem radar penghentian sementara (suspensi) perdagangan efek dan pemantauan Unusual Market Activity (UMA) oleh Bursa Efek Indonesia, lengkap dengan tautan pengumuman resmi bursa.
-                </p>
-                <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
-                    <span>Filter status spesifik emiten / se-Bursa</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
-                    <span>Tautan surat pengumuman resmi BEI</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
-                    <span>One-click Salin Konteks ke AlphaAgent</span>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/smart-money?tab=suspensions"
-                className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-rose-400 hover:text-rose-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
-              >
-                <span>Buka Radar Suspensi BEI</span>
-                <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </RevealOnScroll>
-        </div>
-
-        {/* Seamless Context Handoff Feature Banner with Video Demo (75% Centered) */}
-        <RevealOnScroll direction="up" delayMs={400}>
-          <div className="w-full lg:w-3/4 max-w-4xl mx-auto rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-[#0a1122] to-[#070b16] p-4 sm:p-6 space-y-5 shadow-2xl shadow-emerald-950/20">
+        {/* Split Scrolling: 3 Cards Flowing on Left + Video Holding on Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          
+          {/* Left Column: 3 Pillar Feature Cards Flowing Vertically */}
+          <div className="lg:col-span-6 flex flex-col space-y-8">
             
-            {/* Header: Concise Text + Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                  <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+            {/* Card 1: Insider Deal Tracker */}
+            <RevealOnScroll direction="up" delayMs={0}>
+              <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-cyan-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+                
+                {/* Faded corner image graphic centered on canvas subject */}
+                <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                  <Image
+                    src="/images/landing/Insider Deal Tracker.jpeg"
+                    alt="Insider Deal Tracker Preview"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 30vw"
+                    className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  />
+                  {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                  <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
                 </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-bold text-white mb-0.5">
-                    Seamless Context Handoff ke AlphaAgent
-                  </h4>
-                  <p className="text-xs text-slate-300">
-                    Bawa temuan riset dari Smart Money langsung ke AlphaAgent sebagai konteks instan untuk analisis mendalam.
+
+                <div className="space-y-4 relative z-10">
+                  {/* Top spacer gap */}
+                  <div className="h-10 sm:h-12" aria-hidden="true" />
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      Insider Deal Tracker
+                    </h3>
+                    <p className="text-xs font-semibold text-cyan-400 mt-0.5">
+                      Transaksi Direksi &amp; Komisaris
+                    </p>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Laporan keterbukaan resmi BEI/KSEI atas transaksi pembelian dan pelepasan saham oleh jajaran direksi, komisaris, dan pengendali untuk mendeteksi sinyal keyakinan manajemen emiten.
                   </p>
+                  <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                      <span>Klasifikasi Beli vs Jual otomatis</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                      <span>Riwayat nominal &amp; tanggal transaksi</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                      <span>One-click Salin Konteks ke AlphaAgent</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                 <Link
-                  href="/smart-money"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
+                  href="/smart-money?tab=insider"
+                  className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-cyan-400 hover:text-cyan-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
                 >
-                  <span>Buka Smart Money</span>
+                  <span>Lihat Transaksi Insider</span>
+                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
+              </div>
+            </RevealOnScroll>
+
+            {/* Card 2: Institutional Breakdown KSEI */}
+            <RevealOnScroll direction="up" delayMs={0}>
+              <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-purple-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+                
+                {/* Faded corner image graphic centered on canvas subject */}
+                <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                  <Image
+                    src="/images/landing/Institutional Breakdown.png"
+                    alt="Institutional Breakdown KSEI Preview"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 30vw"
+                    className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  />
+                  {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                  <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
+                </div>
+
+                <div className="space-y-4 relative z-10">
+                  {/* Top spacer gap */}
+                  <div className="h-10 sm:h-12" aria-hidden="true" />
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
+                      Institutional Breakdown
+                    </h3>
+                    <p className="text-xs font-semibold text-purple-400 mt-0.5">
+                      Dapen, Reksadana &amp; Asuransi
+                    </p>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Dekomposisi kepemilikan saham riil dari KSEI setiap bulan. Ketahui akumulasi dana pensiun (smart money jangka panjang) dan asuransi vs posisi spekulatif ritel.
+                  </p>
+                  <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                      <span>Rasio Asing vs Domestik akurat</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                      <span>6 kategori entitas pemegang saham</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                      <span>One-click Salin Konteks ke AlphaAgent</span>
+                    </div>
+                  </div>
+                </div>
                 <Link
-                  href="/alpha-agent"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
+                  href="/smart-money?tab=institutional"
+                  className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-purple-400 hover:text-purple-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
                 >
-                  <span>Coba di AlphaAgent</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <span>Cek Dekomposisi KSEI</span>
+                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
-            </div>
+            </RevealOnScroll>
 
-            {/* Video Demo Mockup Player */}
-            <div className="relative rounded-xl border border-slate-800/90 bg-[#060a14] overflow-hidden shadow-2xl">
-              {/* Window Header Bar */}
-              <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-rose-500/80" />
-                  <div className="w-2 h-2 rounded-full bg-amber-500/80" />
-                  <div className="w-2 h-2 rounded-full bg-emerald-500/80" />
+            {/* Card 3: BEI Suspension & UMA Watchdog */}
+            <RevealOnScroll direction="up" delayMs={0}>
+              <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-rose-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+                
+                {/* Faded corner image graphic centered on canvas subject */}
+                <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
+                  <Image
+                    src="/images/landing/BEI Suspension UMA.jpeg"
+                    alt="BEI Suspension & UMA Preview"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 30vw"
+                    className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+                  />
+                  {/* Smooth multi-directional fading gradients to blend seamlessly */}
+                  <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
                 </div>
-                <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
-                  Smart Money → AlphaAgent Context Handoff Demo
-                </div>
-                <div className="w-8" />
-              </div>
 
-              {/* Video Element */}
-              <div className="relative aspect-video w-full bg-black">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover object-center"
-                  src="/images/landing/vids/copy-context-demo.webm"
-                />
+                <div className="space-y-4 relative z-10">
+                  {/* Top spacer gap */}
+                  <div className="h-10 sm:h-12" aria-hidden="true" />
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-rose-300 transition-colors">
+                      BEI Suspension &amp; UMA
+                    </h3>
+                    <p className="text-xs font-semibold text-rose-400 mt-0.5">
+                      Suspensi Perdagangan &amp; Keterbukaan Bursa
+                    </p>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Sistem radar penghentian sementara (suspensi) perdagangan efek dan pemantauan Unusual Market Activity (UMA) oleh Bursa Efek Indonesia, lengkap dengan tautan pengumuman resmi bursa.
+                  </p>
+                  <div className="space-y-1.5 pt-1 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
+                      <span>Filter status spesifik emiten / se-Bursa</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
+                      <span>Tautan surat pengumuman resmi BEI</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-rose-400 shrink-0" />
+                      <span>One-click Salin Konteks ke AlphaAgent</span>
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/smart-money?tab=suspensions"
+                  className="relative z-10 inline-flex items-center justify-between text-xs font-bold text-rose-400 hover:text-rose-300 pt-3 border-t border-slate-800/80 group-hover:border-slate-700 transition-colors"
+                >
+                  <span>Buka Radar Suspensi BEI</span>
+                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </Link>
               </div>
-            </div>
+            </RevealOnScroll>
 
           </div>
-        </RevealOnScroll>
+
+          {/* Right Column: Sticky Video Demo Holding in Place */}
+          <div className="lg:col-span-6 lg:sticky lg:top-28">
+            <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-[#0a1122] to-[#070b16] p-5 sm:p-6 space-y-5 shadow-2xl shadow-emerald-950/20">
+              
+              {/* Header: Concise Text + Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                    <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-bold text-white mb-0.5">
+                      Seamless Context Handoff ke AlphaAgent
+                    </h4>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Bawa temuan riset dari Smart Money langsung ke AlphaAgent sebagai konteks instan untuk analisis mendalam.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                  <Link
+                    href="/smart-money"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
+                  >
+                    <span>Buka Smart Money</span>
+                  </Link>
+                  <Link
+                    href="/alpha-agent"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
+                  >
+                    <span>Coba di AlphaAgent</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Video Demo Mockup Player */}
+              <div className="relative rounded-xl border border-slate-800/90 bg-[#060a14] overflow-hidden shadow-2xl">
+                {/* Window Header Bar */}
+                <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-rose-500/80" />
+                    <div className="w-2 h-2 rounded-full bg-amber-500/80" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                  </div>
+                  <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
+                    Smart Money → AlphaAgent Context Handoff Demo
+                  </div>
+                  <div className="w-8" />
+                </div>
+
+                {/* Video Element */}
+                <div className="relative aspect-video w-full bg-black">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover object-center"
+                    src="/images/landing/vids/copy-context-demo.webm"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
         </div>
       </section>
 
