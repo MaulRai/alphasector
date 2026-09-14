@@ -415,15 +415,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 2.5 END-TO-END FOLLOW-UP WORKFLOW (Side-by-Side: Video Left, Title & Desc Right, 50:50, No CTA) */}
+      {/* 2.5 END-TO-END FOLLOW-UP WORKFLOW (Side-by-Side: Video Left 60%, Title & Desc Right 40%, Align Top, No CTA) */}
       <section className="py-20 sm:py-28 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Subtle Ambient Light Glow */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-emerald-500/10 blur-[140px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12 items-start">
             
-            {/* Left Column (50% ratio): Video Demo Player */}
+            {/* Left Column (60% ratio / 6 of 10): Video Demo Player */}
             <div className="order-2 lg:order-1 lg:col-span-6 w-full">
               <RevealOnScroll direction="right">
                 <div className="relative rounded-2xl border border-slate-800 bg-[#060a14] overflow-hidden shadow-2xl shadow-cyan-950/20 w-full group hover:border-emerald-500/40 transition-colors duration-300">
@@ -455,20 +455,16 @@ export default function LandingPage() {
               </RevealOnScroll>
             </div>
 
-            {/* Right Column (50% ratio): Title + Description (No CTA) */}
-            <div className="order-1 lg:order-2 lg:col-span-6 w-full space-y-4">
+            {/* Right Column (40% ratio / 4 of 10): Title + Description (Align Top, No CTA) */}
+            <div className="order-1 lg:order-2 lg:col-span-4 w-full pt-1 lg:pt-2">
               <RevealOnScroll direction="left">
-                <div className="space-y-3.5">
-                  <span className="text-xs font-bold text-emerald-400 tracking-wider uppercase">
-                    Seamless Inter-Module Workflow
-                  </span>
-                  
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                <div className="space-y-3">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
                     Ekosistem Riset End-to-End: Follow-Up Setiap Temuan Tanpa Hambatan
                   </h2>
                   
                   <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    Setiap temuan anomali harga di Peer Battle, jejak akumulasi di Smart Money, hingga emiten hasil filter Screener saling terhubung secara terpadu. Kamu dapat langsung mem-follow up data mentah ke AlphaAgent sebagai konteks instan untuk menguji hipotesis investasi, menggali katalis masa depan, dan merumuskan kesimpulan tanpa perlu berpindah aplikasi atau menyalin data manual.
+                    Setiap temuan di Peer Battle, Smart Money, hingga Screener saling terhubung secara terpadu. Anda dapat langsung mem-follow up data ke AlphaAgent sebagai konteks instan untuk menguji hipotesis dan menggali katalis tanpa perlu menyalin data manual.
                   </p>
                 </div>
               </RevealOnScroll>
