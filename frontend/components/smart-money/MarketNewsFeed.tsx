@@ -12,7 +12,9 @@ import {
   Tag, 
   Copy, 
   Check, 
-  Sparkles 
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
 import { encodeContextForClipboard } from '@/lib/contextClipboard';
@@ -91,9 +93,18 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
     }
   };
 
-  // Filter articles locally by searchKeyword
-  const filteredArticles = useMemo(() => {
-    const rawList = newsData?.data?.results || [];
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Guarantee sorting strictly descending by timestamp (newest first)
+  const sortedAndFilteredArticles = useMemo(() => {
+    const rawList = [...(newsData?.data?.results || [])];
+    rawList.sort((a, b) => {
+      const timeA = new Date(a.timestamp).getTime();
+      const timeB = new Date(b.timestamp).getTime();
+      return timeB - timeA;
+    });
+
     if (!searchKeyword.trim()) return rawList;
     const query = searchKeyword.toLowerCase();
     return rawList.filter(article => 
@@ -103,6 +114,17 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
       article.tags?.some(t => t.toLowerCase().includes(query))
     );
   }, [newsData, searchKeyword]);
+
+  // Reset page to 1 on filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [initialTicker, selectedTag, searchKeyword]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedAndFilteredArticles.length / ITEMS_PER_PAGE));
+  const paginatedArticles = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return sortedAndFilteredArticles.slice(start, start + ITEMS_PER_PAGE);
+  }, [sortedAndFilteredArticles, currentPage]);
 
   const handleCopySingleNews = (article: NewsArticle, index: number) => {
     const symStr = article.symbols && article.symbols.length > 0 
@@ -131,20 +153,20 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
     router.push(`/alpha-agent?ticker=${sym}&prompt=${encodeURIComponent(`Analisis dampak berita: "${article.title}" terhadap prospek fundamental dan harga saham ${sym}.`)}`);
   };
 
-  const handleCopyAllNews = () => {
-    if (!filteredArticles || filteredArticles.length === 0) return;
-    const topArticles = filteredArticles.slice(0, 6);
-    const summaryList = topArticles.map((a, i) => {
+  const handleCopyCurrentPageNews = () => {
+    if (!paginatedArticles || paginatedArticles.length === 0) return;
+    const summaryList = paginatedArticles.map((a, i) => {
       const s = a.symbols?.join(', ') || 'IDX';
-      return `${i + 1}. [${s}] ${a.title}\nRingkasan: ${a.body.slice(0, 140)}...`;
+      const timeStr = formatTimeAgo(a.timestamp);
+      return `${i + 1}. [${s} • ${timeStr}] ${a.title}\nRingkasan: ${a.body.slice(0, 130)}...`;
     }).join('\n\n');
 
-    const tickerLabel = initialTicker ? initialTicker.toUpperCase() : 'Semua Emiten';
+    const tickerLabel = initialTicker ? initialTicker.toUpperCase() : 'Pasar IDX';
     const payloadText = encodeContextForClipboard({
       type: 'MARKET_NEWS',
-      title: `Kompilasi Berita Pasar IDX (${tickerLabel})`,
+      title: `Kompilasi 5 Berita Terkini (${tickerLabel} - Halaman ${currentPage})`,
       ticker: initialTicker,
-      summary: `Ringkasan ${topArticles.length} Berita Utama Terkini:`,
+      summary: `5 Berita Terkini (${tickerLabel} - Hal ${currentPage}):`,
       details: summaryList,
     });
 
@@ -207,12 +229,12 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
         {/* Action Buttons */}
         <div className="flex items-center gap-2.5 self-start sm:self-center">
           <button
-            onClick={handleCopyAllNews}
-            disabled={filteredArticles.length === 0}
+            onClick={handleCopyCurrentPageNews}
+            disabled={paginatedArticles.length === 0}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/50 hover:to-indigo-600/50 text-blue-300 border border-blue-500/30 transition-all disabled:opacity-50 cursor-pointer"
           >
             {copiedAll ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
-            <span>{copiedAll ? 'Tersalin!' : 'Salin Konteks ke AlphaAgent'}</span>
+            <span>{copiedAll ? 'Tersalin!' : `Salin ${paginatedArticles.length} Berita ke AlphaAgent`}</span>
           </button>
         </div>
       </div>
@@ -300,7 +322,7 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
             </button>
           </div>
         </div>
-      ) : filteredArticles.length === 0 ? (
+      ) : sortedAndFilteredArticles.length === 0 ? (
         <div className="text-center py-12 px-4 rounded-xl border border-slate-800/80 bg-slate-950/30 space-y-3">
           <Newspaper className="w-10 h-10 text-slate-600 mx-auto" />
           <div className="text-slate-300 text-sm font-medium">Tidak ada berita yang sesuai kriteria filter</div>
@@ -319,9 +341,12 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
           </button>
         </div>
       ) : (
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-            <span>Menampilkan <strong>{filteredArticles.length}</strong> artikel berita terverifikasi</span>
+            <span>
+              Menampilkan <strong>{paginatedArticles.length}</strong> dari <strong>{sortedAndFilteredArticles.length}</strong> berita terbaru
+              {totalPages > 1 && <span className="text-slate-500 ml-1">(Halaman {currentPage} dari {totalPages})</span>}
+            </span>
             {newsData?.last_updated && (
               <span className="text-[11px] text-slate-500 font-mono">
                 Pembaruan: {formatTimeAgo(newsData.last_updated)}
@@ -330,7 +355,7 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
           </div>
 
           <div className="grid grid-cols-1 gap-3.5">
-            {filteredArticles.map((article, idx) => {
+            {paginatedArticles.map((article, idx) => {
               const cleanSymbols = (article.symbols || []).map(s => s.replace('.JK', ''));
               return (
                 <div
@@ -461,6 +486,63 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
               );
             })}
           </div>
+
+          {/* Pagination Controls (5 Articles per Page) */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-800/80 text-xs text-slate-400">
+              <div className="flex items-center gap-1">
+                <span>Halaman</span>
+                <span className="font-bold text-slate-200">{currentPage}</span>
+                <span>dari</span>
+                <span className="font-bold text-slate-200">{totalPages}</span>
+                <span className="text-slate-500 ml-1">({sortedAndFilteredArticles.length} total berita terurut terbaru)</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 self-start sm:self-center">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <span>Sebelumnya</span>
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                    if (totalPages > 7 && Math.abs(p - currentPage) > 2 && p !== 1 && p !== totalPages) {
+                      if (p === 2 || p === totalPages - 1) {
+                        return <span key={p} className="px-1 text-slate-600">...</span>;
+                      }
+                      return null;
+                    }
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => setCurrentPage(p)}
+                        className={`w-7 h-7 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          currentPage === p
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'bg-slate-900 text-slate-400 border border-slate-800/80 hover:text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                >
+                  <span>Selanjutnya</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

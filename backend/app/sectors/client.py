@@ -240,6 +240,9 @@ class SectorsAPIClient:
                 
                 if response.status_code == 200:
                     data = response.json()
+                    # Ensure results are strictly ordered descending by timestamp (newest first)
+                    if isinstance(data, dict) and "results" in data and isinstance(data["results"], list):
+                        data["results"].sort(key=lambda x: str(x.get("timestamp", "")), reverse=True)
                     # Store with 2-hour TTL (7200s) in shared Neon DB & memory
                     cache.set(cache_key, data, ttl_seconds=7200, endpoint="/news/", params=params)
                     return {
