@@ -25,7 +25,7 @@ function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const searchParams = useSearchParams();
   const sessionIdParam = searchParams.get('session_id');
-  const initialQueryParam = searchParams.get('initial_query') || searchParams.get('q');
+  const initialQueryParam = searchParams.get('initial_query') || searchParams.get('prompt') || searchParams.get('q');
 
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);

@@ -117,8 +117,11 @@ export function useChatSessions({
           setActiveSessionId(null);
           setMessages([]);
           setIsFetchingHistory(false);
+          if (typeof window !== 'undefined' && (window.location.search.includes('initial_query') || window.location.search.includes('prompt') || window.location.search.includes('q'))) {
+            window.history.replaceState({}, '', '/alpha-agent');
+          }
           await onInitialQueryTrigger(initialQueryParam);
-        } else if (userSessions.length > 0 && !activeSessionId) {
+        } else if (userSessions.length > 0 && !activeSessionId && !initialQueryParam && !initialQueryExecuted.current) {
           await handleSelectSession(userSessions[0].id);
         } else {
           setIsFetchingHistory(false);
@@ -138,7 +141,7 @@ export function useChatSessions({
     return () => {
       isMounted = false;
     };
-  }, [user, sessionIdParam]);
+  }, [user?.id, sessionIdParam]);
 
   // Handshake when sessionIdParam changes
   useEffect(() => {

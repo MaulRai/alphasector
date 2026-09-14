@@ -149,7 +149,17 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
   const handleAnalyzeWithAgent = (article: NewsArticle) => {
     handleCopySingleNews(article, -1);
     const sym = article.symbols?.[0]?.replace('.JK', '') || initialTicker || 'BBCA';
-    router.push(`/alpha-agent?ticker=${sym}&prompt=${encodeURIComponent(`Analisis dampak berita: "${article.title}" terhadap prospek fundamental dan harga saham ${sym}.`)}`);
+    const rawBody = article.body ? article.body.trim() : '';
+    const cleanBody = rawBody.length > 600 ? rawBody.slice(0, 600) + '...' : rawBody;
+
+    const promptText = `Analisis dampak berita pasar berikut terhadap prospek fundamental dan harga saham ${sym}:
+
+Judul Berita: "${article.title}"
+Sumber: ${article.source || 'IDX Media'} (${formatTimeAgo(article.timestamp)})
+${cleanBody ? `Ringkasan:\n${cleanBody}\n` : ''}
+Berikan kesimpulan dampak sentimen (bullish/bearish/netral), implikasi terhadap kinerja keuangan emiten ${sym}, serta rekomendasi tindakan strategis bagi investor.`;
+
+    router.push(`/alpha-agent?initial_query=${encodeURIComponent(promptText)}&ticker=${encodeURIComponent(sym)}&prompt=${encodeURIComponent(promptText)}`);
   };
 
   // Format relative time helper
