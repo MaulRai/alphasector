@@ -44,7 +44,7 @@ export const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
   }, [threshold]);
 
   const getTransformClass = () => {
-    if (isVisible) return 'opacity-100 translate-x-0 translate-y-0';
+    if (isVisible) return 'opacity-100 transform-none';
     switch (direction) {
       case 'up':
         return 'opacity-0 translate-y-8';

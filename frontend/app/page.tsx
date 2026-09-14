@@ -14,7 +14,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#070b16] text-slate-100 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-[#070b16] text-slate-100 flex flex-col overflow-x-clip">
       
       {/* Navigation */}
       <Navbar />
@@ -103,131 +103,293 @@ export default function LandingPage() {
 
       </section>
 
-      {/* 2. CORE CAPABILITIES (Rich Donker Navy Theme) */}
-      <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
+      {/* 2. CORE CAPABILITIES (Sticky Left Header + Vertical Stacked Cards with Diagonal Overlapping Preview Images) */}
+      <section className="py-24 sm:py-32 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
         {/* Subtle Donker Ambient Lighting centered below the boundary to prevent top-edge seam */}
         <div className="absolute top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl h-64 bg-blue-950/20 blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           
-          <RevealOnScroll direction="up">
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-bold text-emerald-400 tracking-wider uppercase">
-                Fitur Riset Unggulan
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Dirancang Khusus untuk Analisis Pasar Modal Indonesia
-              </h2>
-              <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
-                Kombinasi data finansial resmi berlisensi dan AI Agent berkecepatan tinggi tanpa halusinasi angka.
-              </p>
-            </div>
-          </RevealOnScroll>
-
-          {/* Capabilities Grid with Staggered Entrance */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
-            {/* Feature 1: Peer Battle */}
-            <RevealOnScroll direction="up" delayMs={0}>
-              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-cyan-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
-                <div>
-                  <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
-                    <Image
-                      src="/images/landing/peer-battle.jpeg"
-                      alt="Peer Battle Matrix"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Swords className="h-5 w-5 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
-                    <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
-                      Peer Battle & Multiples Gap
-                    </h3>
-                  </div>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Bandingkan 2–4 emiten dalam satu subsektor secara head-to-head. Hitung selisih valuasi P/E, PBV, ROE, dan identifikasi saham yang terdiskon.
+            {/* Left Column: Title, Subtitle, & Feature Indicators (Sticky Hold) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-32 self-start space-y-6 pt-2">
+              <RevealOnScroll direction="left">
+                <div className="space-y-4">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    Fitur Riset Unggulan
+                  </span>
+                  
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+                    Dirancang Khusus untuk Analisis Pasar Modal Indonesia
+                  </h2>
+                  
+                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-lg">
+                    Kombinasi data finansial resmi berlisensi dan AI Agent berkecepatan tinggi tanpa halusinasi angka.
                   </p>
                 </div>
-                <Link 
-                  href="/battle"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 mt-5 pt-3 border-t border-slate-800 group-hover:border-slate-700 transition-colors"
-                >
-                  <span>Buka Peer Battle Terminal</span>
-                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </RevealOnScroll>
 
-            {/* Feature 2: Smart Money Flow */}
-            <RevealOnScroll direction="up" delayMs={150}>
-              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-amber-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
-                <div>
-                  <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
-                    <Image
-                      src="/images/landing/money-charts.jpeg"
-                      alt="Smart Money Flow"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
+                {/* Micro Pillars / Navigation Guide */}
+                <div className="hidden sm:flex flex-col gap-3 pt-6 mt-4 border-t border-slate-800/80">
+                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
+                    <div className="w-6 h-6 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-[11px]">
+                      01
+                    </div>
+                    <span>Peer Battle & Multiples Valuation Gap</span>
                   </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Users className="h-5 w-5 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
-                      Smart Money & Market Surveillance
-                    </h3>
+                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
+                    <div className="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-[11px]">
+                      02
+                    </div>
+                    <span>Smart Money & Broker Concentration Radar</span>
                   </div>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Pantau broker flow, transaksi orang dalam (insider filings), dekomposisi kepemilikan KSEI (Dapen & Reksadana), hingga radar suspensi BEI & UMA.
-                  </p>
+                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-[11px]">
+                      03
+                    </div>
+                    <span>Screener Pro Berbasis Natural Language (NLP)</span>
+                  </div>
                 </div>
-                <Link 
-                  href="/smart-money"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 mt-5 pt-3 border-t border-slate-800 group-hover:border-slate-700 transition-colors"
-                >
-                  <span>Lacak Aliran Dana Smart Money</span>
-                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </RevealOnScroll>
 
-            {/* Feature 3: Screener Pro */}
-            <RevealOnScroll direction="up" delayMs={300}>
-              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-emerald-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
-                <div>
-                  <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
-                    <Image
-                      src="/images/landing/trading-chart-intense.jpg"
-                      alt="Screener Pro"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Search className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">
-                      Screener Pro & Trade Ideas
-                    </h3>
-                  </div>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Saring semesta 900+ emiten BEI dengan bahasa natural (NLP) atau filter terstruktur. Dilengkapi radar 1-klik untuk ESG Leaders dan Revenue Titans.
-                  </p>
+                {/* Secondary Engine Guarantee */}
+                <div className="pt-4 flex items-center gap-2 text-xs text-slate-400">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Data terverifikasi langsung dari IDX & KSEI via Sectors API.</span>
                 </div>
-                <Link 
-                  href="/screener"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 mt-5 pt-3 border-t border-slate-800 group-hover:border-slate-700 transition-colors"
-                >
-                  <span>Mulai Screening Emiten</span>
-                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
+              </RevealOnScroll>
+            </div>
+
+            {/* Right Column: Vertically Stacked Cards with Diagonal Overlapping Previews & Scroll Resistance */}
+            <div className="lg:col-span-7 flex flex-col gap-10 sm:gap-14">
+              
+              {/* Feature 1: Peer Battle & Multiples Gap */}
+              <div className="sticky top-28 sm:top-32 z-10 transition-all duration-300">
+                <RevealOnScroll direction="up" delayMs={0}>
+                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-cyan-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                    
+                    {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                      
+                      {/* Badge & Icon */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shrink-0">
+                          <Swords className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold tracking-wider text-cyan-400 uppercase block">
+                            Head-to-Head Multiples
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                            Peer Battle Matrix
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Bandingkan 2–4 emiten dalam satu subsektor secara head-to-head. Hitung selisih valuasi P/E, PBV, ROE, dan Piotroski F-Score deterministik untuk menemukan saham yang terdiskon.
+                      </p>
+
+                      {/* Feature Spec Tags */}
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          P/E Historical Band
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Piotroski Score 9/9
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Multiples Gap
+                        </span>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="pt-2">
+                        <Link 
+                          href="/battle"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-bold text-cyan-300 hover:text-white transition-all group/btn"
+                        >
+                          <span>Buka Peer Battle Terminal</span>
+                          <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                        </Link>
+                      </div>
+
+                    </div>
+
+                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                      {/* Ambient Accent Glow */}
+                      <div className="absolute -inset-4 bg-cyan-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                        <Image
+                          src="/images/landing/Peer Battle & Valuation Matrix.png"
+                          alt="Peer Battle & Valuation Matrix"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                          className="object-cover object-top"
+                          priority
+                        />
+                        {/* Subtle soft vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    </div>
+
+                  </div>
+                </RevealOnScroll>
               </div>
-            </RevealOnScroll>
+
+              {/* Feature 2: Smart Money & Broker Flow Tracker */}
+              <div className="sticky top-32 sm:top-36 z-20 transition-all duration-300">
+                <RevealOnScroll direction="up" delayMs={100}>
+                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-amber-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                    
+                    {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                      
+                      {/* Badge & Icon */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shrink-0">
+                          <Users className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold tracking-wider text-amber-400 uppercase block">
+                            Institutional Surveillance
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                            Smart Money Tracker
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Pantau konsentrasi transaksi broker institusi, asing, dan ritel 14–30 hari terakhir. Dilengkapi pelacakan insider filings, kepemilikan KSEI (Dapen & Reksadana), dan radar suspensi resmi BEI.
+                      </p>
+
+                      {/* Feature Spec Tags */}
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Top Net Buyers/Sellers
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          KSEI Decomposition
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Radar Suspensi BEI
+                        </span>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="pt-2">
+                        <Link 
+                          href="/smart-money"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-bold text-amber-300 hover:text-white transition-all group/btn"
+                        >
+                          <span>Lacak Aliran Dana Smart Money</span>
+                          <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                        </Link>
+                      </div>
+
+                    </div>
+
+                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                      {/* Ambient Accent Glow */}
+                      <div className="absolute -inset-4 bg-amber-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                        <Image
+                          src="/images/landing/Smart Money & Broker Flow Tracker.png"
+                          alt="Smart Money & Broker Flow Tracker"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                          className="object-cover object-top"
+                        />
+                        {/* Subtle soft vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    </div>
+
+                  </div>
+                </RevealOnScroll>
+              </div>
+
+              {/* Feature 3: Screener Pro & Trade Ideas */}
+              <div className="sticky top-36 sm:top-40 z-30 transition-all duration-300">
+                <RevealOnScroll direction="up" delayMs={100}>
+                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-emerald-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                    
+                    {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                      
+                      {/* Badge & Icon */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shrink-0">
+                          <Search className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold tracking-wider text-emerald-400 uppercase block">
+                            Natural Language Discovery
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-emerald-300 transition-colors">
+                            Screener Pro & Ideas
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Saring semesta 900+ emiten BEI dengan bahasa natural (NLP) atau filter terstruktur. Dilengkapi preset 1-klik untuk dividen tinggi, ESG Leaders, dan valuasi terdiskon.
+                      </p>
+
+                      {/* Feature Spec Tags */}
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          NLP Natural Prompt
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Subsektor Multi-filter
+                        </span>
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
+                          Dossier 360° 1-Click
+                        </span>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="pt-2">
+                        <Link 
+                          href="/screener"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-bold text-emerald-300 hover:text-white transition-all group/btn"
+                        >
+                          <span>Mulai Skrining Emiten</span>
+                          <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                        </Link>
+                      </div>
+
+                    </div>
+
+                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                      {/* Ambient Accent Glow */}
+                      <div className="absolute -inset-4 bg-emerald-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                        <Image
+                          src="/images/landing/Screener Pro.png"
+                          alt="Screener Pro"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                          className="object-cover object-top"
+                        />
+                        {/* Subtle soft vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    </div>
+
+                  </div>
+                </RevealOnScroll>
+              </div>
+
+            </div>
 
           </div>
 
