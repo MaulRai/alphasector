@@ -446,10 +446,10 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Stat 3: <6s Agent Latency */}
+                {/* Stat 3: <1.2s Agent Latency */}
                 <div className="p-6 sm:p-8 lg:p-10 group">
                   <div className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-emerald-300 transition-colors">
-                    &lt;6s
+                    &lt;1.2s
                   </div>
                 </div>
 
@@ -490,7 +490,7 @@ export default function LandingPage() {
                     Agent Latency
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
-                    Eksekusi paralel otonom multi-agent super cepat
+                    Throughput kilat Groq LPU &amp; retrieval I/O paralel
                   </p>
                 </div>
 
