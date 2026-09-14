@@ -890,39 +890,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. GRAND BOTTOM BANNER / CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
-        <div className="max-w-6xl mx-auto">
-          <RevealOnScroll direction="up">
-          <div className="relative rounded-3xl border border-slate-800/80 bg-gradient-to-b from-[#0c162c] to-[#080e1e] p-8 sm:p-14 text-center overflow-hidden hover:border-emerald-500/30 transition-all shadow-2xl shadow-blue-950/20">
-            
-            {/* Oversized Subtle Background Brand Logo Mark */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-              <span className="text-9xl sm:text-[180px] font-black tracking-tighter text-white select-none">
-                ALPHA
-              </span>
-            </div>
+      {/* 5. GRAND BOTTOM BANNER / CTA (Frameless with Cyber Grid Background) */}
+      <section className="py-28 sm:py-36 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative overflow-hidden">
+        
+        {/* Cybernetic Geometric Grid Background ("kotak-kotak" reused from Sectors API section) */}
+        <div className="absolute inset-0 bg-grid-cyber mask-radial-fade opacity-85 pointer-events-none select-none" />
 
-            <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        {/* Ambient Subtle Radial Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-emerald-500/10 blur-[150px] pointer-events-none rounded-full" />
+
+        {/* Oversized Subtle Background Brand Logo Mark */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none select-none">
+          <span className="text-9xl sm:text-[200px] font-black tracking-tighter text-white">
+            ALPHA
+          </span>
+        </div>
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <RevealOnScroll direction="up">
+            <div className="space-y-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
                 Mulai Riset Saham Cerdas Hari Ini
               </h2>
-              <p className="text-sm sm:text-base text-slate-200 leading-relaxed max-w-xl mx-auto">
-                Jalankan riset emiten pertama kamu dengan AI Agent otonom AlphaSector. Dapatkan dossier finansial terstruktur dalam hitungan detik.
+              
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl mx-auto">
+                Jalankan riset emiten pertama Anda dengan AI Agent otonom AlphaSector. Dapatkan dossier finansial terstruktur dalam hitungan detik.
               </p>
-              <div className="pt-3">
+
+              <div className="pt-2">
                 <Link
                   href="/alpha-agent"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/20"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/25"
                 >
                   <span>Buka AlphaAgent Sekarang</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>
-
-          </div>
-        </RevealOnScroll>
+          </RevealOnScroll>
         </div>
       </section>
 
