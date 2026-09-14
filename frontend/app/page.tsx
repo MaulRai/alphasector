@@ -166,10 +166,10 @@ export default function LandingPage() {
               {/* Feature 1: Peer Battle & Multiples Gap */}
               <div className="sticky top-28 sm:top-32 z-10 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={0}>
-                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-cyan-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-cyan-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -216,22 +216,22 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-cyan-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Peer Battle & Valuation Matrix.png"
                           alt="Peer Battle & Valuation Matrix"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 45vw"
-                          className="object-cover object-top"
+                          sizes="(max-width: 1024px) 100vw, 750px"
+                          className="object-cover object-left-top"
                           priority
                         />
                         {/* Subtle soft vignette */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/30 via-transparent to-transparent pointer-events-none" />
                       </div>
                     </div>
 
@@ -242,10 +242,10 @@ export default function LandingPage() {
               {/* Feature 2: Smart Money & Broker Flow Tracker */}
               <div className="sticky top-32 sm:top-36 z-20 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={100}>
-                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-amber-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-amber-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -292,21 +292,21 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-amber-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Smart Money & Broker Flow Tracker.png"
                           alt="Smart Money & Broker Flow Tracker"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 45vw"
-                          className="object-cover object-top"
+                          sizes="(max-width: 1024px) 100vw, 750px"
+                          className="object-cover object-left-top"
                         />
                         {/* Subtle soft vignette */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/30 via-transparent to-transparent pointer-events-none" />
                       </div>
                     </div>
 
@@ -317,10 +317,10 @@ export default function LandingPage() {
               {/* Feature 3: Screener Pro & Trade Ideas */}
               <div className="sticky top-36 sm:top-40 z-30 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={100}>
-                  <div className="relative group rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-br from-[#0c152a]/70 via-[#0a1020]/40 to-[#070c18]/60 border border-slate-800/80 hover:border-emerald-500/40 shadow-2xl shadow-black/80 transition-all duration-500 overflow-hidden min-h-[420px] sm:min-h-[450px] flex flex-col lg:flex-row items-center justify-between gap-6">
+                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.85)] space-y-4 shrink-0">
+                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-emerald-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -367,21 +367,21 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Diagonal Overlapping Feature Preview (Contoh Fitur - Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:right-[-15px] xl:right-[-10px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[58%] xl:w-[60%] z-10 mt-2 lg:mt-0">
+                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-emerald-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.9)] bg-[#070c18] transform rotate-[2deg] lg:rotate-[3.5deg] group-hover:lg:rotate-[1.5deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Screener Pro.png"
                           alt="Screener Pro"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 45vw"
-                          className="object-cover object-top"
+                          sizes="(max-width: 1024px) 100vw, 750px"
+                          className="object-cover object-left-top"
                         />
                         {/* Subtle soft vignette */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/40 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/30 via-transparent to-transparent pointer-events-none" />
                       </div>
                     </div>
 
