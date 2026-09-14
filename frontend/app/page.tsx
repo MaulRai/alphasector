@@ -317,6 +317,68 @@ export default function LandingPage() {
                 </RevealOnScroll>
               </div>
 
+              {/* Feature 4: Emiten 360° Profile & Executive Dossier */}
+              <div className="sticky top-40 sm:top-44 z-40 transition-all duration-300">
+                <RevealOnScroll direction="up" delayMs={100}>
+                  <div className="relative group min-h-[340px] sm:min-h-[360px] flex flex-col lg:flex-row items-center">
+                    
+                    {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
+                    <div className="relative z-20 w-full lg:w-[360px] xl:w-[390px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-blue-500/50 transition-colors duration-300">
+                      
+                      {/* Badge & Icon */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shrink-0">
+                          <Building2 className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold tracking-wider text-blue-400 uppercase block">
+                            Deep-Dive Fundamental
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
+                            Emiten 360° Profile
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Buka lembar analisis komprehensif emiten manapun di BEI. Dapatkan data historis valuasi tahunan, Sankey visualisasi laba, hingga ekspor riset siap cetak ke format PDF atau Markdown.
+                      </p>
+
+                      {/* CTA Button */}
+                      <div className="pt-2">
+                        <Link 
+                          href="/company/BBCA"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-xs font-bold text-blue-300 hover:text-white transition-all group/btn"
+                        >
+                          <span>Lihat Contoh Dossier: BBCA</span>
+                          <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                        </Link>
+                      </div>
+
+                    </div>
+
+                    {/* Compact Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[250px] xl:left-[280px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[480px] xl:w-[540px] z-10 mt-4 lg:mt-0">
+                      {/* Ambient Accent Glow */}
+                      <div className="absolute -inset-4 bg-blue-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                        <Image
+                          src="/images/landing/Emiten 360.png"
+                          alt="Emiten 360° Profile & Executive Dossier"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 550px"
+                          className="object-cover object-left-top"
+                        />
+                        {/* Subtle soft vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426]/30 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    </div>
+
+                  </div>
+                </RevealOnScroll>
+              </div>
+
             </div>
 
           </div>
@@ -324,86 +386,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. EMITEN 360 & DOSSIER SHOWCASE */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          <RevealOnScroll direction="left">
-            <div className="space-y-6">
-              <span className="text-xs font-bold text-cyan-400 tracking-wider uppercase">
-                Deep-Dive Analysis
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Emiten 360° Profile & Executive Research Dossier
-              </h2>
-              <p className="text-sm text-slate-300 leading-relaxed max-w-xl">
-                Buka lembar analisis komprehensif emiten manapun di BEI. Dapatkan data historis valuasi tahunan, rincian segmen bisnis, hingga ekspor laporan riset siap cetak ke format PDF atau Markdown.
-              </p>
-
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3">
-                  <div className="p-1 rounded bg-emerald-500/10 text-emerald-400 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">Sankey Breakdown Pendapatan</h3>
-                    <p className="text-xs text-slate-300">Pahami dari mana emiten menghasilkan laba terbesar secara visual.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="p-1 rounded bg-cyan-500/10 text-cyan-400 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">Kalkulasi Multiples Otomatis</h3>
-                    <p className="text-xs text-slate-300">P/E, PBV, P/S, PCF, EV/EBITDA, dan rasio neraca DER tanpa perhitungan manual.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="p-1 rounded bg-amber-500/10 text-amber-400 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">One-Click PDF Export</h3>
-                    <p className="text-xs text-slate-300">Ekspor brief riset berstandar institusi lengkap dengan disclaimer kepatuhan.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <Link
-                  href="/company/BBCA"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all border border-slate-700 hover:border-slate-500"
-                >
-                  <span>Lihat Contoh Dossier: BBCA</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-          </RevealOnScroll>
-
-          {/* Visual Showcase Graphic */}
-          <RevealOnScroll direction="right" delayMs={200}>
-            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] overflow-hidden">
-              <div className="relative h-80 sm:h-96 w-full">
-                <Image
-                  src="/images/landing/digital-dossier.jpeg"
-                  alt="Digital Dossier Preview"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent opacity-80" />
-              </div>
-            </div>
-          </RevealOnScroll>
-
-        </div>
-      </section>
-
-      {/* 4. SECTORS API DATA ENGINE (Unified Donker Navy) */}
+      {/* 3. SECTORS API DATA ENGINE (Unified Donker Navy) */}
       <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-5xl mx-auto text-center space-y-12 relative z-10">
           
@@ -467,7 +450,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. SMART MONEY & MARKET SURVEILLANCE SUITE */}
+      {/* 4. SMART MONEY & MARKET SURVEILLANCE SUITE */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
         <div className="max-w-7xl mx-auto">
           <RevealOnScroll direction="up">
@@ -702,7 +685,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. GRAND BOTTOM BANNER / CTA */}
+      {/* 5. GRAND BOTTOM BANNER / CTA */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll direction="up">
@@ -738,7 +721,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 7. FOOTER */}
+      {/* 6. FOOTER */}
       <footer className="w-full border-t border-slate-800/50 bg-[#080e1e] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           
