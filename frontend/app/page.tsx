@@ -14,13 +14,13 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-[#070b16] text-slate-100 flex flex-col overflow-x-hidden">
       
       {/* Navigation */}
       <Navbar />
 
-      {/* 1. HERO SECTION WITH ISOMETRIC ARCHITECTURE ILLUSTRATION */}
-      <section className="relative pt-20 pb-12 md:pt-28 md:pb-16 px-4 sm:px-6 lg:px-8 w-full bg-gradient-to-b from-black via-black to-[#090d16] overflow-hidden">
+      {/* 1. HERO SECTION (ONLY SECTION WITH PURE BLACK BACKGROUND) */}
+      <section className="relative pt-20 pb-16 md:pt-28 md:pb-20 px-4 sm:px-6 lg:px-8 w-full bg-black overflow-hidden">
         
         {/* Subtle Ambient Radial Glow */}
         <div className="absolute top-0 right-0 w-[500px] lg:w-[700px] h-[500px] bg-slate-900/30 blur-[130px] pointer-events-none select-none rounded-full" />
@@ -93,14 +93,17 @@ export default function LandingPage() {
 
         </div>
 
+        {/* Seamless Soft Transition from Pure Black into Rich Donker (Section 2) */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent via-[#080e1e]/40 to-[#080e1e] pointer-events-none z-10" />
+
       </section>
 
-      {/* Seamless Transition Zone Between Section 1 (Black) and Section 2 (#090d16) */}
-      <div className="w-full h-24 sm:h-32 bg-gradient-to-b from-black via-[#04060b] to-[#090d16] pointer-events-none" />
+      {/* 2. CORE CAPABILITIES (Rich Donker Navy Theme) */}
+      <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
+        {/* Subtle Donker Ambient Lighting */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-64 bg-blue-950/20 blur-[130px] pointer-events-none" />
 
-      {/* 2. CORE CAPABILITIES (Rich Visual Grid) */}
-      <section className="py-20 bg-[#090d16] px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto relative z-10">
           
           <RevealOnScroll direction="up">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
@@ -121,7 +124,7 @@ export default function LandingPage() {
             
             {/* Feature 1: Peer Battle */}
             <RevealOnScroll direction="up" delayMs={0}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
+              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-cyan-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -131,7 +134,7 @@ export default function LandingPage() {
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
                   </div>
                   <div className="flex items-center gap-2 mb-2">
                     <Swords className="h-5 w-5 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
@@ -155,7 +158,7 @@ export default function LandingPage() {
 
             {/* Feature 2: Smart Money Flow */}
             <RevealOnScroll direction="up" delayMs={150}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-amber-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
+              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-amber-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -165,7 +168,7 @@ export default function LandingPage() {
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
                   </div>
                   <div className="flex items-center gap-2 mb-2">
                     <Users className="h-5 w-5 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
@@ -189,7 +192,7 @@ export default function LandingPage() {
 
             {/* Feature 3: Screener Pro */}
             <RevealOnScroll direction="up" delayMs={300}>
-              <div className="rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-emerald-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full">
+              <div className="rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-emerald-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full">
                 <div>
                   <div className="relative h-44 w-full rounded-xl overflow-hidden mb-5">
                     <Image
@@ -199,7 +202,7 @@ export default function LandingPage() {
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent" />
                   </div>
                   <div className="flex items-center gap-2 mb-2">
                     <Search className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300" />
@@ -288,7 +291,7 @@ export default function LandingPage() {
 
           {/* Visual Showcase Graphic */}
           <RevealOnScroll direction="right" delayMs={200}>
-            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] overflow-hidden">
+            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] overflow-hidden">
               <div className="relative h-80 sm:h-96 w-full">
                 <Image
                   src="/images/landing/digital-dossier.jpeg"
@@ -297,7 +300,7 @@ export default function LandingPage() {
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07090e] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-transparent to-transparent opacity-80" />
               </div>
             </div>
           </RevealOnScroll>
@@ -305,9 +308,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. SECTORS API DATA ENGINE */}
-      <section className="py-20 border-t border-slate-800/80 bg-[#080c14] px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto text-center space-y-12">
+      {/* 4. SECTORS API DATA ENGINE (Deep Tech Donker) */}
+      <section className="py-24 border-y border-slate-800/60 bg-[#080e22] px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-5xl mx-auto text-center space-y-12 relative z-10">
           
           <RevealOnScroll direction="up">
             <div className="space-y-4">
@@ -334,7 +337,7 @@ export default function LandingPage() {
           {/* Integration Arc Nodes with Staggered Delays */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <RevealOnScroll direction="up" delayMs={0}>
-              <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 transition-all text-center space-y-2 hover:scale-105">
+              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-emerald-500/40 transition-all text-center space-y-2 hover:scale-105">
                 <div className="text-2xl font-black text-emerald-400 font-mono tabular-nums">70+</div>
                 <div className="text-xs font-bold text-white">REST Endpoints</div>
                 <p className="text-xs text-slate-400">Valuasi, laporan, dividen, dan pergerakan harga</p>
@@ -342,7 +345,7 @@ export default function LandingPage() {
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delayMs={100}>
-              <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 transition-all text-center space-y-2 hover:scale-105">
+              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-cyan-500/40 transition-all text-center space-y-2 hover:scale-105">
                 <div className="text-2xl font-black text-cyan-400 font-mono tabular-nums">900+</div>
                 <div className="text-xs font-bold text-white">Emiten BEI</div>
                 <p className="text-xs text-slate-400">Cakupan semesta seluruh saham terdaftar di Indonesia</p>
@@ -350,7 +353,7 @@ export default function LandingPage() {
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delayMs={200}>
-              <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 transition-all text-center space-y-2 hover:scale-105">
+              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-amber-500/40 transition-all text-center space-y-2 hover:scale-105">
                 <div className="text-2xl font-black text-amber-400 font-mono tabular-nums">100+</div>
                 <div className="text-xs font-bold text-white">Anggota Bursa</div>
                 <p className="text-xs text-slate-400">Data konsentrasi broker dan pergerakan asing</p>
@@ -358,7 +361,7 @@ export default function LandingPage() {
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delayMs={300}>
-              <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-teal-500/40 transition-all text-center space-y-2 hover:scale-105">
+              <div className="p-5 rounded-2xl bg-[#0c152a]/90 hover:bg-[#101c36] border border-slate-800/80 hover:border-teal-500/40 transition-all text-center space-y-2 hover:scale-105">
                 <div className="text-2xl font-black text-teal-400 font-mono tabular-nums">&lt;6s</div>
                 <div className="text-xs font-bold text-white">Agent Latency</div>
                 <p className="text-xs text-slate-400">Eksekusi paralel multi-agent berkecepatan tinggi</p>
@@ -389,7 +392,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Card 1: Insider Deal Tracker */}
           <RevealOnScroll direction="up" delayMs={0}>
-            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-cyan-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-cyan-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
               {/* Faded corner image graphic centered on canvas subject */}
               <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
@@ -401,9 +404,9 @@ export default function LandingPage() {
                   className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
               </div>
 
               <div className="space-y-4 relative z-10">
@@ -447,7 +450,7 @@ export default function LandingPage() {
 
           {/* Card 2: Institutional Breakdown KSEI */}
           <RevealOnScroll direction="up" delayMs={150}>
-            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-purple-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-purple-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
               {/* Faded corner image graphic centered on canvas subject */}
               <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
@@ -459,9 +462,9 @@ export default function LandingPage() {
                   className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
               </div>
 
               <div className="space-y-4 relative z-10">
@@ -505,7 +508,7 @@ export default function LandingPage() {
 
           {/* Card 3: BEI Suspension & UMA Watchdog */}
           <RevealOnScroll direction="up" delayMs={300}>
-            <div className="relative rounded-2xl border border-slate-800 bg-[#0d121e] p-6 hover:border-rose-500/40 hover:bg-[#101726] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
+            <div className="relative rounded-2xl border border-slate-800/80 bg-[#0c1426] p-6 hover:border-rose-500/40 hover:bg-[#101b33] transition-all duration-300 flex flex-col justify-between group h-full space-y-5 overflow-hidden">
               
               {/* Faded corner image graphic centered on canvas subject */}
               <div className="absolute top-0 right-0 w-56 sm:w-64 h-44 sm:h-52 pointer-events-none select-none overflow-hidden z-0 rounded-tr-2xl">
@@ -517,9 +520,9 @@ export default function LandingPage() {
                   className="object-cover object-center opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
                 />
                 {/* Smooth multi-directional fading gradients to blend seamlessly */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0d121e]/60 to-[#0d121e]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0d121e] via-[#0d121e]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0d121e] via-[#0d121e]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#0c1426]/60 to-[#0c1426]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1426] via-[#0c1426]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c1426] via-[#0c1426]/40 to-transparent" />
               </div>
 
               <div className="space-y-4 relative z-10">
@@ -564,7 +567,7 @@ export default function LandingPage() {
 
         {/* Seamless Context Handoff Feature Banner */}
         <RevealOnScroll direction="up" delayMs={400}>
-          <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/20 via-[#0d121e] to-cyan-950/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/30 via-[#0c152a] to-cyan-950/30 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0 mt-0.5">
                 <FileText className="h-5 w-5" />
@@ -603,9 +606,9 @@ export default function LandingPage() {
       </section>
 
       {/* 6. GRAND BOTTOM BANNER / CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
         <RevealOnScroll direction="up">
-          <div className="relative rounded-3xl border border-slate-800 bg-[#0a0f1d] p-8 sm:p-14 text-center overflow-hidden hover:border-emerald-500/30 transition-all">
+          <div className="relative rounded-3xl border border-slate-800/80 bg-gradient-to-b from-[#0c162c] to-[#080e1e] p-8 sm:p-14 text-center overflow-hidden hover:border-emerald-500/30 transition-all shadow-2xl shadow-blue-950/20">
             
             {/* Oversized Subtle Background Brand Logo Mark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
@@ -624,7 +627,7 @@ export default function LandingPage() {
               <div className="pt-3">
                 <Link
                   href="/alpha-agent"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-emerald-500/20"
                 >
                   <span>Buka AlphaAgent Sekarang</span>
                   <ArrowRight className="h-4 w-4" />
@@ -637,7 +640,7 @@ export default function LandingPage() {
       </section>
 
       {/* 7. FOOTER */}
-      <footer className="w-full border-t border-slate-800/80 bg-[#05070b] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
+      <footer className="w-full border-t border-slate-800/80 bg-[#050914] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           
           <div className="space-y-3">
