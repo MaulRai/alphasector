@@ -850,12 +850,13 @@ export default function LandingPage() {
       </section>
 
       {/* 6. FOOTER */}
-      <footer className="w-full border-t border-slate-800/50 bg-[#080e1e] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+      <footer className="w-full border-t border-slate-800/60 bg-[#060a14] pt-14 pb-10 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 mb-12">
           
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="relative h-6 w-6 rounded-lg overflow-hidden border border-emerald-500/40">
+          {/* Col 1: Brand & Autonomous Mission */}
+          <div className="space-y-3.5 sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2.5">
+              <div className="relative h-7 w-7 rounded-xl overflow-hidden border border-emerald-500/40 shadow-sm shadow-emerald-500/20">
                 <Image
                   src="/images/alphasector-icon.png"
                   alt="AlphaSector"
@@ -863,52 +864,143 @@ export default function LandingPage() {
                   className="object-cover"
                 />
               </div>
-              <span className="font-bold text-white text-sm tracking-tight">
+              <span className="font-bold text-white text-base tracking-tight">
                 Alpha<span className="text-emerald-400">Sector</span>
               </span>
             </div>
+            
             <p className="text-xs text-slate-400 leading-relaxed">
-              Autonomous Equity Research Agent for IDX. Developed for Sectors Hackathon 2026.
+              Agen riset finansial otonom untuk Bursa Efek Indonesia (IDX). Mengintegrasikan data resmi Sectors Financial API v2 dengan reasoning multi-agent berlatensi kilat.
             </p>
+
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-medium text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Sectors Hackathon 2026 • Track 01</span>
+            </div>
           </div>
 
+          {/* Col 2: AlphaAgent & Autonomous Copilot */}
           <div>
-            <h3 className="font-bold text-slate-200 text-xs uppercase mb-3">Fitur Aplikasi</h3>
+            <h3 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3.5">
+              AlphaAgent Terminal
+            </h3>
             <ul className="space-y-2 text-xs text-slate-400">
-              <li><Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">AlphaAgent Terminal</Link></li>
-              <li><Link href="/battle" className="hover:text-emerald-400 transition-colors">Peer Battle Terminal</Link></li>
-              <li><Link href="/smart-money" className="hover:text-emerald-400 transition-colors">Smart Money & Surveillance</Link></li>
-              <li><Link href="/screener" className="hover:text-emerald-400 transition-colors">Screener Pro (NLP & SQL)</Link></li>
+              <li>
+                <Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">
+                  Autonomous Research Terminal
+                </Link>
+              </li>
+              <li>
+                <Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">
+                  Live Multi-Agent Reasoning Trace
+                </Link>
+              </li>
+              <li>
+                <Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">
+                  Interactive Valuation Artifacts
+                </Link>
+              </li>
+              <li>
+                <Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">
+                  One-Click Notion Export
+                </Link>
+              </li>
+              <li>
+                <Link href="/alpha-agent" className="hover:text-emerald-400 transition-colors">
+                  Smart Context Handoff
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Col 3: Smart Money & Market Surveillance */}
           <div>
-            <h3 className="font-bold text-slate-200 text-xs uppercase mb-3">Teknologi & Ekosistem</h3>
+            <h3 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3.5">
+              Market Intelligence
+            </h3>
             <ul className="space-y-2 text-xs text-slate-400">
+              <li>
+                <Link href="/smart-money?tab=insider" className="hover:text-cyan-400 transition-colors">
+                  Insider Deal Tracker (Direksi)
+                </Link>
+              </li>
+              <li>
+                <Link href="/smart-money?tab=institutional" className="hover:text-purple-400 transition-colors">
+                  Institutional Breakdown (KSEI)
+                </Link>
+              </li>
+              <li>
+                <Link href="/smart-money?tab=suspensions" className="hover:text-rose-400 transition-colors">
+                  Radar Suspensi BEI &amp; UMA
+                </Link>
+              </li>
+              <li>
+                <Link href="/battle" className="hover:text-emerald-400 transition-colors">
+                  Peer Battle Matrix (H2H)
+                </Link>
+              </li>
+              <li>
+                <Link href="/screener" className="hover:text-emerald-400 transition-colors">
+                  NLP AI Stock Screener
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Teknologi & Integrasi */}
+          <div>
+            <h3 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3.5">
+              Teknologi &amp; Integrasi
+            </h3>
+            <ul className="space-y-2.5 text-xs text-slate-400">
               <li className="flex items-center gap-1.5 text-slate-300 font-medium">
                 <div className="relative h-3.5 w-3.5 shrink-0">
                   <Image src="/images/sectors-icon.png" alt="Sectors" fill className="object-contain" />
                 </div>
                 <span>Sectors Financial API v2</span>
               </li>
-              <li>Autonomous Agent Orchestrator</li>
-              <li>Ultra-Low Latency Inference Engine</li>
-              <li>Modern Full-Stack Architecture</li>
+              <li className="text-slate-300">
+                Groq LPU Ultra-Low Latency
+              </li>
+              <li className="text-slate-300">
+                Notion Workspace Sync
+              </li>
+              <li>
+                <Link href="/settings" className="hover:text-emerald-400 transition-colors">
+                  Pengaturan API Key (BYOK)
+                </Link>
+              </li>
+              <li>
+                <Link href="/company/BBCA" className="hover:text-emerald-400 transition-colors">
+                  Company 360° Demo (BBCA)
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Col 5: Kepatuhan & Disclaimer Bursa */}
           <div>
-            <h3 className="font-bold text-slate-200 text-xs uppercase mb-3">Kepatuhan</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Seluruh informasi disajikan semata-mata untuk kebutuhan edukasi dan analisis riset finansial. Bukan merupakan rekomendasi atau ajakan jual/beli efek.
+            <h3 className="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3.5">
+              Kepatuhan Pasar Modal
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-3">
+              Seluruh data emiten dan dossier riset disajikan untuk kebutuhan analisis independen dan edukasi finansial. Bukan merupakan anjuran, ajakan, atau rekomendasi transaksi efek tertentu.
             </p>
+            <div className="text-[11px] text-slate-500 font-mono">
+              Bursa Efek Indonesia (IDX) Compliant
+            </div>
           </div>
 
         </div>
 
+        {/* Sub-footer Bottom Bar */}
         <div className="max-w-7xl mx-auto pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <span>© 2026 AlphaSector. All rights reserved.</span>
-          <span>Sectors Hackathon 2026 • Track 01 AI Agents & Assistants</span>
+          <span>© 2026 AlphaSector. Seluruh hak cipta dilindungi.</span>
+          <div className="flex items-center gap-4 text-slate-500 text-[11px]">
+            <span>Powered by Sectors API</span>
+            <span>•</span>
+            <span>Track 01: AI Agents &amp; Assistants</span>
+          </div>
         </div>
       </footer>
 
