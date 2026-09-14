@@ -137,13 +137,14 @@ function SmartMoneyWorkspace() {
                     setBrokerSummary(null);
                     setAgentReport(null);
                   }}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
                     ticker === sym
                       ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                       : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
                   }`}
                 >
-                  {sym}
+                  <CompanyLogo symbol={sym} size="xs" />
+                  <span>{sym}</span>
                 </button>
               ))}
             </div>
