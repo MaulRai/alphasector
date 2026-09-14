@@ -14,7 +14,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#070b16] text-slate-100 flex flex-col overflow-x-clip">
+    <div className="min-h-screen bg-[#080e1e] text-slate-100 flex flex-col overflow-x-clip">
       
       {/* Navigation */}
       <Navbar />
@@ -325,8 +325,8 @@ export default function LandingPage() {
       </section>
 
       {/* 3. EMITEN 360 & DOSSIER SHOWCASE */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           <RevealOnScroll direction="left">
             <div className="space-y-6">
@@ -403,8 +403,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. SECTORS API DATA ENGINE (Deep Tech Donker) */}
-      <section className="py-24 border-y border-slate-800/60 bg-[#080e22] px-4 sm:px-6 lg:px-8 relative">
+      {/* 4. SECTORS API DATA ENGINE (Unified Donker Navy) */}
+      <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-5xl mx-auto text-center space-y-12 relative z-10">
           
           <RevealOnScroll direction="up">
@@ -468,8 +468,9 @@ export default function LandingPage() {
       </section>
 
       {/* 5. SMART MONEY & MARKET SURVEILLANCE SUITE */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <RevealOnScroll direction="up">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
+        <div className="max-w-7xl mx-auto">
+          <RevealOnScroll direction="up">
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <span className="text-xs font-bold text-cyan-400 tracking-wider uppercase">
               Market Surveillance & Smart Money Suite
@@ -698,11 +699,13 @@ export default function LandingPage() {
             </div>
           </div>
         </RevealOnScroll>
+        </div>
       </section>
 
       {/* 6. GRAND BOTTOM BANNER / CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-        <RevealOnScroll direction="up">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 w-full bg-[#080e1e] relative">
+        <div className="max-w-6xl mx-auto">
+          <RevealOnScroll direction="up">
           <div className="relative rounded-3xl border border-slate-800/80 bg-gradient-to-b from-[#0c162c] to-[#080e1e] p-8 sm:p-14 text-center overflow-hidden hover:border-emerald-500/30 transition-all shadow-2xl shadow-blue-950/20">
             
             {/* Oversized Subtle Background Brand Logo Mark */}
@@ -732,10 +735,11 @@ export default function LandingPage() {
 
           </div>
         </RevealOnScroll>
+        </div>
       </section>
 
       {/* 7. FOOTER */}
-      <footer className="w-full border-t border-slate-800/80 bg-[#050914] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
+      <footer className="w-full border-t border-slate-800/50 bg-[#080e1e] py-12 px-4 sm:px-6 lg:px-8 text-xs text-slate-400">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           
           <div className="space-y-3">
