@@ -1022,7 +1022,7 @@ export default function LandingPage() {
                 </Link>
               </li>
               <li>
-                <Link href="/smart-money?tab=news" className="hover:text-blue-400 transition-colors">
+                <Link href="/news" className="hover:text-blue-400 transition-colors">
                   Market News &amp; Sentiment Radar
                 </Link>
               </li>

@@ -11,11 +11,10 @@ import { SmartMoneyExplainerCard } from '@/components/smart-money/SmartMoneyExpl
 import { InsiderFilingsCard } from '@/components/smart-money/InsiderFilingsCard';
 import { InstitutionalOwnershipCard } from '@/components/smart-money/InstitutionalOwnershipCard';
 import { RegulatorySuspensionsCard } from '@/components/smart-money/RegulatorySuspensionsCard';
-import { MarketNewsFeed } from '@/components/smart-money/MarketNewsFeed';
 import { useBackendHealth } from '@/hooks/useBackendHealth';
 import { fetchBrokerSummary, fetchTopBrokers, queryAgent } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
-import { Users, RefreshCw, Sparkles, Play, Zap, ArrowRight, ShieldCheck, Landmark, Lock, BarChart3, Newspaper } from 'lucide-react';
+import { Users, RefreshCw, Sparkles, Play, Zap, ArrowRight, ShieldCheck, Landmark, Lock, BarChart3 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
@@ -33,8 +32,8 @@ function SmartMoneyWorkspace() {
     return 'TLKM';
   });
 
-  const [activeTab, setActiveTab] = useState<'bandarmology' | 'insider' | 'institutional' | 'suspensions' | 'news'>(() => {
-    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions', 'news'].includes(tabParam)) {
+  const [activeTab, setActiveTab] = useState<'bandarmology' | 'insider' | 'institutional' | 'suspensions'>(() => {
+    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions'].includes(tabParam)) {
       return tabParam as any;
     }
     return 'bandarmology';
@@ -48,7 +47,7 @@ function SmartMoneyWorkspace() {
   const { backendOnline } = useBackendHealth();
 
   useEffect(() => {
-    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions', 'news'].includes(tabParam)) {
+    if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions'].includes(tabParam)) {
       setActiveTab(tabParam as any);
     }
     if (tickerParam) {
@@ -56,7 +55,7 @@ function SmartMoneyWorkspace() {
     }
   }, [tabParam, tickerParam]);
 
-  const handleTabChange = (newTab: 'bandarmology' | 'insider' | 'institutional' | 'suspensions' | 'news') => {
+  const handleTabChange = (newTab: 'bandarmology' | 'insider' | 'institutional' | 'suspensions') => {
     setActiveTab(newTab);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
@@ -234,18 +233,6 @@ function SmartMoneyWorkspace() {
               <Lock className="h-3.5 w-3.5" />
               <span>Radar Suspensi BEI & UMA</span>
             </button>
-
-            <button
-              onClick={() => handleTabChange('news')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'news'
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <Newspaper className="h-3.5 w-3.5" />
-              <span>Berita & Sentimen Pasar</span>
-            </button>
           </div>
 
           {/* TAB 1: BANDARMOLOGY & BROKER FLOW */}
@@ -401,16 +388,6 @@ function SmartMoneyWorkspace() {
           {activeTab === 'suspensions' && (
             <div className="space-y-6">
               <RegulatorySuspensionsCard initialTicker={ticker} />
-            </div>
-          )}
-
-          {/* TAB 5: IDX MARKET NEWS & SENTIMENT */}
-          {activeTab === 'news' && (
-            <div className="space-y-6">
-              <MarketNewsFeed
-                initialTicker={ticker}
-                onTickerSelect={(sym) => setTicker(sym)}
-              />
             </div>
           )}
         </AuthGate>
