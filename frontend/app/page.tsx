@@ -420,95 +420,71 @@ export default function LandingPage() {
             </div>
           </RevealOnScroll>
 
-          {/* x.ai Inspired Cybernetic Metrics Board with Traveling Neon */}
+          {/* x.ai Inspired Cybernetic Metrics Board with Single Traveling Neon */}
           <RevealOnScroll direction="up" delayMs={150}>
             <div className="relative border-t border-slate-800/80 overflow-hidden backdrop-blur-[2px]">
               
-              {/* Top Border Line Traveling Pulse */}
-              <div className="absolute top-0 inset-x-0 h-[1px] pointer-events-none">
-                <div className="neon-beam-tertiary" />
-              </div>
-
-              {/* Numbers Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-800/80 text-left">
+              {/* Numbers Row (3 Columns, Center Aligned) */}
+              <div className="grid grid-cols-3 divide-x divide-slate-800/80 text-center">
                 
-                {/* Stat 1 */}
-                <div className="p-5 sm:p-7 lg:p-9 group">
-                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-emerald-300 transition-colors">
-                    70+
-                  </div>
-                </div>
-
-                {/* Stat 2 */}
-                <div className="p-5 sm:p-7 lg:p-9 group">
-                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-cyan-300 transition-colors">
+                {/* Stat 1: 900+ Emiten BEI */}
+                <div className="p-6 sm:p-8 lg:p-10 group">
+                  <div className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-cyan-300 transition-colors">
                     900+
                   </div>
                 </div>
 
-                {/* Stat 3 */}
-                <div className="p-5 sm:p-7 lg:p-9 group">
-                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-amber-300 transition-colors">
+                {/* Stat 2: 100+ Anggota Bursa */}
+                <div className="p-6 sm:p-8 lg:p-10 group">
+                  <div className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-amber-300 transition-colors">
                     100+
                   </div>
                 </div>
 
-                {/* Stat 4 */}
-                <div className="p-5 sm:p-7 lg:p-9 group">
-                  <div className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-teal-300 transition-colors">
+                {/* Stat 3: <6s Agent Latency */}
+                <div className="p-6 sm:p-8 lg:p-10 group">
+                  <div className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight font-mono tabular-nums group-hover:text-emerald-300 transition-colors">
                     &lt;6s
                   </div>
                 </div>
 
               </div>
 
-              {/* Prominent Center Horizontal Grid Line with Traveling Neon Laser Beams */}
+              {/* Prominent Center Horizontal Grid Line with Single Traveling Neon Laser Beam */}
               <div className="relative w-full h-[1px] bg-slate-800/90">
-                {/* Primary Neon Beam (Cyan/White) */}
+                {/* Single Pristine Neon Beam (Cyan/White) */}
                 <div className="neon-beam-primary pointer-events-none" />
-                {/* Secondary Neon Beam (Emerald/Cyan) */}
-                <div className="neon-beam-secondary pointer-events-none" />
               </div>
 
-              {/* Labels Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-800/80 text-left">
+              {/* Labels Row (3 Columns, Center Aligned) */}
+              <div className="grid grid-cols-3 divide-x divide-slate-800/80 text-center">
                 
                 {/* Label 1 */}
-                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
-                  <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
-                    REST Endpoints
-                  </div>
-                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-                    Valuasi, dividen, dan pergerakan harga historis
-                  </p>
-                </div>
-
-                {/* Label 2 */}
-                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                <div className="p-6 sm:p-8 lg:p-10 space-y-1.5">
                   <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
                     Emiten BEI
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
                     Cakupan semesta seluruh saham terdaftar di BEI
                   </p>
                 </div>
 
-                {/* Label 3 */}
-                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                {/* Label 2 */}
+                <div className="p-6 sm:p-8 lg:p-10 space-y-1.5">
                   <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
                     Anggota Bursa
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
                     Data konsentrasi broker dan kepemilikan KSEI
                   </p>
                 </div>
 
-                {/* Label 4 */}
-                <div className="p-5 sm:p-7 lg:p-9 space-y-1.5">
+                {/* Label 3 */}
+                <div className="p-6 sm:p-8 lg:p-10 space-y-1.5">
                   <div className="text-xs sm:text-sm font-bold text-white tracking-wide">
                     Agent Latency
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
                     Eksekusi paralel otonom multi-agent super cepat
                   </p>
                 </div>
@@ -516,9 +492,7 @@ export default function LandingPage() {
               </div>
 
               {/* Bottom Border Line */}
-              <div className="relative w-full h-[1px] bg-slate-800/80">
-                <div className="neon-beam-tertiary pointer-events-none" />
-              </div>
+              <div className="relative w-full h-[1px] bg-slate-800/80" />
 
             </div>
           </RevealOnScroll>
