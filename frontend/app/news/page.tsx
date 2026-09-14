@@ -25,18 +25,19 @@ function NewsWorkspace() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <AuthGate>
-          {/* Header Banner */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-slate-800/80 pb-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                <Newspaper className="w-3.5 h-3.5" />
-                <span>IDX Intelligence Feed</span>
+          {/* Header */}
+          <div className="mb-8 pb-6 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <Newspaper className="h-5 w-5" />
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                  Market News & Sentimen Emiten
+                </h1>
               </div>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
-                Market News & Sentimen Emiten
-              </h1>
-              <p className="text-sm text-slate-400 max-w-2xl">
-                Pantau berita pasar modal Indonesia terverifikasi dari Bursa Efek Indonesia secara real-time. Dilengkapi shared cache database Neon L2 (0 API Credit) dan pembatasan jam bursa (08:30 – 16:30 WIB) untuk efisiensi maksimal.
+              <p className="text-sm text-slate-400">
+                Lacak berita emiten terverifikasi dari Bursa Efek Indonesia, aksi korporasi, dan sentimen penggerak pasar secara real-time.
               </p>
             </div>
 

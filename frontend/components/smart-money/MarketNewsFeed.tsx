@@ -37,23 +37,14 @@ const POPULAR_TAGS = [
 
 export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeedProps) {
   const router = useRouter();
-  const [scope, setScope] = useState<'ticker' | 'market'>(initialTicker ? 'ticker' : 'market');
   const [newsData, setNewsData] = useState<NewsApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('Semua');
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
-
-  // Sync initialTicker if changed externally
-  useEffect(() => {
-    if (initialTicker) {
-      setScope('ticker');
-    }
-  }, [initialTicker]);
 
   // Load tag helper list once
   useEffect(() => {
@@ -70,22 +61,18 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
     loadTags();
   }, []);
 
-  // Fetch news when scope, ticker, or tag changes
+  // Fetch news when initialTicker or tag changes
   useEffect(() => {
-    loadNews(false);
-  }, [scope, initialTicker, selectedTag]);
+    loadNews();
+  }, [initialTicker, selectedTag]);
 
-  const loadNews = async (forceRefresh: boolean = false) => {
-    if (forceRefresh) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
-    }
+  const loadNews = async () => {
+    setIsLoading(true);
     setError(null);
 
     try {
-      const sym = (scope === 'ticker' && initialTicker) 
-        ? initialTicker.toUpperCase().replace('.JK', '') 
+      const sym = initialTicker 
+        ? initialTicker.trim().toUpperCase().replace('.JK', '') 
         : undefined;
       const tagParam = (selectedTag && selectedTag !== 'Semua') ? selectedTag : undefined;
 
@@ -93,7 +80,6 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
         symbols: sym,
         tags: tagParam,
         limit: 25,
-        force_refresh: forceRefresh,
       });
 
       setNewsData(res);
@@ -102,7 +88,6 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
       setError(err.message || 'Gagal memuat berita pasar IDX.');
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
     }
   };
 
@@ -154,9 +139,10 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
       return `${i + 1}. [${s}] ${a.title}\nRingkasan: ${a.body.slice(0, 140)}...`;
     }).join('\n\n');
 
+    const tickerLabel = initialTicker ? initialTicker.toUpperCase() : 'Semua Emiten';
     const payloadText = encodeContextForClipboard({
       type: 'MARKET_NEWS',
-      title: `Kompilasi Berita Pasar IDX (${scope === 'ticker' && initialTicker ? initialTicker : 'Semua Emiten'})`,
+      title: `Kompilasi Berita Pasar IDX (${tickerLabel})`,
       ticker: initialTicker,
       summary: `Ringkasan ${topArticles.length} Berita Utama Terkini:`,
       details: summaryList,
@@ -200,45 +186,30 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
 
   return (
     <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 md:p-7 shadow-2xl space-y-6">
-      {/* Header with Title & Market Hours Status Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shadow-inner">
-              <Newspaper className="w-6 h-6" />
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              <Newspaper className="h-5 w-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-xl font-bold text-slate-100 tracking-tight">
-                  Market News & Sentiment Radar
-                </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-                  Sectors Financial API v2
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Berita emiten terkurasi resmi BEI dengan shared caching database Neon L2 & sinkronisasi pintar jam bursa.
-              </p>
-            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
+              Feed Berita & Sentimen Terkini
+            </h2>
           </div>
+          <p className="text-xs text-slate-400">
+            {initialTicker 
+              ? `Berita terverifikasi Bursa Efek Indonesia untuk emiten ${initialTicker.toUpperCase()}`
+              : 'Berita terverifikasi Bursa Efek Indonesia untuk seluruh emiten di pasar modal'}
+          </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2.5 self-start lg:self-center flex-wrap">
-          <button
-            onClick={() => loadNews(true)}
-            disabled={isLoading || isRefreshing}
-            title="Refresh berita terkini. Sinkronisasi aktif saat jam bursa 08:30 - 16:30 WIB."
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/60 transition-all disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-400'}`} />
-            <span>{isRefreshing ? 'Menyinkronkan...' : 'Sinkronkan Berita'}</span>
-          </button>
-
+        <div className="flex items-center gap-2.5 self-start sm:self-center">
           <button
             onClick={handleCopyAllNews}
             disabled={filteredArticles.length === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/50 hover:to-indigo-600/50 text-blue-300 border border-blue-500/30 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/50 hover:to-indigo-600/50 text-blue-300 border border-blue-500/30 transition-all disabled:opacity-50 cursor-pointer"
           >
             {copiedAll ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
             <span>{copiedAll ? 'Tersalin!' : 'Salin Konteks ke AlphaAgent'}</span>
@@ -246,45 +217,35 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
         </div>
       </div>
 
-      {/* Scope, Ticker, Tag & Search Filters */}
+      {/* Tag & Search Filters */}
       <div className="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          {/* Scope Radio / Toggle */}
-          <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
-            <button
-              onClick={() => setScope('ticker')}
-              disabled={!initialTicker}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                scope === 'ticker'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 disabled:opacity-40'
-              }`}
-            >
-              Emiten: {initialTicker ? initialTicker.toUpperCase() : 'Pilih Emiten'}
-            </button>
-            <button
-              onClick={() => setScope('market')}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                scope === 'market'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Semua Emiten (Pasar IDX)
-            </button>
-          </div>
-
           {/* Search Box */}
-          <div className="relative flex-1 max-w-xs">
+          <div className="relative w-full sm:max-w-md">
             <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
-              placeholder="Cari judul berita atau emiten..."
+              placeholder="Cari kata kunci judul berita atau emiten..."
               className="w-full bg-slate-900/90 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/60 transition-colors"
             />
           </div>
+
+          {initialTicker && (
+            <div className="flex items-center gap-2 text-xs text-slate-400 self-start sm:self-center">
+              <span>Filter emiten:</span>
+              <span className="px-2 py-0.5 rounded font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                {initialTicker.toUpperCase()}
+              </span>
+              <button
+                onClick={() => onTickerSelect?.('')}
+                className="text-xs text-slate-500 hover:text-slate-300 underline cursor-pointer ml-1"
+              >
+                Reset
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Quick Tag Pills */}
@@ -332,10 +293,10 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
             <p className="font-semibold">Gagal Memuat Berita</p>
             <p className="text-rose-300/80">{error}</p>
             <button 
-              onClick={() => loadNews(true)}
+              onClick={() => loadNews()}
               className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded bg-rose-500/20 border border-rose-500/30 text-rose-200 hover:bg-rose-500/30 transition-colors"
             >
-              <RefreshCw className="w-3 h-3" /> Coba Lagi
+              Coba Lagi
             </button>
           </div>
         </div>
@@ -350,7 +311,7 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
             onClick={() => {
               setSearchKeyword('');
               setSelectedTag('Semua');
-              setScope('market');
+              onTickerSelect?.('');
             }}
             className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-blue-600/30 border border-blue-500/40 text-blue-300 hover:bg-blue-600/50 transition-colors"
           >
