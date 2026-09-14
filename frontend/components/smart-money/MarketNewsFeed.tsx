@@ -8,19 +8,11 @@ import {
   ExternalLink, 
   RefreshCw, 
   AlertCircle, 
-  Clock, 
   Search, 
   Tag, 
-  TrendingUp, 
-  TrendingDown, 
   Copy, 
   Check, 
-  Sparkles, 
-  Database, 
-  Calendar,
-  Layers,
-  ArrowUpRight,
-  ShieldAlert
+  Sparkles 
 } from 'lucide-react';
 import { CompanyLogo } from '@/components/CompanyLogo';
 import { encodeContextForClipboard } from '@/lib/contextClipboard';
@@ -251,54 +243,6 @@ export function MarketNewsFeed({ initialTicker, onTickerSelect }: MarketNewsFeed
             {copiedAll ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
             <span>{copiedAll ? 'Tersalin!' : 'Salin Konteks ke AlphaAgent'}</span>
           </button>
-        </div>
-      </div>
-
-      {/* Market Hours & Shared Cache Status Banner */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {/* Market Hours Notice */}
-        <div className={`p-3.5 rounded-xl border flex items-start gap-3 transition-colors ${
-          newsData?.is_market_hours 
-            ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' 
-            : 'bg-slate-800/40 border-slate-700/60 text-slate-300'
-        }`}>
-          <div className="mt-0.5">
-            {newsData?.is_market_hours ? (
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-              </span>
-            ) : (
-              <Clock className="w-4 h-4 text-amber-400/80" />
-            )}
-          </div>
-          <div className="text-xs space-y-0.5">
-            <div className="font-semibold flex items-center gap-2">
-              <span>{newsData?.is_market_hours ? '🟢 Jam Perdagangan Bursa Aktif' : '🌙 Di Luar Jam Bursa (Arsip DB)'}</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-900/60 border border-slate-700/50 text-slate-300">
-                08:30 - 16:30 WIB
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              {newsData?.market_status || 'Update berkala 2 jam hanya berlangsung saat jam aktif bursa (08:30 - 16:30 WIB) untuk efisiensi API kredit.'}
-            </p>
-          </div>
-        </div>
-
-        {/* Shared L2 Database Cache Notice */}
-        <div className="p-3.5 rounded-xl border bg-blue-950/20 border-blue-500/30 text-blue-300 flex items-start gap-3">
-          <Database className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-          <div className="text-xs space-y-0.5">
-            <div className="font-semibold flex items-center gap-2">
-              <span>Shared Neon DB Cache (L1/L2)</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-blue-900/50 border border-blue-500/40 text-blue-200">
-                0 Credit Terpakai
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              Sekali di-fetch user manapun, tersimpan di database Neon & berlaku 2 jam bagi seluruh pengunjung tanpa memotong kuota Sectors.
-            </p>
-          </div>
         </div>
       </div>
 
