@@ -42,19 +42,6 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToStep = (stepIndex: number) => {
-    setActiveSmartStep(stepIndex);
-    if (!smartSectionRef.current) return;
-    const rect = smartSectionRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const totalDist = rect.height - windowHeight;
-    if (totalDist <= 0) return;
-    
-    const stepProgress = stepIndex === 0 ? 0.05 : stepIndex === 1 ? 0.5 : 0.95;
-    const targetScrollTop = window.scrollY + rect.top + (stepProgress * totalDist);
-    window.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
-  };
-
   return (
     <div className="min-h-screen bg-[#080e1e] text-slate-100 flex flex-col overflow-x-clip">
       
@@ -558,53 +545,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Column: 1 Card at a Time with Smooth Upward Fading Transitions */}
-            <div className="order-2 lg:order-1 lg:col-span-6 flex flex-col space-y-3">
+            <div className="order-2 lg:order-1 lg:col-span-6 flex flex-col justify-center">
               
-              {/* Step Switcher Pills & Counter */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/90 border border-slate-800/80 text-xs shadow-inner">
-                  <button
-                    type="button"
-                    onClick={() => scrollToStep(0)}
-                    className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-                      activeSmartStep === 0
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/10'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    01 Insider Deal
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToStep(1)}
-                    className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-                      activeSmartStep === 1
-                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-sm shadow-purple-500/10'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    02 Institusi KSEI
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToStep(2)}
-                    className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-                      activeSmartStep === 2
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/10'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    03 Radar Suspensi
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <div className="text-[11px] font-mono text-slate-400">
-                    <span className="text-white font-bold">{activeSmartStep + 1}</span> / 3
-                  </div>
-                </div>
-              </div>
-
               {/* Card Transition Stage: Only 1 Active, Old Fading Upwards */}
               <div className="relative min-h-[460px] sm:min-h-[440px] w-full">
                 
@@ -802,14 +744,6 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-              </div>
-
-              {/* Progress Indicator Bar */}
-              <div className="w-full h-1 bg-slate-800/80 rounded-full overflow-hidden">
-                <div
-                  className="h-full transition-all duration-300 bg-gradient-to-r from-cyan-400 via-purple-400 to-rose-400"
-                  style={{ width: `${((activeSmartStep + 1) / 3) * 100}%` }}
-                />
               </div>
 
             </div>
