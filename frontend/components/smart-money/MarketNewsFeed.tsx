@@ -400,8 +400,22 @@ Berikan kesimpulan dampak sentimen (bullish/bearish/netral), implikasi terhadap 
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-sm md:text-base font-semibold text-slate-100 group-hover:text-blue-300 transition-colors leading-snug line-clamp-2">
-                        {article.title}
+                      <h3 className="text-sm md:text-base font-semibold leading-snug line-clamp-2">
+                        {article.source ? (
+                          <a
+                            href={article.source}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-slate-100 hover:text-blue-400 hover:underline transition-colors inline-flex items-center gap-1.5"
+                          >
+                            <span>{article.title}</span>
+                            <ExternalLink className="w-3.5 h-3.5 opacity-60 flex-shrink-0 group-hover:opacity-100" />
+                          </a>
+                        ) : (
+                          <span className="text-slate-100 group-hover:text-blue-300 transition-colors">
+                            {article.title}
+                          </span>
+                        )}
                       </h3>
 
                       {/* Excerpt Body */}
