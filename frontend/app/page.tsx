@@ -751,31 +751,8 @@ export default function LandingPage() {
             {/* Right Column: Combined Headline, Context Handoff & Wide Video */}
             <div className="order-1 lg:order-2 lg:col-span-6 flex flex-col space-y-4">
               
-              {/* Peleburan Dua Group Text: Header Section + Context Handoff + CTA Buttons */}
+              {/* Headline + Description + Action Buttons */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <span className="text-xs font-bold text-cyan-400 tracking-wider uppercase">
-                    Market Surveillance &amp; Smart Money Suite
-                  </span>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href="/smart-money"
-                      className="inline-flex items-center justify-center px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700"
-                    >
-                      <span>Buka Smart Money</span>
-                    </Link>
-                    <Link
-                      href="/alpha-agent"
-                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
-                    >
-                      <span>Coba di AlphaAgent</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </div>
-
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
                   Deteksi Jejak Smart Money &amp; Keterbukaan Informasi BEI
                 </h2>
@@ -783,6 +760,23 @@ export default function LandingPage() {
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                   Mulai dari transaksi Direksi &amp; Komisaris, dekomposisi pemegang saham riil KSEI, hingga radar suspensi bursa — seluruh insight dapat disalin langsung sebagai konteks ke AlphaAgent.
                 </p>
+
+                {/* 2 Action Buttons di bawah Deskripsi */}
+                <div className="flex items-center gap-2.5 pt-1">
+                  <Link
+                    href="/smart-money"
+                    className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs transition-all border border-slate-700 shadow-sm"
+                  >
+                    <span>Buka Smart Money</span>
+                  </Link>
+                  <Link
+                    href="/alpha-agent"
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs hover:brightness-110 transition-all shadow-md shadow-emerald-500/20"
+                  >
+                    <span>Coba di AlphaAgent</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
 
               {/* Video Mockup Window: Lega tanpa pembungkus frame luar tebal */}
