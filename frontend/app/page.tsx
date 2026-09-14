@@ -112,15 +112,10 @@ export default function LandingPage() {
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
-            {/* Left Column: Title, Subtitle, & Feature Indicators (Sticky Hold) */}
-            <div className="lg:col-span-5 lg:sticky lg:top-32 self-start space-y-6 pt-2">
+            {/* Left Column: Title & Subtitle (Sticky Hold) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-32 self-start space-y-4 pt-2">
               <RevealOnScroll direction="left">
                 <div className="space-y-4">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                    Fitur Riset Unggulan
-                  </span>
-                  
                   <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
                     Dirancang Khusus untuk Analisis Pasar Modal Indonesia
                   </h2>
@@ -128,34 +123,6 @@ export default function LandingPage() {
                   <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-lg">
                     Kombinasi data finansial resmi berlisensi dan AI Agent berkecepatan tinggi tanpa halusinasi angka.
                   </p>
-                </div>
-
-                {/* Micro Pillars / Navigation Guide */}
-                <div className="hidden sm:flex flex-col gap-3 pt-6 mt-4 border-t border-slate-800/80">
-                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
-                    <div className="w-6 h-6 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-[11px]">
-                      01
-                    </div>
-                    <span>Peer Battle & Multiples Valuation Gap</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
-                    <div className="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-[11px]">
-                      02
-                    </div>
-                    <span>Smart Money & Broker Concentration Radar</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs font-medium text-slate-300">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-[11px]">
-                      03
-                    </div>
-                    <span>Screener Pro Berbasis Natural Language (NLP)</span>
-                  </div>
-                </div>
-
-                {/* Secondary Engine Guarantee */}
-                <div className="pt-4 flex items-center gap-2 text-xs text-slate-400">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Data terverifikasi langsung dari IDX & KSEI via Sectors API.</span>
                 </div>
               </RevealOnScroll>
             </div>
@@ -166,10 +133,10 @@ export default function LandingPage() {
               {/* Feature 1: Peer Battle & Multiples Gap */}
               <div className="sticky top-28 sm:top-32 z-10 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={0}>
-                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
+                  <div className="relative group min-h-[340px] sm:min-h-[360px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-cyan-500/50 transition-colors duration-300">
+                    <div className="relative z-20 w-full lg:w-[360px] xl:w-[390px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-cyan-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -190,19 +157,6 @@ export default function LandingPage() {
                         Bandingkan 2–4 emiten dalam satu subsektor secara head-to-head. Hitung selisih valuasi P/E, PBV, ROE, dan Piotroski F-Score deterministik untuk menemukan saham yang terdiskon.
                       </p>
 
-                      {/* Feature Spec Tags */}
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          P/E Historical Band
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Piotroski Score 9/9
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Multiples Gap
-                        </span>
-                      </div>
-
                       {/* CTA Button */}
                       <div className="pt-2">
                         <Link 
@@ -216,17 +170,17 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
+                    {/* Compact Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[250px] xl:left-[280px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[480px] xl:w-[540px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-cyan-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Peer Battle & Valuation Matrix.png"
                           alt="Peer Battle & Valuation Matrix"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 750px"
+                          sizes="(max-width: 1024px) 100vw, 550px"
                           className="object-cover object-left-top"
                           priority
                         />
@@ -242,10 +196,10 @@ export default function LandingPage() {
               {/* Feature 2: Smart Money & Broker Flow Tracker */}
               <div className="sticky top-32 sm:top-36 z-20 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={100}>
-                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
+                  <div className="relative group min-h-[340px] sm:min-h-[360px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-amber-500/50 transition-colors duration-300">
+                    <div className="relative z-20 w-full lg:w-[360px] xl:w-[390px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-amber-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -266,19 +220,6 @@ export default function LandingPage() {
                         Pantau konsentrasi transaksi broker institusi, asing, dan ritel 14–30 hari terakhir. Dilengkapi pelacakan insider filings, kepemilikan KSEI (Dapen & Reksadana), dan radar suspensi resmi BEI.
                       </p>
 
-                      {/* Feature Spec Tags */}
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Top Net Buyers/Sellers
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          KSEI Decomposition
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Radar Suspensi BEI
-                        </span>
-                      </div>
-
                       {/* CTA Button */}
                       <div className="pt-2">
                         <Link 
@@ -292,17 +233,17 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
+                    {/* Compact Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[250px] xl:left-[280px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[480px] xl:w-[540px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-amber-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Smart Money & Broker Flow Tracker.png"
                           alt="Smart Money & Broker Flow Tracker"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 750px"
+                          sizes="(max-width: 1024px) 100vw, 550px"
                           className="object-cover object-left-top"
                         />
                         {/* Subtle soft vignette */}
@@ -317,10 +258,10 @@ export default function LandingPage() {
               {/* Feature 3: Screener Pro & Trade Ideas */}
               <div className="sticky top-36 sm:top-40 z-30 transition-all duration-300">
                 <RevealOnScroll direction="up" delayMs={100}>
-                  <div className="relative group min-h-[380px] sm:min-h-[420px] flex flex-col lg:flex-row items-center">
+                  <div className="relative group min-h-[340px] sm:min-h-[360px] flex flex-col lg:flex-row items-center">
                     
                     {/* Main Card Content (Card Utama - Solid Foreground Layer) */}
-                    <div className="relative z-20 w-full lg:w-[380px] xl:w-[410px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-emerald-500/50 transition-colors duration-300">
+                    <div className="relative z-20 w-full lg:w-[360px] xl:w-[390px] rounded-2xl bg-[#0c1426] border border-slate-700/80 p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-4 shrink-0 hover:border-emerald-500/50 transition-colors duration-300">
                       
                       {/* Badge & Icon */}
                       <div className="flex items-center gap-3">
@@ -341,19 +282,6 @@ export default function LandingPage() {
                         Saring semesta 900+ emiten BEI dengan bahasa natural (NLP) atau filter terstruktur. Dilengkapi preset 1-klik untuk dividen tinggi, ESG Leaders, dan valuasi terdiskon.
                       </p>
 
-                      {/* Feature Spec Tags */}
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          NLP Natural Prompt
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Subsektor Multi-filter
-                        </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-medium text-slate-300">
-                          Dossier 360° 1-Click
-                        </span>
-                      </div>
-
                       {/* CTA Button */}
                       <div className="pt-2">
                         <Link 
@@ -367,17 +295,17 @@ export default function LandingPage() {
 
                     </div>
 
-                    {/* Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
-                    <div className="relative lg:absolute lg:left-[240px] xl:left-[270px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[620px] xl:w-[720px] z-10 mt-4 lg:mt-0">
+                    {/* Compact Elongated Feature Preview (Contoh Fitur - Memanjang & Overlap Dibelakang Card Utama) */}
+                    <div className="relative lg:absolute lg:left-[250px] xl:left-[280px] lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[480px] xl:w-[540px] z-10 mt-4 lg:mt-0">
                       {/* Ambient Accent Glow */}
                       <div className="absolute -inset-4 bg-emerald-500/15 blur-3xl -z-10 rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_25px_60px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
+                      <div className="relative aspect-[21/10] w-full rounded-2xl overflow-hidden border border-slate-700/70 shadow-[0_20px_50px_rgba(0,0,0,0.95)] bg-[#070c18] transform rotate-[1.5deg] lg:rotate-[2.5deg] group-hover:lg:rotate-[1deg] group-hover:scale-[1.02] group-hover:-translate-y-1 transition-all duration-700 ease-out">
                         <Image
                           src="/images/landing/Screener Pro.png"
                           alt="Screener Pro"
                           fill
-                          sizes="(max-width: 1024px) 100vw, 750px"
+                          sizes="(max-width: 1024px) 100vw, 550px"
                           className="object-cover object-left-top"
                         />
                         {/* Subtle soft vignette */}
