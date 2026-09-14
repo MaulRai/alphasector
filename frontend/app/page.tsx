@@ -415,6 +415,69 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* 2.5 END-TO-END FOLLOW-UP WORKFLOW (Side-by-Side: Video Left, Title & Desc Right, 50:50, No CTA) */}
+      <section className="py-20 sm:py-28 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Subtle Ambient Light Glow */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-emerald-500/10 blur-[140px] pointer-events-none rounded-full" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+            
+            {/* Left Column (50% ratio): Video Demo Player */}
+            <div className="order-2 lg:order-1 lg:col-span-6 w-full">
+              <RevealOnScroll direction="right">
+                <div className="relative rounded-2xl border border-slate-800 bg-[#060a14] overflow-hidden shadow-2xl shadow-cyan-950/20 w-full group hover:border-emerald-500/40 transition-colors duration-300">
+                  {/* Clean Window Title Bar */}
+                  <div className="flex items-center justify-between px-3.5 py-2 bg-slate-900/90 border-b border-slate-800/80">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 font-medium">
+                      End-to-End Follow-Up Workflow Demo
+                    </div>
+                    <div className="w-8" />
+                  </div>
+
+                  {/* Video Mockup Element */}
+                  <div className="relative aspect-video w-full bg-black">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover object-center"
+                      src="/images/landing/vids/follow-up-demo.webm"
+                    />
+                  </div>
+                </div>
+              </RevealOnScroll>
+            </div>
+
+            {/* Right Column (50% ratio): Title + Description (No CTA) */}
+            <div className="order-1 lg:order-2 lg:col-span-6 w-full space-y-4">
+              <RevealOnScroll direction="left">
+                <div className="space-y-3.5">
+                  <span className="text-xs font-bold text-emerald-400 tracking-wider uppercase">
+                    Seamless Inter-Module Workflow
+                  </span>
+                  
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    Ekosistem Riset End-to-End: Follow-Up Setiap Temuan Tanpa Hambatan
+                  </h2>
+                  
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Setiap temuan anomali harga di Peer Battle, jejak akumulasi di Smart Money, hingga emiten hasil filter Screener saling terhubung secara terpadu. Kamu dapat langsung mem-follow up data mentah ke AlphaAgent sebagai konteks instan untuk menguji hipotesis investasi, menggali katalis masa depan, dan merumuskan kesimpulan tanpa perlu berpindah aplikasi atau menyalin data manual.
+                  </p>
+                </div>
+              </RevealOnScroll>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* 3. SECTORS API DATA ENGINE (x.ai Inspired Cyber Grid & Traveling Neon Beams) */}
       <section className="py-28 sm:py-36 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         
