@@ -93,15 +93,20 @@ export default function LandingPage() {
 
         </div>
 
-        {/* Seamless Soft Transition from Pure Black into Rich Donker (Section 2) */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent via-[#080e1e]/40 to-[#080e1e] pointer-events-none z-10" />
+        {/* Seamless Ultra-Smooth Scrim Transition from Pure Black into Rich Donker (Section 2) */}
+        <div 
+          className="absolute inset-x-0 bottom-0 h-48 sm:h-64 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(8, 14, 30, 0) 0%, rgba(8, 14, 30, 0.04) 15%, rgba(8, 14, 30, 0.14) 30%, rgba(8, 14, 30, 0.35) 50%, rgba(8, 14, 30, 0.65) 70%, rgba(8, 14, 30, 0.88) 88%, rgba(8, 14, 30, 1) 100%)'
+          }}
+        />
 
       </section>
 
       {/* 2. CORE CAPABILITIES (Rich Donker Navy Theme) */}
       <section className="py-24 bg-[#080e1e] px-4 sm:px-6 lg:px-8 relative">
-        {/* Subtle Donker Ambient Lighting */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-64 bg-blue-950/20 blur-[130px] pointer-events-none" />
+        {/* Subtle Donker Ambient Lighting centered below the boundary to prevent top-edge seam */}
+        <div className="absolute top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl h-64 bg-blue-950/20 blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           
