@@ -900,10 +900,15 @@ export default function LandingPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-emerald-500/10 blur-[150px] pointer-events-none rounded-full" />
 
         {/* Oversized Subtle Background Brand Logo Mark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none select-none">
-          <span className="text-9xl sm:text-[200px] font-black tracking-tighter text-white">
-            ALPHA
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <div className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[480px] lg:h-[480px] opacity-10">
+            <Image
+              src="/images/alphasector-icon.png"
+              alt="AlphaSector Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
