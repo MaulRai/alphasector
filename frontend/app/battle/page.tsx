@@ -34,6 +34,28 @@ function PeerBattleContent() {
   const [error, setError] = useState<string | null>(null);
   const { backendOnline } = useBackendHealth();
 
+  // Randomly animated hint for presets to encourage user engagement
+  const [suggestedPresetIdx, setSuggestedPresetIdx] = useState<number>(0);
+  const [isHoveringPresets, setIsHoveringPresets] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isHoveringPresets) return;
+    const interval = setInterval(() => {
+      setSuggestedPresetIdx((prev) => {
+        const candidates = PRESET_BATTLES.map((_, i) => i).filter((i) => i !== prev);
+        const next = candidates[Math.floor(Math.random() * candidates.length)];
+        return next ?? 0;
+      });
+    }, 4200);
+
+    return () => clearInterval(interval);
+  }, [isHoveringPresets]);
+
+  const isPresetActive = (symbols: string[]) => {
+    if (tickers.length !== symbols.length) return false;
+    return symbols.every((s) => tickers.includes(s));
+  };
+
   useEffect(() => {
     if (tickersParam) {
       const parsed = tickersParam
@@ -114,21 +136,51 @@ function PeerBattleContent() {
               </p>
             </div>
 
-            {/* Quick Presets */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium mr-1">Presets:</span>
-              {PRESET_BATTLES.map((p, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setTickers(p.symbols);
-                    setReport(null);
-                  }}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
-                >
-                  {p.title}
-                </button>
-              ))}
+            {/* Quick Presets with Random Elegant Hint Animation */}
+            <div 
+              className="flex flex-wrap items-center gap-2"
+              onMouseEnter={() => setIsHoveringPresets(true)}
+              onMouseLeave={() => setIsHoveringPresets(false)}
+            >
+              <div className="flex items-center gap-1.5 mr-0.5">
+                <span className="text-xs text-slate-500 font-medium">Presets:</span>
+              </div>
+              {PRESET_BATTLES.map((p, idx) => {
+                const isActive = isPresetActive(p.symbols);
+                const isSuggested = suggestedPresetIdx === idx && !isActive;
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setTickers(p.symbols);
+                      setReport(null);
+                    }}
+                    title={`Muat preset ${p.title} (${p.symbols.join(', ')})`}
+                    className={`relative group px-2.5 py-1 rounded-lg text-xs font-semibold transition-all duration-300 cursor-pointer overflow-hidden border ${
+                      isActive
+                        ? 'bg-cyan-500/20 text-cyan-200 border-cyan-500/70 shadow-[0_0_12px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
+                        : isSuggested
+                        ? 'bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 text-cyan-300 border-cyan-500/60 shadow-[0_0_16px_rgba(6,182,212,0.25)] animate-preset-hint scale-[1.02]'
+                        : 'bg-slate-900 hover:bg-slate-800 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    {/* Elegant Shimmer Light Beam for Randomly Hinted Preset */}
+                    {isSuggested && (
+                      <span className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden rounded-lg">
+                        <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent animate-shimmer-slide" />
+                      </span>
+                    )}
+
+                    <span className="relative z-10 flex items-center gap-1.5">
+                      {isSuggested && (
+                        <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse shrink-0" />
+                      )}
+                      <span>{p.title}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
