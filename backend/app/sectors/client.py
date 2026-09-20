@@ -34,6 +34,32 @@ def is_idx_market_hours() -> Tuple[bool, str]:
         
     return True, f"Bursa Aktif ({day_str}, {time_str}). Sinkronisasi 2 jam diizinkan."
 
+def is_cache_from_previous_day(created_at_val: Any) -> bool:
+    """
+    Checks if cache was created on a previous calendar day (in WIB timezone) or more than 24 hours ago.
+    If True, the cache is overnight-stale and MUST be refreshed from Sectors API even outside trading hours.
+    """
+    if not created_at_val:
+        return True
+    try:
+        now_wib = datetime.now(WIB_TZ)
+        if isinstance(created_at_val, datetime):
+            created_dt = created_at_val.astimezone(WIB_TZ) if created_at_val.tzinfo else created_at_val.replace(tzinfo=timezone.utc).astimezone(WIB_TZ)
+        else:
+            s = str(created_at_val).strip()
+            if "T" in s:
+                created_dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+            else:
+                created_dt = datetime.strptime(s.split(".")[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+            created_dt = created_dt.astimezone(WIB_TZ)
+            
+        # If created on an earlier calendar date (WIB) or older than 24 hours
+        is_earlier_date = now_wib.date() > created_dt.date()
+        is_older_than_24h = (now_wib - created_dt).total_seconds() > 86400
+        return is_earlier_date or is_older_than_24h
+    except Exception:
+        return True
+
 class SectorsAPIClient:
     """Async HTTP Client for Sectors Financial API v2 with persistent two-tier caching & error handling."""
     
@@ -214,9 +240,12 @@ class SectorsAPIClient:
                 "credit_used": 0
             }
 
-        # Rule 2: Stale cache exists (> 2 hours old) or force_refresh requested,
-        # BUT current time is OUTSIDE IDX trading hours (08:30 - 16:30 WIB)
-        if cached_entry and not is_market_open:
+        is_overnight_stale = is_cache_from_previous_day(cached_entry.get("created_at")) if cached_entry else True
+
+        # Rule 2: Stale cache exists (> 2 hours old) and outside trading hours,
+        # BUT the cache was ALREADY updated TODAY (not overnight/previous day).
+        # Since the market is closed and today's news is already captured, serve from cache to preserve credits.
+        if cached_entry and not is_market_open and not is_overnight_stale and not force_refresh:
             return {
                 "data": cached_entry["data"],
                 "cached": True,
@@ -224,13 +253,16 @@ class SectorsAPIClient:
                 "is_market_hours": False,
                 "market_status": market_status,
                 "source": cached_entry.get("source", "cache_db_off_hours"),
-                "notice": "Di luar jam bursa (08:30 - 16:30 WIB). Menampilkan arsip berita terbaru dari database.",
+                "notice": "Di luar jam bursa (08:30 - 16:30 WIB). Menampilkan arsip berita tersinkron hari ini.",
                 "last_updated": cached_entry.get("created_at"),
                 "credit_used": 0
             }
 
-        # Rule 3: Either inside market hours (and cache expired / force refresh),
-        # OR no cached data exists at all (initial query).
+        # Rule 3: Either:
+        # a) Inside market hours (and cache expired / force refresh), OR
+        # b) Outside market hours BUT cache is from a previous day / overnight (> 1 day old, e.g. 6 days ago!), OR
+        # c) No cached data exists at all.
+        # -> Trigger fresh fetch from Sectors API v2!
         try:
             url = f"{self.base_url}/news/"
             start_time = time.time()

@@ -1,9 +1,11 @@
 import time
 import logging
+from datetime import datetime, timezone, timedelta
 from typing import Any, Optional, Dict
 from app.db.database import SectorsCacheRepository
 
 logger = logging.getLogger("sectors.cache")
+WIB_TZ = timezone(timedelta(hours=7))
 
 class DatabaseApiCache:
     """
@@ -38,7 +40,8 @@ class DatabaseApiCache:
                 # Populate memory L1 cache for subsequent fast reads
                 self._memory_store[key] = {
                     "value": db_data,
-                    "expires_at": current_time + min(self.default_ttl, 3600)  # 1hr memory buffer
+                    "expires_at": current_time + min(self.default_ttl, 3600),
+                    "created_at": datetime.now(WIB_TZ).isoformat()
                 }
                 return db_data
         except Exception as e:
@@ -55,7 +58,7 @@ class DatabaseApiCache:
             return {
                 "data": entry["value"],
                 "status_code": 200,
-                "created_at": None,
+                "created_at": entry.get("created_at"),
                 "expires_at": entry["expires_at"],
                 "is_expired": is_expired,
                 "source": "memory"
@@ -68,7 +71,8 @@ class DatabaseApiCache:
                 if not entry["is_expired"]:
                     self._memory_store[key] = {
                         "value": entry["data"],
-                        "expires_at": current_time + min(self.default_ttl, 3600)
+                        "expires_at": current_time + min(self.default_ttl, 3600),
+                        "created_at": entry.get("created_at")
                     }
                 entry["source"] = "database"
                 return entry
@@ -88,11 +92,13 @@ class DatabaseApiCache:
     ) -> None:
         ttl = ttl_seconds if ttl_seconds is not None else self.default_ttl
         current_time = time.time()
+        now_iso = datetime.now(WIB_TZ).isoformat()
         
         # 1. Store in memory L1
         self._memory_store[key] = {
             "value": value,
-            "expires_at": current_time + ttl
+            "expires_at": current_time + ttl,
+            "created_at": now_iso
         }
         
         # 2. Persist to Neon PostgreSQL Database L2
