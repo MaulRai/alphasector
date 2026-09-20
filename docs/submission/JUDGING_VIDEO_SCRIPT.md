@@ -15,11 +15,11 @@
 
 | Segmen | Waktu | Durasi | Fokus & Fitur Utama | Rute UI |
 |---|---|---|---|---|
-| **Segmen 1** | 0:00 - 0:30 | 30 dtk | **The Problem & Zero-Friction Entry**<br>Fragmentasi 900+ emiten BEI, data PDF tebal, perkenalan AlphaSector & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segmen 2** | 0:30 - 1:10 | 40 dtk | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning di `/alpha-agent`, visualisasi `AgentThinkingTrace`, pemanggilan paralel Sectors API, sintesis fundamental. | `/alpha-agent` |
-| **Segmen 3** | 1:10 - 1:50 | 40 dtk | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle di `/battle`, Stanford 9-kriteria Piotroski F-Score, P/E Bands, serta Strip Ratio & Cadangan JORC ESDM di `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
-| **Segmen 4** | 1:50 - 2:30 | 40 dtk | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>Radar 4 pilar di `/smart-money` (Bandarmology, Insider Filings, Kepemilikan Institusi KSEI, Suspensi BEI), ekspor memo Notion. | `/smart-money`<br>Notion Modal |
-| **Segmen 5** | 2:30 - 3:00 | 30 dtk | **The Future of Equity Research & Closing**<br>Visi produk, standar etika analitis (Zero Automated Trading) & call-to-action GitHub. | Workspace Showcase<br>Wrap-up |
+| **Segmen 1** | 0:00 - 0:35 | 35 dtk | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Fragmentasi 900+ emiten & PDF tebal, diperparah reshuffle Menkeu Purbaya & minyak $100, perkenalan AlphaSector & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
+| **Segmen 2** | 0:35 - 1:15 | 40 dtk | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning di `/alpha-agent`, visualisasi `AgentThinkingTrace`, pemanggilan paralel Sectors API, sintesis fundamental. | `/alpha-agent` |
+| **Segmen 3** | 1:15 - 1:55 | 40 dtk | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle di `/battle`, Stanford 9-kriteria Piotroski F-Score, P/E Bands, serta Strip Ratio & Cadangan JORC ESDM di `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
+| **Segmen 4** | 1:55 - 2:35 | 40 dtk | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>Radar 4 pilar di `/smart-money` (Bandarmology, Insider Filings, Kepemilikan Institusi KSEI, Suspensi BEI), ekspor memo Notion. | `/smart-money`<br>Notion Modal |
+| **Segmen 5** | 2:35 - 3:05 | 30 dtk | **The Future of Equity Research & Closing**<br>Visi produk, standar etika analitis (Zero Automated Trading) & call-to-action GitHub. | Workspace Showcase<br>Wrap-up |
 
 ---
 
@@ -27,59 +27,75 @@
 
 ---
 
-### SEGMEN 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:30)
-* **Durasi**: 30 Detik
-* **Tujuan**: Membuka dengan problem nyata di pasar modal Indonesia (900+ emiten BEI, PDF tebal, data terfragmentasi), memperkenalkan AlphaSector, dan membuka akses instan ke terminal riset terpadu.
+### SEGMEN 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:35)
+* **Durasi**: 35 Detik
+* **Tujuan**: Menggabungkan problem fundamental pasar modal Indonesia (900+ emiten BEI, ratusan halaman PDF, riset manual) dengan eskalasi drama makro riil (pergantian Menkeu Purbaya, lonjakan minyak dunia $100/barel, volatilitas IHSG anjlok 2,6% lalu memangkas koreksi), memperkenalkan AlphaSector sebagai jawaban rasional, dan membuka akses instan ke terminal riset terpadu.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[0:00 - 0:06] B-Roll / Layar Monitor**: Tampilkan layar dengan belasan tab browser terbuka berisi PDF laporan keuangan BEI yang rumit, spreadsheet penuh angka, dan grafik terpisah. Kursor bergerak cepat menggambarkan frustrasi analisis manual.
-2. **[0:06 - 0:14] Transisi Cepat**: Transisi *smooth zoom-in* langsung ke browser yang membuka Landing Page AlphaSector (`localhost:3000`). Sorot banner header berlatar *Deep Obsidian* (`#07090e`) dengan aksen neon emerald/cyan. Kursor melakukan *hover* halus pada tagline hero: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
-3. **[0:14 - 0:22] Jelajah Singkat**: Scroll lembut ke bawah memperlihatkan 5 pilar utama (Alpha Agent, Peer Battle, Screener Pro, Smart Money 2.0, Minerba Suite, dan Notion Sync).
-4. **[0:22 - 0:30] AuthGate & 1-Click Login**: Klik tombol navigasi menuju `/alpha-agent`. Modal `AuthGate` muncul elegan. Kursor langsung mengklik tombol hijau bercahaya: **"1-Click Demo Login (Akses Instan)"** (`demo@alphasector.id`). Dalam tempo kurang dari 1 detik, indikator login sukses dan workspace terbuka mulus.
+1. **[0:00 - 0:08] Masalah 1: Banyak Dokumen & Hitungan Valuasi Manual (Information Overload)**: Layar penuh menampilkan 20+ tab browser terbuka: dokumen PDF laporan keuangan bursa (halaman 142 dari 348 Catatan Atas Laporan Keuangan), berdampingan dengan spreadsheet model DCF penuh angka rumit dan error `#REF!`. Kursor bergerak frustrasi bolak-balik antara PDF dan spreadsheet, menggambarkan proses riset manual yang melelahkan dan rawan bias.
+2. **[0:08 - 0:17] Masalah 2: Reshuffle Kabinet & Pencopotan Menkeu Purbaya**: Kursor beralih cepat mengklik tab CNBC Indonesia. Layar menampilkan banner merah tebal berkedip: *"BREAKING NEWS: Reshuffle Kabinet: Purbaya Dicopot dari Menkeu, Suahasil Ditunjuk"*. Kursor menyorot judul berita politik dan foto reshuffle menteri yang mendadak memicu ketidakpastian regulasi dan kepanikan di bursa.
+3. **[0:17 - 0:26] Masalah 3: Minyak Dunia >$100 & IHSG Anjlok 2,6% (Puncak Kepanikan Pasar)**: Kursor beralih ke tab Bloomberg & RTI Composite. Headline Bloomberg mencolok: *"Crude Oil Surges Past $100/bbl Amid Geopolitical Shocks"*, berdampingan dengan candlestick merah tajam grafik IHSG menukik -2,6% menembus level psikologis ke 6.371 sebelum volume akumulasi asing memborong Big Banks. Kursor menunjuk jurang koreksi indeks dan kepanikan orderbook pasar saham.
+4. **[0:26 - 0:35] Solusi: AlphaSector Terminal Reveal & 1-Click Institutional Demo Login**: Dentuman *sub-bass* dan transisi *digital whoosh* cepat seketika memotong layar panik ke Landing Page AlphaSector (`localhost:3000`). Sorot kontras visual yang menenangkan: tema *Deep Obsidian* (`#07090e`) elegan dengan aksen neon emerald/cyan dan badge *Sectors Financial API*. Kursor mengklik tombol navigasi menuju `/alpha-agent`, modal `AuthGate` terbuka, dan kursor langsung menekan tombol hijau bercahaya: **"1-Click Demo Login (Akses Instan)"** (`demo@alphasector.id`). Dalam <500ms, centang hijau muncul dan ruang kerja terminal institusional terbuka seketika tanpa hambatan.
 
 #### On-Screen Graphics & Teks Overlay:
-* `[0:02]` Text Card: **"900+ Saham BEI • Ratusan Halaman PDF • Jam-Jaman Riset Manual"**
-* `[0:05]` Persona Overlay: **Built for**: *Investor Ritel & Analis Riset Ekuitas Indonesia*
-* `[0:08]` Brand Card: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
-* `[0:24]` Badge Highlight: **Instant Terminal Access** — *Unified Institutional Workspace*
+* `[0:02]` Pain Card: **"900+ Saham BEI • Ratusan Halaman PDF • Hitungan Manual Rawan Bias"**
+* `[0:09]` Macro Shock 1 Ticker: **"Macro Shock 1: Reshuffle Kabinet • Menkeu Purbaya Dicopot • Ketidakpastian Regulasi"**
+* `[0:18]` Macro Shock 2 Ticker: **"Macro Shock 2: Minyak Mentah >$100/Barel • IHSG Swing -2,6% (6.371) • Kepanikan Pasar"**
+* `[0:22]` Crisis Question Callout: **"Kepanikan Pasar vs Akumulasi Asing: Bagaimana Mengambil Keputusan Rasional?"**
+* `[0:27]` Brand Reveal Card: **AlphaSector Terminal** — *Autonomous Equity Intelligence Powered by Sectors API*
+* `[0:31]` Zero-Friction Entry: **1-Click Institutional Demo Login** (`demo@alphasector.id`)
+* `[0:34]` Workspace Ready: **Akses Instan ke Terminal `/alpha-agent`**
 
 #### Audio Design:
-* BGM: Low-hum ambient synth misterius di awal, berubah menjadi upbeat tech corporate groove bertempo 115 BPM saat AlphaSector muncul.
-* SFX: Suara lembaran kertas/typing cepat di awal, diikuti *digital whoosh* renyah saat transisi ke AlphaSector, dan *positive chime* saat 1-click login berhasil.
+* BGM:
+  - `0:00 - 0:08`: Low-hum ambient synth tegang (frustrasi riset manual banyak dokumen).
+  - `0:08 - 0:17`: Tempo meningkat dengan ketukan denyut tegang / sonar saat berita pencopotan Purbaya muncul.
+  - `0:17 - 0:26`: Nada disonan dan riser dramatis saat harga minyak $100 dan grafik merah IHSG anjlok ke 6.371.
+  - `0:26 - 0:35`: Dentuman *sub-bass impact* dan *digital whoosh* memotong ketegangan, bertransisi seketika ke upbeat modern tech corporate groove (115 BPM) yang jernih dan percaya diri saat AlphaSector muncul, diakhiri *success chime* saat 1-click login berhasil.
+* SFX:
+  - `[0:02]`: Suara kertas dibolak-balik cepat & ketikan frustrasi.
+  - `[0:09]`: Alert "Breaking News Ping" tajam saat tab CNBC Purbaya dibuka.
+  - `[0:18]`: Alert alarm pasar bursa saat chart IHSG merah menukik.
+  - `[0:26]`: *Crisp digital whoosh* memotong kekacauan layar beralih ke interface AlphaSector.
+  - `[0:33]`: *Affirming positive chime* saat 1-click login berhasil.
 
 #### Narasi Suara (Verbatim Indonesian Voiceover):
-> *"Menganalisis lebih dari sembilan ratus emiten di Bursa Efek Indonesia adalah pekerjaan yang melelahkan. Analis dan investor ritel terjebak ratusan halaman PDF laporan keuangan yang terfragmentasi dan perhitungan valuasi manual yang rawan bias.*
+> *"Menganalisis lebih dari sembilan ratus emiten di BEI adalah pekerjaan melelahkan—terjebak ratusan halaman PDF laporan keuangan dan hitungan valuasi manual yang rawan bias.*
 > 
-> *Inilah **AlphaSector**: Terminal riset ekuitas otonom pertama untuk pasar modal Indonesia bertenaga Sectors Financial API. Dengan akses instan satu klik, ruang kerja analitis berstandar institusi siap digunakan seketika."*
+> *Situasi semakin genting ketika badai makro menghantam: reshuffle kabinet mencopot Menkeu Purbaya dan harga minyak dunia menembus 100 dolar per barel—memicu IHSG anjlok dua koma enam persen sebelum asing memborong Big Banks. Di tengah kepanikan pasar, bagaimana mengambil keputusan rasional?*
+> 
+> *Inilah **AlphaSector**: Terminal riset ekuitas otonom pertama untuk pasar modal Indonesia bertenaga Sectors Financial API—mengubah data mentah dan volatilitas pasar menjadi kejelasan analitis institusional dalam satu ruang kerja terpadu."*
 
 #### English Subtitles:
-> *"Analyzing over 900 companies on the Indonesia Stock Exchange is exhausting. Analysts and retail investors are trapped in hundreds of fragmented PDF filings and error-prone manual calculations.*
+> *"Analyzing over 900 companies on the Indonesia Stock Exchange is exhausting—trapped in hundreds of dense PDF filings and error-prone manual calculations.*
 > 
-> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API. With instant one-click access, an institutional-grade research workspace is ready in seconds."*
+> *The stakes escalate when macro shocks hit: a sudden cabinet reshuffle ousted Finance Minister Purbaya and global crude broke 100 dollars a barrel, plunging the IDX 2.6% before foreign whales bought the dip. Amid market panic, how can investors make grounded decisions without emotional bias?*
+> 
+> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API—turning raw market telemetry and extreme volatility into institutional clarity in a single unified workspace."*
 
 ---
 
-### SEGMEN 2: Multi-Step Agent Reasoning & Tool Calling di `/alpha-agent` (0:30 - 1:10)
+### SEGMEN 2: Multi-Step Agent Reasoning & Tool Calling di `/alpha-agent` (0:35 - 1:15)
 * **Durasi**: 40 Detik
 * **Tujuan**: Membuktikan kualifikasi Track 01 dengan memperlihatkan multi-step reasoning, dynamic DAG planning, parallel API fetching, dan sintesis fundamental institusional di route `/alpha-agent`.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[0:30 - 0:38] Input Natural Language Prompt**: Kursor berada di `ChatInputBar`. Ketik prompt komparasi:
+1. **[0:35 - 0:43] Input Natural Language Prompt**: Kursor berada di `ChatInputBar`. Ketik prompt komparasi:
    `"Bandingkan valuasi dan kesehatan finansial BBRI vs BMRI"` lalu tekan **Enter**.
-2. **[0:38 - 0:52] Live Thinking Trace Inspection**: Komponen `LiveThinkingTrace` dan `AgentThinkingTrace` seketika aktif. Arahkan kursor dan sorot tahapan eksekusi otonom yang bergerak dinamis:
+2. **[0:43 - 0:57] Live Thinking Trace Inspection**: Komponen `LiveThinkingTrace` dan `AgentThinkingTrace` seketika aktif. Arahkan kursor dan sorot tahapan eksekusi otonom yang bergerak dinamis:
    - **Phase 1 (PLANNING)**: Intent diklasifikasikan sebagai `PEER_BATTLE_COMPARISON`, target emiten `BBRI` dan `BMRI`.
    - **Phase 2 (FETCHING)**: Pemanggilan paralel via `asyncio.gather` ke endpoint Sectors API: `GET /company/report/BBRI` (~320ms) dan `GET /company/report/BMRI` (~310ms).
    - **Phase 3 (COMPARING)**: Kalkulasi rasio matematika dan matriks komparatif.
    - **Phase 4 (SYNTHESIZING)**: Inferensi LPU Groq Llama 3.3 70B menyusun sintesis Bahasa Indonesia.
    - Sorot badge ringkasan: `(1,520ms • 2 cr)`.
-3. **[0:52 - 1:02] PeerBattleMatrix Presentation**: Scroll ke tabel komparasi berdampingan `PeerBattleMatrix`. Kursor menyorot metrik kunci: P/E, PBV, ROE, Net Profit Margin (NPM), dan lencana best-in-class hijau (`bg-emerald-500/10 text-emerald-400`).
-4. **[1:02 - 1:10] Autonomous Synthesis & Research Dossier**: Sorot bagian **Valuation Verdict** dan **Key Findings**. Klik tombol pada panel kanan untuk membuka drawer **Research Dossier Artifact** yang berisi ringkasan riset terstruktur.
+3. **[0:57 - 1:07] PeerBattleMatrix Presentation**: Scroll ke tabel komparasi berdampingan `PeerBattleMatrix`. Kursor menyorot metrik kunci: P/E, PBV, ROE, Net Profit Margin (NPM), dan lencana best-in-class hijau (`bg-emerald-500/10 text-emerald-400`).
+4. **[1:07 - 1:15] Autonomous Synthesis & Research Dossier**: Sorot bagian **Valuation Verdict** dan **Key Findings**. Klik tombol pada panel kanan untuk membuka drawer **Research Dossier Artifact** yang berisi ringkasan riset terstruktur.
 
 #### On-Screen Graphics & Teks Overlay:
-* `[0:32]` Prompt Callout: `"Bandingkan valuasi dan kesehatan finansial BBRI vs BMRI"`
-* `[0:40]` Architecture Box: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
-* `[0:48]` Telemetry Badge: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
-* `[0:56]` Feature Tag: **Peer Battle Matrix & Grounded Institutional Synthesis**
+* `[0:37]` Prompt Callout: `"Bandingkan valuasi dan kesehatan finansial BBRI vs BMRI"`
+* `[0:45]` Architecture Box: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
+* `[0:53]` Telemetry Badge: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
+* `[1:01]` Feature Tag: **Peer Battle Matrix & Grounded Institutional Synthesis**
 
 #### Audio Design:
 * BGM: Musik berlanjut dengan beat modern teratur yang menonjolkan kecerdasan analitis.
@@ -101,26 +117,26 @@
 
 ---
 
-### SEGMEN 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:10 - 1:50)
+### SEGMEN 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:15 - 1:55)
 * **Durasi**: 40 Detik
 * **Tujuan**: Membuktikan keunggulan kuantitatif AlphaSector melalui perhitungan deterministik matematika murni (Piotroski & P/E Bands) serta memperlihatkan fitur baru **Minerba Deep Intelligence Suite** (data resmi Ditjen Minerba ESDM) di Company 360°.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[1:10 - 1:18] Navigasi ke `/battle`**: Klik menu **"Peer Battle"** di Navbar atas. Klik tombol preset: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), lalu klik tombol gradien cyan **"Jalankan Peer Battle"**. Tabel 4 emiten terisi instan dalam ~450ms.
-2. **[1:18 - 1:28] Drill Down ke `/company/ADRO`**: Cari atau buka emiten komoditas `ADRO` untuk membuka halaman Company 360° Profile. Scroll ke kartu **Deterministic Quant Panel**:
+1. **[1:15 - 1:23] Navigasi ke `/battle`**: Klik menu **"Peer Battle"** di Navbar atas. Klik tombol preset: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), lalu klik tombol gradien cyan **"Jalankan Peer Battle"**. Tabel 4 emiten terisi instan dalam ~450ms.
+2. **[1:23 - 1:33] Drill Down ke `/company/ADRO`**: Cari atau buka emiten komoditas `ADRO` untuk membuka halaman Company 360° Profile. Scroll ke kartu **Deterministic Quant Panel**:
    - Tunjukkan kartu **Piotroski F-Score (Score: 7/9 PRIMA)** dengan 9 kriteria akuntansi.
    - Tunjukkan kartu **P/E Historical Standard Deviation Band** dengan deviasi diskon terhadap rata-rata historis.
-3. **[1:28 - 1:50] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll ke bawah menuju komponen kartu **`MiningOperationalCard`**:
+3. **[1:33 - 1:55] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll ke bawah menuju komponen kartu **`MiningOperationalCard`**:
    - Sorot **Strip Ratio Meter**: Nilai `3.9x` bertag hijau **Low-Cost Producer** (biaya kupas tanah sangat hemat).
    - Sorot **Cadangan JORC/KCMI**: Total `996.2 Mt` (Proven & Probable Reserves vs Resources).
    - Sorot **Reserve Life Index**: Kalkulasi otomatis sisa umur aset tambang (**~15.4 Tahun**).
    - Sorot spesifikasi kualitas batubara resmi: Kalori (4.843 kkal/kg), Total Moisture, dan Rendah Sulfur (<1%).
 
 #### On-Screen Graphics & Teks Overlay:
-* `[1:12]` Preset Tag: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
-* `[1:20]` Formula Card: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Efficiency*
-* `[1:30]` ESDM Badge: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
-* `[1:38]` Metric Callouts: **Strip Ratio 3.9x** (Low-Cost Leader) • **Cadangan JORC 996.2 Mt** • **Reserve Life ~15.4 Tahun**
+* `[1:17]` Preset Tag: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
+* `[1:25]` Formula Card: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Efficiency*
+* `[1:35]` ESDM Badge: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
+* `[1:43]` Metric Callouts: **Strip Ratio 3.9x** (Low-Cost Leader) • **Cadangan JORC 996.2 Mt** • **Reserve Life ~15.4 Tahun**
 
 #### Audio Design:
 * BGM: Ritme perkusi meningkat stabil, memberikan sensasi presisi matematika dan bobot riset industri.
@@ -138,23 +154,23 @@
 
 ---
 
-### SEGMEN 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:50 - 2:30)
+### SEGMEN 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:55 - 2:35)
 * **Durasi**: 40 Detik
 * **Tujuan**: Menampilkan fitur mutakhir **Smart Money 2.0** dengan 4 pilar forensik institusional serta ekspor instan memo investasi ke Notion Workspace.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[1:50 - 1:58] Smart Money 2.0 (`/smart-money`)**: Buka `/smart-money`. Tunjukkan **Global 900+ Emiten Selector** (pilih `TLKM`). Sorot tab bar 4 pilar forensik terpadu.
-2. **[1:58 - 2:12] Jelajah 4 Pilar Forensik**:
+1. **[1:55 - 2:03] Smart Money 2.0 (`/smart-money`)**: Buka `/smart-money`. Tunjukkan **Global 900+ Emiten Selector** (pilih `TLKM`). Sorot tab bar 4 pilar forensik terpadu.
+2. **[2:03 - 2:17] Jelajah 4 Pilar Forensik**:
    - **Pilar 1 (Bandarmology)**: Klik tombol analisis, tunjukkan Top 5 Broker Akumulasi vs Distribusi dan Net Foreign Flow.
    - **Pilar 2 (Insider Filings)**: Klik tab *Insider Filings*, tunjukkan deteksi **`INSIDER BUY / ACCUMULATION`** Direksi/Komisaris lengkap dengan harga beli dan tautan **PDF Surat Resmi BEI**.
    - **Pilar 3 (Kepemilikan Institusi)**: Klik tab *Kepemilikan Institusi*, tunjukkan dekomposisi data KSEI: Dana Pensiun (Dapen BPJS-TK/Taspen), Reksadana, Asuransi, Korporasi vs Ritel, beserta bar rasio Lokal vs Asing.
    - **Pilar 4 (Radar Suspensi)**: Klik sekilas tab *Radar Suspensi BEI* yang mendeteksi gembok bursa dan Unusual Market Activity.
-3. **[2:12 - 2:30] 1-Click Institutional Notion Sync**: Kembali ke Company Profile atau klik tombol **"Sync to Notion"** berlogo `N`. Modal `NotionExportModal` terbuka. Klik **"Sync Memo to Notion"**. Dalam 1 detik, indikator sukses muncul. Buka tab Notion: tampilkan memo investasi Wall-Street lengkap berstruktur eksekutif, tabel valuasi, dan disclaimer kepatuhan.
+3. **[2:17 - 2:35] 1-Click Institutional Notion Sync**: Kembali ke Company Profile atau klik tombol **"Sync to Notion"** berlogo `N`. Modal `NotionExportModal` terbuka. Klik **"Sync Memo to Notion"**. Dalam 1 detik, indikator sukses muncul. Buka tab Notion: tampilkan memo investasi Wall-Street lengkap berstruktur eksekutif, tabel valuasi, dan disclaimer kepatuhan.
 
 #### On-Screen Graphics & Teks Overlay:
-* `[1:52]` Radar Card: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
-* `[2:02]` Compliance Badge: **Insider Filings & KSEI Ownership** • *Official BEI Disclosure PDFs*
-* `[2:14]` Integration Box: **1-Click Institutional Notion Sync** — *Wall-Street Style Investment Memo*
+* `[1:57]` Radar Card: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
+* `[2:07]` Compliance Badge: **Insider Filings & KSEI Ownership** • *Official BEI Disclosure PDFs*
+* `[2:19]` Integration Box: **1-Click Institutional Notion Sync** — *Wall-Street Style Investment Memo*
 
 #### Audio Design:
 * BGM: Melodi dinamis mengalir penuh percaya diri.
@@ -172,22 +188,22 @@
 
 ---
 
-### SEGMEN 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
+### SEGMEN 5: The Future of Indonesian Equity Research & Closing (2:35 - 3:05)
 * **Durasi**: 30 Detik
 * **Tujuan**: Menutup video dengan impresi kuat ala peluncuran produk FinTech modern: merangkul seluruh alur kerja terintegrasi (Alpha Agent, Battle, Minerba, Smart Money, Notion), menegaskan komitmen Responsible FinTech (tanpa automated trading), dan memberikan call-to-action yang meyakinkan.
 
 #### Detail Aksi Visual (Screen Actions & Clicks):
-1. **[2:30 - 2:40] Unified Workspace Showcase**: Kamera melakukan *smooth zoom-out* sinematik memperlihatkan ekosistem AlphaSector yang saling terhubung: dari penalaran Alpha Agent, arena Peer Battle, kartu Minerba ESDM, radar Smart Money 2.0, hingga memo Notion.
-2. **[2:40 - 2:48] Responsible FinTech & Disclaimers**: Sorot sekilas kartu etika analitis di footer: menegaskan komitmen pada *pure decision-support intelligence* tanpa eksekusi transaksi otomatis (Rule 12).
-3. **[2:48 - 3:00] Hero Closing & Call-To-Action**: Transisi ke layar penutup Deep Obsidian. Logo AlphaSector berkilau di tengah layar, diikuti teks tagline *"Smarter Research, Sharper Decisions"*, tautan repositori GitHub publik (`github.com/MaulRai/sectors-hackathon`), dan badge *Sectors Hackathon 2026*.
+1. **[2:35 - 2:45] Unified Workspace Showcase**: Kamera melakukan *smooth zoom-out* sinematik memperlihatkan ekosistem AlphaSector yang saling terhubung: dari penalaran Alpha Agent, arena Peer Battle, kartu Minerba ESDM, radar Smart Money 2.0, hingga memo Notion.
+2. **[2:45 - 2:53] Responsible FinTech & Disclaimers**: Sorot sekilas kartu etika analitis di footer: menegaskan komitmen pada *pure decision-support intelligence* tanpa eksekusi transaksi otomatis (Rule 12).
+3. **[2:53 - 3:05] Hero Closing & Call-To-Action**: Transisi ke layar penutup Deep Obsidian. Logo AlphaSector berkilau di tengah layar, diikuti teks tagline *"Smarter Research, Sharper Decisions"*, tautan repositori GitHub publik (`github.com/MaulRai/sectors-hackathon`), dan badge *Sectors Hackathon 2026*.
 
 #### On-Screen Graphics & Teks Overlay:
-* `[2:32]` Headline Card: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine • Minerba Suite*
-* `[2:42]` Assurance Badge: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
-* `[2:50]` Closing Hero: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
+* `[2:37]` Headline Card: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine • Minerba Suite*
+* `[2:47]` Assurance Badge: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
+* `[2:55]` Closing Hero: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
 
 #### Audio Design:
-* BGM: Musik bertransisi ke riser megah bersemangat, mencapai klimaks pada detik 2:50, lalu diakhiri denting synth jernih dan reverb tail yang bersih.
+* BGM: Musik bertransisi ke riser megah bersemangat, mencapai klimaks pada detik 2:55, lalu diakhiri denting synth jernih dan reverb tail yang bersih.
 * SFX: *Sub-bass boom* halus saat logo AlphaSector muncul, diikuti *sparkle chime* saat link GitHub ditampilkan.
 
 #### Narasi Suara (Verbatim Indonesian Voiceover):

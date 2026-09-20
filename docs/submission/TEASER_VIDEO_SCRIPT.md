@@ -27,23 +27,23 @@
 
 ---
 
-### [0:00 - 0:08] SCENE 1: THE HOOK & THE FRUSTRATION
+### [0:00 - 0:08] SCENE 1: THE HOOK & MARKET SHOCK
 * **Durasi**: 8 Detik (Detik 0 - 8)
 * **Kamera / Visual**:
-  - Layar penuh menampilkan 20+ tab browser terbuka: dokumen PDF prospektus dan laporan keuangan BEI yang berantakan, grafik berkedip liar, dan spreadsheet Excel yang rumit.
+  - Layar penuh menampilkan breaking news reshuffle Menkeu Purbaya, grafik minyak dunia menembus USD 100/barel, dan IHSG berfluktuasi tajam, dikelilingi belasan tab PDF laporan keuangan BEI yang berantakan.
   - Efek kamera *fast zoom-in* dramatis diiringi efek visual *glitch digital* merah/abu-abu.
   - Layar mendadak *shatter* (pecah) beralih ke warna *Deep Obsidian* (`#07090e`) AlphaSector yang super elegan dan dingin.
 * **Kinetic Typography (Teks Pop-Up Layar)**:
-  - `[0:01]` **"900+ SAHAM BEI"** (Font raksasa merah)
-  - `[0:03]` **"RATUSAN HALAMAN PDF?"** (Efek shake)
+  - `[0:01]` **"RESHUFFLE MENKEU • MINYAK $100"** (Font raksasa merah)
+  - `[0:03]` **"IHSG SWING 2,6% • PANIK PASAR?"** (Efek shake)
   - `[0:06]` **"STOP RISET MANUAL."** (Neon Emerald bersinar)
 * **Audio SFX & BGM**:
-  - SFX: Suara kertas dibolak-balik cepat, distorsi statis radio, lalu *GLITCH CUT* hening 0.3 detik.
+  - SFX: Suara alert breaking news, statis radio, lalu *GLITCH CUT* hening 0.3 detik.
   - BGM: *HEAVY BASS DROP* menggelegar di detik 0:07 mengawali beat musik elektronik 128 BPM yang adiktif.
 * **Voiceover (VO Indonesia)**:
-  > *"Menganalisis sembilan ratus saham di Bursa Efek Indonesia masih pakai cara lama yang bikin pusing? Tinggalkan cara lama!"*
+  > *"Reshuffle menteri mengguncang bursa, minyak dunia tembus 100 dolar, dan pasar panik? Tinggalkan cara riset lama!"*
 * **English Subtitle**:
-  > *"Still analyzing 900+ Indonesian stocks the hard way with messy PDFs? Time to upgrade!"*
+  > *"Cabinet reshuffles rocking the market, crude oil breaking $100, and mass panic? Stop researching the old way!"*
 
 ---
 

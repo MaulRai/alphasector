@@ -17,11 +17,11 @@
 
 | Segment | Timestamp | Duration | Core Feature & Focus | UI Route |
 | :--- | :--- | :--- | :--- | :--- |
-| **Segment 1** | 0:00 - 0:30 | 30s | **The Problem & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, fragmented PDFs, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segment 2** | 0:30 - 1:10 | 40s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
-| **Segment 3** | 1:10 - 1:50 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle`, Stanford 9-criteria Piotroski F-Score, P/E Bands, plus Strip Ratio & JORC Reserves at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
-| **Segment 4** | 1:50 - 2:30 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
-| **Segment 5** | 2:30 - 3:00 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
+| **Segment 1** | 0:00 - 0:35 | 35s | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, compounded by Purbaya reshuffle & $100 oil, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
+| **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
+| **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle`, Stanford 9-criteria Piotroski F-Score, P/E Bands, plus Strip Ratio & JORC Reserves at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
+| **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
+| **Segment 5** | 2:35 - 3:05 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
 
 ---
 
@@ -29,54 +29,68 @@
 
 ---
 
-### SEGMENT 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:30)
-* **Duration**: 30 Seconds
-* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), introduce AlphaSector, and open instant access to a unified research workspace.
+### SEGMENT 1: The High-Stakes Problem & Zero-Friction Entry (0:00 - 0:35)
+* **Duration**: 35 Seconds
+* **Objective**: Establish the core real-world pain point in the Indonesian equity market (900+ listed companies, unstructured PDFs, manual financial math), escalate it with real-world macro turbulence (Minister Purbaya's sudden dismissal, crude breaking $100/barrel, and IDX swinging 2.6%), introduce AlphaSector as the antidote to market panic, and open instant access to a unified research workspace.
 
 #### Visual Screen Actions & Clicks:
-1. **[0:00 - 0:06] B-Roll / Screen Capture**: Display a screen overflowing with 20+ open browser tabs: complex Indonesian annual report PDFs, cluttered financial spreadsheets, and disjointed price charts. The mouse moves erratically, illustrating the frustration of manual equity research.
-2. **[0:06 - 0:14] Smooth Transition**: Smooth zoom-in cut directly to AlphaSector’s Landing Page (`localhost:3000`). Highlight the Deep Obsidian theme (`#07090e`) with vibrant neon emerald and cyan glows. Cursor hovers gently over the hero headline: *"Autonomous Equity Research Agent for Indonesian Capital Markets"*.
-3. **[0:14 - 0:22] Quick Feature Tour**: Smooth scroll down revealing the 5 core modules (Alpha Agent Workspace, Peer Battle Terminal, Screener Pro, Smart Money 2.0, Minerba Suite, and Notion Sync).
-4. **[0:22 - 0:30] AuthGate & 1-Click Login**: Click the navigation button toward `/alpha-agent`. The elegant `AuthGate` modal appears. Cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication succeeds and the workspace opens seamlessly.
+1. **[0:00 - 0:08] Problem 1: Information Overload & Manual Models (Baseline Friction)**: Full screen displaying 20+ open browser tabs: complex audited financial report PDFs (page 142 of 348 Notes to Consolidated Financial Statements), alongside a messy DCF Excel model full of complex figures and `#REF!` errors. Mouse moves with visible frustration, toggling frantically between PDF footnotes and spreadsheet cells.
+2. **[0:08 - 0:17] Problem 2: Cabinet Reshuffle & Minister Purbaya Dismissal (Macro Shock 1)**: Cursor clicks into the CNBC Indonesia tab. The screen displays a bold flashing red banner: *"BREAKING NEWS: Reshuffle Kabinet: Purbaya Dicopot dari Menkeu, Suahasil Ditunjuk"*. Cursor highlights the political headline and reshuffle imagery that injected sudden regulatory uncertainty and panic across capital markets.
+3. **[0:17 - 0:26] Problem 3: Crude Oil >$100 & IDX Composite Panic Plunge (Macro Shock 2)**: Cursor switches swiftly to Bloomberg & RTI Composite tabs. Bloomberg headline: *"Crude Oil Surges Past $100/bbl Amid Geopolitical Shocks"*, side-by-side with an RTI candlestick chart plunging -2.6% through the 6,371 psychological support level before foreign accumulation swoops in on Big Banks. Mouse traces the steep red drop and chaotic order books, capturing peak market anxiety.
+4. **[0:26 - 0:35] Solution: AlphaSector Terminal Reveal & 1-Click Institutional Demo Login**: A sub-bass drop and crisp digital whoosh instantly cut through the panic into the AlphaSector Landing Page (`localhost:3000`). A soothing visual contrast: clean, elegant Deep Obsidian theme (`#07090e`) with vibrant neon emerald/cyan glows and official *Sectors Financial API* badge. Cursor clicks navigate to `/alpha-agent`, the `AuthGate` modal opens, and cursor clicks the glowing emerald button: **"1-Click Demo Login (Instant Access)"** (`demo@alphasector.id`). In under 500ms, authentication checkmark succeeds and the institutional workspace unlocks seamlessly—poised for Segmen 2.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[0:02]` **Title Card**: `"900+ IDX Stocks • Hundreds of PDF Pages • Hours of Manual Research"`
-* `[0:05]` **Persona Overlay**: **Built for**: *Indonesian Retail Investors & Equity Research Analysts*
-* `[0:08]` **Brand Badge**: **AlphaSector Terminal** — *Track 01: AI Agents & Assistants*
-* `[0:24]` **Highlight Banner**: **Instant Terminal Access** — *Unified Institutional Workspace*
+* `[0:02]` **Pain Card**: `"900+ IDX Stocks • Hundreds of PDF Pages • Hours of Error-Prone Math"`
+* `[0:09]` **Macro Shock 1 Ticker**: `"Macro Shock 1: Cabinet Reshuffle • Finance Minister Purbaya Dismissed • Regulatory Uncertainty"`
+* `[0:18]` **Macro Shock 2 Ticker**: `"Macro Shock 2: Crude Oil >$100/bbl • IDX Plunges -2.6% to 6,371 • Market Panic"`
+* `[0:22]` **Crisis Question Callout**: `"Market Panic vs Foreign Whale Inflows: How to Make Grounded Decisions?"`
+* `[0:27]` **Brand Reveal Card**: **AlphaSector Terminal** — *Autonomous Equity Intelligence Powered by Sectors API*
+* `[0:31]` **Zero-Friction Entry**: **1-Click Institutional Demo Login** (`demo@alphasector.id`)
+* `[0:34]` **Workspace Ready**: **Direct Entry to `/alpha-agent` Terminal**
 
 #### Audio Design:
-* BGM: Low-hum ambient mystery synth for the first 6 seconds, swelling into an upbeat modern tech corporate groove (115 BPM) as AlphaSector appears.
-* SFX: Rapid paper rustling/keystrokes initially, followed by a crisp *digital whoosh* into AlphaSector, and an affirming *success chime* upon 1-click login.
+* BGM:
+  - `0:00 - 0:08`: Tense low-hum ambient synth (frustration with manual research across dense filings).
+  - `0:08 - 0:17`: Tempo tightens with tense clock-pulse / sonar beat as the Purbaya dismissal headlines break.
+  - `0:17 - 0:26`: Dissonant tones and dramatic riser as crude crosses $100 and IDX composite plunges to 6,371.
+  - `0:26 - 0:35`: Sub-bass impact and digital whoosh cut through the tension, instantly transitioning into an upbeat modern tech corporate groove (115 BPM) as AlphaSector resolves, punctuated by a success chime upon 1-click login.
+* SFX:
+  - `[0:02]`: Rapid paper rustling & frantic typing.
+  - `[0:09]`: Sharp "Breaking News Ping" alert when the CNBC Purbaya tab is opened.
+  - `[0:18]`: Stock market alarm alert as the red IDX chart plunges.
+  - `[0:26]`: Crisp *digital whoosh* clearing the screen chaos into AlphaSector.
+  - `[0:33]`: Affirming *positive chime* as 1-click demo login succeeds.
 
 #### Verbatim English Voiceover Narration:
-> *"Analyzing over nine hundred publicly listed companies on the Indonesia Stock Exchange is an exhausting challenge. Analysts and retail investors are trapped in hundreds of dense, fragmented PDF disclosures and error-prone manual calculations.*
+> *"Analyzing over 900 companies on the Indonesia Stock Exchange is exhausting—trapped in hundreds of dense PDF filings and error-prone manual calculations.*
 > 
-> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API. With instant one-click access, an institutional-grade research workspace is ready in seconds."*
+> *The stakes escalate when macro shocks hit: a sudden cabinet reshuffle ousted Finance Minister Purbaya and global crude broke 100 dollars a barrel, plunging the IDX two point six percent before foreign whales bought the dip. Amid market panic, how can investors make grounded decisions without emotional bias?*
+> 
+> *Meet **AlphaSector**: the first autonomous equity research terminal purpose-built for the Indonesian market, powered by Sectors Financial API—turning raw market telemetry and extreme volatility into institutional clarity in a single unified workspace."*
 
 ---
 
-### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:30 - 1:10)
+### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:35 - 1:15)
 * **Duration**: 40 Seconds
 * **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-step agent reasoning, dynamic DAG planning, parallel Sectors API calls, and grounded institutional synthesis on `/alpha-agent`.
 
 #### Visual Screen Actions & Clicks:
-1. **[0:30 - 0:38] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
+1. **[0:35 - 0:43] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
    `"Compare the valuation and financial health of BBRI vs BMRI"` and hit **Enter**.
-2. **[0:38 - 0:52] Live Thinking Trace Inspection**: The `LiveThinkingTrace` and `AgentThinkingTrace` components expand immediately. Cursor highlights the dynamic autonomous execution stages:
+2. **[0:43 - 0:57] Live Thinking Trace Inspection**: The `LiveThinkingTrace` and `AgentThinkingTrace` components expand immediately. Cursor highlights the dynamic autonomous execution stages:
    - **Phase 1 (PLANNING)**: Intent classified as `PEER_BATTLE_COMPARISON`, targets set to `BBRI` and `BMRI`.
    - **Phase 2 (FETCHING)**: Concurrent execution via `asyncio.gather` to Sectors API endpoints: `GET /company/report/BBRI` (~320ms) and `GET /company/report/BMRI` (~310ms).
    - **Phase 3 (COMPARING)**: Real-time mathematical ratio delta computation.
    - **Phase 4 (SYNTHESIZING)**: Groq LPU inference drafting grounded institutional findings.
    - Highlight latency & credit badge: `(1,520ms • 2 cr)`.
-3. **[0:52 - 1:02] PeerBattleMatrix Presentation**: Scroll down to the side-by-side `PeerBattleMatrix`. Highlight key metrics: P/E, PBV, ROE, Net Profit Margin, and glowing green best-in-class badges (`bg-emerald-500/10 text-emerald-400`).
-4. **[1:02 - 1:10] Autonomous Synthesis & Research Dossier**: Highlight the **Valuation Verdict** and **Key Findings**. Click the button on the right panel to slide open the **Research Dossier Artifact** drawer.
+3. **[0:57 - 1:07] PeerBattleMatrix Presentation**: Scroll down to the side-by-side `PeerBattleMatrix`. Highlight key metrics: P/E, PBV, ROE, Net Profit Margin, and glowing green best-in-class badges (`bg-emerald-500/10 text-emerald-400`).
+4. **[1:07 - 1:15] Autonomous Synthesis & Research Dossier**: Highlight the **Valuation Verdict** and **Key Findings**. Click the button on the right panel to slide open the **Research Dossier Artifact** drawer.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[0:32]` **Prompt Callout**: `"Compare the valuation and financial health of BBRI vs BMRI"`
-* `[0:40]` **Architecture Box**: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
-* `[0:48]` **Telemetry Badge**: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
-* `[0:56]` **Feature Tag**: **Peer Battle Matrix & Grounded Institutional Synthesis**
+* `[0:37]` **Prompt Callout**: `"Compare the valuation and financial health of BBRI vs BMRI"`
+* `[0:45]` **Architecture Box**: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
+* `[0:53]` **Telemetry Badge**: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
+* `[1:01]` **Feature Tag**: **Peer Battle Matrix & Grounded Institutional Synthesis**
 
 #### Audio Design:
 * BGM: Modern rhythmic synth bassline driving analytical momentum.
@@ -91,26 +105,26 @@
 
 ---
 
-### SEGMENT 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:10 - 1:50)
+### SEGMENT 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:15 - 1:55)
 * **Duration**: 40 Seconds
 * **Objective**: Prove quantitative supremacy through pure deterministic computation (Piotroski & P/E Bands) and unveil the **Minerba Deep Intelligence Suite** (official Ministry of Energy and Mineral Resources / ESDM data) on Company 360°.
 
 #### Visual Screen Actions & Clicks:
-1. **[1:10 - 1:18] Navigate to `/battle`**: Click **"Peer Battle"** in the top Navbar. Click the preset button: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click the cyan button **"Run Peer Battle"**. In ~450ms, the full 4-way comparative table populates with unified historical metrics.
-2. **[1:18 - 1:28] Drill Down to `/company/ADRO`**: Search or open commodity titan `ADRO` to view the Company 360° Profile. Scroll to the **Deterministic Quant Panel**:
+1. **[1:15 - 1:23] Navigate to `/battle`**: Click **"Peer Battle"** in the top Navbar. Click the preset button: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click the cyan button **"Run Peer Battle"**. In ~450ms, the full 4-way comparative table populates with unified historical metrics.
+2. **[1:23 - 1:33] Drill Down to `/company/ADRO`**: Search or open commodity titan `ADRO` to view the Company 360° Profile. Scroll to the **Deterministic Quant Panel**:
    - Highlight the **Piotroski F-Score (Score: 7/9 PRIMA)** card across 9 accounting criteria.
    - Highlight the **P/E Historical Standard Deviation Band** showing the undervaluation discount.
-3. **[1:28 - 1:50] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll down to the **`MiningOperationalCard`**:
+3. **[1:33 - 1:55] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll down to the **`MiningOperationalCard`**:
    - Highlight the **Strip Ratio Meter**: `3.9x` tagged as **Low-Cost Producer** (highly efficient overburden removal).
    - Highlight **JORC/KCMI Reserves**: Total `996.2 Mt` (Proven & Probable Reserves vs Total Resources).
    - Highlight **Reserve Life Index**: Automatic mine lifespan calculation (**~15.4 Years**).
    - Highlight official coal quality specifications: Calorific Value (4,843 kcal/kg), Moisture, and Low Sulphur (<1%).
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:12]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
-* `[1:20]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Operating Efficiency*
-* `[1:30]` **ESDM Badge**: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
-* `[1:38]` **Metric Callouts**: **Strip Ratio 3.9x** (Low-Cost Leader) • **JORC Reserves 996.2 Mt** • **Reserve Life ~15.4 Years**
+* `[1:17]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
+* `[1:25]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Operating Efficiency*
+* `[1:35]` **ESDM Badge**: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
+* `[1:43]` **Metric Callouts**: **Strip Ratio 3.9x** (Low-Cost Leader) • **JORC Reserves 996.2 Mt** • **Reserve Life ~15.4 Years**
 
 #### Audio Design:
 * BGM: Percussion tightens, conveying mathematical precision and institutional authority.
@@ -123,23 +137,23 @@
 
 ---
 
-### SEGMENT 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:50 - 2:30)
+### SEGMENT 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:55 - 2:35)
 * **Duration**: 40 Seconds
 * **Objective**: Showcase **Smart Money 2.0** with its 4-pillar forensic radar and 1-click Wall Street-grade Notion memorandum export.
 
 #### Visual Screen Actions & Clicks:
-1. **[1:50 - 1:58] Smart Money 2.0 (`/smart-money`)**: Navigate to `/smart-money`. Highlight the **Global 900+ Stock Selector** (select `TLKM`). Pan across the 4-pillar forensic switcher tabs.
-2. **[1:58 - 2:12] Explore the 4 Forensic Pillars**:
+1. **[1:55 - 2:03] Smart Money 2.0 (`/smart-money`)**: Navigate to `/smart-money`. Highlight the **Global 900+ Stock Selector** (select `TLKM`). Pan across the 4-pillar forensic switcher tabs.
+2. **[2:03 - 2:17] Explore the 4 Forensic Pillars**:
    - **Pillar 1 (Bandarmology)**: Click analyze, showcasing Top 5 Accumulator vs Distributor brokers and Net Foreign Flow.
    - **Pillar 2 (Insider Filings)**: Switch to the *Insider Filings* tab, spotlighting **`INSIDER BUY / ACCUMULATION`** flags by Directors/Commissioners with transaction prices and official **IDX Disclosure PDF Links**.
    - **Pillar 3 (Institutional Ownership)**: Switch to *Institutional Ownership*, revealing exact KSEI custodian breakdowns: Pension Funds (BPJS-TK/Taspen), Mutual Funds, Insurance, Corporate vs Retail, with Local vs Foreign macro ratio bars.
    - **Pillar 4 (Suspensions Radar)**: Brief click on *IDX Suspensions Radar* monitoring trade halts and Unusual Market Activity (UMA).
-3. **[2:12 - 2:30] 1-Click Institutional Notion Sync**: Click the **"Sync to Notion"** button with the `N` logo. The `NotionExportModal` opens. Click **"Sync Memo to Notion"**. In 1 second, a success checkmark appears. Switch to the Notion tab displaying a fully structured Wall Street investment memo (Executive Summary, Valuation Multiples, and Compliance Disclaimers).
+3. **[2:17 - 2:35] 1-Click Institutional Notion Sync**: Click the **"Sync to Notion"** button with the `N` logo. The `NotionExportModal` opens. Click **"Sync Memo to Notion"**. In 1 second, a success checkmark appears. Switch to the Notion tab displaying a fully structured Wall Street investment memo (Executive Summary, Valuation Multiples, and Compliance Disclaimers).
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:52]` **Radar Card**: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
-* `[2:02]` **Compliance Badge**: **Insider Filings & KSEI Ownership** • *Official IDX Disclosure PDFs*
-* `[2:14]` **Integration Box**: **1-Click Institutional Notion Sync** — *Wall Street-Grade Investment Memo*
+* `[1:57]` **Radar Card**: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
+* `[2:07]` **Compliance Badge**: **Insider Filings & KSEI Ownership** • *Official IDX Disclosure PDFs*
+* `[2:19]` **Integration Box**: **1-Click Institutional Notion Sync** — *Wall Street-Grade Investment Memo*
 
 #### Audio Design:
 * BGM: Dynamic, steady tech flow.
@@ -152,19 +166,19 @@
 
 ---
 
-### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:30 - 3:00)
+### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:35 - 3:05)
 * **Duration**: 30 Seconds
 * **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Battle, Minerba, Smart Money 2.0, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:30 - 2:40] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, the ESDM Minerba cards, the Smart Money 2.0 forensic radar, and the Notion memo.
-2. **[2:40 - 2:48] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
-3. **[2:48 - 3:00] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/sectors-hackathon`), and the *Sectors Hackathon 2026* badge.
+1. **[2:35 - 2:45] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, the ESDM Minerba cards, the Smart Money 2.0 forensic radar, and the Notion memo.
+2. **[2:45 - 2:53] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
+3. **[2:53 - 3:05] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/sectors-hackathon`), and the *Sectors Hackathon 2026* badge.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[2:32]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine • Minerba Suite*
-* `[2:42]` **Assurance Badge**: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
-* `[2:50]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
+* `[2:37]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Step Reasoning • Deterministic Quant Engine • Minerba Suite*
+* `[2:47]` **Assurance Badge**: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
+* `[2:55]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
 
 #### Audio Design:
 * BGM: Contemporary melodic synth crescendo reaching its triumphant peak at 2:50, resolving into an upbeat final chord with a pristine reverb tail.
