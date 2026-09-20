@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthResponse } from './types';
-import { loginUser, registerUser, getMeProfile, fetchCustomSectorsApiKey } from './api';
+import { loginUser, registerUser, getMeProfile, fetchCustomSectorsApiKey, triggerEarlyBackendWarmup } from './api';
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +26,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    // Proactively ping backend to spin up cold container early on any page visit
+    triggerEarlyBackendWarmup();
+
     const storedToken = localStorage.getItem(TOKEN_KEY);
     const cachedUser = localStorage.getItem(USER_KEY);
     

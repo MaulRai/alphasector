@@ -36,6 +36,40 @@ export function getApiHeaders(): Record<string, string> {
   return headers;
 }
 
+/**
+ * Early Silent Backend Warm-up
+ * Pings the backend immediately upon client app initialization to spin up any cold serverless/idle containers.
+ * Uses sessionStorage guard to ensure it only runs once per browser session.
+ */
+export function triggerEarlyBackendWarmup(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const isWarmed = sessionStorage.getItem('alphasector_backend_warmed');
+    if (isWarmed) return;
+
+    // Mark as warmed immediately to prevent duplicate simultaneous calls across components
+    sessionStorage.setItem('alphasector_backend_warmed', 'true');
+
+    // Fire-and-forget silent ping
+    fetch(`${API_BASE_URL}/health`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          fetch(`${API_BASE_URL}/`, { method: 'GET', cache: 'no-store' }).catch(() => {});
+        }
+      })
+      .catch(() => {
+        // Fallback ping to root if /health fails
+        fetch(`${API_BASE_URL}/`, { method: 'GET', cache: 'no-store' }).catch(() => {});
+      });
+  } catch {
+    // Gracefully ignore storage or network restrictions
+  }
+}
+
 export async function checkBackendHealth(): Promise<{ status: string }> {
   try {
     const res = await fetch(`${API_BASE_URL}/`);
