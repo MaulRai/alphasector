@@ -194,24 +194,7 @@ Berikan kesimpulan dampak sentimen (bullish/bearish/netral), implikasi terhadap 
   };
 
   return (
-    <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 md:p-7 shadow-2xl space-y-6">
-      {/* Header */}
-      <div className="border-b border-slate-800/80 pb-5">
-        <div className="flex items-center gap-2 mb-1.5">
-          <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-            <Newspaper className="h-5 w-5" />
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
-            Feed Berita & Sentimen Terkini
-          </h2>
-        </div>
-        <p className="text-xs text-slate-400">
-          {initialTicker 
-            ? `Berita terverifikasi Bursa Efek Indonesia untuk emiten ${initialTicker.toUpperCase()}`
-            : 'Berita terverifikasi Bursa Efek Indonesia untuk seluruh emiten di pasar modal'}
-        </p>
-      </div>
-
+    <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 md:p-7 shadow-2xl space-y-5">
       {/* Tag & Search Filters */}
       <div className="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
