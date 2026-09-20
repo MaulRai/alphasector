@@ -35,26 +35,64 @@ function PeerBattleContent() {
   const { backendOnline } = useBackendHealth();
 
   // Randomly animated hint for presets to encourage user engagement
-  const [suggestedPresetIdx, setSuggestedPresetIdx] = useState<number>(0);
+  // 1s active animation with 3s pause interval; permanently turned off once a preset is selected
+  const [suggestedPresetIdx, setSuggestedPresetIdx] = useState<number | null>(null);
+  const [hasUserSelectedPreset, setHasUserSelectedPreset] = useState<boolean>(false);
   const [isHoveringPresets, setIsHoveringPresets] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (isHoveringPresets) return;
-    const interval = setInterval(() => {
-      setSuggestedPresetIdx((prev) => {
-        const candidates = PRESET_BATTLES.map((_, i) => i).filter((i) => i !== prev);
-        const next = candidates[Math.floor(Math.random() * candidates.length)];
-        return next ?? 0;
-      });
-    }, 4200);
-
-    return () => clearInterval(interval);
-  }, [isHoveringPresets]);
 
   const isPresetActive = (symbols: string[]) => {
     if (tickers.length !== symbols.length) return false;
     return symbols.every((s) => tickers.includes(s));
   };
+
+  const isAnyPresetActive = PRESET_BATTLES.some((p) => isPresetActive(p.symbols));
+  const isAnimationEnabled = !hasUserSelectedPreset && !isAnyPresetActive && !isHoveringPresets;
+
+  useEffect(() => {
+    if (!isAnimationEnabled) {
+      setSuggestedPresetIdx(null);
+      return;
+    }
+
+    let activeTimeout: NodeJS.Timeout;
+    let pauseTimeout: NodeJS.Timeout;
+    let isCancelled = false;
+
+    const triggerHint = () => {
+      if (isCancelled) return;
+
+      // Pick a random preset
+      setSuggestedPresetIdx((prev) => {
+        const candidates = PRESET_BATTLES.map((_, i) => i).filter((i) => i !== prev);
+        return candidates[Math.floor(Math.random() * candidates.length)] ?? 0;
+      });
+
+      // Keep animation active for exactly 1s
+      activeTimeout = setTimeout(() => {
+        if (isCancelled) return;
+        setSuggestedPresetIdx(null); // turn off hint for 3s jeda
+
+        // Jeda 3s before next animation
+        pauseTimeout = setTimeout(() => {
+          if (!isCancelled) {
+            triggerHint();
+          }
+        }, 3000);
+      }, 1000);
+    };
+
+    // Initial 3s pause on mount before first hint
+    const initialDelay = setTimeout(() => {
+      triggerHint();
+    }, 3000);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(initialDelay);
+      clearTimeout(activeTimeout);
+      clearTimeout(pauseTimeout);
+    };
+  }, [isAnimationEnabled]);
 
   useEffect(() => {
     if (tickersParam) {
@@ -147,12 +185,14 @@ function PeerBattleContent() {
               </div>
               {PRESET_BATTLES.map((p, idx) => {
                 const isActive = isPresetActive(p.symbols);
-                const isSuggested = suggestedPresetIdx === idx && !isActive;
+                const isSuggested = suggestedPresetIdx === idx && !isActive && isAnimationEnabled;
 
                 return (
                   <button
                     key={idx}
                     onClick={() => {
+                      setHasUserSelectedPreset(true);
+                      setSuggestedPresetIdx(null);
                       setTickers(p.symbols);
                       setReport(null);
                     }}
