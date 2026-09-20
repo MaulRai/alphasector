@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { 
-  Sparkles, ShieldCheck, TrendingUp, Users, Zap, Search, Play, Filter, RefreshCw
+  Sparkles, ShieldCheck, TrendingUp, Users, Zap, Search, Play, Filter, RefreshCw, CheckCircle2
 } from 'lucide-react';
 
 interface ScreenerFilterControlsProps {
@@ -36,6 +36,33 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
   onReset,
   isLoading,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isAnimatingPreset, setIsAnimatingPreset] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+
+  // Auto focus input field on page mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handlePresetClick = (slug: string) => {
+    setIsAnimatingPreset(true);
+    setAnimKey((prev) => prev + 1);
+    onSelectPreset(slug);
+
+    // Keep focus and smoothly highlight
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 50);
+
+    setTimeout(() => {
+      setIsAnimatingPreset(false);
+    }, 850);
+  };
+
   return (
     <>
       {/* 1-Click Trade Ideas Radar Presets */}
@@ -46,11 +73,11 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <button
-            onClick={() => onSelectPreset('esg-leaders')}
-            className={`p-3.5 rounded-xl border text-left transition-all ${
+            onClick={() => handlePresetClick('esg-leaders')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               activePreset === 'esg-leaders'
-                ? 'bg-emerald-500/20 border-emerald-400 text-white shadow-lg shadow-emerald-500/10'
-                : 'bg-slate-900/60 border-slate-800 hover:border-emerald-500/40 text-slate-300'
+                ? 'bg-emerald-500/20 border-emerald-400 text-white shadow-lg shadow-emerald-500/10 scale-[1.01]'
+                : 'bg-slate-900/60 border-slate-800 hover:border-emerald-500/40 text-slate-300 hover:bg-slate-800/50'
             }`}
           >
             <div className="flex items-center gap-2 font-bold text-xs mb-1 text-emerald-400">
@@ -60,11 +87,11 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
           </button>
 
           <button
-            onClick={() => onSelectPreset('revenue-growth')}
-            className={`p-3.5 rounded-xl border text-left transition-all ${
+            onClick={() => handlePresetClick('revenue-growth')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               activePreset === 'revenue-growth'
-                ? 'bg-blue-500/20 border-blue-400 text-white shadow-lg shadow-blue-500/10'
-                : 'bg-slate-900/60 border-slate-800 hover:border-blue-500/40 text-slate-300'
+                ? 'bg-blue-500/20 border-blue-400 text-white shadow-lg shadow-blue-500/10 scale-[1.01]'
+                : 'bg-slate-900/60 border-slate-800 hover:border-blue-500/40 text-slate-300 hover:bg-slate-800/50'
             }`}
           >
             <div className="flex items-center gap-2 font-bold text-xs mb-1 text-blue-400">
@@ -74,11 +101,11 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
           </button>
 
           <button
-            onClick={() => onSelectPreset('large-shareholder')}
-            className={`p-3.5 rounded-xl border text-left transition-all ${
+            onClick={() => handlePresetClick('large-shareholder')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               activePreset === 'large-shareholder'
-                ? 'bg-amber-500/20 border-amber-400 text-white shadow-lg shadow-amber-500/10'
-                : 'bg-slate-900/60 border-slate-800 hover:border-amber-500/40 text-slate-300'
+                ? 'bg-amber-500/20 border-amber-400 text-white shadow-lg shadow-amber-500/10 scale-[1.01]'
+                : 'bg-slate-900/60 border-slate-800 hover:border-amber-500/40 text-slate-300 hover:bg-slate-800/50'
             }`}
           >
             <div className="flex items-center gap-2 font-bold text-xs mb-1 text-amber-400">
@@ -88,11 +115,11 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
           </button>
 
           <button
-            onClick={() => onSelectPreset('efficient-operators')}
-            className={`p-3.5 rounded-xl border text-left transition-all ${
+            onClick={() => handlePresetClick('efficient-operators')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               activePreset === 'efficient-operators'
-                ? 'bg-cyan-500/20 border-cyan-400 text-white shadow-lg shadow-cyan-500/10'
-                : 'bg-slate-900/60 border-slate-800 hover:border-cyan-500/40 text-slate-300'
+                ? 'bg-cyan-500/20 border-cyan-400 text-white shadow-lg shadow-cyan-500/10 scale-[1.01]'
+                : 'bg-slate-900/60 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:bg-slate-800/50'
             }`}
           >
             <div className="flex items-center gap-2 font-bold text-xs mb-1 text-cyan-400">
@@ -107,20 +134,36 @@ export const ScreenerFilterControls: React.FC<ScreenerFilterControlsProps> = ({
       <div className="rounded-2xl border border-slate-800 bg-[#0d121e]/90 p-5 mb-8 glass-panel space-y-4">
         {/* Natural Language Form */}
         <form onSubmit={onNlSearch} className="flex flex-col sm:flex-row items-center gap-2">
-          <div className="relative w-full flex-1 flex items-center rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
-            <Search className="h-4 w-4 text-emerald-400 mr-2 shrink-0" />
+          <div 
+            className={`relative w-full flex-1 flex items-center rounded-xl border px-3 py-2 transition-all duration-500 ${
+              isAnimatingPreset
+                ? 'border-emerald-400 bg-emerald-950/30 ring-2 ring-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.25)]'
+                : 'border-slate-700 bg-slate-900 focus-within:border-emerald-500/80 focus-within:ring-1 focus-within:ring-emerald-500/40'
+            }`}
+          >
+            <Search className={`h-4 w-4 mr-2 shrink-0 transition-colors ${isAnimatingPreset ? 'text-emerald-300' : 'text-emerald-400'}`} />
             <input
+              ref={inputRef}
+              key={animKey}
               type="text"
               value={nlQuery}
               onChange={(e) => onNlQueryChange(e.target.value)}
               placeholder="Ketik kriteria bebas (misal: 'saham perbankan dividen > 5%' atau 'batu bara PE murah')..."
-              className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none"
+              className={`w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-all ${
+                isAnimatingPreset ? 'animate-in fade-in slide-in-from-left-1 duration-300' : ''
+              }`}
             />
+            {isAnimatingPreset && (
+              <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 rounded-full animate-in fade-in zoom-in-95 duration-200 shrink-0 ml-2">
+                <Sparkles className="w-2.5 h-2.5" />
+                <span>Preset Terisi</span>
+              </div>
+            )}
           </div>
           <button
             type="submit"
             disabled={isLoading || !nlQuery.trim()}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs transition-all disabled:opacity-50 shrink-0 flex items-center justify-center gap-1.5"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold text-xs transition-all disabled:opacity-50 shrink-0 flex items-center justify-center gap-1.5 cursor-pointer shadow-md hover:shadow-emerald-500/20 hover:brightness-105"
           >
             <Play className="h-3.5 w-3.5 fill-black" />
             <span>Jalankan Skrining</span>

@@ -3,6 +3,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors } from '@/lib/api';
 
+export const PRESET_PROMPTS: Record<string, string> = {
+  'esg-leaders': 'Top rating keberlanjutan & tata kelola (ESG Leaders IDX)',
+  'revenue-growth': 'Pertumbuhan omset YoY tercepat (Revenue Titans)',
+  'large-shareholder': 'Kepemilikan pengendali ≥ 70% (Large Shareholder)',
+  'efficient-operators': 'Laba bersih per karyawan tertinggi (Efficient Operators)',
+};
+
 const SCREENER_STORAGE_KEY = 'alphasector_screener_cache';
 
 export function useScreener() {
@@ -136,6 +143,9 @@ export function useScreener() {
     setError(null);
     setActivePreset(slug);
     setHasSearched(true);
+    if (PRESET_PROMPTS[slug]) {
+      setNlQuery(PRESET_PROMPTS[slug]);
+    }
     try {
       const res = await fetchTradeIdeaPreset(slug);
       if (res && res.data && Array.isArray(res.data)) {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { AuthGate } from '@/components/AuthGate';
@@ -18,6 +18,9 @@ export default function ScreenerPage() {
   const { backendOnline } = useBackendHealth();
   const [isPreparingChat, setIsPreparingChat] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
+
+  const resultsTableRef = useRef<HTMLDivElement>(null);
+  const wasLoadingRef = useRef(false);
 
   const {
     nlQuery,
@@ -40,6 +43,20 @@ export default function ScreenerPage() {
     handleSelectPreset,
     getScreeningThesisQuery,
   } = useScreener();
+
+  // Automatically scroll down directly to the results table when screening completes
+  useEffect(() => {
+    if (wasLoadingRef.current && !isLoading && results.length > 0) {
+      const timer = setTimeout(() => {
+        resultsTableRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+    wasLoadingRef.current = isLoading;
+  }, [isLoading, results.length]);
 
   const handleResetFilters = () => {
     setNlQuery('');
@@ -145,7 +162,11 @@ export default function ScreenerPage() {
 
           {/* Results Table & Follow-Up Actions */}
           {!isLoading && results.length > 0 && (
-            <div className="space-y-6 animate-in fade-in duration-300">
+            <div 
+              ref={resultsTableRef} 
+              id="screener-results-section" 
+              className="space-y-6 animate-in fade-in duration-300 scroll-mt-24 sm:scroll-mt-28"
+            >
               <ScreenerResultsTable
                 results={results}
                 selectedSubsector={selectedSubsector}
