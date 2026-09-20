@@ -197,27 +197,29 @@ function PeerBattleContent() {
                       setReport(null);
                     }}
                     title={`Muat preset ${p.title} (${p.symbols.join(', ')})`}
-                    className={`relative group px-2.5 py-1 rounded-lg text-xs font-semibold transition-all duration-300 cursor-pointer overflow-hidden border ${
+                    className={`relative group px-2.5 py-1 rounded-lg text-xs font-semibold transition-all duration-500 cursor-pointer overflow-hidden border ${
                       isActive
                         ? 'bg-cyan-500/20 text-cyan-200 border-cyan-500/70 shadow-[0_0_12px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/30'
                         : isSuggested
-                        ? 'bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 text-cyan-300 border-cyan-500/60 shadow-[0_0_16px_rgba(6,182,212,0.25)] animate-preset-hint scale-[1.02]'
+                        ? 'bg-slate-900/90 text-cyan-300 border-cyan-500/60 shadow-[0_0_14px_rgba(6,182,212,0.2)] animate-preset-hint'
                         : 'bg-slate-900 hover:bg-slate-800 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
                     }`}
                   >
+                    {/* Subtle Ambient Background for Suggested Hint */}
+                    <div 
+                      className={`absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent pointer-events-none transition-opacity duration-500 ${
+                        isSuggested ? 'opacity-100' : 'opacity-0'
+                      }`} 
+                    />
+
                     {/* Elegant Shimmer Light Beam for Randomly Hinted Preset */}
                     {isSuggested && (
                       <span className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden rounded-lg">
-                        <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent animate-shimmer-slide" />
+                        <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent animate-shimmer-slide" />
                       </span>
                     )}
 
-                    <span className="relative z-10 flex items-center gap-1.5">
-                      {isSuggested && (
-                        <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse shrink-0" />
-                      )}
-                      <span>{p.title}</span>
-                    </span>
+                    <span className="relative z-10 transition-colors duration-300">{p.title}</span>
                   </button>
                 );
               })}
