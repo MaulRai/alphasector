@@ -43,8 +43,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'AlphaAgent', href: '/alpha-agent', isCustomLogo: true },
     { label: 'Peer Battle', href: '/battle', icon: Swords },
     { label: 'Smart Money', href: '/smart-money', icon: Users },
-    { label: 'News', href: '/news', icon: Newspaper },
     { label: 'Screener', href: '/screener', icon: Search },
+    { label: 'News', href: '/news', icon: Newspaper },
   ];
 
   const getInitials = (name: string) => {
