@@ -9,8 +9,8 @@ export interface AttachedImageData {
   fileName: string;
 }
 
-export function useImageUpload() {
-  const [attachedImage, setAttachedImage] = useState<AttachedImageData | null>(null);
+export function useImageUpload(initialImage: AttachedImageData | null = null) {
+  const [attachedImage, setAttachedImage] = useState<AttachedImageData | null>(initialImage);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFile = useCallback((file: File) => {

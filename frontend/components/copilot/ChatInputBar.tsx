@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Paperclip, RefreshCw, Send, X, FileText } from 'lucide-react';
 import { AttachedImageData } from '@/hooks/useImageUpload';
@@ -37,6 +37,16 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
 }) => {
   const localTextareaRef = useRef<HTMLTextAreaElement>(null);
   const activeTextareaRef = textareaRef || localTextareaRef;
+
+  // Auto expand/shrink textarea when inputQuery changes (including initial draft restoration)
+  useEffect(() => {
+    if (activeTextareaRef.current) {
+      activeTextareaRef.current.style.height = 'auto';
+      if (inputQuery) {
+        activeTextareaRef.current.style.height = `${Math.min(activeTextareaRef.current.scrollHeight, 84)}px`;
+      }
+    }
+  }, [inputQuery, activeTextareaRef]);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onInputChange(e.target.value);

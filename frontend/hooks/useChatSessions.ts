@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { ChatSession, ChatMessage } from '@/lib/types';
 import { fetchUserChatSessions, fetchChatRoomDetails, deleteChatRoom } from '@/lib/api';
+import { saveLastActiveSessionId, getLastActiveSessionId } from '@/lib/chatDraftStore';
 
 interface UseChatSessionsOptions {
   user: any;
@@ -37,6 +38,7 @@ export function useChatSessions({
     try {
       setIsFetchingHistory(true);
       setActiveSessionId(sessionId);
+      saveLastActiveSessionId(sessionId);
       setError(null);
       const res = await fetchChatRoomDetails(sessionId);
       setMessages(res.messages || []);
@@ -51,6 +53,7 @@ export function useChatSessions({
   // Create new session reset
   const handleCreateNewSession = useCallback(() => {
     setActiveSessionId(null);
+    saveLastActiveSessionId(null);
     setMessages([]);
     setIsFetchingHistory(false);
     setError(null);
@@ -122,7 +125,14 @@ export function useChatSessions({
           }
           await onInitialQueryTrigger(initialQueryParam);
         } else if (userSessions.length > 0 && !activeSessionId && !initialQueryParam && !initialQueryExecuted.current) {
-          await handleSelectSession(userSessions[0].id);
+          const rememberedId = getLastActiveSessionId();
+          if (rememberedId && userSessions.some((s) => s.id === rememberedId)) {
+            await handleSelectSession(rememberedId);
+          } else if (rememberedId === null) {
+            handleCreateNewSession();
+          } else {
+            await handleSelectSession(userSessions[0].id);
+          }
         } else {
           setIsFetchingHistory(false);
         }

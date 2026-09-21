@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { parseContextFromClipboard, PastedContextItem, MAX_PASTED_CONTEXTS } from '@/lib/contextClipboard';
+import { getChatDraft, saveChatDraft, clearChatDraft } from '@/lib/chatDraftStore';
 
 function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
@@ -27,7 +28,15 @@ function CopilotWorkspace() {
   const sessionIdParam = searchParams.get('session_id');
   const initialQueryParam = searchParams.get('initial_query') || searchParams.get('prompt') || searchParams.get('q');
 
-  const [inputQuery, setInputQuery] = useState('');
+  // Hydrate initial draft (typing query, pasted contexts, and attached image)
+  const initialDraft = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return { inputQuery: '', pastedContexts: [], attachedImage: null };
+    }
+    return getChatDraft();
+  }, []);
+
+  const [inputQuery, setInputQuery] = useState(() => initialDraft.inputQuery || '');
   const [isLoading, setIsLoading] = useState(false);
   const [liveThinkingStep, setLiveThinkingStep] = useState<LiveThinkingStep | null>(null);
   const [liveTotalSteps, setLiveTotalSteps] = useState<number | undefined>(undefined);
@@ -35,21 +44,21 @@ function CopilotWorkspace() {
   const [isArtifactPanelOpen, setIsArtifactPanelOpen] = useState(false);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeModalReport, setActiveModalReport] = useState<AgentQueryResponse | null>(null);
-  const [pastedContexts, setPastedContexts] = useState<PastedContextItem[]>([]);
+  const [pastedContexts, setPastedContexts] = useState<PastedContextItem[]>(() => initialDraft.pastedContexts || []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantMsgRef = useRef<HTMLDivElement>(null);
   const latestUserMsgRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Hook 1: Multimodal image upload
+  // Hook 1: Multimodal image upload (hydrated with draft image if any)
   const {
     attachedImage,
     fileInputRef,
     handleFileChange,
     handleClearImage,
     handlePaste,
-  } = useImageUpload();
+  } = useImageUpload(initialDraft.attachedImage);
 
   const handleRemovePastedContext = (id: string) => {
     setPastedContexts(prev => prev.filter(c => c.id !== id));
@@ -85,6 +94,7 @@ function CopilotWorkspace() {
     const currentImg = attachedImage;
     const currentContexts = [...pastedContexts];
 
+    clearChatDraft();
     handleClearImage();
     setPastedContexts([]);
     setInputQuery('');
@@ -214,6 +224,16 @@ function CopilotWorkspace() {
       // View stays firmly at the top so the user can read seamlessly without jumping.
     }
   }, [messages]);
+
+  // Retain typing, pasted contexts, and attached image across page navigations
+  useEffect(() => {
+    saveChatDraft({
+      inputQuery,
+      pastedContexts,
+      attachedImage,
+      sessionId: activeSessionId,
+    });
+  }, [inputQuery, pastedContexts, attachedImage, activeSessionId]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
