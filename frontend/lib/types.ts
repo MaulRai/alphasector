@@ -28,6 +28,31 @@ export interface ClarificationPayload {
   is_confirmed?: boolean;
 }
 
+export interface PillarScorecard {
+  pillar: 'FUNDAMENTAL' | 'SMART_MONEY' | 'GOVERNANCE' | string;
+  title: string;
+  stance: string;
+  score: number;
+  verdict: string;
+  key_points: string[];
+}
+
+export interface ContradictionAlert {
+  has_contradiction: boolean;
+  headline: string;
+  description: string;
+  risk_level: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE' | string;
+  divergence_pillars: string[];
+}
+
+export interface CompositeDossierPayload {
+  ticker: string;
+  contradiction: ContradictionAlert;
+  pillars: PillarScorecard[];
+  master_verdict: string;
+  tactical_recommendation: 'ACCUMULATE' | 'BUY_ON_WEAKNESS' | 'WAIT_AND_SEE' | 'AVOID' | string;
+}
+
 export type ExecutionPhase = 
   | 'PLANNING'
   | 'FETCHING'
@@ -146,6 +171,7 @@ export interface AgentQueryResponse {
   suspensions_data?: any[];
   synthesis: SynthesisResult;
   clarification?: ClarificationPayload;
+  composite_dossier?: CompositeDossierPayload;
   visual_context?: string | null;
   suggested_followups?: string[];
   total_execution_time_ms: number;

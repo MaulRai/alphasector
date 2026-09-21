@@ -13,11 +13,13 @@ from app.schemas.agent import (
     SynthesisResult,
     ClarificationPayload,
     ClarificationOption,
+    CompositeDossierPayload,
 )
 from app.agent.planner import planner, contains_keyword
 from app.agent.tools import tool_executor
 from app.agent.comparator import comparator
 from app.agent.synthesizer import AgentSynthesizer
+from app.agent.multi_agent_harness import multi_agent_harness
 from app.sectors.client import sectors_client
 from app.core.gemini_rotator import gemini_rotator
 from app.core.groq_rotator import groq_rotator
@@ -53,7 +55,7 @@ class AgentOrchestrator:
         '    ],\n'
         '    "context_topic": "Topik Singkat (misal: Komparasi BBCA vs BMRI)"\n'
         '  } | null,\n'
-        '  "intent": "PEER_BATTLE_COMPARISON" | "SINGLE_TICKER_DEEP_DIVE" | "MARKET_SCREENING_DISCOVERY" | "INSIDER_FORENSIC_RADAR" | "INSTITUTIONAL_OWNERSHIP" | "REGULATORY_SUSPENSION_RADAR" | "SMART_MONEY_RADAR" | "COMMODITY_MACRO_IMPACT" | "GENERAL_FINANCIAL_QUERY" | "CLARIFICATION_REQUIRED",\n'
+        '  "intent": "PEER_BATTLE_COMPARISON" | "SINGLE_TICKER_DEEP_DIVE" | "MARKET_SCREENING_DISCOVERY" | "INSIDER_FORENSIC_RADAR" | "INSTITUTIONAL_OWNERSHIP" | "REGULATORY_SUSPENSION_RADAR" | "SMART_MONEY_RADAR" | "COMMODITY_MACRO_IMPACT" | "GENERAL_FINANCIAL_QUERY" | "CLARIFICATION_REQUIRED" | "COMPOSITE_CONTRADICTION_DOSSIER",\n'
         '  "target_tickers": ["TICKER1", "TICKER2"],\n'
         '  "resolved_context_ticker": "TICKER" | null,\n'
         '  "reasoning": "Alasan ringkas 1 kalimat"\n'
@@ -64,7 +66,8 @@ class AgentOrchestrator:
         "  b. Kueri sektor luas tanpa emiten spesifik (contoh: 'analisis sektor energi', 'saham bank apa yang bagus'). Berikan opsi emiten top pick atau kriteria rasio.\n"
         "  c. Kueri rekomendasi tanpa kriteria/horizon (contoh: 'rekomendasi saham hari ini', 'saham apa yang mau naik'). Berikan opsi strategi: Value Investing, Dividend Hunter, Momentum/Swing Flow.\n"
         "  d. Kueri 1-2 kata yang sangat underspecified (contoh: 'gimana TLKM', 'analisis BUMI').\n"
-        "- needs_clarification = FALSE jika kueri sudah memiliki indikator atau tujuan jelas (contoh: 'siapa top buyer BBCA hari ini', 'berapa PE dan PBV BMRI', 'apakah ada suspensi bursa saham tambang', atau follow-up atas chat sebelumnya).\n\n"
+        "- needs_clarification = FALSE jika kueri sudah memiliki indikator atau tujuan jelas (contoh: 'siapa top buyer BBCA hari ini', 'berapa PE dan PBV BMRI', 'apakah ada suspensi bursa saham tambang', atau follow-up atas chat sebelumnya).\n"
+        "- intent = COMPOSITE_CONTRADICTION_DOSSIER jika kueri meminta audit komprehensif, multi-agent research, bedah tuntas seluruh aspek, atau mencari kontradiksi/divergensi pasar emiten (contoh: 'analisis komprehensif BBCA', 'audit forensik BBCA').\n\n"
         "ATURAN LIVE TOOLS:\n"
         "- requires_live_tools = TRUE jika user menanyakan evaluasi baru atas data bursa.\n"
         "- requires_live_tools = FALSE jika user HANYA meminta format ulang data dari chat sebelumnya (tabel, ringkas, opini atas konteks yang sudah ada) atau edukasi konsep."
@@ -357,7 +360,8 @@ class AgentOrchestrator:
         has_enrich = (intent == AgentIntent.MARKET_SCREENING_DISCOVERY)
         has_math = (intent != AgentIntent.REGULATORY_SUSPENSION_RADAR)
         has_broker_analysis = any(s.get("action") == "FETCH_BROKER_SUMMARY" for s in planned_steps)
-        calculated_total = 1 + len(planned_steps) + (1 if has_enrich else 0) + (1 if has_math else 0) + (1 if has_broker_analysis else 0) + 1
+        has_composite = (intent == AgentIntent.COMPOSITE_CONTRADICTION_DOSSIER)
+        calculated_total = 1 + len(planned_steps) + (1 if has_enrich else 0) + (1 if has_math else 0) + (1 if has_broker_analysis else 0) + (5 if has_composite else 0) + 1
 
         plan_step = ReasoningStep(
             id=f"step-{step_counter}",
@@ -776,6 +780,69 @@ class AgentOrchestrator:
                 analyzed_broker = comparator.analyze_broker_sentiment(broker_summaries[first_valid_broker])
 
         # -------------------------------------------------------------
+        # 3.5. GROQ MULTI-AGENT DISTRIBUTED RESEARCH HARNESS
+        # (Active when intent == COMPOSITE_CONTRADICTION_DOSSIER)
+        # -------------------------------------------------------------
+        composite_dossier: Optional[CompositeDossierPayload] = None
+        if intent == AgentIntent.COMPOSITE_CONTRADICTION_DOSSIER and primary_ticker:
+            async def harness_step_callback(tag: str, detail_text: str):
+                nonlocal step_counter
+                phase_map = {
+                    "DISPATCH": ExecutionPhase.COMPARING,
+                    "FUNDAMENTAL": ExecutionPhase.COMPARING,
+                    "SMART_MONEY": ExecutionPhase.COMPARING,
+                    "GOVERNANCE": ExecutionPhase.COMPARING,
+                    "ARBITER": ExecutionPhase.SYNTHESIZING,
+                    "COMPLETE": ExecutionPhase.SYNTHESIZING,
+                }
+                title_map = {
+                    "DISPATCH": "Multi-Agent Harness Activation",
+                    "FUNDAMENTAL": "Sub-Agent: Fundamental & Valuation",
+                    "SMART_MONEY": "Sub-Agent: Smart Money & Flow",
+                    "GOVERNANCE": "Sub-Agent: Governance Sentinel",
+                    "ARBITER": "Lead Arbiter: Contradiction Detection",
+                    "COMPLETE": "Composite Dossier Formulation"
+                }
+                sub_step = ReasoningStep(
+                    id=f"step-{step_counter}",
+                    step_number=step_counter,
+                    phase=phase_map.get(tag, ExecutionPhase.SYNTHESIZING),
+                    title=title_map.get(tag, f"Sub-Agent: {tag}"),
+                    detail=detail_text,
+                    timestamp=datetime.now().strftime("%H:%M:%S")
+                )
+                await record_step(sub_step)
+                step_counter += 1
+
+            raw_insider_list = None
+            if insider_filings_data:
+                first_k = next(iter(insider_filings_data))
+                val_insider = insider_filings_data[first_k]
+                if isinstance(val_insider, dict):
+                    raw_insider_list = val_insider.get("results") or val_insider.get("data")
+                elif isinstance(val_insider, list):
+                    raw_insider_list = val_insider
+
+            raw_sus_list = None
+            if suspensions_data:
+                if isinstance(suspensions_data, dict):
+                    raw_sus_list = suspensions_data.get("results") or suspensions_data.get("data")
+                elif isinstance(suspensions_data, list):
+                    raw_sus_list = suspensions_data
+
+            composite_dossier = await multi_agent_harness.execute_composite_research(
+                ticker=primary_ticker,
+                report_data=reports[0] if reports else None,
+                peer_item=peer_matrix[0] if peer_matrix else None,
+                broker_summary_data=broker_summaries.get(primary_ticker),
+                foreign_flow_data=foreign_flows.get(primary_ticker),
+                insider_filings_data=raw_insider_list,
+                shareholders_data=shareholders_data.get(primary_ticker),
+                suspensions_data=raw_sus_list,
+                on_subagent_step=harness_step_callback
+            )
+
+        # -------------------------------------------------------------
         # 4. SYNTHESIS PHASE (LLM Structured Report Generation)
         # -------------------------------------------------------------
         synth_step = ReasoningStep(
@@ -799,7 +866,8 @@ class AgentOrchestrator:
             screener_data={"results": screener_items} if screener_items else None,
             insider_filings=insider_filings_data,
             shareholders_data=shareholders_data,
-            suspensions_data=suspensions_data
+            suspensions_data=suspensions_data,
+            composite_dossier=composite_dossier
         )
 
         total_ms = int((time.time() - start_time) * 1000)
@@ -837,6 +905,10 @@ class AgentOrchestrator:
             broker_info = None
             metrics_summary = None
         elif intent in (AgentIntent.SINGLE_TICKER_DEEP_DIVE, AgentIntent.COMPANY_DEEP_DIVE):
+            if peer_matrix and len(peer_matrix) > 0:
+                metrics_summary = peer_matrix[0]
+            effective_peer_matrix = None
+        elif intent == AgentIntent.COMPOSITE_CONTRADICTION_DOSSIER:
             if peer_matrix and len(peer_matrix) > 0:
                 metrics_summary = peer_matrix[0]
             effective_peer_matrix = None
@@ -892,6 +964,8 @@ class AgentOrchestrator:
             shareholders_summary=clean_shareholders_summary,
             suspensions_data=clean_suspensions,
             synthesis=synthesis_result,
+            clarification=None,
+            composite_dossier=composite_dossier,
             visual_context=visual_context,
             suggested_followups=synthesis_result.suggested_followups if synthesis_result else [],
             total_execution_time_ms=total_ms,

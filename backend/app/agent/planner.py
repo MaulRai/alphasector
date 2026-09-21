@@ -30,6 +30,11 @@ SUSPENSION_KEYWORDS = [
     "suspensi", "suspension", "gembok", "uma", "unusual market activity", "disuspensi",
     "bursa gembok", "surat pengumuman", "status perdagangan"
 ]
+COMPOSITE_KEYWORDS = [
+    "komprehensif", "audit forensik", "bedah tuntas", "seluruh aspek",
+    "kontradiksi", "divergensi", "multi agent", "multi-agent",
+    "analisis lengkap", "analisis komprehensif", "3 pilar", "three pillars"
+]
 
 # Comprehensive stopword list of common 4-letter Indonesian and English words that are NOT tickers
 STOPWORDS_4 = {
@@ -107,7 +112,9 @@ class AgentPlanner:
         # 1. Determine Intent with robust boundary-aware keyword matching
         intent = AgentIntent.GENERAL_FINANCIAL_QUERY
         
-        if len(tickers) >= 2 and contains_keyword(query, PEER_KEYWORDS + ["vs", "versus"]):
+        if contains_keyword(query, COMPOSITE_KEYWORDS) and len(tickers) >= 1:
+            intent = AgentIntent.COMPOSITE_CONTRADICTION_DOSSIER
+        elif len(tickers) >= 2 and contains_keyword(query, PEER_KEYWORDS + ["vs", "versus"]):
             intent = AgentIntent.PEER_BATTLE_COMPARISON
         elif len(tickers) >= 2:
             intent = AgentIntent.PEER_BATTLE_COMPARISON
@@ -144,7 +151,40 @@ class AgentPlanner:
         """Build DAG execution tool steps given a resolved intent and list of tickers."""
         steps: List[Dict[str, Any]] = []
         
-        if intent == AgentIntent.SINGLE_TICKER_DEEP_DIVE and tickers:
+        if intent == AgentIntent.COMPOSITE_CONTRADICTION_DOSSIER:
+            ticker = tickers[0] if tickers else context_ticker or "BBCA"
+            steps.append({
+                "action": "FETCH_REPORT",
+                "ticker": ticker,
+                "description": f"Fetch comprehensive company report and valuation multiples for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_BROKER_SUMMARY",
+                "ticker": ticker,
+                "description": f"Fetch top accumulating/distributing brokers for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_FOREIGN_FLOW",
+                "ticker": ticker,
+                "description": f"Fetch historical net foreign flow for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_INSIDER_FILINGS",
+                "ticker": ticker,
+                "description": f"Fetch official BEI/KSEI insider disclosure filings for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_SHAREHOLDERS_COMPOSITION",
+                "ticker": ticker,
+                "description": f"Fetch KSEI institutional shareholder decomposition for {ticker}"
+            })
+            steps.append({
+                "action": "FETCH_SUSPENSIONS",
+                "ticker": ticker,
+                "description": f"Fetch BEI suspension radar & UMA notices for {ticker}"
+            })
+
+        elif intent == AgentIntent.SINGLE_TICKER_DEEP_DIVE and tickers:
             ticker = tickers[0]
             steps.append({
                 "action": "FETCH_REPORT",

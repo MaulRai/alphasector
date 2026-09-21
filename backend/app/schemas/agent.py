@@ -28,6 +28,28 @@ class ClarificationPayload(BaseModel):
     allow_custom_input: bool = True
     context_topic: Optional[str] = None
 
+class PillarScorecard(BaseModel):
+    pillar: str  # "FUNDAMENTAL" | "SMART_MONEY" | "GOVERNANCE"
+    title: str
+    stance: str  # e.g. "UNDERVALUED", "HEAVY_DISTRIBUTION", "CLEAN_GOVERNANCE"
+    score: int = Field(..., ge=1, le=10)
+    verdict: str
+    key_points: List[str] = []
+
+class ContradictionAlert(BaseModel):
+    has_contradiction: bool
+    headline: str
+    description: str
+    risk_level: str = "NONE"  # "HIGH" | "MEDIUM" | "LOW" | "NONE"
+    divergence_pillars: List[str] = []
+
+class CompositeDossierPayload(BaseModel):
+    ticker: str
+    contradiction: ContradictionAlert
+    pillars: List[PillarScorecard]
+    master_verdict: str
+    tactical_recommendation: str  # "ACCUMULATE" | "BUY_ON_WEAKNESS" | "WAIT_AND_SEE" | "AVOID"
+
 class ExecutionPhase(str, Enum):
     PLANNING = "PLANNING"
     FETCHING = "FETCHING"
@@ -84,6 +106,7 @@ class AgentQueryResponse(BaseModel):
     suspensions_data: Optional[List[Dict[str, Any]]] = None
     synthesis: SynthesisResult
     clarification: Optional[ClarificationPayload] = None
+    composite_dossier: Optional[CompositeDossierPayload] = None
     visual_context: Optional[str] = None
     suggested_followups: List[str] = []
     total_execution_time_ms: int

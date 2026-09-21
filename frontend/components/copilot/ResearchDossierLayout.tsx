@@ -12,6 +12,7 @@ import { SuggestedFollowupPills } from './dossier/SuggestedFollowupPills';
 import { KseiOwnershipBreakdown } from './dossier/KseiOwnershipBreakdown';
 import { SuspensionsMiniTable } from './dossier/SuspensionsMiniTable';
 import { InsiderFilingsMiniGrid } from './dossier/InsiderFilingsMiniGrid';
+import { CompositeContradictionCard } from './dossier/CompositeContradictionCard';
 import { ClarificationQnACard } from './ClarificationQnACard';
 import { ClarificationPayload, ClarificationOption } from '@/lib/types';
 
@@ -35,35 +36,47 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
     report.intent === 'CLARIFICATION_REQUIRED' ||
     String(report.intent || '').includes('CLARIFICATION_REQUIRED')
   );
+  const isComposite = Boolean(
+    !isClarification && (
+      Boolean(report.composite_dossier) ||
+      report.intent === 'COMPOSITE_CONTRADICTION_DOSSIER'
+    )
+  );
   const isMarketScreening = Boolean(
-    !isClarification && report.intent === 'MARKET_SCREENING_DISCOVERY'
+    !isClarification && !isComposite && report.intent === 'MARKET_SCREENING_DISCOVERY'
   );
   const isPeerBattle = Boolean(
-    !isMarketScreening && (
+    !isMarketScreening && !isComposite && (
       report.intent === 'PEER_BATTLE_COMPARISON' ||
       (report.peer_matrix && report.peer_matrix.length > 1 && !report.metrics_summary)
     )
   );
   const isInstitutional = Boolean(
-    report.intent === 'INSTITUTIONAL_OWNERSHIP' ||
-    Boolean(report.shareholders_summary)
+    !isComposite && (
+      report.intent === 'INSTITUTIONAL_OWNERSHIP' ||
+      Boolean(report.shareholders_summary)
+    )
   );
   const isSuspension = Boolean(
-    report.intent === 'REGULATORY_SUSPENSION_RADAR' ||
-    Boolean(report.suspensions_data && report.suspensions_data.length > 0)
+    !isComposite && (
+      report.intent === 'REGULATORY_SUSPENSION_RADAR' ||
+      Boolean(report.suspensions_data && report.suspensions_data.length > 0)
+    )
   );
   const isInsider = Boolean(
-    report.intent === 'INSIDER_FORENSIC_RADAR' ||
-    Boolean(report.insider_filings && report.insider_filings.length > 0)
+    !isComposite && (
+      report.intent === 'INSIDER_FORENSIC_RADAR' ||
+      Boolean(report.insider_filings && report.insider_filings.length > 0)
+    )
   );
   const isSmartMoney = Boolean(
-    !isInsider && !isInstitutional && !isSuspension && (
+    !isComposite && !isInsider && !isInstitutional && !isSuspension && (
       report.intent === 'SMART_MONEY_RADAR' ||
       (report.broker_summary && !report.peer_matrix && !report.metrics_summary)
     )
   );
   const isCompany360 = Boolean(
-    !isMarketScreening && !isPeerBattle && !isSmartMoney && !isInstitutional && !isSuspension && !isInsider && (
+    !isComposite && !isMarketScreening && !isPeerBattle && !isSmartMoney && !isInstitutional && !isSuspension && !isInsider && (
       report.intent === 'SINGLE_TICKER_DEEP_DIVE' ||
       (report.metrics_summary && !report.peer_matrix)
     )
@@ -95,6 +108,54 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
             isLoading={false}
           />
         </div>
+      )}
+
+      {/* 0. GROQ MULTI-AGENT COMPOSITE & CONTRADICTION DOSSIER */}
+      {isComposite && (
+        <>
+          {report.composite_dossier && (
+            <div className="animate-card-reveal-delay-1">
+              <CompositeContradictionCard data={report.composite_dossier} />
+            </div>
+          )}
+
+          {/* Supporting modules */}
+          {report.metrics_summary && (
+            <div className="animate-card-reveal-delay-2">
+              <Company360Card data={report.metrics_summary} />
+            </div>
+          )}
+
+          {report.broker_summary && (
+            <div className="animate-card-reveal-delay-2">
+              <BrokerFlowTracker
+                brokerSummary={report.broker_summary}
+                ticker={report.primary_ticker}
+              />
+            </div>
+          )}
+
+          {report.synthesis && (
+            <DossierSynthesisCard
+              synthesis={report.synthesis}
+              title={`Sintesis Multi-Agent Ekuitas ${report.primary_ticker ? `(${report.primary_ticker})` : ''}`}
+              badgeLabel="Groq Multi-Agent Dossier"
+              colorVariant="emerald"
+              valuationLabel="Pilar Fundamental"
+              extraFieldLabel="Pilar Smart Money"
+              extraFieldValue={report.synthesis.smart_money_flow}
+              keyFindingsTitle="Temuan & Evaluasi Kontradiksi"
+            />
+          )}
+
+          <DossierArtifactCta
+            title={report.query || 'Composite Stock Dossier'}
+            badgeLabel="Composite Audit Dossier"
+            description="Buka visualisasi multi-agent dan dekomposisi pilar lengkap di Artifact Panel ➔"
+            colorVariant="emerald"
+            onClick={handleOpenArtifact}
+          />
+        </>
       )}
 
       {/* 1. PEER BATTLE SIGNATURE LAYOUT */}

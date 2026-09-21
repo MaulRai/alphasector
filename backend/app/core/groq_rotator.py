@@ -122,6 +122,18 @@ class GroqKeyRotator:
                         content = data["choices"][0]["message"]["content"]
                         logger.info(f"Groq completion success with key {masked_key} (model: {model})")
                         return content
+                    elif resp.status_code == 413:
+                        last_error = f"HTTP {resp.status_code}: {resp.text}"
+                        if payload.get("model") != "openai/gpt-oss-20b":
+                            logger.warning(
+                                f"Groq TPM limit reached for {payload.get('model')}. Automatically failing over to openai/gpt-oss-20b..."
+                            )
+                            payload["model"] = "openai/gpt-oss-20b"
+                            # Reset attempts to give the lighter model a full chance across keys
+                            attempts = 0
+                            continue
+                        attempts += 1
+                        continue
                     elif resp.status_code in (429, 401, 403):
                         logger.warning(
                             f"Groq API key {masked_key} returned HTTP {resp.status_code}. Rotating to next key..."

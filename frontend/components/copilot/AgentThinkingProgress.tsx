@@ -46,7 +46,13 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({
       let phaseClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       let icon: 'cpu' | 'database' | 'calculator' | 'file' | 'sparkles' = 'sparkles';
 
-      if (liveStep.phase === 'PLANNING') {
+      if (cleanTitle.startsWith('Sub-Agent:')) {
+        phaseClass = 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30';
+        icon = 'sparkles';
+      } else if (cleanTitle.includes('Lead Arbiter') || cleanTitle.includes('Multi-Agent')) {
+        phaseClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+        icon = 'cpu';
+      } else if (liveStep.phase === 'PLANNING') {
         phaseClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
         icon = 'cpu';
       } else if (liveStep.phase === 'FETCHING') {

@@ -105,16 +105,17 @@ class AgentSynthesizer:
         screener_data: Optional[Dict[str, Any]],
         insider_filings: Optional[Dict[str, Any]] = None,
         shareholders_data: Optional[Dict[str, Any]] = None,
-        suspensions_data: Optional[Any] = None
+        suspensions_data: Optional[Any] = None,
+        composite_dossier: Optional[Any] = None
     ) -> SynthesisResult:
-        """Synthesizes structured research dossier using Groq (OpenAI 120b) with key rotation or deterministic fallback."""
+        """Synthesizes structured research dossier using Groq with key rotation or deterministic fallback."""
         
         # Check if Groq API keys are available in rotation
         if groq_rotator.has_keys():
             try:
                 return await cls._synthesize_with_groq(
                     query, intent, tickers, reports, peer_matrix, broker_summary, screener_data,
-                    insider_filings, shareholders_data, suspensions_data
+                    insider_filings, shareholders_data, suspensions_data, composite_dossier
                 )
             except Exception as e:
                 logger.warning(f"Groq LLM synthesis error, using intelligent deterministic fallback: {e}")
@@ -122,7 +123,7 @@ class AgentSynthesizer:
         # Deterministic Fact-Grounded Fallback
         return cls._synthesize_fallback(
             query, intent, tickers, reports, peer_matrix, broker_summary, screener_data,
-            insider_filings, shareholders_data, suspensions_data
+            insider_filings, shareholders_data, suspensions_data, composite_dossier
         )
 
     @classmethod
@@ -137,7 +138,8 @@ class AgentSynthesizer:
         screener_data: Optional[Dict[str, Any]],
         insider_filings: Optional[Dict[str, Any]] = None,
         shareholders_data: Optional[Dict[str, Any]] = None,
-        suspensions_data: Optional[Any] = None
+        suspensions_data: Optional[Any] = None,
+        composite_dossier: Optional[Any] = None
     ) -> SynthesisResult:
         screener_list = []
         if isinstance(screener_data, dict):
@@ -148,21 +150,75 @@ class AgentSynthesizer:
         elif isinstance(screener_data, list):
             screener_list = screener_data
 
+        compact_peers = []
+        if peer_matrix:
+            for p in peer_matrix[:4]:
+                compact_peers.append({
+                    "symbol": p.get("symbol"),
+                    "company_name": p.get("company_name"),
+                    "sector": p.get("sector"),
+                    "last_close_price": p.get("last_close_price"),
+                    "pe": p.get("pe"),
+                    "pbv": p.get("pbv"),
+                    "roe": p.get("roe"),
+                    "npm": p.get("npm"),
+                    "der": p.get("der"),
+                    "piotroski_score": p.get("piotroski_score"),
+                    "pe_status": p.get("pe_historical_status"),
+                    "tags": p.get("tags")
+                })
+
+        compact_broker = None
+        if broker_summary and isinstance(broker_summary, dict):
+            compact_broker = {
+                "sentiment": broker_summary.get("sentiment"),
+                "buyer_concentration": broker_summary.get("buyer_concentration"),
+                "net_foreign_flow_status": broker_summary.get("net_foreign_flow_status"),
+                "top_buyers": (broker_summary.get("top_buyers") or [])[:3],
+                "top_sellers": (broker_summary.get("top_sellers") or [])[:3]
+            }
+
         context_data = {
             "query": query,
             "intent": intent.value,
             "tickers": tickers,
-            "peer_matrix": peer_matrix,
-            "broker_summary": broker_summary,
+            "peer_matrix": compact_peers if compact_peers else None,
+            "broker_summary": compact_broker,
             "screener_results": screener_list[:6] if screener_list else None
         }
 
         if insider_filings:
-            context_data["insider_filings"] = insider_filings
+            compact_insiders = []
+            if isinstance(insider_filings, dict):
+                first_k = next(iter(insider_filings), None)
+                if first_k and isinstance(insider_filings[first_k], dict):
+                    raw_f = insider_filings[first_k].get("results") or insider_filings[first_k].get("data") or []
+                    compact_insiders = raw_f[:6] if isinstance(raw_f, list) else [raw_f]
+                elif first_k and isinstance(insider_filings[first_k], list):
+                    compact_insiders = insider_filings[first_k][:6]
+            elif isinstance(insider_filings, list):
+                compact_insiders = insider_filings[:6]
+            context_data["insider_filings"] = compact_insiders or insider_filings
+
         if shareholders_data:
-            context_data["shareholders_data"] = shareholders_data
+            if isinstance(shareholders_data, dict):
+                context_data["shareholders_data"] = {
+                    k: v for k, v in list(shareholders_data.items())[:8]
+                }
+            else:
+                context_data["shareholders_data"] = shareholders_data
+
         if suspensions_data:
-            context_data["suspensions_radar"] = suspensions_data
+            compact_sus = []
+            if isinstance(suspensions_data, dict):
+                raw_s = suspensions_data.get("results") or suspensions_data.get("data") or []
+                compact_sus = raw_s[:6] if isinstance(raw_s, list) else [raw_s]
+            elif isinstance(suspensions_data, list):
+                compact_sus = suspensions_data[:6]
+            context_data["suspensions_radar"] = compact_sus or suspensions_data
+
+        if composite_dossier:
+            context_data["composite_dossier"] = composite_dossier.model_dump() if hasattr(composite_dossier, "model_dump") else composite_dossier
 
         system_prompt = (
             "Anda adalah AlphaSector, Senior Autonomous Equity Research Analyst pasar modal Indonesia (IDX).\n"
@@ -171,21 +227,24 @@ class AgentSynthesizer:
             "1. Tulis seluruh analisis dalam Bahasa Indonesia profesional dan lugas.\n"
             "2. Semua angka valuasi (PE, PBV, ROE, Dividen) WAJIB mengacu persis pada data JSON yang diberikan tanpa halusinasi.\n"
             "3. PANDUAN KHUSUS SESUAI INTENT:\n"
-            "   a. Jika intent adalah 'MARKET_SCREENING_DISCOVERY' (Pencarian & Skrining Saham):\n"
+            "   a. Jika intent adalah 'COMPOSITE_CONTRADICTION_DOSSIER' atau tersedia data 'composite_dossier':\n"
+            "      - Soroti secara tajam TEMUAN UTAMA & KONTRADIKSI/DIVERGENSI PASAR dari audit 3 sub-agent (Fundamental, Smart Money, Governance).\n"
+            "      - Laporkan Master Investment Thesis dan Tactical Recommendation secara tegas di executive_summary.\n"
+            "   b. Jika intent adalah 'MARKET_SCREENING_DISCOVERY' (Pencarian & Skrining Saham):\n"
             "      - Jelaskan dengan gamblang emiten peringkat teratas (#1, #2, #3, dst.) dan MENGAPA mereka menduduki peringkat teratas berdasarkan kriteria pencarian.\n"
             "      - Bandingkan fundamental para pemenang ini menggunakan data 'peer_matrix' (valuasi PE, PBV, ROE, dan F-Score).\n"
             "      - Di 'valuation_verdict', berikan putusan rekomendasi emiten terbaik (Top Pick).\n"
-            "   b. Jika intent adalah 'INSIDER_FORENSIC_RADAR' (Transaksi Orang Dalam / Direksi / Komisaris):\n"
+            "   c. Jika intent adalah 'INSIDER_FORENSIC_RADAR' (Transaksi Orang Dalam / Direksi / Komisaris):\n"
             "      - Analisis laporan keterbukaan BEI di 'insider_filings': sebutkan nama orang/direksi yang bertransaksi, jabatan/afiliasi, tanggal transaksi, aksi (Akumulasi Beli vs Divestasi Jual), jumlah lembar saham, dan nilai transaksi.\n"
             "      - Hubungkan dengan valuasi emiten (PE, PBV, ROE) dari 'peer_matrix' dan akumulasi broker jika tersedia. Jangan katakan data tidak tersedia jika data peer_matrix ada.\n"
-            "   c. Jika intent adalah 'INSTITUTIONAL_OWNERSHIP' (Dekomposisi Pemegang Saham KSEI):\n"
+            "   d. Jika intent adalah 'INSTITUTIONAL_OWNERSHIP' (Dekomposisi Pemegang Saham KSEI):\n"
             "      - Bedah komposisi pemegang saham institusi di 'shareholders_data': WAJIB cantumkan persentase angka konkrit untuk Dana Pensiun (smart money), Reksadana, Asuransi, Korporasi, Investor Ritel/Individu, serta porsi Domestik vs Asing.\n"
             "      - Evaluasi stabilitas kepemilikan dan hubungkan dengan rasio fundamental & valuasi (PE, PBV, ROE, F-Score) dari 'peer_matrix'. JANGAN katakan data valuasi tidak tersedia jika peer_matrix tersedia!\n"
-            "   d. Jika intent adalah 'REGULATORY_SUSPENSION_RADAR' (Radar Suspensi BEI & UMA):\n"
+            "   e. Jika intent adalah 'REGULATORY_SUSPENSION_RADAR' (Radar Suspensi BEI & UMA):\n"
             "      - Evaluasi status pengawasan bursa dari 'suspensions_radar'. JANGAN hanya menyebutkan deretan kode ticker mentah!\n"
             "      - WAJIB berikan ulasan komprehensif untuk emiten yang disuspensi: sebutkan kode ticker, tanggal suspensi, nomor surat resmi BEI, dan klasifikasi alasan (misal: 'Suspensi Cooling Down akibat lonjakan harga kumulatif' vs 'Suspensi Going Concern / kelangsungan usaha').\n"
             "      - Telaah risiko likuiditas dan prosedur pembukaan suspensi (unsuspension) perdagangan bursa.\n"
-            "   e. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' di peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit.\n"
+            "   f. Jika tersedia data 'piotroski' (Piotroski F-Score 0-9) dan 'pe_band' di peer_matrix, WAJIB cantumkan skor akuntansi dan posisi deviasi valuasi ini secara eksplisit.\n"
             "4. Buat 3 pertanyaan lanjutan ('suggested_followups') yang sangat relevan, spesifik, dan tajam (misalnya mengecek transaksi insider Direksi/Komisaris, kepemilikan Dana Pensiun & Reksadana KSEI, atau status suspensi BEI & radar UMA).\n"
             "5. Output WAJIB berupa objek JSON valid dengan struktur skema persis berikut:\n"
             "{\n"
@@ -264,11 +323,41 @@ class AgentSynthesizer:
         screener_data: Optional[Dict[str, Any]],
         insider_filings: Optional[Dict[str, Any]] = None,
         shareholders_data: Optional[Dict[str, Any]] = None,
-        suspensions_data: Optional[Any] = None
+        suspensions_data: Optional[Any] = None,
+        composite_dossier: Optional[Any] = None
     ) -> SynthesisResult:
         """Deterministic high-quality fallback generator when LLM is unavailable or offline."""
         
         followups = []
+        if composite_dossier and tickers:
+            sym = tickers[0]
+            alert = composite_dossier.contradiction
+            exec_summary = (
+                f"Hasil riset terdistribusi Groq Multi-Agent untuk {sym}: {composite_dossier.master_verdict} "
+                f"Rekomendasi taktis: {composite_dossier.tactical_recommendation.replace('_', ' ')}."
+            )
+            key_findings = [
+                f"{p.title}: Skor {p.score}/10 ({p.stance}) — {p.verdict}"
+                for p in composite_dossier.pillars
+            ]
+            if alert.has_contradiction:
+                key_findings.insert(0, f"DIVERGENSI PASAR ({alert.risk_level}): {alert.headline}")
+
+            return SynthesisResult(
+                executive_summary=exec_summary,
+                key_findings=key_findings,
+                valuation_verdict=composite_dossier.pillars[0].verdict if composite_dossier.pillars else None,
+                smart_money_flow=composite_dossier.pillars[1].verdict if len(composite_dossier.pillars) > 1 else None,
+                catalysts=[p.key_points[0] for p in composite_dossier.pillars if p.key_points],
+                risks=[alert.description] if alert.has_contradiction else ["Volatilitas pasar IDX"],
+                suggested_followups=[
+                    f"Bagaimana perincian broker akumulator {sym}?",
+                    f"Bandingkan valuasi {sym} dengan kompetitor sekelasnya",
+                    f"Cek riwayat transaksi insider {sym} setahun terakhir"
+                ],
+                disclaimer=cls.MANDATORY_DISCLAIMER
+            )
+
         if intent == AgentIntent.INSIDER_FORENSIC_RADAR and tickers:
             sym = tickers[0]
             raw_f = []

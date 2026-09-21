@@ -113,6 +113,16 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
                       <span className="font-semibold text-slate-200 text-xs truncate">
                         Step {step.step_number}: {step.title}
                       </span>
+                      {step.title.startsWith("Sub-Agent:") && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                          Groq Parallel
+                        </span>
+                      )}
+                      {step.title.includes("Lead Arbiter") && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                          Lead Arbiter
+                        </span>
+                      )}
                       <span className={`text-[9px] font-medium px-1.5 py-0.2 rounded border ${getPhaseBadge(step.phase)}`}>
                         {step.phase}
                       </span>

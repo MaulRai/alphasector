@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     
     # LLM Settings (Groq with API Key Rotation)
     GROQ_MODEL: str = Field(default_factory=lambda: os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"))
+    GROQ_SUBAGENT_MODEL: str = Field(default_factory=lambda: os.getenv("GROQ_SUBAGENT_MODEL", "openai/gpt-oss-20b"))
     
     # Server & CORS
     HOST: str = "0.0.0.0"
