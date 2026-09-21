@@ -378,21 +378,36 @@ function CopilotWorkspace() {
             messagesEndRef={messagesEndRef}
           />
 
-          {/* Bottom Chat Input Bar */}
-          <ChatInputBar
-            inputQuery={inputQuery}
-            onInputChange={setInputQuery}
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-            attachedImage={attachedImage}
-            onRemoveImage={handleClearImage}
-            fileInputRef={fileInputRef}
-            onImageSelect={handleFileChange}
-            onPaste={handlePasteWithContext}
-            textareaRef={textareaRef}
-            pastedContexts={pastedContexts}
-            onRemovePastedContext={handleRemovePastedContext}
-          />
+          {/* Check if active clarification question is pending on the latest assistant message */}
+          {(() => {
+            const lastMessage = messages[messages.length - 1];
+            const isClarificationPending = Boolean(
+              lastMessage &&
+              lastMessage.role === 'assistant' &&
+              (lastMessage.report_data?.clarification ||
+               lastMessage.report_data?.intent === 'CLARIFICATION_REQUIRED' ||
+               String(lastMessage.report_data?.intent || '').includes('CLARIFICATION_REQUIRED')) &&
+              !lastMessage.report_data?.clarification?.is_confirmed
+            );
+
+            return (
+              <ChatInputBar
+                inputQuery={inputQuery}
+                onInputChange={setInputQuery}
+                onSubmit={handleSubmit}
+                isLoading={isLoading}
+                isClarificationPending={isClarificationPending}
+                attachedImage={attachedImage}
+                onRemoveImage={handleClearImage}
+                fileInputRef={fileInputRef}
+                onImageSelect={handleFileChange}
+                onPaste={handlePasteWithContext}
+                textareaRef={textareaRef}
+                pastedContexts={pastedContexts}
+                onRemovePastedContext={handleRemovePastedContext}
+              />
+            );
+          })()}
         </section>
 
         {/* Right Artifact Panel */}

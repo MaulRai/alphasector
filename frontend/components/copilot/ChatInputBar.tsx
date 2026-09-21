@@ -11,6 +11,7 @@ interface ChatInputBarProps {
   onInputChange: (val: string) => void;
   onSubmit: (e?: React.FormEvent) => void;
   isLoading: boolean;
+  isClarificationPending?: boolean;
   attachedImage: AttachedImageData | null;
   onRemoveImage: () => void;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
@@ -26,6 +27,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   onInputChange,
   onSubmit,
   isLoading,
+  isClarificationPending = false,
   attachedImage,
   onRemoveImage,
   fileInputRef,
@@ -137,7 +139,11 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
 
       <form
         onSubmit={onSubmit}
-        className="max-w-4xl mx-auto relative flex items-end rounded-2xl border border-slate-700/80 bg-[#0d121e] p-2 shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all glow-emerald"
+        className={`max-w-4xl mx-auto relative flex items-end rounded-2xl border transition-all p-2 ${
+          isClarificationPending
+            ? 'border-slate-800/80 bg-[#090d16]/70 opacity-60 cursor-not-allowed shadow-none'
+            : 'border-slate-700/80 bg-[#0d121e] shadow-2xl focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 glow-emerald'
+        }`}
       >
         {/* Hidden file input */}
         <input
@@ -152,9 +158,13 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-          title="Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 10MB • Bisa juga langsung Ctrl+V)"
-          className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5 cursor-pointer"
+          disabled={isLoading || isClarificationPending}
+          title={
+            isClarificationPending
+              ? "Silakan jawab pertanyaan klarifikasi di atas terlebih dahulu"
+              : "Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 10MB • Bisa juga langsung Ctrl+V)"
+          }
+          className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5 cursor-pointer disabled:cursor-not-allowed"
         >
           <Paperclip className="h-4 w-4" />
         </button>
@@ -168,20 +178,24 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           onKeyDown={handleKeyDown}
           onPaste={onPaste}
           placeholder={
-            attachedImage
+            isClarificationPending
+              ? "Pilih fokus riset pada opsi pertanyaan di atas untuk melanjutkan..."
+              : attachedImage
               ? "Tanyakan analisis gambar ini ke AlphaAgent..."
               : pastedContexts.length > 0
               ? `Tanyakan analisis terkait ${pastedContexts.length} konteks tersalin ini ke AlphaAgent...`
               : "Tanyakan analisis emiten ke AlphaAgent..."
           }
-          className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1.5 resize-none overflow-y-auto max-h-[84px] leading-relaxed my-auto"
-          disabled={isLoading}
+          className={`w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none px-2 py-1.5 resize-none overflow-y-auto max-h-[84px] leading-relaxed my-auto ${
+            isClarificationPending ? 'cursor-not-allowed placeholder-slate-400 font-medium' : ''
+          }`}
+          disabled={isLoading || isClarificationPending}
         />
 
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading || (!inputQuery.trim() && !attachedImage && pastedContexts.length === 0)}
+          disabled={isLoading || isClarificationPending || (!inputQuery.trim() && !attachedImage && pastedContexts.length === 0)}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all shrink-0 mb-0.5 ml-1.5 cursor-pointer"
         >
           {isLoading ? (
