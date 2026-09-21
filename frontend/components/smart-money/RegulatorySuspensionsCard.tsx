@@ -116,21 +116,21 @@ export function RegulatorySuspensionsCard({ initialTicker }: RegulatorySuspensio
           <button
             onClick={handleCopyContext}
             disabled={suspensions.length === 0 || isLoading}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed ${
               copied
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
-                : 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/30 active:scale-95'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border-cyan-500/30'
             }`}
-            title="Salin ringkasan suspensi & UMA bursa untuk dijadikan konteks di AlphaAgent"
+            title="Salin ringkasan suspensi & UMA bursa untuk konteks prompt AlphaAgent"
           >
             {copied ? (
               <>
                 <Check className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Tersalin!</span>
+                <span>Konteks Tersalin!</span>
               </>
             ) : (
               <>
-                <Copy className="h-3.5 w-3.5 text-rose-400" />
+                <Copy className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Salin Konteks</span>
               </>
             )}

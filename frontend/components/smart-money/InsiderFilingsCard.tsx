@@ -138,12 +138,12 @@ export function InsiderFilingsCard({ initialTicker, onTickerChange }: InsiderFil
           <button
             onClick={handleCopyContext}
             disabled={filings.length === 0 || isLoading}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed ${
               copied
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
-                : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/30 active:scale-95'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border-cyan-500/30'
             }`}
-            title="Salin ringkasan data ini untuk ditempelkan (Ctrl+V) ke chat AlphaAgent"
+            title="Salin ringkasan data ini untuk konteks prompt AlphaAgent"
           >
             {copied ? (
               <>

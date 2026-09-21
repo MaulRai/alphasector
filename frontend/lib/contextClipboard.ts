@@ -1,6 +1,6 @@
 export interface PastedContextItem {
   id: string;
-  type: 'INSIDER_FILINGS' | 'INSTITUTIONAL_OWNERSHIP' | 'REGULATORY_SUSPENSIONS' | string;
+  type: 'BANDARMOLOGY' | 'INSIDER_FILINGS' | 'INSTITUTIONAL_OWNERSHIP' | 'REGULATORY_SUSPENSIONS' | 'MARKET_NEWS' | string;
   title: string;
   ticker?: string;
   summary: string;

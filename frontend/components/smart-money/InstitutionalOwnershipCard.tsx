@@ -186,21 +186,21 @@ export function InstitutionalOwnershipCard({ initialTicker, onTickerChange }: In
           <button
             onClick={handleCopyContext}
             disabled={!breakdown || isLoading}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed ${
               copied
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
-                : 'bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border-purple-500/30 active:scale-95'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border-cyan-500/30'
             }`}
-            title="Salin ringkasan dekomposisi institusi KSEI untuk dijadikan konteks di AlphaAgent"
+            title="Salin ringkasan dekomposisi institusi KSEI untuk konteks prompt AlphaAgent"
           >
             {copied ? (
               <>
                 <Check className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Tersalin!</span>
+                <span>Konteks Tersalin!</span>
               </>
             ) : (
               <>
-                <Copy className="h-3.5 w-3.5 text-purple-400" />
+                <Copy className="h-3.5 w-3.5 text-cyan-400" />
                 <span>Salin Konteks</span>
               </>
             )}

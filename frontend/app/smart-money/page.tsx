@@ -14,10 +14,11 @@ import { RegulatorySuspensionsCard } from '@/components/smart-money/RegulatorySu
 import { useBackendHealth } from '@/hooks/useBackendHealth';
 import { fetchBrokerSummary, fetchTopBrokers, queryAgent } from '@/lib/api';
 import { AgentQueryResponse } from '@/lib/types';
-import { Users, RefreshCw, Sparkles, Play, Zap, ArrowRight, ShieldCheck, Landmark, Lock, BarChart3 } from 'lucide-react';
+import { Users, RefreshCw, Sparkles, Play, Zap, ArrowRight, ShieldCheck, Landmark, Lock, BarChart3, Copy, Check } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { TickerAutocompleteInput } from '@/components/TickerAutocompleteInput';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
+import { encodeContextForClipboard } from '@/lib/contextClipboard';
 
 const POPULAR_TICKERS = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'BUMI', 'ADRO', 'ANTM', 'GOTO', 'AMMN', 'BREN', 'CUAN', 'MEDC', 'PTBA'];
 
@@ -80,6 +81,30 @@ function SmartMoneyWorkspace() {
     }
   };
 
+  const [analyzedTicker, setAnalyzedTicker] = useState<string | null>(null);
+  const [copiedBandarmology, setCopiedBandarmology] = useState(false);
+
+  const handleCopyBandarmologyContext = () => {
+    if (!brokerSummary && !agentReport) return;
+
+    const topBuyers = brokerSummary?.top_buyers?.slice(0, 3)?.map((b: any) => `${b.broker_code} (${b.net_val_formatted || b.net_val})`).join(', ') || '-';
+    const topSellers = brokerSummary?.top_sellers?.slice(0, 3)?.map((b: any) => `${b.broker_code} (${b.net_val_formatted || b.net_val})`).join(', ') || '-';
+    const foreignFlow = brokerSummary?.foreign_net_formatted || brokerSummary?.foreign_net || '-';
+    const synthesisSnippet = agentReport?.synthesis?.executive_summary || '';
+
+    const payloadText = encodeContextForClipboard({
+      type: 'BANDARMOLOGY',
+      title: `Bandarmology & Broker Flow ${ticker}`,
+      ticker: ticker,
+      summary: `Top Buyer: ${topBuyers}. Top Seller: ${topSellers}. Net Asing: ${foreignFlow}.`,
+      details: `${synthesisSnippet}\n\nTop Buyers: ${topBuyers}\nTop Sellers: ${topSellers}\nForeign Net Flow: ${foreignFlow}`,
+    });
+
+    navigator.clipboard.writeText(payloadText);
+    setCopiedBandarmology(true);
+    setTimeout(() => setCopiedBandarmology(false), 2000);
+  };
+
   const executeSmartMoneyAnalysis = async (sym: string = ticker) => {
     const cleanSym = sym.trim().toUpperCase().replace('.JK', '');
     if (!cleanSym) return;
@@ -93,6 +118,7 @@ function SmartMoneyWorkspace() {
 
       const aRes = await queryAgent(`Analisis smart money dan broker flow ${cleanSym}`);
       setAgentReport(aRes);
+      setAnalyzedTicker(cleanSym);
     } catch (err: any) {
       console.error(err);
       setError(err.message || `Gagal memuat data smart money untuk ${cleanSym}`);
@@ -246,23 +272,58 @@ function SmartMoneyWorkspace() {
                   <span>Sintesis Bandarmology otomatis: Top 5 Broker Akumulasi vs Distribusi & Net Foreign Flow</span>
                 </div>
 
-                <button
-                  onClick={() => executeSmartMoneyAnalysis(ticker)}
-                  disabled={isLoading || !ticker}
-                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer shrink-0"
-                >
-                  {isLoading ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span>Menganalisis Flow {ticker}...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4 fill-black" />
-                      <span>Jalankan Analisis Smart Money ({ticker})</span>
-                    </>
-                  )}
-                </button>
+                {!isLoading && (brokerSummary || agentReport) && (analyzedTicker === ticker || !analyzedTicker) ? (
+                  <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end shrink-0">
+                    <button
+                      onClick={handleCopyBandarmologyContext}
+                      className={`px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer active:scale-95 shadow-sm ${
+                        copiedBandarmology
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                          : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border-cyan-500/30'
+                      }`}
+                      title={`Salin ringkasan data Bandarmology ${ticker} untuk konteks AlphaAgent`}
+                    >
+                      {copiedBandarmology ? (
+                        <>
+                          <Check className="h-4 w-4 text-emerald-400" />
+                          <span>Konteks Tersalin!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4 text-cyan-400" />
+                          <span>Salin Konteks</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => executeSmartMoneyAnalysis(ticker)}
+                      disabled={isLoading}
+                      className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer"
+                      title={`Analisis ulang Smart Money ${ticker}`}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => executeSmartMoneyAnalysis(ticker)}
+                    disabled={isLoading || !ticker}
+                    className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 active:scale-95 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer shrink-0"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 animate-spin" />
+                        <span>Menganalisis Flow {ticker}...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="h-4 w-4 fill-black" />
+                        <span>Jalankan Analisis Smart Money ({ticker})</span>
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
 
               {/* Error Alert */}

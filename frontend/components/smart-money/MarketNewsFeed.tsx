@@ -634,16 +634,20 @@ Berikan kesimpulan dampak sentimen (bullish/bearish/netral), implikasi terhadap 
                       <button
                         onClick={() => handleCopySingleNews(article, idx)}
                         title="Salin cuplikan berita untuk konteks prompt AlphaAgent"
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-colors"
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer active:scale-95 shadow-sm ${
+                          copiedIndex === idx
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                            : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border-cyan-500/30'
+                        }`}
                       >
                         {copiedIndex === idx ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-400" />
-                            <span className="text-emerald-400">Tersalin</span>
+                            <span>Konteks Tersalin!</span>
                           </>
                         ) : (
                           <>
-                            <Copy className="w-3 h-3 text-slate-400" />
+                            <Copy className="w-3 h-3 text-cyan-400" />
                             <span>Salin Konteks</span>
                           </>
                         )}
