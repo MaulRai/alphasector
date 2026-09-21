@@ -134,7 +134,7 @@ export const ClarificationQnACard: React.FC<ClarificationQnACardProps> = ({
               type="button"
               onClick={() => toggleOption(opt.id)}
               disabled={isLoading}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-3 select-none ${
+              className={`w-full px-3.5 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-3 select-none ${
                 isSelected
                   ? 'bg-emerald-500/15 border-emerald-400/60 text-white shadow-sm shadow-emerald-500/10 ring-1 ring-emerald-400/30'
                   : 'bg-[#090e18]/80 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-800/40 hover:text-white'
@@ -142,7 +142,7 @@ export const ClarificationQnACard: React.FC<ClarificationQnACardProps> = ({
             >
               {/* Checkbox Icon */}
               <div
-                className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                className={`mt-0.5 h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                   isSelected
                     ? 'bg-emerald-500 border-emerald-400 text-black'
                     : 'border-slate-600 bg-slate-900/60'
@@ -151,10 +151,17 @@ export const ClarificationQnACard: React.FC<ClarificationQnACardProps> = ({
                 {isSelected && <Check className="h-3 w-3 stroke-[3]" />}
               </div>
 
-              {/* Single Concise Option Text */}
-              <span className={`text-xs ${isSelected ? 'text-emerald-200 font-semibold' : 'text-slate-200 font-medium'}`}>
-                {opt.label}
-              </span>
+              {/* Single Unified Text Flow: Label and optional inline explanation */}
+              <div className="text-xs leading-relaxed flex-1 min-w-0">
+                <span className={`font-semibold ${isSelected ? 'text-emerald-200' : 'text-slate-100'}`}>
+                  {opt.label}
+                </span>
+                {opt.description && (
+                  <span className={`ml-1.5 ${isSelected ? 'text-emerald-300/80' : 'text-slate-400'}`}>
+                    — {opt.description}
+                  </span>
+                )}
+              </div>
             </button>
           );
         })}
