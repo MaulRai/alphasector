@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { BrokerFlowTracker } from '@/components/BrokerFlowTracker';
@@ -46,6 +46,23 @@ function SmartMoneyWorkspace() {
   const [agentReport, setAgentReport] = useState<AgentQueryResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { backendOnline } = useBackendHealth();
+
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const wasLoadingRef = useRef(false);
+
+  // Smoothly scroll down directly to the analysis results when complete
+  useEffect(() => {
+    if (wasLoadingRef.current && !isLoading && (agentReport || brokerSummary)) {
+      const timer = setTimeout(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+    wasLoadingRef.current = isLoading;
+  }, [isLoading, agentReport, brokerSummary]);
 
   useEffect(() => {
     if (tabParam && ['bandarmology', 'insider', 'institutional', 'suspensions'].includes(tabParam)) {
@@ -350,7 +367,11 @@ function SmartMoneyWorkspace() {
 
               {/* Content Body - Only shown after analysis is executed */}
               {(agentReport || brokerSummary) && !isLoading && (
-                <div className="space-y-6">
+                <div
+                  ref={resultsRef}
+                  id="smart-money-results-section"
+                  className="space-y-6 animate-in fade-in duration-300 scroll-mt-24 sm:scroll-mt-28"
+                >
                   {/* BrokerFlowTracker Component */}
                   {brokerSummary && (
                     <BrokerFlowTracker brokerSummary={brokerSummary} ticker={ticker} />
