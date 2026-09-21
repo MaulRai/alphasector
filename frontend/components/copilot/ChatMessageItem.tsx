@@ -6,6 +6,7 @@ import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
 import { ResearchDossierLayout } from './ResearchDossierLayout';
+import { ClarificationQnACard } from './ClarificationQnACard';
 
 interface ChatMessageItemProps {
   message: ChatMessage;
@@ -27,7 +28,12 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const isUser = message.role === 'user';
   const report = message.report_data;
 
+  const hasClarification = Boolean(
+    report?.clarification || report?.intent === 'CLARIFICATION_REQUIRED'
+  );
+
   const isConversational =
+    !hasClarification &&
     !report?.peer_matrix &&
     !report?.broker_summary &&
     (!report?.synthesis?.key_findings || report.synthesis.key_findings.length === 0);
@@ -61,6 +67,25 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             </div>
           )}
           <div>{message.content}</div>
+        </div>
+      ) : hasClarification && report?.clarification ? (
+        /* Interactive Clarification QnA Gate Mode */
+        <div className="w-full space-y-4 animate-card-reveal">
+          {report?.reasoning_trace && report.reasoning_trace.length > 0 && (
+            <div className="animate-card-reveal">
+              <AgentThinkingTrace
+                steps={report.reasoning_trace}
+                totalTimeMs={report.total_execution_time_ms}
+                creditsConsumed={report.credits_consumed}
+                isLoading={false}
+              />
+            </div>
+          )}
+          <ClarificationQnACard
+            clarification={report.clarification}
+            onSendMessage={onSendMessage}
+            isLoading={isLoading}
+          />
         </div>
       ) : isConversational ? (
         /* Conversational Follow-Up Mode */

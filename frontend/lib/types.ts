@@ -7,7 +7,26 @@ export type AgentIntent =
   | 'INSTITUTIONAL_OWNERSHIP'
   | 'REGULATORY_SUSPENSION_RADAR'
   | 'COMMODITY_MACRO_IMPACT'
-  | 'GENERAL_FINANCIAL_QUERY';
+  | 'GENERAL_FINANCIAL_QUERY'
+  | 'CLARIFICATION_REQUIRED'
+  | 'COMPOSITE_CONTRADICTION_DOSSIER';
+
+export interface ClarificationOption {
+  id: string;
+  label: string;
+  description?: string;
+  suggested_query?: string;
+}
+
+export interface ClarificationPayload {
+  question: string;
+  options: ClarificationOption[];
+  allow_custom_input?: boolean;
+  context_topic?: string;
+  selected_option_ids?: string[];
+  custom_input?: string;
+  is_confirmed?: boolean;
+}
 
 export type ExecutionPhase = 
   | 'PLANNING'
@@ -126,6 +145,7 @@ export interface AgentQueryResponse {
   shareholders_summary?: any;
   suspensions_data?: any[];
   synthesis: SynthesisResult;
+  clarification?: ClarificationPayload;
   visual_context?: string | null;
   suggested_followups?: string[];
   total_execution_time_ms: number;

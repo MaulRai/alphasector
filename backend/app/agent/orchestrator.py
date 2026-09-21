@@ -10,7 +10,9 @@ from app.schemas.agent import (
     ReasoningStep,
     ExecutionPhase,
     AgentIntent,
-    SynthesisResult
+    SynthesisResult,
+    ClarificationPayload,
+    ClarificationOption,
 )
 from app.agent.planner import planner, contains_keyword
 from app.agent.tools import tool_executor
@@ -35,29 +37,37 @@ class AgentOrchestrator:
 
     SEMANTIC_ROUTER_SYSTEM = (
         "Anda adalah Autonomous Intent & Tool Routing Arbiter untuk AlphaSector (Autonomous Equity Research Agent di Bursa Efek Indonesia/IDX).\n\n"
-        "TUGAS:\n"
-        "Klasifikasikan apakah pertanyaan user membutuhkan LIVE DATA TOOLS (mengambil data pasar modal baru via Sectors API) atau CUKUP CONVERSATIONAL SYNTHESIS (menjawab konsep edukasi umum atau mensintesis konteks percakapan sebelumnya tanpa data baru).\n\n"
-        "OUTPUT HARUS FORMAT JSON SAJA:\n"
+        "TUGAS UTAMA:\n"
+        "1. Evaluasi apakah pertanyaan user MEMBUTUHKAN KLARIFIKASI (needs_clarification: true) karena kueri terlalu luas, ambigu, atau underspecified.\n"
+        "2. Jika kueri sudah jelas, klasifikasikan apakah membutuhkan LIVE DATA TOOLS (requires_live_tools: true) atau CUKUP CONVERSATIONAL SYNTHESIS (requires_live_tools: false).\n\n"
+        "OUTPUT HARUS FORMAT JSON MURNI:\n"
         "{\n"
         '  "requires_live_tools": true | false,\n'
-        '  "intent": "PEER_BATTLE_COMPARISON" | "SINGLE_TICKER_DEEP_DIVE" | "MARKET_SCREENING_DISCOVERY" | "INSIDER_FORENSIC_RADAR" | "INSTITUTIONAL_OWNERSHIP" | "REGULATORY_SUSPENSION_RADAR" | "SMART_MONEY_RADAR" | "COMMODITY_MACRO_IMPACT" | "GENERAL_FINANCIAL_QUERY",\n'
+        '  "needs_clarification": true | false,\n'
+        '  "clarification": {\n'
+        '    "question": "Pertanyaan spesifik dalam Bahasa Indonesia untuk mengunci fokus riset",\n'
+        '    "options": [\n'
+        '      {"id": "opt_1", "label": "Label Opsi Singkat", "description": "Penjelasan lingkup analisis", "suggested_query": "Query terarah spesifik"},\n'
+        '      {"id": "opt_2", "label": "Label Opsi Singkat", "description": "Penjelasan lingkup analisis", "suggested_query": "Query terarah spesifik"},\n'
+        '      {"id": "opt_3", "label": "Label Opsi Singkat", "description": "Penjelasan lingkup analisis", "suggested_query": "Query terarah spesifik"}\n'
+        '    ],\n'
+        '    "context_topic": "Topik Singkat (misal: Komparasi BBCA vs BMRI)"\n'
+        '  } | null,\n'
+        '  "intent": "PEER_BATTLE_COMPARISON" | "SINGLE_TICKER_DEEP_DIVE" | "MARKET_SCREENING_DISCOVERY" | "INSIDER_FORENSIC_RADAR" | "INSTITUTIONAL_OWNERSHIP" | "REGULATORY_SUSPENSION_RADAR" | "SMART_MONEY_RADAR" | "COMMODITY_MACRO_IMPACT" | "GENERAL_FINANCIAL_QUERY" | "CLARIFICATION_REQUIRED",\n'
         '  "target_tickers": ["TICKER1", "TICKER2"],\n'
         '  "resolved_context_ticker": "TICKER" | null,\n'
         '  "reasoning": "Alasan ringkas 1 kalimat"\n'
         "}\n\n"
-        "ATURAN PENTING:\n"
-        "1. requires_live_tools = TRUE jika user menanyakan hal baru yang belum ada di chat:\n"
-        "   - Evaluasi, valuasi, rasio, fundamental, atau grafik emiten baru.\n"
-        "   - Dampak komoditas terhadap emiten (misal tembaga ke INCO).\n"
-        "   - Skrining saham berdasarkan kriteria tertentu.\n"
-        "   - Aksi transaksi orang dalam (insider) atau kepemilikan institusional (dapen/reksadana).\n"
-        "   - Suspensi bursa atau status UMA.\n"
-        "   - Referensi implisit ke emiten di chat sebelumnya yang menanyakan indikator rasio/data baru (misal 'bagaimana rasio NPL bank pertama tadi').\n\n"
-        "2. requires_live_tools = FALSE jika user TIDAK butuh data baru dari bursa:\n"
-        "   - Meminta format ulang data dari chat sebelumnya (contoh: 'buatkan tabel ringkasan', 'tabel pros/cons', 'tabel perbandingan', 'ringkas dalam 3 poin').\n"
-        "   - Meminta opini strategi atau perbandingan kualitatif dari emiten yang SUDAH dibahas di riwayat percakapan sebelumnya.\n"
-        "   - Bertanya definisi konsep finansial atau edukasi ('apa itu PBV', 'arti Piotroski F-Score').\n"
-        "   KUNCI: Jika emiten sudah dibahas di riwayat chat dan user HANYA meminta tabel, ringkasan, atau rekomendasi atas data tersebut, MAKA requires_live_tools HARUS FALSE!"
+        "ATURAN DETEKSI KLARIFIKASI (needs_clarification):\n"
+        "- needs_clarification = TRUE jika:\n"
+        "  a. Komparasi 2 emiten tanpa kriteria/tujuan spesifik (contoh: 'bagusan mana BBCA atau BMRI', 'pilih ASII atau UNTR'). Berikan opsi pilihan: (1) Valuasi & Dividen, (2) Smart Money & Broker Flow, (3) Audit Forensik Komprehensif.\n"
+        "  b. Kueri sektor luas tanpa emiten spesifik (contoh: 'analisis sektor energi', 'saham bank apa yang bagus'). Berikan opsi emiten top pick atau kriteria rasio.\n"
+        "  c. Kueri rekomendasi tanpa kriteria/horizon (contoh: 'rekomendasi saham hari ini', 'saham apa yang mau naik'). Berikan opsi strategi: Value Investing, Dividend Hunter, Momentum/Swing Flow.\n"
+        "  d. Kueri 1-2 kata yang sangat underspecified (contoh: 'gimana TLKM', 'analisis BUMI').\n"
+        "- needs_clarification = FALSE jika kueri sudah memiliki indikator atau tujuan jelas (contoh: 'siapa top buyer BBCA hari ini', 'berapa PE dan PBV BMRI', 'apakah ada suspensi bursa saham tambang', atau follow-up atas chat sebelumnya).\n\n"
+        "ATURAN LIVE TOOLS:\n"
+        "- requires_live_tools = TRUE jika user menanyakan evaluasi baru atas data bursa.\n"
+        "- requires_live_tools = FALSE jika user HANYA meminta format ulang data dari chat sebelumnya (tabel, ringkas, opini atas konteks yang sudah ada) atau edukasi konsep."
     )
 
     async def _semantic_route(
@@ -91,10 +101,16 @@ class AgentOrchestrator:
 
                 parsed = json.loads(clean_json)
                 intent_str = parsed.get("intent", "GENERAL_FINANCIAL_QUERY")
-                try:
-                    intent_enum = AgentIntent(intent_str)
-                except ValueError:
-                    intent_enum = AgentIntent.GENERAL_FINANCIAL_QUERY
+                needs_clarification = bool(parsed.get("needs_clarification", False))
+                clarification_data = parsed.get("clarification") if needs_clarification else None
+
+                if needs_clarification and clarification_data:
+                    intent_enum = AgentIntent.CLARIFICATION_REQUIRED
+                else:
+                    try:
+                        intent_enum = AgentIntent(intent_str)
+                    except ValueError:
+                        intent_enum = AgentIntent.GENERAL_FINANCIAL_QUERY
 
                 tickers = parsed.get("target_tickers", [])
                 if not tickers and parsed.get("resolved_context_ticker"):
@@ -102,6 +118,8 @@ class AgentOrchestrator:
 
                 return {
                     "requires_live_tools": bool(parsed.get("requires_live_tools", True)),
+                    "needs_clarification": needs_clarification,
+                    "clarification": clarification_data,
                     "intent": intent_enum,
                     "target_tickers": tickers,
                     "reasoning": parsed.get("reasoning", "")
@@ -138,6 +156,8 @@ class AgentOrchestrator:
         if conversation_history and not has_analytical and is_conv_marker:
             return {
                 "requires_live_tools": False,
+                "needs_clarification": False,
+                "clarification": None,
                 "intent": AgentIntent.GENERAL_FINANCIAL_QUERY,
                 "target_tickers": [],
                 "reasoning": "Heuristic fallback: conversational synthesis over existing context"
@@ -146,6 +166,8 @@ class AgentOrchestrator:
         intent, fallback_tickers, _ = planner.classify_and_plan(query, context_ticker)
         return {
             "requires_live_tools": True,
+            "needs_clarification": False,
+            "clarification": None,
             "intent": intent,
             "target_tickers": fallback_tickers,
             "reasoning": "Heuristic fallback: active market research"
@@ -237,6 +259,58 @@ class AgentOrchestrator:
         # 0. SEMANTIC INTENT ROUTING & ARBITER
         # -------------------------------------------------------------
         route = await self._semantic_route(query, conversation_history, context_ticker)
+
+        # 0a. CLARIFICATION GATE: Intercept ambiguous/underspecified queries early
+        if route.get("needs_clarification") and route.get("clarification"):
+            clarify_data = route["clarification"]
+            q_step = ReasoningStep(
+                id=f"step-{step_counter}",
+                step_number=step_counter,
+                phase=ExecutionPhase.PLANNING,
+                title="Identifikasi Ruang Lingkup Riset (Clarification Gate)",
+                detail="Mendeteksi kueri bernilai strategis luas. Mengajukan opsi fokus riset agar analisis akurat dan tepat sasaran.",
+                timestamp=datetime.now().strftime("%H:%M:%S")
+            )
+            await record_step(q_step, 1)
+
+            total_time = int((time.time() - start_time) * 1000)
+            target_tickers = route.get("target_tickers", [])
+            primary_ticker = target_tickers[0] if target_tickers else context_ticker
+
+            raw_options = clarify_data.get("options", [])
+            parsed_options = [
+                ClarificationOption(
+                    id=opt.get("id", f"opt_{i+1}"),
+                    label=opt.get("label", f"Opsi #{i+1}"),
+                    description=opt.get("description"),
+                    suggested_query=opt.get("suggested_query")
+                )
+                for i, opt in enumerate(raw_options)
+            ]
+
+            clarification_payload = ClarificationPayload(
+                question=clarify_data.get("question", "Silakan pilih fokus riset yang ingin diprioritaskan:"),
+                options=parsed_options,
+                allow_custom_input=True,
+                context_topic=clarify_data.get("context_topic")
+            )
+
+            return AgentQueryResponse(
+                query=query,
+                intent=AgentIntent.CLARIFICATION_REQUIRED,
+                session_id=session_id,
+                primary_ticker=primary_ticker,
+                comparison_tickers=target_tickers,
+                reasoning_trace=trace,
+                synthesis=SynthesisResult(
+                    executive_summary=clarification_payload.question,
+                    key_findings=[opt.label for opt in parsed_options],
+                    disclaimer="AlphaSector Research Terminal • Membutuhkan klarifikasi lingkup riset sebelum eksekusi."
+                ),
+                clarification=clarification_payload,
+                total_execution_time_ms=total_time,
+                credits_consumed=0
+            )
 
         if not route["requires_live_tools"]:
             conv_step = ReasoningStep(

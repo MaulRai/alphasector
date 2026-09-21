@@ -13,6 +13,20 @@ class AgentIntent(str, Enum):
     REGULATORY_SUSPENSION_RADAR = "REGULATORY_SUSPENSION_RADAR"
     COMMODITY_MACRO_IMPACT = "COMMODITY_MACRO_IMPACT"
     GENERAL_FINANCIAL_QUERY = "GENERAL_FINANCIAL_QUERY"
+    CLARIFICATION_REQUIRED = "CLARIFICATION_REQUIRED"
+    COMPOSITE_CONTRADICTION_DOSSIER = "COMPOSITE_CONTRADICTION_DOSSIER"
+
+class ClarificationOption(BaseModel):
+    id: str
+    label: str
+    description: Optional[str] = None
+    suggested_query: Optional[str] = None
+
+class ClarificationPayload(BaseModel):
+    question: str
+    options: List[ClarificationOption]
+    allow_custom_input: bool = True
+    context_topic: Optional[str] = None
 
 class ExecutionPhase(str, Enum):
     PLANNING = "PLANNING"
@@ -69,6 +83,7 @@ class AgentQueryResponse(BaseModel):
     shareholders_summary: Optional[Dict[str, Any]] = None
     suspensions_data: Optional[List[Dict[str, Any]]] = None
     synthesis: SynthesisResult
+    clarification: Optional[ClarificationPayload] = None
     visual_context: Optional[str] = None
     suggested_followups: List[str] = []
     total_execution_time_ms: int
