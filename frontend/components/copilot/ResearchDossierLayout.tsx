@@ -12,6 +12,8 @@ import { SuggestedFollowupPills } from './dossier/SuggestedFollowupPills';
 import { KseiOwnershipBreakdown } from './dossier/KseiOwnershipBreakdown';
 import { SuspensionsMiniTable } from './dossier/SuspensionsMiniTable';
 import { InsiderFilingsMiniGrid } from './dossier/InsiderFilingsMiniGrid';
+import { ClarificationQnACard } from './ClarificationQnACard';
+import { ClarificationPayload, ClarificationOption } from '@/lib/types';
 
 interface ResearchDossierLayoutProps {
   report: AgentQueryResponse;
@@ -28,8 +30,13 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
   onSendMessage,
   isLoading = false,
 }) => {
+  const isClarification = Boolean(
+    report.clarification ||
+    report.intent === 'CLARIFICATION_REQUIRED' ||
+    String(report.intent || '').includes('CLARIFICATION_REQUIRED')
+  );
   const isMarketScreening = Boolean(
-    report.intent === 'MARKET_SCREENING_DISCOVERY'
+    !isClarification && report.intent === 'MARKET_SCREENING_DISCOVERY'
   );
   const isPeerBattle = Boolean(
     !isMarketScreening && (
@@ -332,8 +339,31 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
         </>
       )}
 
-      {/* 8. GENERAL / FALLBACK */}
-      {!isPeerBattle && !isSmartMoney && !isCompany360 && !isMarketScreening && !isInstitutional && !isSuspension && !isInsider && (
+      {/* 8. CLARIFICATION QNA GATE (if routed to ResearchDossierLayout) */}
+      {isClarification && (
+        <ClarificationQnACard
+          clarification={report.clarification || {
+            question: report.synthesis?.executive_summary || 'Silakan tentukan fokus riset yang ingin diprioritaskan:',
+            options: (report.synthesis?.key_findings || []).map((label, idx) => ({
+              id: `opt_${idx + 1}`,
+              label,
+              description: `Fokus riset terarah pada ${label}`,
+              suggested_query: `${label} ${report.comparison_tickers?.join(' vs ') || report.primary_ticker || ''}`.trim()
+            })),
+            allow_custom_input: true,
+            context_topic: report.comparison_tickers && report.comparison_tickers.length > 1
+              ? `Komparasi ${report.comparison_tickers.join(' vs ')}`
+              : report.primary_ticker
+              ? `Analisis ${report.primary_ticker}`
+              : undefined
+          }}
+          onSendMessage={onSendMessage}
+          isLoading={isLoading}
+        />
+      )}
+
+      {/* 9. GENERAL / FALLBACK */}
+      {!isClarification && !isPeerBattle && !isSmartMoney && !isCompany360 && !isMarketScreening && !isInstitutional && !isSuspension && !isInsider && (
         <>
           {report.peer_matrix && report.peer_matrix.length > 0 && (
             <div className="animate-card-reveal-delay-1">
@@ -370,7 +400,7 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
       )}
 
       {/* Smart Follow-up Questions Pills */}
-      {report.suggested_followups && report.suggested_followups.length > 0 && (
+      {!isClarification && report.suggested_followups && report.suggested_followups.length > 0 && (
         <SuggestedFollowupPills
           followups={report.suggested_followups}
           colorVariant={activeColorVariant}

@@ -343,7 +343,7 @@ async def execute_agent_query_stream(
                             user_id=user_id,
                             role="assistant",
                             content=response.synthesis.executive_summary,
-                            report_data=response.model_dump()
+                            report_data=response.model_dump(mode="json")
                         )
                         if response.primary_ticker:
                             ChatRepository.update_session(
@@ -360,10 +360,10 @@ async def execute_agent_query_stream(
                         ResearchReportRepository.create(
                             user_id=user_id,
                             query=request.query,
-                            intent=str(response.intent),
+                            intent=response.intent.value if hasattr(response.intent, "value") else str(response.intent),
                             primary_ticker=response.primary_ticker,
                             comparison_tickers=response.comparison_tickers,
-                            report_data=response.model_dump(),
+                            report_data=response.model_dump(mode="json"),
                             total_execution_time_ms=response.total_execution_time_ms,
                             credits_consumed=response.credits_consumed
                         )
@@ -398,19 +398,25 @@ async def execute_agent_query_stream(
                         user_id=user_id,
                         session_id=active_session_id,
                         query=request.query,
-                        intent=str(response.intent),
                         model_name=settings.GROQ_MODEL,
-                        tool_calls=sectors_tool_calls,
-                        reasoning_steps=[s.model_dump() for s in response.reasoning_trace],
-                        output_summary=response.synthesis.executive_summary[:500] if response.synthesis else "",
-                        latency_ms=response.total_execution_time_ms,
+                        vision_model="gemini-2.5-flash" if request.image_base64 else None,
+                        image_url=img_data_url,
+                        intent=response.intent.value if hasattr(response.intent, "value") else str(response.intent),
+                        primary_ticker=response.primary_ticker,
+                        comparison_tickers=response.comparison_tickers,
                         context_data=context_data,
-                        estimated_cost=estimated_cost
+                        sectors_tool_calls=sectors_tool_calls,
+                        credits_consumed=response.credits_consumed,
+                        execution_time_ms=response.total_execution_time_ms,
+                        estimated_cost=estimated_cost,
+                        output_summary=response.synthesis.executive_summary[:500] if response.synthesis else "",
+                        output_data=response.model_dump(mode="json"),
+                        reasoning_trace=[s.model_dump(mode="json") for s in response.reasoning_trace]
                     )
                 except Exception as log_err:
                     print(f"[Warning] Failed to write AI observability log: {log_err}")
 
-                await queue.put({"type": "done", "response": response.model_dump()})
+                await queue.put({"type": "done", "response": response.model_dump(mode="json")})
             except Exception as exc:
                 print(f"[Agent Query Stream Exception] {exc}")
                 await queue.put({"type": "error", "detail": str(exc)})

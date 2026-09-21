@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ChatMessage } from '@/lib/types';
+import { ChatMessage, ClarificationPayload, ClarificationOption } from '@/lib/types';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { AgentThinkingTrace } from '@/components/AgentThinkingTrace';
@@ -29,8 +29,40 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const report = message.report_data;
 
   const hasClarification = Boolean(
-    report?.clarification || report?.intent === 'CLARIFICATION_REQUIRED'
+    report?.clarification ||
+    report?.intent === 'CLARIFICATION_REQUIRED' ||
+    String(report?.intent || '').includes('CLARIFICATION_REQUIRED')
   );
+
+  const effectiveClarification: ClarificationPayload | null = React.useMemo(() => {
+    if (report?.clarification && report.clarification.options && report.clarification.options.length > 0) {
+      return report.clarification;
+    }
+    if (hasClarification) {
+      const options: ClarificationOption[] = (report?.synthesis?.key_findings || []).map((label, idx) => ({
+        id: `opt_${idx + 1}`,
+        label,
+        description: `Fokus riset terarah pada ${label}`,
+        suggested_query: `${label} ${report?.comparison_tickers?.join(' vs ') || report?.primary_ticker || ''}`.trim()
+      }));
+
+      return {
+        question: report?.synthesis?.executive_summary || message.content || 'Silakan tentukan fokus riset yang ingin diprioritaskan:',
+        options: options.length > 0 ? options : [
+          { id: 'opt_1', label: 'Valuasi & Dividen', description: 'Perbandingan PE, PBV, yield & dividend payout' },
+          { id: 'opt_2', label: 'Smart Money & Broker Flow', description: 'Aliran akumulasi bandarmology broker dan asing' },
+          { id: 'opt_3', label: 'Audit Forensik Komprehensif', description: 'Kualitas laba, kepatuhan dan risiko laporan keuangan' }
+        ],
+        allow_custom_input: true,
+        context_topic: report?.comparison_tickers && report.comparison_tickers.length > 1
+          ? `Komparasi ${report.comparison_tickers.join(' vs ')}`
+          : report?.primary_ticker
+          ? `Analisis ${report.primary_ticker}`
+          : undefined
+      };
+    }
+    return null;
+  }, [report, hasClarification, message.content]);
 
   const isConversational =
     !hasClarification &&
@@ -68,7 +100,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           )}
           <div>{message.content}</div>
         </div>
-      ) : hasClarification && report?.clarification ? (
+      ) : effectiveClarification ? (
         /* Interactive Clarification QnA Gate Mode */
         <div className="w-full space-y-4 animate-card-reveal">
           {report?.reasoning_trace && report.reasoning_trace.length > 0 && (
@@ -82,7 +114,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             </div>
           )}
           <ClarificationQnACard
-            clarification={report.clarification}
+            clarification={effectiveClarification}
             onSendMessage={onSendMessage}
             isLoading={isLoading}
           />
