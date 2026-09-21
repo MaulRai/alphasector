@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { AgentQueryResponse } from '@/lib/types';
 import { X, Printer, Copy, Check, FileText, ShieldAlert } from 'lucide-react';
+import { printDossier } from '@/lib/printDossier';
 
 interface ResearchDossierModalProps {
   isOpen: boolean;
@@ -20,7 +21,12 @@ export const ResearchDossierModal: React.FC<ResearchDossierModalProps> = ({
   if (!isOpen || !report) return null;
 
   const handlePrint = () => {
-    window.print();
+    if (report) {
+      printDossier(report, {
+        query: report.query,
+        ticker: report.primary_ticker,
+      });
+    }
   };
 
   const handleCopyMarkdown = () => {

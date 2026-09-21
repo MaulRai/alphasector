@@ -9,6 +9,7 @@ import {
   TrendingUp, Award, DollarSign
 } from 'lucide-react';
 import Link from 'next/link';
+import { printDossier } from '@/lib/printDossier';
 
 export interface ArtifactItem {
   id: string;
@@ -137,9 +138,17 @@ ${report.synthesis.disclaimer}
               </button>
 
               <button
-                onClick={() => window.print()}
-                title="Print / Cetak PDF"
-                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 text-xs transition-colors"
+                onClick={() => {
+                  if (activeArtifact) {
+                    printDossier(activeArtifact.report, {
+                      query: activeArtifact.query,
+                      ticker: activeArtifact.primaryTicker,
+                      timestamp: activeArtifact.timestamp,
+                    });
+                  }
+                }}
+                title="Cetak Laporan Riset (Dossier PDF)"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-emerald-400 border border-slate-800 text-xs transition-colors cursor-pointer"
               >
                 <Printer className="h-3.5 w-3.5" />
               </button>
