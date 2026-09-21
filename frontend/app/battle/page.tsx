@@ -295,11 +295,8 @@ function PeerBattleContent() {
                     <AlphaAgentLogo size={26} glow />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white flex items-center gap-2">
+                    <h4 className="text-base font-bold text-white">
                       Lanjutkan Diskusi di AlphaAgent Chat
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold">
-                        Follow-Up Room Baru
-                      </span>
                     </h4>
                     <p className="text-xs text-slate-400 mt-1">
                       Buka room chat interaktif baru untuk membahas rekomendasi alokasi bobot portofolio, sentimen prospek, dan model komparasi {tickers.join(', ')}.
