@@ -1,10 +1,15 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Paperclip, RefreshCw, Send, X, FileText } from 'lucide-react';
+import Link from 'next/link';
+import { 
+  Paperclip, RefreshCw, Send, X, FileText, Plus, 
+  Network, Zap, Globe, ChevronRight, ImagePlus, ExternalLink 
+} from 'lucide-react';
 import { AttachedImageData } from '@/hooks/useImageUpload';
 import { PastedContextItem } from '@/lib/contextClipboard';
+import { getProtocolPreference, setProtocolPreference } from '@/lib/api';
 
 interface ChatInputBarProps {
   inputQuery: string;
@@ -39,6 +44,50 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
 }) => {
   const localTextareaRef = useRef<HTMLTextAreaElement>(null);
   const activeTextareaRef = textareaRef || localTextareaRef;
+
+  // Action Menu & Protocol Toggle states
+  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
+  const [protocolMode, setProtocolMode] = useState<'rest' | 'mcp'>('rest');
+  const actionMenuRef = useRef<HTMLDivElement>(null);
+  const actionButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setProtocolMode(getProtocolPreference());
+  }, []);
+
+  const handleSelectProtocol = (mode: 'rest' | 'mcp') => {
+    setProtocolMode(mode);
+    setProtocolPreference(mode);
+  };
+
+  // Close action menu on click outside or Escape
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        actionMenuRef.current && 
+        !actionMenuRef.current.contains(e.target as Node) &&
+        actionButtonRef.current &&
+        !actionButtonRef.current.contains(e.target as Node)
+      ) {
+        setIsActionMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isActionMenuOpen) {
+        setIsActionMenuOpen(false);
+      }
+    };
+
+    if (isActionMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isActionMenuOpen]);
 
   // Auto expand/shrink textarea when inputQuery changes (including initial draft restoration)
   useEffect(() => {
@@ -154,20 +203,114 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           className="hidden"
         />
 
-        {/* Attach Image Button */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading || isClarificationPending}
-          title={
-            isClarificationPending
-              ? "Silakan jawab pertanyaan klarifikasi di atas terlebih dahulu"
-              : "Lampirkan Chart atau Screenshot Laporan Keuangan (Maks 10MB • Bisa juga langsung Ctrl+V)"
-          }
-          className="p-2 ml-1 mr-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80 transition-colors shrink-0 disabled:opacity-40 mb-0.5 cursor-pointer disabled:cursor-not-allowed"
-        >
-          <Paperclip className="h-4 w-4" />
-        </button>
+        {/* Plus / Action Menu Button & Popover */}
+        <div className="relative shrink-0 mb-0.5 ml-1 mr-1.5">
+          <button
+            ref={actionButtonRef}
+            type="button"
+            onClick={() => setIsActionMenuOpen((prev) => !prev)}
+            disabled={isLoading || isClarificationPending}
+            title={
+              isClarificationPending
+                ? "Silakan jawab pertanyaan klarifikasi di atas terlebih dahulu"
+                : "Menu Tindakan & Protokol Sectors"
+            }
+            className={`p-2 rounded-xl transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+              isActionMenuOpen
+                ? 'bg-slate-700 text-emerald-400 ring-2 ring-emerald-500/30'
+                : 'text-slate-400 hover:text-emerald-400 hover:bg-slate-800/80'
+            }`}
+          >
+            <Plus className={`h-4 w-4 transition-transform duration-200 ${isActionMenuOpen ? 'rotate-45' : ''}`} />
+          </button>
+
+          {/* Action Menu Popover */}
+          {isActionMenuOpen && (
+            <div
+              ref={actionMenuRef}
+              className="absolute left-0 bottom-full mb-3 w-72 sm:w-80 rounded-2xl border border-slate-700/80 bg-[#0d1322]/98 backdrop-blur-2xl shadow-2xl p-2.5 z-50 space-y-2.5 animate-step-vertical-fade text-xs"
+              style={{ boxShadow: '0 20px 40px -15px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)' }}
+            >
+              {/* Option 1: Upload File / Gambar */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsActionMenuOpen(false);
+                  fileInputRef.current?.click();
+                }}
+                className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-900/70 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/40 text-left group transition-all duration-200 cursor-pointer shadow-sm hover:shadow-emerald-950/20 active:scale-[0.98]"
+              >
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:scale-105 transition-all shrink-0">
+                  <ImagePlus className="h-4 w-4" />
+                </div>
+                <div className="truncate">
+                  <span className="font-semibold text-slate-100 block group-hover:text-emerald-300 transition-colors text-xs">
+                    Upload Gambar / Laporan
+                  </span>
+                  <span className="text-[11px] text-slate-400 block truncate">
+                    Chart atau screenshot laporan emiten
+                  </span>
+                </div>
+              </button>
+
+              {/* Divider */}
+              <div className="h-px bg-slate-800/80 my-1" />
+
+              {/* Option 2: Protokol Data Sectors (REST <-> MCP) */}
+              <div className="p-2.5 rounded-xl bg-slate-900/70 border border-slate-800/70 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Network className="h-3.5 w-3.5 text-teal-400" />
+                  <span className="font-semibold text-slate-200 text-xs">
+                    Protokol Data Sectors
+                  </span>
+                </div>
+
+                {/* Segmented Switch REST <-> MCP */}
+                <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectProtocol('rest')}
+                    className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                      protocolMode === 'rest'
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm font-semibold'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Zap className="h-3 w-3" />
+                    <span>REST (Cepat)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSelectProtocol('mcp')}
+                    className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                      protocolMode === 'mcp'
+                        ? 'bg-teal-500/20 text-teal-200 border border-teal-500/40 shadow-sm font-semibold'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Globe className="h-3 w-3" />
+                    <span>Sectors MCP</span>
+                  </button>
+                </div>
+
+                {/* Sub-action: Link to /mcp-tools page in a new tab */}
+                <Link
+                  href="/mcp-tools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsActionMenuOpen(false)}
+                  className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg bg-slate-950/60 hover:bg-teal-500/10 border border-slate-800/80 hover:border-teal-500/30 text-teal-300 hover:text-teal-200 text-[11px] font-medium transition-all cursor-pointer group"
+                >
+                  <span className="truncate group-hover:underline">
+                    Katalog Tools Sectors MCP (66 Tools)
+                  </span>
+                  <ExternalLink className="h-3.5 w-3.5 text-teal-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Auto-wrapping & Auto-expanding Textarea */}
         <textarea
@@ -222,6 +365,14 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           />
           <span>Terverifikasi Data Resmi Sectors Financial API</span>
         </span>
+        {protocolMode === 'mcp' && (
+          <>
+            <span className="text-slate-700">•</span>
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold px-1.5 py-0.2 rounded border bg-teal-500/10 text-teal-400 border-teal-500/30">
+              🌐 MCP Protocol
+            </span>
+          </>
+        )}
       </div>
     </div>
   );

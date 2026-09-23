@@ -123,6 +123,16 @@ export const AgentThinkingTrace: React.FC<AgentThinkingTraceProps> = ({
                           Lead Arbiter
                         </span>
                       )}
+                      {(step.title.includes("[MCP]") || step.tool_call?.endpoint.includes("[MCP")) && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-teal-500/15 text-teal-300 border border-teal-500/30">
+                          MCP
+                        </span>
+                      )}
+                      {step.tool_call?.endpoint.includes("Fallback") && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                          REST Fallback
+                        </span>
+                      )}
                       <span className={`text-[9px] font-medium px-1.5 py-0.2 rounded border ${getPhaseBadge(step.phase)}`}>
                         {step.phase}
                       </span>

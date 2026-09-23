@@ -21,18 +21,31 @@ export function setCustomSectorsKey(key: string | null) {
   }
 }
 
+export function getProtocolPreference(): 'rest' | 'mcp' {
+  if (typeof window === 'undefined') return 'rest';
+  const mode = localStorage.getItem('alphasector_protocol_mode');
+  return mode === 'mcp' ? 'mcp' : 'rest';
+}
+
+export function setProtocolPreference(mode: 'rest' | 'mcp'): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('alphasector_protocol_mode', mode);
+}
+
 export function getApiHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
   const token = getStoredToken();
   const customSectorsKey = getCustomSectorsKey();
+  const protocolMode = getProtocolPreference();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
   if (customSectorsKey && customSectorsKey.trim()) {
     headers['X-Sectors-Api-Key'] = customSectorsKey.trim();
   }
+  headers['X-Protocol-Mode'] = protocolMode;
   return headers;
 }
 
@@ -694,6 +707,40 @@ export async function fetchNewsTags(): Promise<{ data: string[]; latency_ms: num
   const headers = getApiHeaders();
   const res = await fetch(`${API_BASE_URL}/api/sectors/news/tags`, { headers });
   if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  return res.json();
+}
+
+export interface McpStatusResponse {
+  status: 'ONLINE' | 'OFFLINE';
+  latency_ms: number;
+  message: string;
+  url: string;
+}
+
+export interface McpToolItem {
+  name: string;
+  description: string;
+  parameters_count: number;
+}
+
+export interface McpToolsResponse {
+  status: string;
+  total_tools: number;
+  tools: McpToolItem[];
+}
+
+export async function fetchMcpStatus(): Promise<McpStatusResponse> {
+  const headers = getApiHeaders();
+  const res = await fetch(`${API_BASE_URL}/api/mcp/status`, { headers, cache: 'no-store' });
+  if (!res.ok) throw new Error(`MCP status check failed (${res.status})`);
+  return res.json();
+}
+
+export async function fetchMcpTools(refresh: boolean = false): Promise<McpToolsResponse> {
+  const headers = getApiHeaders();
+  const params = refresh ? '?refresh=true' : '';
+  const res = await fetch(`${API_BASE_URL}/api/mcp/tools${params}`, { headers });
+  if (!res.ok) throw new Error(`MCP tools discovery failed (${res.status})`);
   return res.json();
 }
 

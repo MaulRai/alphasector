@@ -39,9 +39,10 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({
     if (liveStep) {
       const num = liveStep.step_number;
       const total = totalSteps && totalSteps >= num ? totalSteps : num;
-      // Strip any existing "Step X: " prefix to prevent duplicate numbering
       const cleanTitle = liveStep.title.replace(/^Step\s*\d+\s*:\s*/i, '');
-      const formattedTitle = `Step ${num}: ${cleanTitle}`;
+      const isMcp = cleanTitle.includes('[MCP]') || (liveStep.detail && liveStep.detail.includes('[MCP'));
+      const sanitizedTitle = cleanTitle.replace(/\[MCP\]\s*/g, '');
+      const formattedTitle = `Step ${num}: ${sanitizedTitle}`;
       
       let phaseClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       let icon: 'cpu' | 'database' | 'calculator' | 'file' | 'sparkles' = 'sparkles';
@@ -74,6 +75,7 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({
         number: num,
         total,
         title: formattedTitle,
+        isMcp,
         phase: liveStep.phase,
         detail: liveStep.detail,
         phaseClass,
@@ -169,6 +171,11 @@ export const AgentThinkingProgress: React.FC<AgentThinkingProgressProps> = ({
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${displayStep.phaseClass}`}>
                   {displayStep.phase}
                 </span>
+                {displayStep.isMcp && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold border bg-teal-500/15 text-teal-300 border-teal-500/30">
+                    MCP Protocol
+                  </span>
+                )}
               </div>
               <p className="text-xs text-slate-300/90 leading-relaxed truncate">
                 {displayStep.detail}
