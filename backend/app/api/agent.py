@@ -29,7 +29,8 @@ def get_optional_user_id(authorization: Optional[str]) -> Optional[int]:
 async def execute_agent_query(
     request: AgentQueryRequest,
     authorization: Optional[str] = Header(None),
-    x_sectors_api_key: Optional[str] = Header(None)
+    x_sectors_api_key: Optional[str] = Header(None),
+    x_protocol_mode: Optional[str] = Header("rest", alias="X-Protocol-Mode")
 ):
     """
     Execute autonomous multi-step reasoning query across Sectors Financial API.
@@ -111,7 +112,7 @@ async def execute_agent_query(
             except Exception as hist_err:
                 print(f"[Warning] Failed to fetch session history: {hist_err}")
 
-        # 6. Execute agent with custom or default key
+        # 6. Execute agent with custom or default key and protocol mode
         response = await agent_orchestrator.execute(
             query=request.query,
             context_ticker=request.context_ticker,
@@ -119,7 +120,8 @@ async def execute_agent_query(
             custom_api_key=custom_key,
             conversation_history=conversation_history,
             image_base64=request.image_base64,
-            image_mime_type=request.image_mime_type
+            image_mime_type=request.image_mime_type,
+            protocol_mode=(x_protocol_mode or "rest").lower()
         )
 
         # 7. Persist assistant message and update session primary ticker
@@ -234,7 +236,8 @@ async def execute_agent_query(
 async def execute_agent_query_stream(
     request: AgentQueryRequest,
     authorization: Optional[str] = Header(None),
-    x_sectors_api_key: Optional[str] = Header(None)
+    x_sectors_api_key: Optional[str] = Header(None),
+    x_protocol_mode: Optional[str] = Header("rest", alias="X-Protocol-Mode")
 ):
     """
     Execute autonomous multi-step reasoning query with real-time SSE event streaming.
@@ -332,7 +335,8 @@ async def execute_agent_query_stream(
                     conversation_history=conversation_history,
                     image_base64=request.image_base64,
                     image_mime_type=request.image_mime_type,
-                    on_step=on_step_callback
+                    on_step=on_step_callback,
+                    protocol_mode=(x_protocol_mode or "rest").lower()
                 )
 
                 # Persist assistant message and update session

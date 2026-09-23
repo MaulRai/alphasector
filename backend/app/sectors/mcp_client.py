@@ -157,6 +157,141 @@ class SectorsMCPClient:
             return None, elapsed_ms, 500
 
     # -------------------------------------------------------------------------
+    # MCP DISCOVERY & HEALTHCHECK
+    # -------------------------------------------------------------------------
+
+    async def ping_health(self) -> Dict[str, Any]:
+        """Verify MCP server reachability and measure live latency."""
+        start_time = time.time()
+        try:
+            async with httpx.AsyncClient(timeout=8.0) as client:
+                res = await client.post(
+                    self.mcp_url,
+                    headers=self._headers(),
+                    json={"jsonrpc": "2.0", "id": 999, "method": "tools/list", "params": {}}
+                )
+                elapsed_ms = int((time.time() - start_time) * 1000)
+                if res.status_code == 200:
+                    status = "ONLINE" if elapsed_ms < 2500 else "DEGRADED"
+                    return {
+                        "status": status,
+                        "latency_ms": elapsed_ms,
+                        "url": self.mcp_url,
+                        "protocol": "Model Context Protocol (JSON-RPC 2.0 / SSE)",
+                        "message": f"Server aktif dengan latensi {elapsed_ms}ms"
+                    }
+                else:
+                    return {
+                        "status": "DEGRADED",
+                        "latency_ms": elapsed_ms,
+                        "url": self.mcp_url,
+                        "protocol": "Model Context Protocol (JSON-RPC 2.0 / SSE)",
+                        "message": f"Server merespons kode {res.status_code}"
+                    }
+        except Exception as err:
+            elapsed_ms = int((time.time() - start_time) * 1000)
+            return {
+                "status": "OFFLINE",
+                "latency_ms": elapsed_ms,
+                "url": self.mcp_url,
+                "protocol": "Model Context Protocol (JSON-RPC 2.0 / SSE)",
+                "message": f"Gagal terhubung: {str(err)}"
+            }
+
+    async def list_tools(self, use_cache: bool = True) -> Tuple[List[Dict[str, Any]], int, int]:
+        """Fetch all available tools from the Sectors MCP server (with 1-hour local cache)."""
+        cache_key = "mcp:system:tools_list"
+        if use_cache:
+            cached = cache.get(cache_key)
+            if cached is not None and isinstance(cached, list):
+                return cached, 0, 200
+
+        start_time = time.time()
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.post(
+                    self.mcp_url,
+                    headers=self._headers(),
+                    json={"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
+                )
+                elapsed_ms = int((time.time() - start_time) * 1000)
+                if res.status_code != 200:
+                    return [], elapsed_ms, res.status_code
+
+                tools_list = []
+                for line in res.text.splitlines():
+                    line_str = line.strip()
+                    if line_str.startswith("data:"):
+                        data = json.loads(line_str[5:].strip())
+                        tools_list = data.get("result", {}).get("tools", [])
+                        break
+
+                if use_cache and tools_list:
+                    cache.set(cache_key, tools_list, ttl_seconds=3600)
+
+                return tools_list, elapsed_ms, 200
+        except Exception as err:
+            elapsed_ms = int((time.time() - start_time) * 1000)
+            logger.exception(f"Error listing MCP tools: {err}")
+            return [], elapsed_ms, 500
+
+    # -------------------------------------------------------------------------
+    # CORE AGENT MCP TOOLS
+    # -------------------------------------------------------------------------
+
+    async def fetch_company_report(
+        self,
+        symbol: str,
+        sections: Optional[List[str]] = None
+    ) -> Tuple[Optional[Any], int, int]:
+        """Fetch comprehensive company report via Sectors MCP."""
+        clean_sym = symbol.upper().replace(".JK", "")
+        args: Dict[str, Any] = {"symbol": clean_sym}
+        if sections:
+            args["sections"] = sections
+        return await self.call_tool("fetch-company-report", args)
+
+    async def fetch_broker_summary_top(
+        self,
+        symbol: str,
+        n_brokers: int = 10
+    ) -> Tuple[Optional[Any], int, int]:
+        """Fetch top accumulating & distributing brokers via Sectors MCP."""
+        clean_sym = symbol.upper().replace(".JK", "")
+        args = {"symbol": clean_sym, "n_brokers": n_brokers}
+        return await self.call_tool("fetch-broker-summary-top", args)
+
+    async def fetch_foreign_flow(
+        self,
+        symbol: str
+    ) -> Tuple[Optional[Any], int, int]:
+        """Fetch daily net foreign-broker inflow via Sectors MCP."""
+        clean_sym = symbol.upper().replace(".JK", "")
+        return await self.call_tool("fetch-foreign-flow", {"symbol": clean_sym})
+
+    async def fetch_company_segments(
+        self,
+        symbol: str
+    ) -> Tuple[Optional[Any], int, int]:
+        """Fetch revenue and cost segment breakdown via Sectors MCP."""
+        clean_sym = symbol.upper().replace(".JK", "")
+        return await self.call_tool("fetch-company-segments", {"symbol": clean_sym})
+
+    async def fetch_news(
+        self,
+        symbols: Optional[str] = None,
+        tags: Optional[str] = None,
+        limit: int = 10
+    ) -> Tuple[Optional[Any], int, int]:
+        """Fetch latest stock market news via Sectors MCP."""
+        args: Dict[str, Any] = {"limit": limit}
+        if symbols:
+            args["symbol"] = symbols.upper().replace(".JK", "")
+        if tags:
+            args["tags"] = tags
+        return await self.call_tool("fetch-news", args)
+
+    # -------------------------------------------------------------------------
     # FORENSIC & INSIDER TOOLS
     # -------------------------------------------------------------------------
 

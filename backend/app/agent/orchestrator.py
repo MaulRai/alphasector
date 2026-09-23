@@ -185,9 +185,11 @@ class AgentOrchestrator:
         conversation_history: Optional[List[Dict[str, str]]] = None,
         image_base64: Optional[str] = None,
         image_mime_type: Optional[str] = None,
-        on_step: Optional[Callable[[ReasoningStep, int], Awaitable[None]]] = None
+        on_step: Optional[Callable[[ReasoningStep, int], Awaitable[None]]] = None,
+        protocol_mode: str = "rest"
     ) -> AgentQueryResponse:
         start_time = time.time()
+        is_mcp = protocol_mode.lower() == "mcp"
         trace: List[ReasoningStep] = []
         step_counter = 1
         credits_used = 0
@@ -387,49 +389,50 @@ class AgentOrchestrator:
         suspensions_data: Optional[Any] = None
 
         # Prepare async tasks
+        proto_tag = "[MCP] " if is_mcp else ""
         async def execute_single_step(step: Dict[str, Any]):
             action = step.get("action")
             if action == "FETCH_REPORT":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_company_report(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_company_report(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("REPORT", t, data, log)
             elif action == "FETCH_BROKER_SUMMARY":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_broker_summary(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_broker_summary(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("BROKER", t, data, log)
             elif action == "FETCH_FOREIGN_FLOW":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_foreign_flow(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_foreign_flow(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("FOREIGN", t, data, log)
             elif action == "FETCH_SEGMENTS":
                 t = step["ticker"]
-                data, log = await tool_executor.fetch_company_segments(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_company_segments(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("SEGMENTS", t, data, log)
             elif action == "FETCH_INSIDER_FILINGS":
                 t = step.get("ticker") or (tickers[0] if tickers else context_ticker)
-                data, log = await tool_executor.fetch_insider_filings(symbol=t, limit=15, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_insider_filings(symbol=t, limit=15, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("INSIDER", t, data, log)
             elif action == "FETCH_SHAREHOLDERS_COMPOSITION":
                 t = step.get("ticker") or (tickers[0] if tickers else context_ticker) or "BBCA"
-                data, log = await tool_executor.fetch_shareholders_composition(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_shareholders_composition(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("SHAREHOLDERS", t, data, log)
             elif action == "FETCH_SUSPENSIONS":
                 t = step.get("ticker") or (tickers[0] if tickers else context_ticker)
-                data, log = await tool_executor.fetch_suspensions(symbol=t, limit=20, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_suspensions(symbol=t, limit=20, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("SUSPENSIONS", t or "MARKET", data, log)
             elif action in ("SCREEN_MARKET", "RUN_SCREENER"):
                 q_text = step.get("query", query)
-                data, log = await tool_executor.screen_market(q_text, api_key=custom_api_key)
+                data, log = await tool_executor.screen_market(q_text, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("SCREENER", "SCREENER", data, log)
             elif action == "FETCH_TOP_MOVERS":
-                data, log = await tool_executor.fetch_top_movers(api_key=custom_api_key)
+                data, log = await tool_executor.fetch_top_movers(api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("TOP_MOVERS", "TOP_MOVERS", data, log)
             elif action == "FETCH_MINING_PERFORMANCE":
                 t = step.get("ticker") or (tickers[0] if tickers else context_ticker) or "INCO"
-                data, log = await tool_executor.fetch_mining_performance(t, api_key=custom_api_key)
+                data, log = await tool_executor.fetch_mining_performance(t, api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("MINING", t, data, log)
             elif action == "FETCH_TOP_INSTITUTIONAL_BROKERS":
-                data, log = await tool_executor.fetch_top_institutional_brokers(api_key=custom_api_key)
+                data, log = await tool_executor.fetch_top_institutional_brokers(api_key=custom_api_key, protocol_mode=protocol_mode)
                 return ("TOP_BROKERS", "TOP_BROKERS", data, log)
             return (None, None, None, None)
 
@@ -447,7 +450,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Company Report ({sym})",
+                    title=f"{proto_tag}Fetch Company Report ({sym})",
                     detail=f"Retrieved fundamental overview, valuation multiples, and financials for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -461,7 +464,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Broker Summary ({sym})",
+                    title=f"{proto_tag}Fetch Broker Summary ({sym})",
                     detail=f"Retrieved top accumulating & distributing brokers for {sym} in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -475,7 +478,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Net Foreign Flow ({sym})",
+                    title=f"{proto_tag}Fetch Net Foreign Flow ({sym})",
                     detail=f"Retrieved historical net foreign broker inflow for {sym}",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -489,7 +492,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Revenue Segments ({sym})",
+                    title=f"{proto_tag}Fetch Revenue Segments ({sym})",
                     detail=f"Retrieved business revenue & cost breakdown for {sym}",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -551,7 +554,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Insider Filings ({sym or 'BEI'})",
+                    title=f"{proto_tag}Fetch Insider Filings ({sym or 'BEI'})",
                     detail=f"Retrieved {count} official director/commissioner transaction filings from BEI/KSEI in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -565,7 +568,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Institutional Ownership Breakdown ({sym})",
+                    title=f"{proto_tag}Fetch Institutional Ownership Breakdown ({sym})",
                     detail=f"Retrieved KSEI registry breakdown (Dapen, Reksadana, Asuransi, Ritel) in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -581,7 +584,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch BEI Suspension Radar & UMA Notices ({sym})",
+                    title=f"{proto_tag}Fetch BEI Suspension Radar & UMA Notices ({sym})",
                     detail=f"Retrieved {count} regulatory suspension records & official exchange letters in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
@@ -594,7 +597,7 @@ class AgentOrchestrator:
                     id=f"step-{step_counter}",
                     step_number=step_counter,
                     phase=ExecutionPhase.FETCHING,
-                    title=f"Fetch Mining Performance & Sites ({sym})",
+                    title=f"{proto_tag}Fetch Mining Performance & Sites ({sym})",
                     detail=f"Retrieved operational mining metrics, reserves, and production sites in {log.latency_ms}ms",
                     tool_call=log,
                     timestamp=datetime.now().strftime("%H:%M:%S")
