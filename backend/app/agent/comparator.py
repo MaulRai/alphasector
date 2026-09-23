@@ -125,30 +125,50 @@ class QuantitativeComparator:
     def analyze_broker_sentiment(broker_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """Evaluates accumulation vs distribution ratio from broker summary."""
         if not broker_data:
-            return {"sentiment": "NEUTRAL", "top_buyers": [], "top_sellers": []}
+            return {"sentiment": "NEUTRAL", "top_buyers": [], "top_sellers": [], "buyer_concentration": 50}
+
+        def get_item_val(item: Any) -> float:
+            if not isinstance(item, dict):
+                return 0.0
+            val = (
+                item.get("net_idr") or
+                item.get("net_buy_value") or
+                item.get("net_sell_value") or
+                item.get("buy_idr") or
+                item.get("sell_idr") or
+                item.get("buy_val") or
+                item.get("sell_val") or
+                item.get("val") or
+                0
+            )
+            return abs(float(val))
 
         top_buyers = broker_data.get("top_buyers", []) or []
         top_sellers = broker_data.get("top_sellers", []) or []
 
-        total_buy_val = sum(b.get("net_buy_value", 0) or b.get("buy_val", 0) or b.get("net_val", 0) for b in top_buyers[:3])
-        total_sell_val = abs(sum(s.get("net_sell_value", 0) or s.get("sell_val", 0) or s.get("net_val", 0) for s in top_sellers[:3]))
+        total_buy_val = sum(get_item_val(b) for b in top_buyers[:3])
+        total_sell_val = sum(get_item_val(s) for s in top_sellers[:3])
 
-        if total_buy_val > total_sell_val * 1.25:
+        if total_buy_val > total_sell_val * 1.25 and total_buy_val > 0:
             sentiment = "STRONG_ACCUMULATION"
-        elif total_buy_val > total_sell_val * 1.05:
+        elif total_buy_val > total_sell_val * 1.05 and total_buy_val > 0:
             sentiment = "MODERATE_ACCUMULATION"
-        elif total_sell_val > total_buy_val * 1.25:
+        elif total_sell_val > total_buy_val * 1.25 and total_sell_val > 0:
             sentiment = "STRONG_DISTRIBUTION"
-        elif total_sell_val > total_buy_val * 1.05:
+        elif total_sell_val > total_buy_val * 1.05 and total_sell_val > 0:
             sentiment = "MODERATE_DISTRIBUTION"
         else:
             sentiment = "NEUTRAL"
+
+        conc = 50.0
+        if (total_buy_val + total_sell_val) > 0:
+            conc = round(total_buy_val / (total_buy_val + total_sell_val) * 100, 1)
 
         return {
             "sentiment": sentiment,
             "top_buyers": top_buyers[:5],
             "top_sellers": top_sellers[:5],
-            "buyer_concentration": round(total_buy_val / (total_buy_val + total_sell_val + 1e-9) * 100, 1)
+            "buyer_concentration": conc
         }
 
 comparator = QuantitativeComparator()

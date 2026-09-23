@@ -148,9 +148,24 @@ class MultiAgentHarness:
         """Evaluates top broker concentration, accumulation/distribution, and institutional flow."""
         analyzed = comparator.analyze_broker_sentiment(broker_summary_data) if broker_summary_data else {}
         sentiment = analyzed.get("sentiment", "NEUTRAL")
-        buyer_conc = analyzed.get("buyer_concentration", 0)
-        top_buyers = [f"{b.get('broker')} (Rp {round((b.get('val') or 0)/1e9, 1)}M)" for b in analyzed.get("top_buyers", [])[:3]]
-        top_sellers = [f"{s.get('broker')} (Rp {round((s.get('val') or 0)/1e9, 1)}M)" for s in analyzed.get("top_sellers", [])[:3]]
+        buyer_conc = analyzed.get("buyer_concentration", 50)
+        def get_val(b: Any) -> float:
+            if not isinstance(b, dict):
+                return 0.0
+            v = b.get("net_idr") or b.get("net_buy_value") or b.get("net_sell_value") or b.get("buy_idr") or b.get("sell_idr") or b.get("buy_val") or b.get("sell_val") or b.get("val") or 0
+            return abs(float(v))
+
+        def format_val_str(v: float) -> str:
+            if v >= 1e12:
+                return f"Rp {round(v/1e12, 2)} T"
+            elif v >= 1e9:
+                return f"Rp {round(v/1e9, 1)} M"
+            elif v >= 1e6:
+                return f"Rp {round(v/1e6, 0)} Jt"
+            return "Rp 0"
+
+        top_buyers = [f"{b.get('broker') or b.get('broker_code')} ({format_val_str(get_val(b))})" for b in analyzed.get("top_buyers", [])[:3]]
+        top_sellers = [f"{s.get('broker') or s.get('broker_code')} ({format_val_str(get_val(s))})" for s in analyzed.get("top_sellers", [])[:3]]
 
         # Foreign net flow estimate
         foreign_status = "NET_NEUTRAL"
@@ -173,14 +188,14 @@ class MultiAgentHarness:
             f"- Top Distributing Brokers: {', '.join(top_sellers) or 'Tidak ada data signifikan'}\n"
             f"- Foreign Flow Status: {foreign_status}\n\n"
             "TUGAS:\n"
-            "1. Tentukan Skor Smart Money dari 1 (distribusi bandar brutal/outflow asing) hingga 10 (akumulasi masif/high conviction).\n"
+            "1. Tentukan Skor Smart Money dari 1 (distribusi bandar brutal/outflow asing) hingga 10 (akumulasi masif/high conviction). Jika posisi Netral atau berimbang, berikan skor 5 atau 6.\n"
             "2. Tentukan Stance: 'HEAVY_ACCUMULATION', 'MODERATE_ACCUMULATION', 'NEUTRAL', 'DISTRIBUTION', atau 'HEAVY_DISTRIBUTION'.\n"
             "3. Buat Verdict tajam 1-2 kalimat dalam Bahasa Indonesia.\n"
             "4. Buat 3 poin utama (key_points) memuat broker dan volume/konsentrasi.\n\n"
             "OUTPUT FORMAT JSON MURNI:\n"
             "{\n"
-            '  "score": 4,\n'
-            '  "stance": "DISTRIBUTION",\n'
+            '  "score": 6,\n'
+            '  "stance": "NEUTRAL",\n'
             '  "verdict": "Kalimat verdict bandar...",\n'
             '  "key_points": ["Poin 1 dengan data broker", "Poin 2", "Poin 3"]\n'
             "}"

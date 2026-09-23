@@ -138,8 +138,8 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
           {report.synthesis && (
             <DossierSynthesisCard
               synthesis={report.synthesis}
-              title={`Sintesis Multi-Agent Ekuitas ${report.primary_ticker ? `(${report.primary_ticker})` : ''}`}
-              badgeLabel="Groq Multi-Agent Dossier"
+              title={`Sintesis Riset Terpadu ${report.primary_ticker ? `(${report.primary_ticker})` : ''}`}
+              badgeLabel="Verified IDX Fact-Grounded"
               colorVariant="emerald"
               valuationLabel="Pilar Fundamental"
               extraFieldLabel="Pilar Smart Money"
@@ -149,8 +149,7 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
           )}
 
           <DossierArtifactCta
-            title={report.query || 'Composite Stock Dossier'}
-            badgeLabel="Composite Audit Dossier"
+            title={report.query || `Audit Dossier ${report.primary_ticker || ''}`.trim()}
             description="Buka visualisasi multi-agent dan dekomposisi pilar lengkap di Artifact Panel ➔"
             colorVariant="emerald"
             onClick={handleOpenArtifact}
@@ -424,7 +423,7 @@ export const ResearchDossierLayout: React.FC<ResearchDossierLayoutProps> = ({
       )}
 
       {/* 9. GENERAL / FALLBACK */}
-      {!isClarification && !isPeerBattle && !isSmartMoney && !isCompany360 && !isMarketScreening && !isInstitutional && !isSuspension && !isInsider && (
+      {!isComposite && !isClarification && !isPeerBattle && !isSmartMoney && !isCompany360 && !isMarketScreening && !isInstitutional && !isSuspension && !isInsider && (
         <>
           {report.peer_matrix && report.peer_matrix.length > 0 && (
             <div className="animate-card-reveal-delay-1">
