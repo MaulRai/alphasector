@@ -6,7 +6,7 @@ import {
   FileText, Copy, Check, Printer, Maximize2, X, 
   Layers, Clock, Zap, ArrowRight, ShieldCheck, 
   Search, ExternalLink, ChevronRight, BookOpen, 
-  TrendingUp, Award, DollarSign
+  TrendingUp, Award, DollarSign, ChevronDown
 } from 'lucide-react';
 import Link from 'next/link';
 import { printDossier } from '@/lib/printDossier';
@@ -46,6 +46,38 @@ export const CopilotArtifactPanel: React.FC<CopilotArtifactPanelProps> = ({
     artifacts.find((a) => a.id === selectedArtifactId) || 
     artifacts[artifacts.length - 1] || 
     null;
+
+  const [tickerDropdownOpen, setTickerDropdownOpen] = useState(false);
+  const tickerDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (tickerDropdownRef.current && !tickerDropdownRef.current.contains(e.target as Node)) {
+        setTickerDropdownOpen(false);
+      }
+    };
+    if (tickerDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [tickerDropdownOpen]);
+
+  // Extract all unique tickers for active artifact
+  const activeTickers: string[] = React.useMemo(() => {
+    if (!activeArtifact) return [];
+    const list: string[] = [];
+    if (activeArtifact.primaryTicker) list.push(activeArtifact.primaryTicker);
+    if (activeArtifact.report?.comparison_tickers) {
+      list.push(...activeArtifact.report.comparison_tickers);
+    }
+    if (activeArtifact.report?.peer_matrix) {
+      list.push(...activeArtifact.report.peer_matrix.map((p) => p.symbol));
+    }
+    return Array.from(new Set(list.filter(Boolean).map((t) => t.toUpperCase())));
+  }, [activeArtifact]);
 
   const handleCopyMarkdown = (report: AgentQueryResponse) => {
     if (!report) return;
@@ -203,14 +235,70 @@ ${report.synthesis.disclaimer}
           </button>
         </div>
 
-        {activeArtifact && activeArtifact.primaryTicker && (
+        {activeTickers.length === 1 && (
           <Link
-            href={`/company/${activeArtifact.primaryTicker}`}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+            href={`/company/${activeTickers[0]}`}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors py-1 px-1.5 rounded-lg hover:bg-emerald-500/10"
+            title={`Buka Profil Emiten 360° untuk ${activeTickers[0]}`}
           >
-            <span>Emiten 360° ({activeArtifact.primaryTicker})</span>
+            <span>Emiten 360° ({activeTickers[0]})</span>
             <ExternalLink className="h-3 w-3" />
           </Link>
+        )}
+
+        {activeTickers.length > 1 && (
+          <div className="relative" ref={tickerDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setTickerDropdownOpen((prev) => !prev)}
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 px-2.5 py-1 rounded-lg transition-all"
+              title="Pilih Profil Emiten 360°"
+            >
+              <span>Emiten 360° ({activeTickers.length})</span>
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${tickerDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {tickerDropdownOpen && (
+              <div className="absolute right-0 mt-1.5 w-60 rounded-xl bg-[#0b0f19] border border-slate-700/80 shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md">
+                <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80 mb-1 flex items-center justify-between">
+                  <span>Pilih Profil Emiten 360°</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-emerald-400 font-mono">
+                    {activeTickers.length} Emiten
+                  </span>
+                </div>
+                <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                  {activeTickers.map((ticker) => {
+                    const peer = activeArtifact?.report?.peer_matrix?.find(
+                      (p) => p.symbol.toUpperCase() === ticker
+                    );
+                    const cleanName = peer?.company_name
+                      ? peer.company_name.replace(/PT | Tbk\.?/g, '').trim()
+                      : null;
+                    return (
+                      <Link
+                        key={ticker}
+                        href={`/company/${ticker}`}
+                        onClick={() => setTickerDropdownOpen(false)}
+                        className="flex items-center justify-between px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-emerald-500/15 transition-colors group"
+                      >
+                        <div className="flex flex-col min-w-0 pr-2">
+                          <span className="font-bold font-mono text-emerald-400 group-hover:text-emerald-300">
+                            {ticker}
+                          </span>
+                          {cleanName && (
+                            <span className="text-[10px] text-slate-400 truncate max-w-[160px]">
+                              {cleanName}
+                            </span>
+                          )}
+                        </div>
+                        <ExternalLink className="h-3 w-3 text-slate-500 group-hover:text-emerald-400 shrink-0 transition-colors" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
@@ -245,9 +333,10 @@ ${report.synthesis.disclaimer}
                       <Zap className="h-3.5 w-3.5 text-cyan-400" />
                       <span>{activeArtifact.report.credits_consumed || 1} API Credits • {activeArtifact.report.total_execution_time_ms}ms</span>
                     </div>
-                    {activeArtifact.primaryTicker && (
-                      <span className="font-bold text-emerald-400 font-mono">
-                        Ticker: {activeArtifact.primaryTicker}
+                    {activeTickers.length > 0 && (
+                      <span className="font-bold text-emerald-400 font-mono text-[11px]">
+                        {activeTickers.length > 1 ? 'Tickers: ' : 'Ticker: '}
+                        {activeTickers.join(', ')}
                       </span>
                     )}
                   </div>
