@@ -19,7 +19,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Segment 1** | 0:00 - 0:35 | 35s | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, compounded by Purbaya reshuffle & $100 oil, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
 | **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Agent Reasoning & Sectors MCP Protocol**<br>Autonomous reasoning at `/alpha-agent`, Sectors MCP toggle (66 tools), `LiveThinkingTrace`, parallel tool calls, grounded synthesis. | `/alpha-agent` |
-| **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Company 360° Intelligence**<br>Peer Battle at `/battle` with 1-Click Agent Follow-up, Stanford 9-criteria Piotroski F-Score, P/E Bands, and Company 360° profile at `/company/BBCA`. | `/battle`<br>`/company/BBCA` |
+| **Segment 3** | 1:15 - 1:55 | 40s | **Screener Pro, Peer Battle & Company 360°**<br>Screening 900+ stocks at `/screener`, Peer Battle at `/battle` with 1-Click Agent Follow-up, Piotroski F-Score & Company 360° profile. | `/screener`<br>`/battle`<br>`/company/BBCA` |
 | **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & Context Clipboard**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), cross-module clipboard injection into `/alpha-agent`. | `/smart-money`<br>`/alpha-agent` |
 | **Segment 5** | 2:35 - 3:05 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
 
@@ -105,29 +105,31 @@
 
 ---
 
-### SEGMENT 3: Deterministic Quant Engine & Company 360° Intelligence (1:15 - 1:55)
+### SEGMENT 3: Screener Pro, Peer Battle & Company 360° Intelligence (1:15 - 1:55)
 * **Duration**: 40 Seconds
-* **Objective**: Prove quantitative supremacy through pure deterministic computation (Piotroski & P/E Bands), highlight seamless 1-click follow-up from Peer Battle to Alpha Agent, and showcase deep fundamental drill-down on Company 360°.
+* **Objective**: Showcase market discovery on Screener Pro, prove quantitative supremacy in Peer Battle through deterministic computation (Piotroski & P/E Bands), highlight seamless 1-click follow-up to Alpha Agent, and drill down into Company 360°.
 
 #### Visual Screen Actions & Clicks:
-1. **[1:15 - 1:26] Navigate to `/battle` & Deterministic Quant**: Click **"Peer Battle"** in the top Navbar. Click preset **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click cyan button **"Run Peer Battle"**. Multi-stock metrics populate in ~450ms. Highlight the side-by-side comparative table, the **Piotroski F-Score (Score: 7/9 PRIMA)** across 9 accounting criteria, and the **Historical P/E Standard Deviation Bands** showing valuation discounts.
-2. **[1:26 - 1:36] 1-Click Follow-Up to Alpha Agent**: Highlight the glowing action banner: **"Lanjutkan Diskusi di AlphaAgent"**. Click it, showing seamless 1-click contextual handoff where the agent pre-loads the battle findings for conversational follow-up.
-3. **[1:36 - 1:55] Company 360° Profile (`/company/BBCA`)**: Drill down to `BBCA` (or top bank). Scroll through the **Valuation History Table** tracking multi-year cycles and the **Business Segments Breakdown** mapping core revenue drivers and margin trajectories.
+1. **[1:15 - 1:22] Discover via Screener Pro (`/screener`)**: Navigate to `/screener`. Click preset **"Undervalued Dividend Aristocrats"** across 900+ IDX stocks. The candidate table populates in ~300ms. Select top candidate tickers using the **Screener Battle Dock** and send them to **Peer Battle**.
+2. **[1:22 - 1:33] Peer Battle & Deterministic Quant (`/battle`)**: Run head-to-head comparison on **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`). Highlight the side-by-side comparative table, the **Piotroski F-Score (Score: 7/9 PRIMA)** across 9 accounting criteria, and the **Historical P/E Standard Deviation Bands** showing valuation discounts.
+3. **[1:33 - 1:44] 1-Click Follow-Up to Alpha Agent**: Highlight the glowing action banner: **"Lanjutkan Diskusi di AlphaAgent"**. Click it, showing seamless 1-click contextual handoff where the agent pre-loads the battle findings for conversational follow-up.
+4. **[1:44 - 1:55] Company 360° Profile (`/company/BBCA`)**: Drill down to `BBCA` (or top bank). Scroll through the **Valuation History Table** tracking multi-year cycles and the **Business Segments Breakdown** mapping core revenue drivers and margin trajectories.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:17]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Ingestion)*
-* `[1:22]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Deterministic Accounting Health*
-* `[1:28]` **Handoff Feature**: **1-Click Agent Follow-Up** — *Seamless Battle-to-Chat Context Transition*
-* `[1:38]` **Profile Badge**: **Company 360° Profile** — *Multi-Year Valuation Cycles & Segment Breakdown*
+* `[1:17]` **Discovery Badge**: **Screener Pro**: *900+ IDX Stocks • Fundamental Presets & Battle Dock*
+* `[1:24]` **Preset Battle**: *The Big 4 Banks (Head-to-Head Multi-Stock Comparison)*
+* `[1:28]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Deterministic Accounting Health*
+* `[1:36]` **Handoff Feature**: **1-Click Agent Follow-Up** — *Seamless Battle-to-Chat Context Transition*
+* `[1:47]` **Profile Badge**: **Company 360° Profile** — *Multi-Year Valuation Cycles & Segment Breakdown*
 
 #### Audio Design:
 * BGM: Percussion tightens, conveying mathematical precision and institutional authority.
-* SFX: Fast swoosh between routes, followed by a resonant *sub-bass hit* on Piotroski and a delicate chime as valuation history appears.
+* SFX: Fast swoosh between routes, crisp click on filter presets, resonant *sub-bass hit* on Piotroski, and a delicate chime as valuation history appears.
 
 #### Verbatim English Voiceover Narration:
-> *"Peer Battle delivers instant multi-stock comparisons powered by our **Deterministic Quant Engine**—calculating Stanford nine-criteria Piotroski scores and historical valuation bands mathematically without hallucinations.*
+> *"Whether filtering nine hundred stocks in **Screener Pro** or comparing competitors head-to-head in **Peer Battle**, our **Deterministic Quant Engine** calculates Stanford nine-criteria Piotroski scores and historical valuation bands mathematically without hallucinations.
 > 
-> *Analysts can click to seamlessly carry any comparative battle directly into Alpha Agent for deeper autonomous investigation.*
+> *Analysts can click to seamlessly carry any screening thesis or comparative battle directly into Alpha Agent for deeper autonomous investigation.
 > 
 > *Or drill down into **Company 360°** to dissect multi-year valuation cycles and segment revenue drivers across any of the nine hundred listed companies."*
 
@@ -164,15 +166,15 @@
 
 ### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:35 - 3:05)
 * **Duration**: 30 Seconds
-* **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Battle, Company 360°, Smart Money 2.0, Context Clipboard), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
+* **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Screener Pro, Peer Battle, Company 360°, Smart Money 2.0, Context Clipboard), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:35 - 2:45] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, Company 360° valuation profiles, the Smart Money 2.0 forensic radar, and seamless cross-module context injection.
+1. **[2:35 - 2:45] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to Screener Pro discovery, the dynamic Peer Battle matrix, Company 360° valuation profiles, the Smart Money 2.0 forensic radar, and seamless cross-module context injection.
 2. **[2:45 - 2:53] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
 3. **[2:53 - 3:05] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/sectors-hackathon`), and the *Sectors Hackathon 2026* badge.
 
 #### On-Screen Graphics & English Text Overlays:
-* `[2:37]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Agent Reasoning • Deterministic Quant Engine • Smart Money Radar*
+* `[2:37]` **Headline Card**: **Autonomous Equity Intelligence**: *Multi-Agent Reasoning • Screener & Battle • Smart Money Radar*
 * `[2:47]` **Assurance Badge**: **Responsible FinTech**: *Pure Decision Support • Zero Automated Trading*
 * `[2:55]` **Closing Hero**: **AlphaSector** — *Institutional Research for Everyone* | `github.com/MaulRai/sectors-hackathon`
 
