@@ -20,7 +20,7 @@
 | **Segment 1** | 0:00 - 0:35 | 35s | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, compounded by Purbaya reshuffle & $100 oil, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
 | **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Agent Reasoning & Sectors MCP Protocol**<br>Autonomous reasoning at `/alpha-agent`, Sectors MCP toggle (66 tools), `LiveThinkingTrace`, parallel tool calls, grounded synthesis. | `/alpha-agent` |
 | **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Company 360° Intelligence**<br>Peer Battle at `/battle` with 1-Click Agent Follow-up, Stanford 9-criteria Piotroski F-Score, P/E Bands, and Company 360° profile at `/company/BBCA`. | `/battle`<br>`/company/BBCA` |
-| **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
+| **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & Context Clipboard**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), cross-module clipboard injection into `/alpha-agent`. | `/smart-money`<br>`/alpha-agent` |
 | **Segment 5** | 2:35 - 3:05 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
 
 ---
@@ -133,9 +133,9 @@
 
 ---
 
-### SEGMENT 4: Smart Money 2.0 Forensic Radar & 1-Click Notion Sync (1:55 - 2:35)
+### SEGMENT 4: Smart Money 2.0 Forensic Radar & Seamless Context Injection (1:55 - 2:35)
 * **Duration**: 40 Seconds
-* **Objective**: Showcase **Smart Money 2.0** with its 4-pillar forensic radar and 1-click Wall Street-grade Notion memorandum export.
+* **Objective**: Showcase **Smart Money 2.0** with its 4-pillar forensic radar and seamless cross-module context clipboard injection into Alpha Agent.
 
 #### Visual Screen Actions & Clicks:
 1. **[1:55 - 2:03] Smart Money 2.0 (`/smart-money`)**: Navigate to `/smart-money`. Highlight the **Global 900+ Stock Selector** (select `TLKM`). Pan across the 4-pillar forensic switcher tabs.
@@ -144,30 +144,30 @@
    - **Pillar 2 (Insider Filings)**: Switch to the *Insider Filings* tab, spotlighting **`INSIDER BUY / ACCUMULATION`** flags by Directors/Commissioners with transaction prices and official **IDX Disclosure PDF Links**.
    - **Pillar 3 (Institutional Ownership)**: Switch to *Institutional Ownership*, revealing exact KSEI custodian breakdowns: Pension Funds (BPJS-TK/Taspen), Mutual Funds, Insurance, Corporate vs Retail, with Local vs Foreign macro ratio bars.
    - **Pillar 4 (Suspensions Radar)**: Brief click on *IDX Suspensions Radar* monitoring trade halts and Unusual Market Activity (UMA).
-3. **[2:17 - 2:35] 1-Click Institutional Notion Sync**: Click the **"Sync to Notion"** button with the `N` logo. The `NotionExportModal` opens. Click **"Sync Memo to Notion"**. In 1 second, a success checkmark appears. Switch to the Notion tab displaying a fully structured Wall Street investment memo (Executive Summary, Valuation Multiples, and Compliance Disclaimers).
+3. **[2:17 - 2:35] Seamless Context Clipboard Handoff**: On the Insider Filings or Bandarmology card, click the **"Salin Konteks"** button (crisp confirmation badge: *"Konteks Berhasil Disalin"*). Switch back to `/alpha-agent` and paste into the `ChatInputBar`—instantly rendering a rich context badge (`📎 Pasted Context: Insider Accumulation`) for autonomous conversational follow-up.
 
 #### On-Screen Graphics & English Text Overlays:
 * `[1:57]` **Radar Card**: **Smart Money 2.0 Forensic Radar** — *4 Integrated Institutional Pillars*
 * `[2:07]` **Compliance Badge**: **Insider Filings & KSEI Ownership** • *Official IDX Disclosure PDFs*
-* `[2:19]` **Integration Box**: **1-Click Institutional Notion Sync** — *Wall Street-Grade Investment Memo*
+* `[2:19]` **Interoperability Tag**: **Seamless Context Clipboard** — *Instant Cross-Module Agent Injection*
 
 #### Audio Design:
 * BGM: Dynamic, steady tech flow.
-* SFX: Soft radar sweep on Smart Money, crisp click on the Notion button, and a pleasant success chime upon sync completion.
+* SFX: Soft radar sweep on Smart Money, crisp copy click sound, and a delicate confirmation ping upon clipboard pasting in chat.
 
 #### Verbatim English Voiceover Narration:
-> *"Our **Smart Money 2.0** tracks institutional footprints through a 4-pillar Forensic Radar: Bandarmology broker flows, insider filings with official IDX disclosure PDFs, real KSEI institutional ownership breakdown including pension and mutual funds, and exchange suspension alerts.*
+> *"Our **Smart Money 2.0** tracks institutional footprints through a four-pillar Forensic Radar: Bandarmology broker flows, insider filings with official disclosure PDFs, real KSEI institutional ownership breakdown, and exchange suspension alerts.*
 > 
-> *All research can be exported with a single click directly into Notion Workspaces as a Wall Street-caliber investment memorandum—fully ready for investment committees."*
+> *Analysts can copy any forensic finding to their clipboard and paste it seamlessly into Alpha Agent—instantly injecting rich structured context for deep conversational research."*
 
 ---
 
 ### SEGMENT 5: The Future of Indonesian Equity Research & Closing (2:35 - 3:05)
 * **Duration**: 30 Seconds
-* **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Battle, Company 360°, Smart Money 2.0, Notion), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
+* **Objective**: Close the walkthrough with commanding authority: unifying the end-to-end workflow (Alpha Agent, Battle, Company 360°, Smart Money 2.0, Context Clipboard), reinforcing responsible analytical intelligence (zero automated trading), and delivering a crisp, confident call-to-action.
 
 #### Visual Screen Actions & Clicks:
-1. **[2:35 - 2:45] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, Company 360° valuation profiles, the Smart Money 2.0 forensic radar, and the Notion memo.
+1. **[2:35 - 2:45] Unified Workspace Showcase**: Cinematic smooth zoom-out across the cohesive AlphaSector terminal: from intelligent Alpha Agent reasoning, to the dynamic Peer Battle matrix, Company 360° valuation profiles, the Smart Money 2.0 forensic radar, and seamless cross-module context injection.
 2. **[2:45 - 2:53] Responsible FinTech Assurance**: Brief highlight on the responsible analytics badge in the footer: confirming a steadfast commitment to pure decision-support intelligence with zero automated trade execution (Rule 12).
 3. **[2:53 - 3:05] Hero Outro & Call-To-Action**: Transition to the Deep Obsidian closing canvas. The glowing AlphaSector logo resolves center stage, followed by the punchy tagline *"Smarter Research, Sharper Decisions"*, the public GitHub repository link (`github.com/MaulRai/sectors-hackathon`), and the *Sectors Hackathon 2026* badge.
 
