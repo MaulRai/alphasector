@@ -18,7 +18,7 @@
 | Segment | Timestamp | Duration | Core Feature & Focus | UI Route |
 | :--- | :--- | :--- | :--- | :--- |
 | **Segment 1** | 0:00 - 0:35 | 35s | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, compounded by Purbaya reshuffle & $100 oil, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
-| **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Step Agent Reasoning & Dynamic DAG**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
+| **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Agent Reasoning & Parallel Tool Calling**<br>Autonomous reasoning at `/alpha-agent`, `LiveThinkingTrace`, concurrent Sectors API dispatch, grounded synthesis. | `/alpha-agent` |
 | **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle`, Stanford 9-criteria Piotroski F-Score, P/E Bands, plus Strip Ratio & JORC Reserves at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
 | **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
 | **Segment 5** | 2:35 - 3:05 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
@@ -72,7 +72,7 @@
 
 ### SEGMENT 2: Multi-Step Agent Reasoning & Tool Calling at `/alpha-agent` (0:35 - 1:15)
 * **Duration**: 40 Seconds
-* **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-step agent reasoning, dynamic DAG planning, parallel Sectors API calls, and grounded institutional synthesis on `/alpha-agent`.
+* **Objective**: Demonstrate Track 01 qualification by showcasing custom multi-agent reasoning, parallel Sectors API calls, and grounded institutional synthesis on `/alpha-agent`.
 
 #### Visual Screen Actions & Clicks:
 1. **[0:35 - 0:43] Natural Language Prompt Input**: Cursor focuses on the `ChatInputBar`. Type naturally:
@@ -88,18 +88,18 @@
 
 #### On-Screen Graphics & English Text Overlays:
 * `[0:37]` **Prompt Callout**: `"Compare the valuation and financial health of BBRI vs BMRI"`
-* `[0:45]` **Architecture Box**: **Custom Dynamic DAG Planner** — *Intent Classification & Parallel Sectors API*
+* `[0:45]` **Architecture Box**: **Autonomous Multi-Agent Orchestrator** — *Intent Classification & Parallel Sectors API*
 * `[0:53]` **Telemetry Badge**: **Parallel Async Fetch**: `BBRI (320ms)` + `BMRI (310ms)` • Total Latency: `1.52s`
 * `[1:01]` **Feature Tag**: **Peer Battle Matrix & Grounded Institutional Synthesis**
 
 #### Audio Design:
 * BGM: Modern rhythmic synth bassline driving analytical momentum.
-* SFX: Rapid mechanical keyboard clicks, gentle digital resonance during DAG execution, and a double-snap click when the matrix and drawer open.
+* SFX: Rapid mechanical keyboard clicks, gentle digital resonance during multi-agent execution, and a double-snap click when the matrix and drawer open.
 
 #### Verbatim English Voiceover Narration:
 > *"In the Alpha Agent workspace, analysts simply ask in plain language. Notice this live Thinking Trace: AlphaSector is not a superficial prompt wrapper.*
 > 
-> *Our orchestrator autonomously classifies user intent, constructs a dynamic Directed Acyclic Graph, and dispatches parallel asynchronous calls to Sectors API in just hundreds of milliseconds.*
+> *Our multi-agent orchestrator autonomously classifies user intent, dispatches parallel asynchronous calls to Sectors API, and activates specialized sub-agents across fundamentals, smart money flows, and governance.*
 > 
 > *The result is a rigorous, side-by-side comparative matrix across competing companies—highlighting multiples, margins, and capital efficiency—paired with an objective, hallucination-free institutional synthesis stored instantly as an interactive Research Dossier."*
 
