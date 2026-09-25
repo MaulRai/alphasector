@@ -19,7 +19,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Segment 1** | 0:00 - 0:35 | 35s | **The Baseline Pain, Market Shock & Zero-Friction Entry**<br>Information overload across 900+ IDX stocks, compounded by Purbaya reshuffle & $100 oil, AlphaSector intro & 1-Click Demo Login. | `/` (Landing Page)<br>AuthGate Modal |
 | **Segment 2** | 0:35 - 1:15 | 40s | **Multi-Agent Reasoning & Sectors MCP Protocol**<br>Autonomous reasoning at `/alpha-agent`, Sectors MCP toggle (66 tools), `LiveThinkingTrace`, parallel tool calls, grounded synthesis. | `/alpha-agent` |
-| **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle`, Stanford 9-criteria Piotroski F-Score, P/E Bands, plus Strip Ratio & JORC Reserves at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
+| **Segment 3** | 1:15 - 1:55 | 40s | **Deterministic Quant & Minerba Deep Intelligence**<br>Peer Battle at `/battle` with 1-Click Agent Follow-up, Piotroski F-Score, P/E Bands, and Minerba ESDM data at `/company/ADRO`. | `/battle`<br>`/company/ADRO` |
 | **Segment 4** | 1:55 - 2:35 | 40s | **Smart Money 2.0 Forensic & 1-Click Notion Sync**<br>4-Pillar Radar at `/smart-money` (Bandarmology, Insider Filings, KSEI Institutional Ownership, Suspensions), Notion memo export. | `/smart-money`<br>Notion Modal |
 | **Segment 5** | 2:35 - 3:05 | 30s | **The Future of Equity Research & Closing**<br>Product vision, responsible FinTech standards (Zero Automated Trading) & GitHub call-to-action. | Workspace Showcase<br>Wrap-up |
 
@@ -107,33 +107,33 @@
 
 ### SEGMENT 3: Deterministic Quant Engine & Minerba Deep Intelligence (1:15 - 1:55)
 * **Duration**: 40 Seconds
-* **Objective**: Prove quantitative supremacy through pure deterministic computation (Piotroski & P/E Bands) and unveil the **Minerba Deep Intelligence Suite** (official Ministry of Energy and Mineral Resources / ESDM data) on Company 360°.
+* **Objective**: Prove quantitative supremacy through pure deterministic computation (Piotroski & P/E Bands), highlight seamless 1-click follow-up to Alpha Agent, and unveil the **Minerba Deep Intelligence Suite** (official Ministry of Energy and Mineral Resources / ESDM data).
 
 #### Visual Screen Actions & Clicks:
-1. **[1:15 - 1:23] Navigate to `/battle`**: Click **"Peer Battle"** in the top Navbar. Click the preset button: **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click the cyan button **"Run Peer Battle"**. In ~450ms, the full 4-way comparative table populates with unified historical metrics.
-2. **[1:23 - 1:33] Drill Down to `/company/ADRO`**: Search or open commodity titan `ADRO` to view the Company 360° Profile. Scroll to the **Deterministic Quant Panel**:
-   - Highlight the **Piotroski F-Score (Score: 7/9 PRIMA)** card across 9 accounting criteria.
-   - Highlight the **P/E Historical Standard Deviation Band** showing the undervaluation discount.
-3. **[1:33 - 1:55] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll down to the **`MiningOperationalCard`**:
-   - Highlight the **Strip Ratio Meter**: `3.9x` tagged as **Low-Cost Producer** (highly efficient overburden removal).
-   - Highlight **JORC/KCMI Reserves**: Total `996.2 Mt` (Proven & Probable Reserves vs Total Resources).
-   - Highlight **Reserve Life Index**: Automatic mine lifespan calculation (**~15.4 Years**).
-   - Highlight official coal quality specifications: Calorific Value (4,843 kcal/kg), Moisture, and Low Sulphur (<1%).
+1. **[1:15 - 1:24] Navigate to `/battle` & 1-Click Agent Follow-up**: Click **"Peer Battle"** in the top Navbar. Click preset **"The Big 4 Banks"** (`BBCA`, `BBRI`, `BMRI`, `BBNI`), then click cyan button **"Run Peer Battle"**. Multi-stock metrics populate in ~450ms. Highlight the glowing banner: **"Lanjutkan Diskusi di AlphaAgent"** showing seamless 1-click contextual handoff into conversational agent chat.
+2. **[1:24 - 1:34] Deterministic Quant at `/company/ADRO`**: Drill down to commodity titan `ADRO`. In the Quant panel, spotlight the **Piotroski F-Score (Score: 7/9 PRIMA)** and **P/E Historical Standard Deviation Bands** showing valuation discount.
+3. **[1:34 - 1:55] Minerba Deep Intelligence Suite (ESDM Data)**: Scroll to the **`MiningOperationalCard`**:
+   - Highlight **Strip Ratio Meter**: `3.9x` (Low-Cost Leader).
+   - Highlight **JORC/KCMI Reserves**: Total `996.2 Mt` and Reserve Life Index (**~15.4 Years**).
+   - Highlight official coal specifications: Calorific Value (4,843 kcal/kg), Moisture, and Low Sulphur (<1%).
 
 #### On-Screen Graphics & English Text Overlays:
-* `[1:17]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Sectors Ingestion)*
-* `[1:25]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Profitability • Leverage • Operating Efficiency*
-* `[1:35]` **ESDM Badge**: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
-* `[1:43]` **Metric Callouts**: **Strip Ratio 3.9x** (Low-Cost Leader) • **JORC Reserves 996.2 Mt** • **Reserve Life ~15.4 Years**
+* `[1:17]` **Preset Tag**: **Preset Battle**: *The Big 4 Banks (4-Way Parallel Ingestion)*
+* `[1:22]` **Handoff Feature**: **1-Click Agent Follow-Up** — *Seamless Battle-to-Chat Context Transition*
+* `[1:27]` **Formula Card**: **Piotroski F-Score Engine (0-9)**: *Deterministic Accounting Health*
+* `[1:36]` **ESDM Badge**: **Minerba Deep Intelligence Suite** — *Official Ditjen Minerba ESDM Data*
+* `[1:44]` **Metric Callouts**: **Strip Ratio 3.9x** • **JORC Reserves 996.2 Mt** • **Reserve Life ~15.4 Years**
 
 #### Audio Design:
 * BGM: Percussion tightens, conveying mathematical precision and institutional authority.
 * SFX: Fast swoosh between routes, followed by a resonant *sub-bass hit* on Piotroski and a delicate chime as Minerba metrics appear.
 
 #### Verbatim English Voiceover Narration:
-> *"In Peer Battle and Company Profiles, our edge lies in our **Deterministic Quant Engine**—computing Piotroski health scores and historical valuation bands mathematically without LLM hallucinations.*
+> *"Peer Battle delivers instant multi-stock comparisons powered by our **Deterministic Quant Engine**—calculating Piotroski scores and valuation bands mathematically without hallucinations.*
 > 
-> *For commodity and energy sectors powering one-third of IDX liquidity, AlphaSector unveils the **Minerba Deep Intelligence Suite**: integrating official Ministry of Energy and Mineral Resources (ESDM) data to evaluate Strip Ratios, JORC reserves, and mine life expectancy in seconds."*
+> *Any comparative finding can be followed up directly in Alpha Agent with a single click.*
+> 
+> *For commodity titans, our **Minerba Deep Intelligence Suite** integrates official ESDM data to benchmark Strip Ratios, JORC reserves, and mine lifespans in seconds."*
 
 ---
 
