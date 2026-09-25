@@ -32,14 +32,25 @@ export function useChatSessions({
   const [isDeletingSession, setIsDeletingSession] = useState(false);
 
   const initialQueryExecuted = useRef(false);
+  const lastHandledSessionParamRef = useRef<string | null>(null);
 
   // Load chat room messages
   const handleSelectSession = useCallback(async (sessionId: string) => {
     try {
+      lastHandledSessionParamRef.current = sessionId;
       setIsFetchingHistory(true);
       setActiveSessionId(sessionId);
       saveLastActiveSessionId(sessionId);
       setError(null);
+      setMessages([]); // Clear previous messages immediately to avoid visual lag
+
+      // Sync browser URL cleanly without page reload
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('session_id', sessionId);
+        window.history.replaceState({}, '', url.toString());
+      }
+
       const res = await fetchChatRoomDetails(sessionId);
       setMessages(res.messages || []);
     } catch (err: any) {
@@ -52,11 +63,19 @@ export function useChatSessions({
 
   // Create new session reset
   const handleCreateNewSession = useCallback(() => {
+    lastHandledSessionParamRef.current = null;
     setActiveSessionId(null);
     saveLastActiveSessionId(null);
     setMessages([]);
     setIsFetchingHistory(false);
     setError(null);
+
+    // Clear session_id from URL
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('session_id');
+      window.history.replaceState({}, '', url.pathname);
+    }
   }, []);
 
   // Deletion handlers
@@ -114,6 +133,7 @@ export function useChatSessions({
         setSessions(userSessions);
 
         if (sessionIdParam) {
+          lastHandledSessionParamRef.current = sessionIdParam;
           await handleSelectSession(sessionIdParam);
         } else if (initialQueryParam && !initialQueryExecuted.current && onInitialQueryTrigger) {
           initialQueryExecuted.current = true;
@@ -151,14 +171,15 @@ export function useChatSessions({
     return () => {
       isMounted = false;
     };
-  }, [user?.id, sessionIdParam]);
+  }, [user?.id]);
 
-  // Handshake when sessionIdParam changes
+  // Handshake when sessionIdParam changes externally (e.g., via router.push or browser navigation)
   useEffect(() => {
-    if (sessionIdParam && sessionIdParam !== activeSessionId) {
+    if (sessionIdParam && sessionIdParam !== lastHandledSessionParamRef.current) {
+      lastHandledSessionParamRef.current = sessionIdParam;
       handleSelectSession(sessionIdParam);
     }
-  }, [sessionIdParam, activeSessionId, handleSelectSession]);
+  }, [sessionIdParam, handleSelectSession]);
 
   return {
     sessions,

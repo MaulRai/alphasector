@@ -156,6 +156,11 @@ function CopilotWorkspace() {
 
       if (response.session_id && response.session_id !== activeSessionId) {
         setActiveSessionId(response.session_id);
+        if (typeof window !== 'undefined') {
+          const url = new URL(window.location.href);
+          url.searchParams.set('session_id', response.session_id);
+          window.history.replaceState({}, '', url.toString());
+        }
       }
 
       const assistantMsg: ChatMessage = {
