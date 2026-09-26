@@ -20,7 +20,8 @@ import {
 } from 'lucide-react';
 import { AuthGate } from '@/components/AuthGate';
 import { parseContextFromClipboard, PastedContextItem, MAX_PASTED_CONTEXTS } from '@/lib/contextClipboard';
-import { getChatDraft, saveChatDraft, clearChatDraft } from '@/lib/chatDraftStore';
+import { getChatDraft, saveChatDraft, clearChatDraft, saveLastActiveSessionId } from '@/lib/chatDraftStore';
+import { setCachedMessages } from '@/lib/chatCacheStore';
 
 function CopilotWorkspace() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
@@ -139,7 +140,13 @@ function CopilotWorkspace() {
       image_url: currentImg?.previewUrl,
       created_at: new Date().toISOString()
     };
-    setMessages((prev) => [...prev, optimisticUserMsg]);
+    setMessages((prev) => {
+      const next = [...prev, optimisticUserMsg];
+      if (activeSessionId) {
+        setCachedMessages(activeSessionId, next);
+      }
+      return next;
+    });
 
     try {
       const response: AgentQueryResponse = await queryAgentStream(
@@ -154,8 +161,11 @@ function CopilotWorkspace() {
         }
       );
 
+      const targetSessionId = response.session_id || activeSessionId;
+
       if (response.session_id && response.session_id !== activeSessionId) {
         setActiveSessionId(response.session_id);
+        saveLastActiveSessionId(response.session_id);
         if (typeof window !== 'undefined') {
           const url = new URL(window.location.href);
           url.searchParams.set('session_id', response.session_id);
@@ -165,7 +175,7 @@ function CopilotWorkspace() {
 
       const assistantMsg: ChatMessage = {
         id: Date.now() + 1,
-        session_id: response.session_id || activeSessionId || 'temp',
+        session_id: targetSessionId || 'temp',
         user_id: user?.id || 1,
         role: 'assistant',
         content: response.synthesis.executive_summary,
@@ -173,7 +183,13 @@ function CopilotWorkspace() {
         created_at: new Date().toISOString()
       };
 
-      setMessages((prev) => [...prev, assistantMsg]);
+      setMessages((prev) => {
+        const next = [...prev, assistantMsg];
+        if (targetSessionId) {
+          setCachedMessages(targetSessionId, next);
+        }
+        return next;
+      });
       await refreshSessions();
 
     } catch (err: any) {

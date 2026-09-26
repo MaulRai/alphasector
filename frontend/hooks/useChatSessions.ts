@@ -4,6 +4,13 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { ChatSession, ChatMessage } from '@/lib/types';
 import { fetchUserChatSessions, fetchChatRoomDetails, deleteChatRoom } from '@/lib/api';
 import { saveLastActiveSessionId, getLastActiveSessionId } from '@/lib/chatDraftStore';
+import {
+  getCachedSessions,
+  setCachedSessions,
+  getCachedMessages,
+  setCachedMessages,
+  removeCachedSession,
+} from '@/lib/chatCacheStore';
 
 interface UseChatSessionsOptions {
   user: any;
@@ -18,13 +25,23 @@ export function useChatSessions({
   initialQueryParam,
   onInitialQueryTrigger,
 }: UseChatSessionsOptions) {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // Pre-seed from cache if available so there is zero flash when switching internal tabs
+  const initialTargetSessionId = sessionIdParam || (getLastActiveSessionId() === null ? null : (getLastActiveSessionId() || null));
+  const cachedInitialSessions = getCachedSessions();
+  const cachedInitialMessages = initialTargetSessionId ? getCachedMessages(initialTargetSessionId) : null;
+
+  const [sessions, setSessions] = useState<ChatSession[]>(() => cachedInitialSessions || []);
+  const [isLoadingSessions, setIsLoadingSessions] = useState<boolean>(() => !cachedInitialSessions || cachedInitialSessions.length === 0);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(() => initialTargetSessionId);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => cachedInitialMessages || []);
   const [sessionSearch, setSessionSearch] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isFetchingHistory, setIsFetchingHistory] = useState(true);
+  const [isFetchingHistory, setIsFetchingHistory] = useState<boolean>(() => {
+    if (initialTargetSessionId) {
+      return !cachedInitialMessages || cachedInitialMessages.length === 0;
+    }
+    return false;
+  });
   const [error, setError] = useState<string | null>(null);
 
   // Deletion modal state
@@ -32,17 +49,32 @@ export function useChatSessions({
   const [isDeletingSession, setIsDeletingSession] = useState(false);
 
   const initialQueryExecuted = useRef(false);
-  const lastHandledSessionParamRef = useRef<string | null>(null);
+  const lastHandledSessionParamRef = useRef<string | null>(initialTargetSessionId);
+
+  // Auto-sync messages to cache whenever messages change for active session
+  useEffect(() => {
+    if (activeSessionId && messages && messages.length > 0) {
+      setCachedMessages(activeSessionId, messages);
+    }
+  }, [activeSessionId, messages]);
 
   // Load chat room messages
   const handleSelectSession = useCallback(async (sessionId: string) => {
     try {
       lastHandledSessionParamRef.current = sessionId;
-      setIsFetchingHistory(true);
       setActiveSessionId(sessionId);
       saveLastActiveSessionId(sessionId);
       setError(null);
-      setMessages([]); // Clear previous messages immediately to avoid visual lag
+
+      // Check cache first for instant display
+      const cached = getCachedMessages(sessionId);
+      if (cached && cached.length > 0) {
+        setMessages(cached);
+        setIsFetchingHistory(false);
+      } else {
+        setIsFetchingHistory(true);
+        setMessages([]); // Clear only on cache miss to avoid visual lag
+      }
 
       // Sync browser URL cleanly without page reload
       if (typeof window !== 'undefined') {
@@ -52,10 +84,15 @@ export function useChatSessions({
       }
 
       const res = await fetchChatRoomDetails(sessionId);
-      setMessages(res.messages || []);
+      const freshMessages = res.messages || [];
+      setMessages(freshMessages);
+      setCachedMessages(sessionId, freshMessages);
     } catch (err: any) {
       console.error('Failed to load session history:', err);
-      setError('Gagal memuat riwayat percakapan sesi ini.');
+      const existingCached = getCachedMessages(sessionId);
+      if (!existingCached || existingCached.length === 0) {
+        setError('Gagal memuat riwayat percakapan sesi ini.');
+      }
     } finally {
       setIsFetchingHistory(false);
     }
@@ -89,7 +126,12 @@ export function useChatSessions({
     try {
       setIsDeletingSession(true);
       await deleteChatRoom(sessionToDelete.id);
-      setSessions((prev) => prev.filter((s) => s.id !== sessionToDelete.id));
+      removeCachedSession(sessionToDelete.id);
+      setSessions((prev) => {
+        const next = prev.filter((s) => s.id !== sessionToDelete.id);
+        setCachedSessions(next);
+        return next;
+      });
       if (activeSessionId === sessionToDelete.id) {
         handleCreateNewSession();
       }
@@ -106,8 +148,10 @@ export function useChatSessions({
     if (!user) return;
     try {
       const res = await fetchUserChatSessions();
-      setSessions(res.sessions || []);
-      return res.sessions || [];
+      const userSessions = res.sessions || [];
+      setSessions(userSessions);
+      setCachedSessions(userSessions);
+      return userSessions;
     } catch (err) {
       console.error('Failed to fetch user chat sessions:', err);
       return [];
@@ -125,12 +169,17 @@ export function useChatSessions({
         return;
       }
       try {
-        setIsLoadingSessions(true);
-        setIsFetchingHistory(true);
+        const currentCached = getCachedSessions();
+        if (!currentCached || currentCached.length === 0) {
+          setIsLoadingSessions(true);
+        }
+
         const res = await fetchUserChatSessions();
         if (!isMounted) return;
         const userSessions = res.sessions || [];
         setSessions(userSessions);
+        setCachedSessions(userSessions);
+        setIsLoadingSessions(false);
 
         if (sessionIdParam) {
           lastHandledSessionParamRef.current = sessionIdParam;
@@ -144,14 +193,40 @@ export function useChatSessions({
             window.history.replaceState({}, '', '/alpha-agent');
           }
           await onInitialQueryTrigger(initialQueryParam);
-        } else if (userSessions.length > 0 && !activeSessionId && !initialQueryParam && !initialQueryExecuted.current) {
+        } else if (userSessions.length > 0 && !initialQueryParam && !initialQueryExecuted.current) {
           const rememberedId = getLastActiveSessionId();
           if (rememberedId && userSessions.some((s) => s.id === rememberedId)) {
-            await handleSelectSession(rememberedId);
+            // If already loaded and active from initial cache seed, do quiet background revalidation
+            if (activeSessionId === rememberedId && messages.length > 0) {
+              try {
+                const roomRes = await fetchChatRoomDetails(rememberedId);
+                if (isMounted && roomRes.messages) {
+                  setMessages(roomRes.messages);
+                  setCachedMessages(rememberedId, roomRes.messages);
+                }
+              } catch (e) {
+                // keep cached messages on background failure
+              }
+            } else {
+              await handleSelectSession(rememberedId);
+            }
           } else if (rememberedId === null) {
             handleCreateNewSession();
           } else {
-            await handleSelectSession(userSessions[0].id);
+            const firstId = userSessions[0].id;
+            if (activeSessionId === firstId && messages.length > 0) {
+              try {
+                const roomRes = await fetchChatRoomDetails(firstId);
+                if (isMounted && roomRes.messages) {
+                  setMessages(roomRes.messages);
+                  setCachedMessages(firstId, roomRes.messages);
+                }
+              } catch (e) {
+                // keep cached messages
+              }
+            } else {
+              await handleSelectSession(firstId);
+            }
           }
         } else {
           setIsFetchingHistory(false);

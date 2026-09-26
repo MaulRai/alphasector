@@ -21,6 +21,7 @@ import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
 import { encodeContextForClipboard } from '@/lib/contextClipboard';
 
 const POPULAR_TICKERS = ['TLKM', 'BBCA', 'BBRI', 'BMRI', 'ASII', 'BUMI', 'ADRO', 'ANTM', 'GOTO', 'AMMN', 'BREN', 'CUAN', 'MEDC', 'PTBA'];
+const SMART_MONEY_TICKER_STORAGE_KEY = 'alphasector_smart_money_ticker';
 
 function SmartMoneyWorkspace() {
   const router = useRouter();
@@ -30,6 +31,12 @@ function SmartMoneyWorkspace() {
 
   const [ticker, setTicker] = useState(() => {
     if (tickerParam) return tickerParam.trim().toUpperCase().replace('.JK', '');
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(SMART_MONEY_TICKER_STORAGE_KEY);
+        if (saved) return saved.trim().toUpperCase().replace('.JK', '');
+      } catch (e) {}
+    }
     return 'TLKM';
   });
 
@@ -69,9 +76,44 @@ function SmartMoneyWorkspace() {
       setActiveTab(tabParam as any);
     }
     if (tickerParam) {
-      setTicker(tickerParam.trim().toUpperCase().replace('.JK', ''));
+      const cleanParam = tickerParam.trim().toUpperCase().replace('.JK', '');
+      setTicker(cleanParam);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem(SMART_MONEY_TICKER_STORAGE_KEY, cleanParam);
+        } catch (e) {}
+      }
     }
   }, [tabParam, tickerParam]);
+
+  // Sync saved ticker from localStorage on mount if no ticker in URL
+  useEffect(() => {
+    if (!tickerParam && typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(SMART_MONEY_TICKER_STORAGE_KEY);
+        if (saved && saved !== ticker) {
+          setTicker(saved.trim().toUpperCase().replace('.JK', ''));
+        }
+      } catch (e) {}
+    }
+  }, [tickerParam]);
+
+  const handleSelectTicker = (sym: string) => {
+    const cleanSym = sym.trim().toUpperCase().replace('.JK', '');
+    if (!cleanSym) return;
+    setTicker(cleanSym);
+    setBrokerSummary(null);
+    setAgentReport(null);
+    setError(null);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(SMART_MONEY_TICKER_STORAGE_KEY, cleanSym);
+        const url = new URL(window.location.href);
+        url.searchParams.set('ticker', cleanSym);
+        window.history.replaceState(null, '', url.pathname + url.search);
+      } catch (e) {}
+    }
+  };
 
   const handleTabChange = (newTab: 'bandarmology' | 'insider' | 'institutional' | 'suspensions') => {
     setActiveTab(newTab);
@@ -128,6 +170,14 @@ function SmartMoneyWorkspace() {
     setIsLoading(true);
     setError(null);
     setTicker(cleanSym);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(SMART_MONEY_TICKER_STORAGE_KEY, cleanSym);
+        const url = new URL(window.location.href);
+        url.searchParams.set('ticker', cleanSym);
+        window.history.replaceState(null, '', url.pathname + url.search);
+      } catch (e) {}
+    }
 
     try {
       const bRes = await fetchBrokerSummary(cleanSym);
@@ -175,11 +225,7 @@ function SmartMoneyWorkspace() {
               {POPULAR_TICKERS.map((sym) => (
                 <button
                   key={sym}
-                  onClick={() => {
-                    setTicker(sym);
-                    setBrokerSummary(null);
-                    setAgentReport(null);
-                  }}
+                  onClick={() => handleSelectTicker(sym)}
                   className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
                     ticker === sym
                       ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -210,12 +256,7 @@ function SmartMoneyWorkspace() {
             {/* Global Autocomplete Input */}
             <div className="w-full sm:w-80">
               <TickerAutocompleteInput
-                onSelectTicker={(selected) => {
-                  setTicker(selected);
-                  setBrokerSummary(null);
-                  setAgentReport(null);
-                  setError(null);
-                }}
+                onSelectTicker={(selected) => handleSelectTicker(selected)}
                 selectedTickers={[ticker]}
                 singleSelect={true}
                 showItemPlusIcon={false}
@@ -449,7 +490,7 @@ function SmartMoneyWorkspace() {
             <div className="space-y-6">
               <InsiderFilingsCard
                 initialTicker={ticker}
-                onTickerChange={(newTicker) => setTicker(newTicker)}
+                onTickerChange={(newTicker) => handleSelectTicker(newTicker)}
               />
             </div>
           )}
@@ -459,7 +500,7 @@ function SmartMoneyWorkspace() {
             <div className="space-y-6">
               <InstitutionalOwnershipCard
                 initialTicker={ticker}
-                onTickerChange={(newTicker) => setTicker(newTicker)}
+                onTickerChange={(newTicker) => handleSelectTicker(newTicker)}
               />
             </div>
           )}
