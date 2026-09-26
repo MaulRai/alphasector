@@ -127,7 +127,7 @@
 * SFX: Fast swoosh between routes, crisp click on filter presets, resonant *sub-bass hit* on Piotroski, and a delicate chime as valuation history appears.
 
 #### Verbatim English Voiceover Narration:
-> *"Whether filtering nine hundred stocks in **Screener Pro** or comparing competitors head-to-head in **Peer Battle**, our **Deterministic Quant Engine** calculates Stanford nine-criteria Piotroski scores and historical valuation bands mathematically without hallucinations.
+> *"Whether filtering nine hundred stocks in **Screener Pro** or comparing competitors head-to-head in **Peer Battle**, our **Deterministic Quant Engine** computes Stanford nine-criteria Piotroski scores and historical valuation bands with pure mathematical precision.
 > 
 > *Analysts can click to seamlessly carry any screening thesis or comparative battle directly into Alpha Agent for deeper autonomous investigation.
 > 
