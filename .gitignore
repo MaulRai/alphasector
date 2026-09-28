@@ -62,3 +62,6 @@ backend/.cache/
 demo-materials/
 ORIGINAL_REQUEST.md
 backend/scratch
+
+temp_vids_frames/
+video_analysis_clips/

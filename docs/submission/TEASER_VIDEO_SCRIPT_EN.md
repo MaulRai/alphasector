@@ -1,151 +1,203 @@
-# AlphaSector — 1-Minute Viral Teaser Video Script & Storyboard (English Edition)
+# AlphaSector — High-Octane "No-VO" Kinetic Teaser Script & Visual Scoreboard
+*(Inspired by the Dynamic Rhythm & Visual Choreography of "Introducing Google Vids")*
 
 **Track**: Track 01 — AI Agents & Assistants (Sectors Hackathon 2026)  
-**Target Duration**: Exactly 01:00 (60 Seconds)  
-**Style**: Fast-Paced, High-Octane, Modern FinTech / Cyberpunk Obsidian Aesthetic, Beat-Matched Cuts  
-**Target Platforms**: X / Twitter, LinkedIn, YouTube Shorts, Instagram Reels, TikTok  
-**Aspect Ratio**: 16:9 Landscape Master (1920x1080 @ 60fps) with 9:16 Vertical Safe-Zone Framing  
-**Narration Speed**: ~140 Words/Minute (~145 Words Total) — High Energy, Confident, Punchy, Cinematic  
-**BGM**: Cyber-Trap / Electronic FinTech Beat (Tempo: 128 BPM, Heavy Bass Drop at 0:08)
+**Target Duration**: Exactly 0:45 - 0:50 (High-Retention Social & Demo Loop)  
+**Format**: **100% No-Voiceover (No-VO)** — Driven by Kinetic Typography, UI-as-Graphic Morphing, Beat-Matched Edits, and Tactile ASMR Sound Design  
+**Pacing & Cadence**: 124–128 BPM (Syncing every cut, pop, and zoom to the downbeat)  
+**Aspect Ratio**: 16:9 Master (1920x1080 @ 60fps) with 1080x1080 / 9:16 Vertical Safe-Zone Framing  
+**Visual Style**: Deep Obsidian Cyberpunk (`#07090e`), Floating 3D Glassmorphism, Neon Emerald (`#10b981`) & Cyan Glows (`#06b6d4`), Geist Font Family  
 
 ---
 
-## 1. Beat & Story Arc Overview
+## 1. The "Google Vids" Dynamic Blueprint Applied to AlphaSector
+
+| Dynamic Principle | How Google Vids Does It | How AlphaSector Adapts It (FinTech Edition) |
+| :--- | :--- | :--- |
+| **1. UI as Typography** | Words and buttons merge: *"Meet your `[+ New]` producer"* | Real UI pills morph into sentences: *"Screen 900+ stocks in `[ 300ms ]`"* |
+| **2. Beat-Matched Cuts** | Every cut and action hits on the exact musical kick/snare | Clicks, card expansions, and matrix reveals snap 1:1 on the 126 BPM grid |
+| **3. Micro-Zooms & 3D Tilt** | Never shows static full-browser; zooms tightly onto inputs | 5° 3D perspective tilts, speed-ramped typing, floating glass cards |
+| **4. Tactile Audio (ASMR)** | Satisfying clicks, sweeps, pops replace human voiceover | Mechanical keyboard clicks, sub-bass drops, laser telemetry sweeps, chime rings |
+| **5. High-Impact Brevity** | 2-3 words per punch card, zero cognitive fatigue | Punchy, institutional statements that communicate value in under 1 second |
+
+---
+
+## 2. Beat-by-Beat Visual & SFX Scoreboard (No-VO)
 
 ```
-[0:00 - 0:08] HOOK & THE PAIN ──────────► 900+ messy IDX PDFs, manual spreadsheet fatigue (Frustration)
-[0:08 - 0:20] AUTONOMOUS ALPHA AGENT ───► Plain English prompt, Sectors MCP (66 tools), parallel tool calls
-[0:20 - 0:32] SCREENER PRO & PEER BATTLE ► Discover 900+ stocks, Battle Dock, head-to-head quant benchmarking
-[0:32 - 0:44] SMART MONEY 2.0 RADAR ────► 4-pillar forensic radar: Bandarmology, Insider PDFs, KSEI ownership
-[0:44 - 0:52] CONTEXT CLIPBOARD & NOTION► Seamless cross-module injection to Agent, 1-click Notion memo sync
-[0:52 - 1:00] CTA & HACKATHON OUTRO ─────► Zero automated trading, GitHub repo, Sectors Hackathon 2026
+[0:00 - 0:06] THE HOOK ──────────────► 900+ Stocks. Cluttered PDFs. "Stop Manual Research."
+[0:06 - 0:16] MEET YOUR AGENT ───────► Prompt typed at 10x speed ➔ Parallel Sectors MCP (66 Tools) ➔ Matrix resolves
+[0:16 - 0:26] SCREEN & BATTLE ───────► Screener Pro (300ms) ➔ Battle Dock ➔ 4-Way Head-to-Head Showdown
+[0:26 - 0:36] SMART MONEY FORENSICS ─► 4-Pillar Radar ➔ Top Broker Accumulation ➔ Director Insider Filing PDF
+[0:36 - 0:42] SEAMLESS WORKFLOW ─────► 1-Click Clipboard Context ➔ 1-Click Notion Sync 
+[0:42 - 0:48] OUTRO & CALL-TO-ACTION ► Brand reveal ➔ Zero Automated Trading ➔ GitHub link
 ```
 
 ---
 
-## 2. Second-by-Second Storyboard & English Narration
+### [0:00 - 0:06] ACT I: THE HOOK & SYSTEM SHOCK
+* **Audio Track**: Low atmospheric ambient hum. A digital Geiger counter sound building up tension.
+* **Visual Choreography**:
+  * `0:00 - 0:02`: Extreme close-up of a messy Indonesian PDF financial statement (page 184, complex balance sheet footnotes) overlaid with red error alerts `#REF!`.
+  * `0:02 - 0:04`: **Kinetic Punch Cut 1** (Screen shake + glitch burst):
+    * Giant white Geist text against pure black:  
+      **900+ IDX STOCKS.**
+  * `0:04 - 0:05`: **Kinetic Punch Cut 2**:
+    * Text switches with a sharp snap:  
+      **HUNDREDS OF PDF FILINGS.**
+  * `0:05 - 0:06`: **Kinetic Punch Cut 3**:
+    * Text shatters into glowing neon green particles:  
+      **STOP MANUAL RESEARCH.**
+* **SFX Cues**:
+  * `0:01`: Paper rustle & static hiss.
+  * `0:03`: Sharp typewriter ding.
+  * `0:05.5`: Sudden 0.2s dead silence — then **HEAVY BASS DROP** at `0:06`!
 
 ---
 
-### [0:00 - 0:08] SCENE 1: THE HOOK & THE FRUSTRATION
-* **Duration**: 8 Seconds (Seconds 0 - 8)
-* **Visual Action**:
-  - Full screen showcasing 20+ cluttered browser tabs: dense Indonesian annual report PDFs, complex audited footnotes, and tangled spreadsheets.
-  - Dramatic fast zoom-in paired with a subtle red/grey glitch effect.
-  - Screen dramatically shatters, transitioning smoothly into AlphaSector’s ultra-clean Deep Obsidian theme (`#07090e`).
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:01]` **"900+ LISTED IDX STOCKS"** (Giant bold red)
-  - `[0:03]` **"HUNDREDS OF PDF PAGES?"** (Screen shake effect)
-  - `[0:06]` **"STOP MANUAL RESEARCH."** (Glowing Neon Emerald)
-* **Audio SFX & BGM**:
-  - SFX: Rapid paper rustling, digital glitch burst, followed by a 0.3s sudden silence.
-  - BGM: **HEAVY BASS DROP** hits at second 0:07, unleashing an addictive 128 BPM electronic beat.
-* **Verbatim English Voiceover**:
-  > *"Still analyzing nine hundred Indonesian stocks the hard way with dense PDFs and messy spreadsheets? It's time to upgrade."*
+### [0:06 - 0:16] ACT II: MEET YOUR NEW EQUITY ANALYST (ALPHA AGENT)
+* **Audio Track**: 126 BPM Modern Electronic Bassline drops with heavy groove and driving hi-hats.
+* **Visual Choreography**:
+  * `0:06 - 0:08`: **Typography + UI Morph** (Google Vids style):
+    * Centered text animates onto screen:  
+      `Meet your`  
+      *(A floating glowing pill pops into the middle)* `[ ⚡ AlphaAgent ]`  
+      `analyst.`
+  * `0:08 - 0:11`: **Speed-Ramped Terminal Input**:
+    * Camera glides smoothly in a 3D isometric tilt into the prompt bar.
+    * Prompt auto-types at 10x mechanical speed:  
+      `"Compare valuation & financial health of BBRI vs BMRI"`
+    * Mouse cursor clicks the glowing emerald send button -> **Crisp Click SFX**.
+  * `0:11 - 0:14`: **Parallel Tool Telemetry (The Engine)**:
+    * Thinking trace unfolds with micro-stoppers snapping on each beat:
+      * Beat 1: `[Intent] PEER_BATTLE`
+      * Beat 2: `[MCP Tool] fetch-company-report/BBRI` *(320ms)*
+      * Beat 3: `[MCP Tool] fetch-company-report/BMRI` *(310ms)*
+  * `0:14 - 0:16`: **Resolution Reveal**:
+    * The **PeerBattleMatrix** erupts with emerald highlight rings around *Best P/E (10.2x)* and *Best ROE (19.4%)*.
+* **Kinetic Overlay Banner**:
+  * `[0:13]`: `⚡ SECTORS MCP PROTOCOL • 66 FINANCIAL TOOLS`
+* **SFX Cues**:
+  * Rapid mechanical clacks (Cherry MX Blue sound), dual laser whooshes on parallel fetch, resonant chime on matrix reveal.
 
 ---
 
-### [0:08 - 0:20] SCENE 2: AUTONOMOUS ALPHA AGENT & SECTORS MCP
-* **Duration**: 12 Seconds (Seconds 8 - 20)
-* **Visual Action**:
-  - Dynamic punch-in zoom to the `/alpha-agent` prompt bar.
-  - Hands type at hyper-speed with a speed-ramp effect: `"Compare the valuation and financial health of BBRI vs BMRI"`.
-  - Cursor clicks Enter -> The **LiveThinkingTrace** instantly pulses with neon cyan and emerald indicators.
-  - Highlight the Sectors MCP protocol badge: `[Sectors MCP JSON-RPC] Parallel Fetch BBRI & BMRI (1.52s)`.
-  - The **PeerBattleMatrix** erupts onto the screen with glowing *Best P/E* and *Best ROE* badges, paired with the slide-out **Research Dossier**.
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:09]` **"ALPHASECTOR ALPHA AGENT"** (Cyan glow)
-  - `[0:13]` **"SECTORS MODEL CONTEXT PROTOCOL (MCP)"** (66 Tools Badge)
-  - `[0:17]` **"PARALLEL MULTI-AGENT INGESTION"** (Lightning badge)
-* **Audio SFX & BGM**:
-  - SFX: Rapid mechanical key clicks, digital swoosh on Thinking Trace expansion, sparkling chime as the matrix resolves.
-  - BGM: High-energy synth lead driving forward momentum.
-* **Verbatim English Voiceover**:
-  > *"Meet AlphaSector. Ask in plain language—our autonomous multi-agent orchestrator interfaces natively via Sectors’ Model Context Protocol to execute parallel financial tools and deliver grounded institutional research."*
+### [0:16 - 0:26] ACT III: SCREEN & BATTLE IN SECONDS
+* **Audio Track**: Percussion kicks intensify; secondary synth arpeggio joins the groove.
+* **Visual Choreography**:
+  * `0:16 - 0:18`: **Typography + UI Morph**:
+    * Centered text:  
+      `Scan all 900+ companies in`  
+      `[ ⚡ 300 ms ]`  
+      `via Screener Pro.`
+  * `0:18 - 0:21`: **Screener Preset Action**:
+    * Screen cuts to `/screener`. Cursor clicks preset pill: **"Undervalued Dividend Aristocrats"**.
+    * The table ripples downwards instantly.
+    * Cursor drags 3 tickers into the floating **Screener Battle Dock** at the bottom right.
+  * `0:21 - 0:26`: **The Big 4 Banks Showdown (`/battle`)**:
+    * Button click: **"Launch Peer Battle"** -> Screen transitions with a horizontal split-wipe.
+    * Head-to-head 4-way comparison (`BBCA`, `BBRI`, `BMRI`, `BBNI`).
+    * Camera zooms into the **Piotroski F-Score**:  
+      `7 / 9 PRIMA` *(Green institutional badge pulses)*.
+    * Camera pans laterally to **Historical P/E Band**:  
+      `-1.5 SD (Valuation Discount Detected)`.
+* **Kinetic Overlay Banner**:
+  * `[0:22]`: `⚔️ PEER BATTLE: DETERMINISTIC QUANT MATRIX`
+* **SFX Cues**:
+  * Whip-whoosh transition, card snap sound when docking tickers, deep metallic gong on Piotroski reveal.
 
 ---
 
-### [0:20 - 0:32] SCENE 3: SCREENER PRO & PEER BATTLE
-* **Duration**: 12 Seconds (Seconds 20 - 32)
-* **Visual Action**:
-  - Lightning cut to `/screener`. Cursor clicks preset **"Undervalued Dividend Aristocrats"**—the candidate table fills in ~300ms across 900+ stocks.
-  - Select candidate stocks directly into the floating **Screener Battle Dock** and launch into `/battle`.
-  - Instant head-to-head comparison on **The Big 4 Banks** (`BBCA`, `BBRI`, `BMRI`, `BBNI`).
-  - Spotlight the side-by-side metric matrix: **Piotroski F-Score (Score: 7/9 PRIMA)** and **Historical P/E Standard Deviation Bands**.
-  - Cursor hovers over the glowing **"Lanjutkan Diskusi di AlphaAgent"** 1-click follow-up banner.
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:21]` **"SCREENER PRO: 900+ STOCKS IN 300MS"** (Emerald pill)
-  - `[0:24]` **"PEER BATTLE: HEAD-TO-HEAD MATRIX"** (Cyan badge)
-  - `[0:28]` **"PIOTROSKI (7/9) • HISTORICAL P/E BANDS"** (Stats pill)
-  - `[0:30]` **"1-CLICK AGENT FOLLOW-UP"** (Interactive tag)
-* **Audio SFX & BGM**:
-  - SFX: Drum roll hit, swift route swoosh, metallic clash upon entering battle, resonant sub-bass on the Piotroski card.
-* **Verbatim English Voiceover**:
-  > *"Discover top ideas across nine hundred stocks in **Screener Pro**, then pit sector rivals head-to-head in **Peer Battle**—benchmarking multiples, capital efficiency, and Piotroski health scores with pure mathematical precision."*
+### [0:26 - 0:36] ACT IV: FORENSIC SMART MONEY 2.0 RADAR
+* **Audio Track**: Synth switches to a darker, bass-heavy radar sweep rhythm.
+* **Visual Choreography**:
+  * `0:26 - 0:28`: **Typography + UI Morph**:
+    * Centered text:  
+      `Follow the institutional whales with`  
+      `[ 🐋 Smart Money 2.0 ]`
+  * `0:28 - 0:32`: **Pillar 1: Bandarmology & Net Flow**:
+    * Camera zooms into Top 5 Broker Accumulation cards for `TLKM`.
+    * Glowing amber circular meter: **"Buyer Concentration: 76%"**.
+    * Bar graph shoots up in vibrant green: **"Net Foreign Flow: +Rp 245.8B"**.
+  * `0:32 - 0:36`: **Pillar 2: Director Insider Filings**:
+    * Tab click to *Insider Filings*.
+    * Highlight row: `DIRECTOR BUY • 1,500,000 SHARES`.
+    * Cursor hovers over **"Official BEI Disclosure PDF"** icon -> A micro-preview of the regulatory document pops up with a verified seal.
+* **Kinetic Overlay Banner**:
+  * `[0:30]`: `🐋 4-PILLAR FORENSIC RADAR: BROKERS • INSIDERS • KSEI • SUSPENSIONS`
+* **SFX Cues**:
+  * Sonar ping, crisp switch click on tab change, verified stamp sound on PDF hover.
 
 ---
 
-### [0:32 - 0:44] SCENE 4: SMART MONEY 2.0 FORENSIC RADAR
-* **Duration**: 12 Seconds (Seconds 32 - 44)
-* **Visual Action**:
-  - Slide wipe to `/smart-money`. Ticker `TLKM` selected.
-  - Pan swiftly across the 4 forensic pillars:
-    1. **Bandarmology**: Top 5 broker accumulation vs distribution and **Net Foreign Flow** surge.
-    2. **Insider Filings**: Director/Commissioner **`INSIDER ACCUMULATION`** flags with official **IDX Disclosure PDF Links**.
-    3. **Institutional Ownership**: KSEI custodian breakdown (Pension, Mutual Funds, Insurance, Foreign vs Domestic).
-    4. **Suspensions Radar**: Trade halts and Unusual Market Activity (UMA) tracking.
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:33]` **"SMART MONEY 2.0 FORENSIC RADAR"** (Gold glow)
-  - `[0:36]` **"4 PILLARS: BROKER FLOW • INSIDERS • KSEI • SUSPENSIONS"** (Pillar badges)
-  - `[0:40]` **"OFFICIAL IDX FILING PDF AUDIT"** (Compliance shield)
-* **Audio SFX & BGM**:
-  - SFX: Soft radar ping, telemetry sweep, rising synth riser.
-* **Verbatim English Voiceover**:
-  > *"Track institutional footprints in **Smart Money 2.0**—a four-pillar radar uncovering broker accumulation, director insider filings with official disclosure PDFs, and real KSEI institutional ownership breakdowns."*
+### [0:36 - 0:42] ACT V: CONTEXT INJECTION & 1-CLICK NOTION SYNC
+* **Audio Track**: Upbeat melodic breakdown; energy builds towards the finale.
+* **Visual Choreography**:
+  * `0:36 - 0:39`: **Seamless Clipboard Injection**:
+    * On the Insider card, cursor clicks **`[ Salin Konteks ]`** -> Button turns emerald with checkmark: *Konteks Tersalin!*
+    * Quick jump to `/alpha-agent` prompt bar -> Paste shortcut executed -> An interactive badge pops up:  
+      `📎 Pasted Context: Insider Accumulation (TLKM)`
+  * `0:39 - 0:42`: **1-Click Notion Workspace Sync**:
+    * Cut to Company 360° -> Cursor clicks **`[ Sync to Notion ]`**.
+    * Checkmark confirms in 0.5s -> Smooth zoom reveals a Notion workspace featuring a Wall Street-grade investment memorandum fully populated with tables, scorecards, and syntheses.
+* **Kinetic Overlay Banner**:
+  * `[0:40]`: `📝 1-CLICK NOTION EXPORT • WALL STREET-GRADE MEMORANDUM`
+* **SFX Cues**:
+  * Crisp copy click, delicate paste chime, double-tone Notion sync success ping.
 
 ---
 
-### [0:44 - 0:52] SCENE 5: CONTEXT CLIPBOARD & 1-CLICK NOTION SYNC
-* **Duration**: 8 Seconds (Seconds 44 - 52)
-* **Visual Action**:
-  - Split screen or rapid cut:
-    1. On Smart Money card, click **"Salin Konteks"** -> Paste into `/alpha-agent` (`📎 Pasted Context: Insider Accumulation` badge renders instantly).
-    2. In Company 360°, click **"Sync to Notion"** -> Modal confirms checkmark -> Switch to Notion, unveiling a Wall Street-grade investment memorandum.
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:45]` **"SEAMLESS CONTEXT CLIPBOARD"** (Instant Agent Injection)
-  - `[0:48]` **"1-CLICK NOTION WORKSPACE SYNC"** (Notion `N` icon pop)
-  - `[0:50]` **"WALL STREET-GRADE INVESTMENT MEMO"** (Clean typography)
-* **Audio SFX & BGM**:
-  - SFX: Soft mouse click, paper glide, triumphant success chime.
-* **Verbatim English Voiceover**:
-  > *"Copy any forensic finding seamlessly into Alpha Agent chat, or export full investment memos directly to Notion in one single click."*
+### [0:42 - 0:48] ACT VI: THE OUTRO & REVOLUTION
+* **Audio Track**: Grand final synth chord hits with massive sub-bass impact, followed by a warm, lingering reverb tail.
+* **Visual Choreography**:
+  * `0:42 - 0:45`:
+    * Smooth camera pull-back into an infinite Deep Obsidian space.
+    * Glowing **AlphaSector** logo resolves in center screen with neon emerald bloom.
+    * Tagline reveals letter-by-letter:  
+      **Smarter Research. Sharper Decisions.**
+  * `0:45 - 0:48`:
+    * Sub-text elements cleanly fade in below:
+      * `RESPONSIBLE FINTECH • ZERO AUTOMATED TRADING`
+      * `Sectors Hackathon 2026 • Track 01 (AI Agents & Assistants)`
+      * `github.com/MaulRai/sectors-hackathon`
+* **SFX Cues**:
+  * Sub-bass boom, gentle glass shimmer, clean fade to black.
 
 ---
 
-### [0:52 - 1:00] SCENE 6: CALL-TO-ACTION & HACKATHON OUTRO
-* **Duration**: 8 Seconds (Seconds 52 - 60)
-* **Visual Action**:
-  - Cinematic zoom-out revealing the glowing **AlphaSector** brand logo center stage on Deep Obsidian canvas.
-  - Tagline resolves underneath: *"Smarter Research, Sharper Decisions"*.
-  - Assurance badge: **"Responsible FinTech: Pure Decision Support • Zero Automated Trading"**.
-  - Public GitHub link: `github.com/MaulRai/sectors-hackathon` with official *Sectors Hackathon 2026* badge.
-  - Clean cinematic fade to black.
-* **Kinetic Typography (English On-Screen Pop-Ups)**:
-  - `[0:53]` **"ALPHASECTOR"** (Giant Cyber Emerald logo)
-  - `[0:55]` **"SMARTER RESEARCH, SHARPER DECISIONS"**
-  - `[0:57]` **"RESPONSIBLE FINTECH • ZERO AUTOMATED TRADING"**
-  - `[0:59]` **"CLONE & RUN: github.com/MaulRai/sectors-hackathon"**
-* **Audio SFX & BGM**:
-  - BGM: Grand crescendo bass hit, reverberating cleanly into silence.
-  - SFX: Sub-bass boom on the final logo reveal.
-* **Verbatim English Voiceover**:
-  > *"AlphaSector: Smarter research, sharper decisions. Pure analytical intelligence with zero automated trading. Explore the code on GitHub today!"*
+## 3. Production & Tooling Plan: How to Build This
 
----
+To achieve the buttery-smooth 60fps fluidity seen in Google Vids without manual keyframing headaches, here is the exact recommended stack and pipeline:
 
-## 3. Video Editing & Social Media Export Spec
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   ALPHASECTOR TEASER RENDER PIPELINE                   │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│  [UI Component Captures]  ──►  [Remotion / Motion Canvas Engine]        │
+│   • Screen Studio / OBS         • Programmatic React compositions      │
+│   • Playwright 4K Stills        • Framer Motion spring physics         │
+│   • Pure React UI Components    • Absolute beat-matching in code       │
+│                                           │                            │
+│                                           ▼                            │
+│  [Sound Design ASMR]      ──►  [Final 4K60 Lossless Video Export]      │
+│   • Tactile keyboard/clicks     • 16:9 Landscape (YouTube / X)         │
+│   • Synth beat (126 BPM)        • 9:16 Vertical Crop (TikTok / Reels)  │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-* **Framing / Safe Zone**: Ensure all Kinetic Typography cards stay within the central 1080x1080 square so the video looks spectacular when cropped to 9:16 for TikTok, Instagram Reels, and YouTube Shorts.
-* **Color Grade**: Deep blacks (`#07090e`), high-contrast neon cyan (`#06b6d4`), and emerald (`#10b981`) highlights.
-* **Subtitles**: Hardcode clean English burnt-in captions with active word highlighting (yellow or emerald highlight on currently spoken word).
-* **Font Recommendation**: Use **Geist Sans** (official AlphaSector font) or **Inter / Roboto Bold** for titles, and **Geist Mono / JetBrains Mono** for metrics, JSON-RPC, and telemetry tags.
+### Recommendation 1: Programmatic React Video with **Remotion** (Top Tier)
+* **Why Remotion is King for this**:
+  1. **Direct React Reusability**: Your project is already built on Next.js, Tailwind CSS v4, Lucide icons, and Framer Motion. With Remotion, you can import your *real* React UI cards (`PeerBattleMatrix`, `PiotroskiScoreCard`, `CompanyLogo`, `AlphaAgentLogo`) directly into the video canvas without taking blurry screenshots!
+  2. **Code-Driven Spring Physics**: Animations use mathematical springs (`spring({ frame, fps, config: { damping: 12 } })`), guaranteeing the signature Google/Apple organic bounce.
+  3. **Frame-Perfect Beat Sync**: You align events to exact frame numbers (e.g., Frame 30 = Click, Frame 45 = Drop) rather than guessing in a timeline editor.
+
+### Recommendation 2: **Screen Studio + CapCut Desktop** (Fastest & Ultra-Polished)
+* If you want to render this in under 2 hours without writing Remotion code:
+  1. **Capture with Screen Studio**: Screen Studio automatically tracks mouse cursor clicks, adds smooth cinematic camera pans, and generates beautiful rounded glassmorphism backgrounds.
+  2. **Edit in CapCut Desktop**:
+     - Import the 126 BPM electronic beat track.
+     - Hit **Auto-Beat Detection** to mark yellow beat dots on the timeline.
+     - Cut every clip precisely on the yellow dots.
+     - Overlay the **Kinetic Typography** using Geist/Inter Bold with smooth spring pop animations.
+     - Layer the tactile ASMR sound effects (Mouse clicks, whooshes, chimes) on audio track 2 & 3.
