@@ -107,7 +107,7 @@
 
 ### SEGMENT 3: Screener Pro, Peer Battle & Company 360° Intelligence (1:15 - 1:55)
 * **Duration**: 40 Seconds
-* **Objective**: Showcase market discovery on Screener Pro, prove quantitative supremacy in Peer Battle through deterministic computation (Piotroski & P/E Bands), highlight seamless 1-click follow-up to Alpha Agent, and drill down into Company 360°.
+* **Objective**: Highlight high-speed market discovery in Screener Pro across 900+ stocks, showcase head-to-head multi-stock benchmarking in Peer Battle, demonstrate 1-click contextual handoff to Alpha Agent, and drill down into Company 360° valuation intelligence.
 
 #### Visual Screen Actions & Clicks:
 1. **[1:15 - 1:22] Discover via Screener Pro (`/screener`)**: Navigate to `/screener`. Click preset **"Undervalued Dividend Aristocrats"** across 900+ IDX stocks. The candidate table populates in ~300ms. Select top candidate tickers using the **Screener Battle Dock** and send them to **Peer Battle**.
@@ -127,11 +127,11 @@
 * SFX: Fast swoosh between routes, crisp click on filter presets, resonant *sub-bass hit* on Piotroski, and a delicate chime as valuation history appears.
 
 #### Verbatim English Voiceover Narration:
-> *"Whether filtering nine hundred stocks in **Screener Pro** or comparing competitors head-to-head in **Peer Battle**, our **Deterministic Quant Engine** computes Stanford nine-criteria Piotroski scores and historical valuation bands with pure mathematical precision.
+> *"For market discovery, **Screener Pro** instantly scans all nine hundred Indonesian stocks—letting analysts filter by valuation and financial health, apply institutional presets, and dock top candidates with zero friction.
 > 
-> *Analysts can click to seamlessly carry any screening thesis or comparative battle directly into Alpha Agent for deeper autonomous investigation.
+> *From there, **Peer Battle** pits contenders head-to-head in a dynamic comparative matrix—benchmarking multiples, capital efficiency, Piotroski accounting health, and historical valuation bands side by side.
 > 
-> *Or drill down into **Company 360°** to dissect multi-year valuation cycles and segment revenue drivers across any of the nine hundred listed companies."*
+> *Analysts can seamlessly launch an **Alpha Agent follow-up** with a single click to interrogate any comparative delta, or drill into **Company 360°** to inspect multi-year valuation cycles and segment revenue drivers."*
 
 ---
 
