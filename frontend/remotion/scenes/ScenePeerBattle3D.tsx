@@ -8,21 +8,26 @@ export const ScenePeerBattle3D: React.FC = () => {
   const { durationInFrames } = useVideoConfig();
 
   // Dynamic Camera Motion (Flipped for Left-Angle POV)
-  const rotateX = interpolate(frame, [0, durationInFrames], [15, 11], {
+  const rotateX = interpolate(frame, [0, durationInFrames], [14, 10], {
     easing: Easing.inOut(Easing.quad),
   });
 
   // Flipped rotateY: Positive values for POV viewed from the left
-  const rotateY = interpolate(frame, [0, durationInFrames], [24, 18], {
+  const rotateY = interpolate(frame, [0, durationInFrames], [20, 15], {
     easing: Easing.inOut(Easing.quad),
   });
 
   // Flipped rotateZ to match left tilt perspective
-  const rotateZ = interpolate(frame, [0, durationInFrames], [-3, -1.5], {
+  const rotateZ = interpolate(frame, [0, durationInFrames], [-2.5, -1], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  const scale = interpolate(frame, [0, durationInFrames], [0.98, 1.04], {
+  const scale = interpolate(frame, [0, durationInFrames], [0.98, 1.03], {
+    easing: Easing.inOut(Easing.quad),
+  });
+
+  // Shift card rightwards so left side (emiten names & title) is not cut off
+  const translateX = interpolate(frame, [0, durationInFrames], [340, 310], {
     easing: Easing.inOut(Easing.quad),
   });
 
@@ -70,7 +75,7 @@ export const ScenePeerBattle3D: React.FC = () => {
         {/* 3D Angled Window (Left POV) */}
         <div
           style={{
-            transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
+            transform: `translateX(${translateX}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
             transformStyle: 'preserve-3d',
             boxShadow: `
               0 30px 90px -15px rgba(0, 0, 0, 0.95),
