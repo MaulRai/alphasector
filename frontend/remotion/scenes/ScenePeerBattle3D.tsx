@@ -8,33 +8,36 @@ export const ScenePeerBattle3D: React.FC = () => {
   const { durationInFrames } = useVideoConfig();
 
   // Dynamic Camera Motion (Flipped for Left-Angle POV)
-  const rotateX = interpolate(frame, [0, durationInFrames], [14, 10], {
+  const rotateX = interpolate(frame, [0, durationInFrames], [12, 8], {
     easing: Easing.inOut(Easing.quad),
   });
 
   // Flipped rotateY: Positive values for POV viewed from the left
-  const rotateY = interpolate(frame, [0, durationInFrames], [20, 15], {
+  const rotateY = interpolate(frame, [0, durationInFrames], [17, 13], {
     easing: Easing.inOut(Easing.quad),
   });
 
   // Flipped rotateZ to match left tilt perspective
-  const rotateZ = interpolate(frame, [0, durationInFrames], [-2.5, -1], {
+  const rotateZ = interpolate(frame, [0, durationInFrames], [-1.8, -0.6], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  const scale = interpolate(frame, [0, durationInFrames], [0.98, 1.03], {
+  // Zoomed in comfortably without overflowing screen boundaries
+  const scale = interpolate(frame, [0, durationInFrames], [1.08, 1.13], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  // Shift card rightwards so left side (emiten names & title) is not cut off
-  const translateX = interpolate(frame, [0, durationInFrames], [340, 310], {
+  // Shift card rightwards to balance left perspective projection
+  const translateX = interpolate(frame, [0, durationInFrames], [330, 300], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  // Smooth vertical glide from top to bottom
-  // 1260px container width -> 1024x947 image rendered height is ~1165px
-  // Window height is 720px, so travel distance is ~445px
-  const travelDistance = 445;
+  // Vertical container offset to prevent top clipping
+  const containerY = 15;
+
+  // Gentle descent: keeps the Peer Battle Matrix (BBCA, BBRI, BMRI, BBNI) 
+  // and the AI Synthesis verdict heroically together in view at the end
+  const travelDistance = 120;
   const translateY = interpolate(
     frame, 
     [20, durationInFrames - 30], 
@@ -75,7 +78,7 @@ export const ScenePeerBattle3D: React.FC = () => {
         {/* 3D Angled Window (Left POV) */}
         <div
           style={{
-            transform: `translateX(${translateX}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
+            transform: `translateX(${translateX}px) translateY(${containerY}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
             transformStyle: 'preserve-3d',
             boxShadow: `
               0 30px 90px -15px rgba(0, 0, 0, 0.95),
@@ -83,7 +86,7 @@ export const ScenePeerBattle3D: React.FC = () => {
               inset 0 1px 1px rgba(255, 255, 255, 0.15)
             `,
           }}
-          className="w-[1260px] h-[720px] rounded-2xl border border-violet-500/30 overflow-hidden relative bg-[#07090e]"
+          className="w-[1240px] h-[720px] rounded-2xl border border-violet-500/30 overflow-hidden relative bg-[#07090e]"
         >
           {/* Top Window Accent Bar (Violet to Cyan gradient) */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500/80 via-cyan-400/80 to-emerald-500/30 z-20" />
