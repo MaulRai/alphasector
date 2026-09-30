@@ -35,13 +35,15 @@ export const ScenePeerBattle3D: React.FC = () => {
   // Vertical container offset to prevent top clipping
   const containerY = 15;
 
-  // Gentle descent: keeps the Peer Battle Matrix (BBCA, BBRI, BMRI, BBNI) 
-  // and the AI Synthesis verdict heroically together in view at the end
-  const travelDistance = 120;
+  // Vertical scroll animation:
+  // Starts higher up to showcase the top navbar & header,
+  // then glides down to the exact approved end state (-120px)
+  const startTranslateY = 55;
+  const endTranslateY = -120;
   const translateY = interpolate(
     frame, 
     [20, durationInFrames - 30], 
-    [0, -travelDistance], 
+    [startTranslateY, endTranslateY], 
     {
       easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       extrapolateLeft: 'clamp',
