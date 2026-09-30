@@ -8,6 +8,7 @@ import {
   TEASER_HEIGHT 
 } from './TeaserComposition';
 import { SceneAlphaAgent3D } from './scenes/SceneAlphaAgent3D';
+import { ScenePeerBattle3D } from './scenes/ScenePeerBattle3D';
 import '../app/globals.css';
 
 export const RemotionRoot: React.FC = () => {
@@ -24,6 +25,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="AlphaAgent3D"
         component={SceneAlphaAgent3D}
+        durationInFrames={300} // 5 seconds at 60 FPS
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="PeerBattle3D"
+        component={ScenePeerBattle3D}
         durationInFrames={300} // 5 seconds at 60 FPS
         fps={60}
         width={1920}
