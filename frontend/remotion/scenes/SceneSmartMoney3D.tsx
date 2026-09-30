@@ -22,22 +22,23 @@ export const SceneSmartMoney3D: React.FC = () => {
     easing: Easing.inOut(Easing.quad),
   });
 
-  // Zoomed in for crisp, punchy presentation without clipping edges
-  const scale = interpolate(frame, [0, durationInFrames], [1.00, 1.04], {
+  // Zoomed in boldly for an immersive, close-up presentation
+  const scale = interpolate(frame, [0, durationInFrames], [1.20, 1.26], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  // Centering translation
-  const translateX = interpolate(frame, [0, durationInFrames], [-20, 0], {
+  // Shift rightwards to center the right-angle 3D projection across the screen
+  const translateX = interpolate(frame, [0, durationInFrames], [110, 130], {
     easing: Easing.inOut(Easing.quad),
   });
 
-  const translateYStage = -10;
+  const translateYStage = 15;
 
   // Vertical scroll animation:
-  // Starts from the very top (navbar & header flush) and glides all the way down to the bottom
+  // Starts at the very top (navbar & header) and glides gently down (~110px) to showcase
+  // the broker flow table, reasoning trace, and the synthesis verdict without scrolling off the top!
   const startTranslateY = 0;
-  const endTranslateY = -505;
+  const endTranslateY = -110;
   const translateY = interpolate(
     frame, 
     [20, durationInFrames - 30], 
