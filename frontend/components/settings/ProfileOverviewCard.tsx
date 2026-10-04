@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { User, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { User, LogOut, KeyRound } from 'lucide-react';
 
 interface ProfileOverviewCardProps {
   user: {
@@ -48,8 +49,16 @@ export const ProfileOverviewCard: React.FC<ProfileOverviewCardProps> = ({
         </div>
       </div>
 
-      {/* Logout Button */}
-      <div className="pt-2 flex justify-end">
+      {/* Action Buttons: Ganti Password & Logout */}
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/60">
+        <Link
+          href="/settings/password"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 hover:border-emerald-500/50 text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer shadow-sm group"
+        >
+          <KeyRound className="h-4 w-4 text-emerald-400 group-hover:rotate-12 transition-transform" />
+          <span>Ganti Password</span>
+        </Link>
+
         <button
           type="button"
           onClick={onRequestLogout}

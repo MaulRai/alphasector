@@ -341,6 +341,20 @@ class UserRepository:
         return True
 
     @staticmethod
+    def update_password(user_id: int, new_password: str) -> bool:
+        mode = detect_db_mode()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        pwd_hash = hash_password(new_password)
+        if mode == "postgres":
+            cursor.execute("UPDATE users SET hashed_password = %s WHERE id = %s", (pwd_hash, user_id))
+        else:
+            cursor.execute("UPDATE users SET hashed_password = ? WHERE id = ?", (pwd_hash, user_id))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
     def deduct_demo_credits(user_id: int, amount: int = 1) -> int:
         mode = detect_db_mode()
         conn = get_db_connection()

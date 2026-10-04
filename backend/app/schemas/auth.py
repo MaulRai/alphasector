@@ -13,6 +13,15 @@ class UserLoginRequest(BaseModel):
 class CustomApiKeyRequest(BaseModel):
     api_key: Optional[str] = Field(None, description="Personal Sectors API Key or empty to reset")
 
+class ChangePasswordRequest(BaseModel):
+    old_password: str = Field(..., min_length=1, description="Kata sandi saat ini")
+    new_password: str = Field(..., min_length=6, description="Kata sandi baru (minimal 6 karakter)")
+    confirm_password: Optional[str] = Field(None, description="Konfirmasi kata sandi baru")
+
+class ChangePasswordResponse(BaseModel):
+    success: bool = True
+    message: str
+
 class UserResponse(BaseModel):
     id: int
     email: str

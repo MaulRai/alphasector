@@ -5,7 +5,9 @@ from app.schemas.auth import (
     UserLoginRequest, 
     UserResponse, 
     TokenResponse,
-    CustomApiKeyRequest
+    CustomApiKeyRequest,
+    ChangePasswordRequest,
+    ChangePasswordResponse
 )
 from app.db.database import UserRepository
 from app.core.security import verify_password, create_access_token, decode_access_token
@@ -117,3 +119,35 @@ async def get_user_credits(authorization: Optional[str] = Header(None)):
         "max_credits": 50,
         "has_custom_sectors_key": has_key
     }
+
+@router.post("/change-password", response_model=ChangePasswordResponse)
+async def change_password(
+    req: ChangePasswordRequest,
+    authorization: Optional[str] = Header(None)
+):
+    """Change authenticated user's password securely."""
+    user_id = get_current_user_id(authorization)
+    user_dict = UserRepository.get_by_id(user_id)
+    if not user_dict:
+        raise HTTPException(status_code=404, detail="Akun analis tidak ditemukan.")
+
+    # 1. Verify old password
+    if not verify_password(req.old_password, user_dict["hashed_password"]):
+        raise HTTPException(status_code=400, detail="Password lama (saat ini) salah. Silakan periksa kembali.")
+
+    # 2. Check confirm password match
+    if req.confirm_password is not None and req.new_password != req.confirm_password:
+        raise HTTPException(status_code=400, detail="Konfirmasi password baru tidak cocok.")
+
+    # 3. Ensure new password is not identical to old password
+    if req.old_password == req.new_password:
+        raise HTTPException(status_code=400, detail="Password baru tidak boleh sama persis dengan password lama.")
+
+    # 4. Update in database
+    UserRepository.update_password(user_id, req.new_password)
+
+    return ChangePasswordResponse(
+        success=True,
+        message="Password berhasil diperbarui dengan aman."
+    )
+

@@ -533,6 +533,32 @@ export async function fetchUserCredits(): Promise<{ demo_credits: number; max_cr
   return res.json();
 }
 
+export async function changeUserPassword(
+  oldPassword: string,
+  newPassword: string,
+  confirmPassword?: string
+): Promise<{ success: boolean; message: string }> {
+  const token = getStoredToken();
+  if (!token) throw new Error('Sesi analis diperlukan. Silakan login kembali.');
+  const res = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword || newPassword,
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.detail || data.message || 'Gagal mengubah kata sandi akun.');
+  }
+  return data;
+}
+
 // --- NOTION WORKSPACE EXPORT API ---
 
 export interface NotionExportPayload {
