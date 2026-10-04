@@ -3,6 +3,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthResponse } from './types';
 import { loginUser, registerUser, getMeProfile, fetchCustomSectorsApiKey, triggerEarlyBackendWarmup } from './api';
+import { clearChatCache } from './chatCacheStore';
+import { clearChatDraft } from './chatDraftStore';
+import { clearScreenerCache } from '@/hooks/useScreener';
 
 interface AuthContextType {
   user: User | null;
@@ -52,6 +55,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Never log out on temporary network reload or 500 error
           const msg = err?.message || '';
           if (err?.status === 401 || msg.includes('401') || msg.includes('kedaluwarsa') || msg.includes('Unauthorized')) {
+            clearChatCache();
+            clearChatDraft();
+            clearScreenerCache();
             localStorage.removeItem(TOKEN_KEY);
             localStorage.removeItem(USER_KEY);
             setToken(null);
@@ -70,6 +76,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const res: AuthResponse = await loginUser(email, password);
+
+      // If switching accounts or logging in freshly, wipe stale cache immediately
+      const prevId = user?.id;
+      if (!prevId || prevId !== res.user.id) {
+        clearChatCache();
+        clearChatDraft();
+        clearScreenerCache();
+        if (typeof window !== 'undefined') {
+          try {
+            sessionStorage.clear();
+          } catch {
+            // ignore
+          }
+        }
+      }
+
       localStorage.setItem(TOKEN_KEY, res.access_token);
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
@@ -89,6 +111,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const res: AuthResponse = await registerUser(email, password, fullName);
+
+      clearChatCache();
+      clearChatDraft();
+      clearScreenerCache();
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.clear();
+        } catch {
+          // ignore
+        }
+      }
+
       localStorage.setItem(TOKEN_KEY, res.access_token);
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
@@ -99,9 +133,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    // 1. Wipe in-memory and client storage caches for chats, drafts, and screener
+    clearChatCache();
+    clearChatDraft();
+    clearScreenerCache();
+
+    // 2. Remove user authentication tokens and sensitive settings
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem('alphasector_custom_sectors_key');
+    localStorage.removeItem('alphasector_notion_token_v1');
+    localStorage.removeItem('alphasector_notion_page_v1');
+
+    // 3. Clear all temporary sessionStorage
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.clear();
+      } catch {
+        // ignore
+      }
+    }
+
     setToken(null);
     setUser(null);
   };

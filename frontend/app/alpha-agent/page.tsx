@@ -61,6 +61,22 @@ function CopilotWorkspace() {
     handlePaste,
   } = useImageUpload(initialDraft.attachedImage);
 
+  const prevUserIdRef = useRef<number | undefined>(user?.id);
+
+  // Clean active UI, draft, and modal state if user changes or logs out
+  useEffect(() => {
+    if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== user?.id) {
+      setInputQuery('');
+      setPastedContexts([]);
+      handleClearImage();
+      clearChatDraft();
+      setActiveModalReport(null);
+      setIsArtifactPanelOpen(false);
+      setSelectedArtifactId(null);
+    }
+    prevUserIdRef.current = user?.id;
+  }, [user?.id, handleClearImage]);
+
   const handleRemovePastedContext = (id: string) => {
     setPastedContexts(prev => prev.filter(c => c.id !== id));
   };

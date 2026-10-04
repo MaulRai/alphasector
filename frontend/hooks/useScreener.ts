@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchScreener, fetchTradeIdeaPreset, fetchSubsectors } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 
 export const PRESET_PROMPTS: Record<string, string> = {
   'esg-leaders': 'Top rating keberlanjutan & tata kelola (ESG Leaders IDX)',
@@ -12,7 +13,19 @@ export const PRESET_PROMPTS: Record<string, string> = {
 
 const SCREENER_STORAGE_KEY = 'alphasector_screener_cache';
 
+export function clearScreenerCache(): void {
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.removeItem(SCREENER_STORAGE_KEY);
+      localStorage.removeItem(SCREENER_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  }
+}
+
 export function useScreener() {
+  const { user } = useAuth();
   const [nlQuery, setNlQuery] = useState('');
   const [selectedSubsector, setSelectedSubsector] = useState('');
   const [orderBy, setOrderBy] = useState('-market_cap');
@@ -23,6 +36,23 @@ export function useScreener() {
   const [activePreset, setActivePreset] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedTickersForBattle, setSelectedTickersForBattle] = useState<string[]>([]);
+
+  const prevUserIdRef = useRef<number | undefined>(user?.id);
+
+  // Clear screener state immediately if user logs out or switches accounts
+  useEffect(() => {
+    if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== user?.id) {
+      setNlQuery('');
+      setSelectedSubsector('');
+      setOrderBy('-market_cap');
+      setResults([]);
+      setActivePreset(null);
+      setHasSearched(false);
+      setSelectedTickersForBattle([]);
+      clearScreenerCache();
+    }
+    prevUserIdRef.current = user?.id;
+  }, [user?.id]);
 
   // Toggle ticker for battle (max 4)
   const toggleTickerForBattle = useCallback((sym: string) => {
@@ -37,12 +67,17 @@ export function useScreener() {
     });
   }, []);
 
-  // Restore previous screener state from memory on mount
+  // Restore previous screener state from memory on mount only if matches current user
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(SCREENER_STORAGE_KEY) || localStorage.getItem(SCREENER_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        // Guard: do not restore another user's screener results
+        if (parsed.userId && user?.id && parsed.userId !== user.id) {
+          clearScreenerCache();
+          return;
+        }
         if (parsed.results && Array.isArray(parsed.results) && parsed.results.length > 0) {
           setResults(parsed.results);
           setHasSearched(true);
@@ -56,13 +91,14 @@ export function useScreener() {
     } catch (e) {
       console.warn('Failed to parse cached screener state:', e);
     }
-  }, []);
+  }, [user?.id]);
 
   // Save screener state to memory whenever results or filters change
   useEffect(() => {
     if (hasSearched && results && results.length > 0) {
       try {
         const stateToSave = {
+          userId: user?.id || null,
           results,
           activePreset,
           nlQuery,
@@ -79,7 +115,7 @@ export function useScreener() {
         console.warn('Failed to cache screener state:', e);
       }
     }
-  }, [results, activePreset, nlQuery, selectedSubsector, orderBy, hasSearched, selectedTickersForBattle]);
+  }, [results, activePreset, nlQuery, selectedSubsector, orderBy, hasSearched, selectedTickersForBattle, user?.id]);
 
   // Load subsectors list on mount
   useEffect(() => {

@@ -10,6 +10,7 @@ import {
   getCachedMessages,
   setCachedMessages,
   removeCachedSession,
+  clearChatCache,
 } from '@/lib/chatCacheStore';
 
 interface UseChatSessionsOptions {
@@ -50,6 +51,23 @@ export function useChatSessions({
 
   const initialQueryExecuted = useRef(false);
   const lastHandledSessionParamRef = useRef<string | null>(initialTargetSessionId);
+  const prevUserIdRef = useRef<number | undefined>(user?.id);
+
+  // Automatically wipe chat state and cache when user logs out or switches accounts
+  useEffect(() => {
+    if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== user?.id) {
+      clearChatCache();
+      saveLastActiveSessionId(null);
+      setSessions([]);
+      setActiveSessionId(null);
+      setMessages([]);
+      setIsLoadingSessions(false);
+      setIsFetchingHistory(false);
+      lastHandledSessionParamRef.current = null;
+      initialQueryExecuted.current = false;
+    }
+    prevUserIdRef.current = user?.id;
+  }, [user?.id]);
 
   // Auto-sync messages to cache whenever messages change for active session
   useEffect(() => {
@@ -164,6 +182,9 @@ export function useChatSessions({
 
     const init = async () => {
       if (!user) {
+        setSessions([]);
+        setActiveSessionId(null);
+        setMessages([]);
         setIsLoadingSessions(false);
         setIsFetchingHistory(false);
         return;
@@ -228,6 +249,12 @@ export function useChatSessions({
               await handleSelectSession(firstId);
             }
           }
+        } else if (userSessions.length === 0) {
+          // Zero sessions: completely clear any old active session & messages
+          setActiveSessionId(null);
+          setMessages([]);
+          setIsFetchingHistory(false);
+          saveLastActiveSessionId(null);
         } else {
           setIsFetchingHistory(false);
         }
