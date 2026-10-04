@@ -1,6 +1,6 @@
 # AlphaSector — Live Testing Report: 1-Click Screening Radar & Deep MCP Forensics
 
-**Tester Account**: `admin@alphasector.com` (`Admin Utomo`)  
+**Tester Account**: `test@alphasector.com` (`Testing User`)  
 **Test Execution Date**: 04 Oktober 2026  
 **Environment**: Localhost Production Build (`frontend:3000` • `backend:8000`)  
 **Active Protocol**: `MCP Protocol` (`X-Protocol-Mode: mcp` • Anthropic/Sectors Model Context Protocol JSON-RPC 2.0)  
@@ -9,7 +9,7 @@
 
 ## Executive Summary of Results
 
-Keempat fitur **Sectors Trade Ideas Radar (1-Click Screening)** telah berhasil diuji secara end-to-end menggunakan akun admin. Masing-masing fitur dibuatkan room chat terdedikasi di AlphaAgent dengan **2 putaran percakapan (Initial Screening ➔ Deep MCP Follow-up)**.
+Keempat fitur **Sectors Trade Ideas Radar (1-Click Screening)** telah berhasil diuji secara end-to-end menggunakan akun test analis (`Testing User`). Masing-masing fitur dibuatkan room chat terdedikasi di AlphaAgent dengan **2 putaran percakapan (Initial Screening ➔ Deep MCP Follow-up)**.
 
 Hasil pengujian membuktikan bahwa AlphaAgent tidak sekadar memanggil REST API kaku, melainkan mengorkestrasikan **alat-alat forensik mendalam via Sectors MCP** (seperti `fetch-filings` transaksi insider direksi, `fetch-company-segments` anatomi unit bisnis, `fetch-broker-summary-top` bandarmology, dan `fetch-foreign-flow` likuiditas asing).
 
@@ -131,7 +131,8 @@ Sesi-sesi di atas kini **aktif dan tersimpan permanen di database lokal (`alphas
 Anda dapat langsung membuka browser di:
 `http://localhost:3000/alpha-agent`
 Dan login menggunakan:
-* **Email**: `admin@alphasector.com`
+* **Nama Lengkap**: `Testing User`
+* **Email**: `test@alphasector.com`
 * **Password**: `meong123`
 
 Semua 4 room chat telah muncul di panel sidebar kiri untuk diinspeksi secara langsung.

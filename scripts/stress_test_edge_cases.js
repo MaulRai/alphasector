@@ -10,7 +10,7 @@ async function sleep(ms) {
 async function runStressTests() {
   console.log('================================================================');
   console.log('🚀 RUNNING TRACK 4: JUDGE STRESS TEST & EDGE CASE FALLBACK');
-  console.log('Account: admin@alphasector.com');
+  console.log('Account: test@alphasector.com');
   console.log('================================================================\n');
 
   const report = [];

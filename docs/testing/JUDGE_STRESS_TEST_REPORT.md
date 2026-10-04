@@ -2,7 +2,7 @@
 
 **Date of Execution**: 2026-10-04  
 **Target Environment**: Local Dev Server (`http://localhost:3000` / `http://localhost:8000`)  
-**Authenticated Session**: `admin@alphasector.com` (Role: `analyst`)  
+**Authenticated Session**: `test@alphasector.com` (`Testing User` • Role: `analyst`)  
 **Execution Objective**: Memvalidasi ketahanan arsitektur AlphaSector terhadap input ekstrem, ticker anomali/fiktif, prompt injection, serta lifecycle BYOK (Bring Your Own Key) untuk menjamin stabilitas saat live demo di depan dewan juri Sectors Hackathon 2026.
 
 ---

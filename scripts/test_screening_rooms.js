@@ -38,11 +38,11 @@ async function sleep(ms) {
 }
 
 async function run() {
-  console.log('=== Step 1: Logging in as admin@alphasector.com ===');
+  console.log('=== Step 1: Logging in as test@alphasector.com ===');
   const loginRes = await fetch(`${API_BASE}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@alphasector.com', password: '[PASSWORD]' })
+    body: JSON.stringify({ email: 'test@alphasector.com', password: '[PASSWORD]' })
   });
 
   if (!loginRes.ok) {

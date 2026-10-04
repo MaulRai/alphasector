@@ -3,7 +3,7 @@ const require = createRequire('C:/Users/User/.gemini/config/skills/playwright-br
 const { chromium } = require('playwright');
 import fs from 'fs';
 
-// Token for admin@alphasector.com
+// Token for test@alphasector.com
 const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBhbHBoYXNlY3Rvci5jb20iLCJleHAiOjE3OTE3MTQxMTB9.a0OUAdE0MtdWJIaEaWnOCY_z0K_kt-iptjK8uNlUhBA';
 
 const ROOMS = [
