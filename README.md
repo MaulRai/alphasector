@@ -13,14 +13,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Sectors API](https://img.shields.io/badge/Data_Engine-Sectors_API_v2-0284C7?style=for-the-badge)](https://sectors.app)
-[![Anthropic MCP](https://img.shields.io/badge/Protocol-Anthropic_MCP_(JSON--RPC_2.0)-8B5CF6?style=for-the-badge&logoColor=white)](https://modelcontextprotocol.io/)
+[![Sectors MCP](https://img.shields.io/badge/Protocol-Sectors_MCP_(JSON--RPC_2.0)-8B5CF6?style=for-the-badge&logoColor=white)](https://sectors.app)
 [![Groq LPU](https://img.shields.io/badge/LLM_Inference-Groq_LPU_(120B_/_70B)-F05A28?style=for-the-badge)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision_Perception-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
 [![Notion Export](https://img.shields.io/badge/Institutional_Sync-Notion_API-000000?style=for-the-badge&logo=notion&logoColor=white)](https://developers.notion.com/)
 [![Vercel Deployment](https://img.shields.io/badge/Production_Live-alphasector.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://alphasector.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[🌐 **Deployed Application (Vercel)**](https://alphasector.vercel.app/) • [💻 **Local Terminal**](http://localhost:3000) • [🧭 **MCP Tools Catalog**](http://localhost:3000/mcp-tools) • [**Swagger API Docs**](http://localhost:8000/docs) • [**Judging Video Script (ID)**](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [**Judging Video Script (EN)**](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md) • [**Submission Package**](docs/submission/SUBMISSION_PACKAGE.md)
+[🌐 **Deployed Application (Vercel)**](https://alphasector.vercel.app/) • [💻 **Local Terminal**](http://localhost:3000) • [🧭 **MCP Tools Catalog**](http://localhost:3000/mcp-tools) • [**Swagger API Docs**](http://localhost:8000/docs)
 
 > 🚀 **Live Production Deployment**: AlphaSector is deployed and live at [**https://alphasector.vercel.app/**](https://alphasector.vercel.app/). Hackathon judges can test the full terminal immediately with 1-click instant demo access!
 
@@ -32,7 +32,7 @@
 1. [Executive Summary](#-executive-summary)
 2. [Track 01 Qualification Statement](#-track-01-qualification-statement)
 3. [Architecture: Custom Agent vs Generic MCP Wrapper](#-architecture-custom-agent-vs-generic-mcp-wrapper)
-4. [Anthropic Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline](#-anthropic-model-context-protocol-mcp-engine--dual-protocol-pipeline)
+4. [Sectors Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline](#-sectors-model-context-protocol-mcp-engine--dual-protocol-pipeline)
 5. [Completed Feature Navigation Index](#-completed-feature-navigation-index)
 6. [Frictionless Local Run Guide (Zero-Config Bootup)](#-frictionless-local-run-guide-zero-config-bootup)
 7. [Judge Usability & Zero-Friction Hardening (8 Curated Scenarios)](#-judge-usability--zero-friction-hardening-8-curated-scenarios)
@@ -53,7 +53,7 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 **AlphaSector** solves this structural problem by providing an institutional-grade, autonomous equity research terminal. Built on top of the official **Sectors Financial API v2**, AlphaSector bridges raw financial telemetry with rigorous decision-making:
 
 - **Autonomous Multi-Step Agent Orchestrator**: Coordinates a 5-phase Directed Acyclic Graph (DAG) that decomposes natural language queries, dispatches parallel asynchronous tool executions, and generates structured Indonesian equity dossiers.
-- **Anthropic Model Context Protocol (MCP Engine)**: Full JSON-RPC 2.0 client implementation over SSE Streamable HTTP (`/api/mcp/`), dynamic 66-tool catalog discovery, live ping latency diagnostics, and specialized forensic tools (`fetch-filings`, `fetch-shareholders-composition`, `fetch-suspensions`, `fetch-mining-company-performance`).
+- **Sectors Model Context Protocol (MCP Engine)**: Full JSON-RPC 2.0 client implementation over SSE Streamable HTTP (`/api/mcp/`), dynamic 66-tool catalog discovery, live ping latency diagnostics, and specialized forensic tools (`fetch-filings`, `fetch-shareholders-composition`, `fetch-suspensions`, `fetch-mining-company-performance`).
 - **Deterministic Quantitative Engine**: Bypasses LLM calculation hallucinations completely. Computes the complete **9-criteria Piotroski F-Score**, sample variance **P/E Historical Standard Deviation Bands**, and Benjamin Graham Fair Value using deterministic Python mathematics.
 - **Trade Ideas Radar & 1-Click Screening**: 4 institutional-grade screening presets (`ESG Leaders IDX`, `Revenue Growth Titans`, `Large Single-Shareholder`, `Efficient Operators`) triggerable directly in `/screener` and the AlphaAgent research room.
 - **Smart Money & Bandarmology Radar**: Tracks top institutional brokerage accumulation vs. distribution, net foreign flow trends, and institutional buyer concentration ratios in real time.
@@ -79,7 +79,7 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 | Track 01 Criterion | AlphaSector Implementation Evidence | Codebase Reference |
 |---|---|---|
 | **Custom Multi-Step Reasoning** | 5-phase execution DAG: Multimodal Perception $\to$ Intent Arbitration $\to$ DAG Planning $\to$ Parallel Tool Fetching $\to$ Quant Math $\to$ Structured Bahasa Indonesia Synthesis. | `backend/app/agent/orchestrator.py`<br>`backend/app/agent/planner.py` |
-| **Dual-Protocol Tool Pipeline** | Dual-engine dispatcher combining high-concurrency **REST API v2** (`asyncio.gather`) with **Anthropic MCP JSON-RPC 2.0** (`sectors-mcp.supertype.ai`) for deep forensic tools, with live UI protocol switching. | `backend/app/agent/tools.py`<br>`backend/app/sectors/mcp_client.py` |
+| **Dual-Protocol Tool Pipeline** | Dual-engine dispatcher combining high-concurrency **REST API v2** (`asyncio.gather`) with **Sectors MCP JSON-RPC 2.0** (`sectors-mcp.supertype.ai`) for deep forensic tools, with live UI protocol switching. | `backend/app/agent/tools.py`<br>`backend/app/sectors/mcp_client.py` |
 | **Data Routing & Synthesis** | Dynamically routes queries across company financials, subsector metrics, broker flows, foreign flows, and top movers based on intent classification. | `backend/app/agent/comparator.py`<br>`backend/app/api/sectors.py` |
 | **Memory & State Management** | Persistent multi-turn research rooms, primary ticker bindings, contextual follow-up reasoning, and user authentication state. | `backend/app/api/chat.py`<br>`backend/app/db/database.py` |
 | **Deterministic Math Rigor** | Full 9-point Piotroski F-Score calculation and historical P/E standard deviation bands executed purely in Python—never hallucinated by an LLM. | `backend/app/agent/financial_engine.py` |
@@ -133,7 +133,7 @@ flowchart TD
 
 ---
 
-## 🌐 Anthropic Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline
+## 🌐 Sectors Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline
 
 AlphaSector bridges two communication paradigms to optimize both high-concurrency valuation batching and deep institutional forensic discovery:
 
@@ -146,7 +146,7 @@ AlphaSector bridges two communication paradigms to optimize both high-concurrenc
       • Sub-400ms parallel fetching for Peer Battles & Piotroski Calculations
       • Two-Tier L1/L2 Cache with 24-hour TTL
 
-  [PATH B] ANTHROPIC MCP PROTOCOL (JSON-RPC 2.0 / SSE Streamable HTTP)
+  [PATH B] SECTORS MCP PROTOCOL (JSON-RPC 2.0 / SSE Streamable HTTP)
       • Direct connection to sectors-mcp.supertype.ai
       • Dynamic 66-Tool Discovery & Parameter Schema Inspection (/mcp-tools)
       • Forensic Specialized Tools:
@@ -381,7 +381,7 @@ To guarantee an effortless evaluation experience, the following eight curated sc
 
 ### Scenario 7: Sectors MCP Protocol Live Inspection & Dual-Protocol Agent Switching
 * **Target Route**: `/mcp-tools` & `/alpha-agent`
-* **User Intent**: Audit the live Anthropic Model Context Protocol server connection and verify dynamic tool execution.
+* **User Intent**: Audit the live Sectors Model Context Protocol server connection and verify dynamic tool execution.
 * **Action**:
   1. Navigate to `/mcp-tools` and click **"Test Koneksi Ping"** $\to$ observe live JSON-RPC 2.0 response with round-trip latency (`~350ms`) and dynamic 66-tool catalog.
   2. Filter by category or search: e.g. `fetch-filings`, `fetch-suspensions`, or `fetch-mining-licenses`.
