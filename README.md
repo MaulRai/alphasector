@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![AlphaSector Banner](https://raw.githubusercontent.com/MaulRai/alphasector/main/frontend/public/alphasector-banner.png)
+![AlphaSector Banner](./frontend/public/alphasector-banner.png)
 
 **Institutional-Grade Autonomous Equity Research Terminal & Quantitative Alpha Agent for the Indonesian Capital Market (Bursa Efek Indonesia / IDX)**
 
