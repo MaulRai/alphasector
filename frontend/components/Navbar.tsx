@@ -10,6 +10,7 @@ import {
   Activity, Home, Layers, LogOut, User as UserIcon, LogIn, Settings, Newspaper
 } from 'lucide-react';
 import { AlphaAgentLogo } from '@/components/AlphaAgentLogo';
+import { ApiKeySetupTooltip } from '@/components/ApiKeySetupTooltip';
 
 interface NavbarProps {
   onOpenDossier?: () => void;
@@ -160,13 +161,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   </div>
                   
-                  <Link
-                    href="/settings"
-                    title="Pengaturan & Sectors API Key (Settings)"
-                    className="p-1.5 rounded-lg hover:bg-slate-800/70 text-slate-400 hover:text-emerald-400 transition-colors text-xs"
-                  >
-                    <Settings className="h-3.5 w-3.5" />
-                  </Link>
+                  <div className="relative">
+                    <Link
+                      href="/settings"
+                      title="Pengaturan & Sectors API Key (Settings)"
+                      className="p-1.5 rounded-lg hover:bg-slate-800/70 text-slate-400 hover:text-emerald-400 transition-colors text-xs flex items-center justify-center"
+                    >
+                      <Settings className="h-3.5 w-3.5" />
+                    </Link>
+
+                    {/* Elegant tooltip pointing to Settings for fresh logins without Sectors API key */}
+                    <ApiKeySetupTooltip />
+                  </div>
                 </div>
               ) : (
                 <Link

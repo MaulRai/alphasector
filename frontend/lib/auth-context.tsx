@@ -12,6 +12,8 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isFreshLogin: boolean;
+  dismissApiKeyTooltip: () => void;
   login: (email: string, password: string) => Promise<void>;
   loginDemo: () => Promise<void>;
   register: (email: string, password: string, fullName: string) => Promise<void>;
@@ -27,10 +29,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isFreshLogin, setIsFreshLogin] = useState<boolean>(false);
+
+  const dismissApiKeyTooltip = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('alphasector_api_key_tooltip_dismissed', 'true');
+    }
+    setIsFreshLogin(false);
+  };
 
   useEffect(() => {
     // Proactively ping backend to spin up cold container early on any page visit
     triggerEarlyBackendWarmup();
+
+    // Check if current browser session was started with fresh login and not dismissed
+    if (typeof window !== 'undefined') {
+      const isFresh = sessionStorage.getItem('alphasector_is_fresh_login') === 'true';
+      const isDismissed = sessionStorage.getItem('alphasector_api_key_tooltip_dismissed') === 'true';
+      setIsFreshLogin(isFresh && !isDismissed);
+    }
 
     const storedToken = localStorage.getItem(TOKEN_KEY);
     const cachedUser = localStorage.getItem(USER_KEY);
@@ -96,6 +113,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
       setUser(res.user);
+
+      // Flag fresh login session for informative UI guidance
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('alphasector_is_fresh_login', 'true');
+        sessionStorage.removeItem('alphasector_api_key_tooltip_dismissed');
+      }
+      setIsFreshLogin(true);
+
       // Synchronize saved Sectors API key from DB into client storage
       await fetchCustomSectorsApiKey().catch(() => '');
     } finally {
@@ -127,6 +152,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.access_token);
       setUser(res.user);
+
+      // Flag fresh login session for informative UI guidance
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('alphasector_is_fresh_login', 'true');
+        sessionStorage.removeItem('alphasector_api_key_tooltip_dismissed');
+      }
+      setIsFreshLogin(true);
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +177,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('alphasector_notion_token_v1');
     localStorage.removeItem('alphasector_notion_page_v1');
 
-    // 3. Clear all temporary sessionStorage
+    // 3. Clear all temporary sessionStorage & tooltip flags
     if (typeof window !== 'undefined') {
       try {
         sessionStorage.clear();
@@ -156,6 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setToken(null);
     setUser(null);
+    setIsFreshLogin(false);
   };
 
   return (
@@ -165,6 +198,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         token,
         isLoading,
         isAuthenticated: !!user,
+        isFreshLogin,
+        dismissApiKeyTooltip,
         login,
         loginDemo,
         register,
