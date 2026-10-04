@@ -83,7 +83,7 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 | **Data Routing & Synthesis** | Dynamically routes queries across company financials, subsector metrics, broker flows, foreign flows, and top movers based on intent classification. | `backend/app/agent/comparator.py`<br>`backend/app/api/sectors.py` |
 | **Memory & State Management** | Persistent multi-turn research rooms, primary ticker bindings, contextual follow-up reasoning, and user authentication state. | `backend/app/api/chat.py`<br>`backend/app/db/database.py` |
 | **Deterministic Math Rigor** | Full 9-point Piotroski F-Score calculation and historical P/E standard deviation bands executed purely in Python—never hallucinated by an LLM. | `backend/app/agent/financial_engine.py` |
-| **Dual-Tier Credit Caching** | L1 In-Memory and L2 Database cache (24h TTL) saving Sectors API credits across repeated queries and peer battles. | `backend/app/sectors/cache.py` |
+| **Dual-Tier Credit Caching** | L1 In-Memory and L2 Database cache (24h demo TTL, configurable for real-time live feeds) saving Sectors API credits across repeated queries and peer battles. | `backend/app/sectors/cache.py` |
 | **Purpose-Built UI / UX** | High-craft dark obsidian Next.js 15 terminal featuring Live Thinking Trace accordions, Peer Battle Matrix, Screener Battle Dock, and Artifact Panel. | `frontend/app/alpha-agent/`<br>`frontend/app/battle/`<br>`frontend/app/screener/` |
 | **External Workflow Integration** | 1-Click Institutional Notion Sync transforming quantitative findings into a structured block tree in user workspaces. | `backend/app/services/notion_service.py` |
 | **Independent Viability** | Even if all LLMs are disconnected, AlphaSector's deterministic financial engine, screener, peer comparison matrix, and offline synthesis fallback continue operating flawlessly. | `backend/app/agent/synthesizer.py:318` |
@@ -144,7 +144,7 @@ AlphaSector bridges two communication paradigms to optimize both high-concurrenc
   [PATH A] HIGH-CONCURRENCY REST API v2 (Default Engine)
       • High-throughput async dispatch via asyncio.gather
       • Sub-400ms parallel fetching for Peer Battles & Piotroski Calculations
-      • Two-Tier L1/L2 Cache with 24-hour TTL
+      • Two-Tier L1/L2 Cache (24h Demo TTL / Configurable Real-Time in Production)
 
   [PATH B] SECTORS MCP PROTOCOL (JSON-RPC 2.0 / SSE Streamable HTTP)
       • Direct connection to sectors-mcp.supertype.ai
@@ -534,9 +534,13 @@ Notion Page Block Hierarchy:
 
 To ensure zero downtime, absolute data isolation, and prevent API credit exhaustion during hackathon judging:
 
-1. **Two-Tier Database Caching (`backend/app/sectors/cache.py`)**:
+1. **Two-Tier Database Caching (`backend/app/sectors/cache.py`) & Production TTL Strategy**:
    - **L1 Memory Cache**: Python dictionary lookup with sub-millisecond response times.
-   - **L2 Database Cache (`sectors_api_cache`)**: Persistent SQLite/PostgreSQL storage with configurable TTL (default: 86,400s / 24 hours).
+   - **L2 Database Cache (`sectors_api_cache`)**: Persistent SQLite/PostgreSQL storage with configurable TTL (default: 86,400s / 24 hours during demo/evaluation).
+   - **Demo Rationale vs Production Roadmap**:
+     - *Why 24h TTL during Hackathon Demo?* The 24-hour TTL was chosen intentionally for the hackathon judging environment to prevent credit exhaustion across multiple evaluators, continuous stress tests, and automated reviewer scripts testing identical emiten.
+     - *Quicker TTL in Production*: In a live production deployment, this TTL will be dialed down significantly to shorter intervals (e.g. 5–15 minutes for intraday price quotes & broker flows, and 2 hours for news) to ensure near-immediate market sync.
+     - *User-Configurable Real-Time Stream*: Production roadmaps include a **"Bypass Cache / Live Feed" toggle in `/settings`**, allowing pro analysts with custom Sectors API keys to stream live un-cached exchange data directly whenever zero latency is desired.
    - *Impact*: When Judge A queries `BBCA`, the data is cached. Subsequent queries by Judge B or automated test scripts are served in 0ms consuming **0 Sectors API credits**.
 2. **Groq LPU Multi-Key Rotation & 429 Failover (`groq_rotator.py`)**:
    - Supports round-robin rotation across `GROQ_API_KEY_1`, `GROQ_API_KEY_2`, etc.
