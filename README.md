@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![AlphaSector Banner](https://raw.githubusercontent.com/MaulRai/alphasector/main/frontend/public/banner.png)
+![AlphaSector Banner](https://raw.githubusercontent.com/MaulRai/alphasector/main/frontend/public/alphasector-banner.png)
 
 **Institutional-Grade Autonomous Equity Research Terminal & Quantitative Alpha Agent for the Indonesian Capital Market (Bursa Efek Indonesia / IDX)**
 
@@ -13,13 +13,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Sectors API](https://img.shields.io/badge/Data_Engine-Sectors_API_v2-0284C7?style=for-the-badge)](https://sectors.app)
+[![Anthropic MCP](https://img.shields.io/badge/Protocol-Anthropic_MCP_(JSON--RPC_2.0)-8B5CF6?style=for-the-badge&logoColor=white)](https://modelcontextprotocol.io/)
 [![Groq LPU](https://img.shields.io/badge/LLM_Inference-Groq_LPU_(120B_/_70B)-F05A28?style=for-the-badge)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision_Perception-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
 [![Notion Export](https://img.shields.io/badge/Institutional_Sync-Notion_API-000000?style=for-the-badge&logo=notion&logoColor=white)](https://developers.notion.com/)
 [![Vercel Deployment](https://img.shields.io/badge/Production_Live-alphasector.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://alphasector.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-[🌐 **Deployed Application (Vercel)**](https://alphasector.vercel.app/) • [💻 **Local Terminal**](http://localhost:3000) • [**Swagger API Docs**](http://localhost:8000/docs) • [**Judging Video Script (ID)**](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [**Judging Video Script (EN)**](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md) • [**Submission Package**](docs/submission/SUBMISSION_PACKAGE.md)
+[🌐 **Deployed Application (Vercel)**](https://alphasector.vercel.app/) • [💻 **Local Terminal**](http://localhost:3000) • [🧭 **MCP Tools Catalog**](http://localhost:3000/mcp-tools) • [**Swagger API Docs**](http://localhost:8000/docs) • [**Judging Video Script (ID)**](docs/submission/JUDGING_VIDEO_SCRIPT.md) • [**Judging Video Script (EN)**](docs/submission/JUDGING_VIDEO_SCRIPT_EN.md) • [**Submission Package**](docs/submission/SUBMISSION_PACKAGE.md)
 
 > 🚀 **Live Production Deployment**: AlphaSector is deployed and live at [**https://alphasector.vercel.app/**](https://alphasector.vercel.app/). Hackathon judges can test the full terminal immediately with 1-click instant demo access!
 
@@ -31,16 +32,17 @@
 1. [Executive Summary](#-executive-summary)
 2. [Track 01 Qualification Statement](#-track-01-qualification-statement)
 3. [Architecture: Custom Agent vs Generic MCP Wrapper](#-architecture-custom-agent-vs-generic-mcp-wrapper)
-4. [Completed Feature Navigation Index](#-completed-feature-navigation-index)
-5. [Frictionless Local Run Guide (Zero-Config Bootup)](#-frictionless-local-run-guide-zero-config-bootup)
-6. [Judge Usability & Zero-Friction Hardening (6 Curated Scenarios)](#-judge-usability--zero-friction-hardening-6-curated-scenarios)
-7. [Deterministic Quantitative Finance Engine](#-deterministic-quantitative-finance-engine)
-8. [Smart Money & Bandarmology Telemetry](#-smart-money--bandarmology-telemetry)
-9. [Market News Intelligence & Bursa Caching Engine](#-market-news-intelligence--bursa-caching-engine)
-10. [Institutional Notion Sync Pipeline](#-institutional-notion-sync-pipeline)
-11. [Resilience, Caching & Fallback Architecture](#-resilience-caching--fallback-architecture)
-12. [Repository Hygiene & Code Freeze Compliance](#-repository-hygiene--code-freeze-compliance)
-13. [Mandatory Financial Disclaimer & Regulatory Compliance](#-mandatory-financial-disclaimer--regulatory-compliance)
+4. [Anthropic Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline](#-anthropic-model-context-protocol-mcp-engine--dual-protocol-pipeline)
+5. [Completed Feature Navigation Index](#-completed-feature-navigation-index)
+6. [Frictionless Local Run Guide (Zero-Config Bootup)](#-frictionless-local-run-guide-zero-config-bootup)
+7. [Judge Usability & Zero-Friction Hardening (8 Curated Scenarios)](#-judge-usability--zero-friction-hardening-8-curated-scenarios)
+8. [Deterministic Quantitative Finance Engine](#-deterministic-quantitative-finance-engine)
+9. [Smart Money & Bandarmology Telemetry](#-smart-money--bandarmology-telemetry)
+10. [Market News Intelligence & Bursa Caching Engine](#-market-news-intelligence--bursa-caching-engine)
+11. [Institutional Notion Sync Pipeline](#-institutional-notion-sync-pipeline)
+12. [Resilience, Multi-Tenant Session Isolation & Security Architecture](#-resilience-multi-tenant-session-isolation--security-architecture)
+13. [Repository Hygiene & Code Freeze Compliance](#-repository-hygiene--code-freeze-compliance)
+14. [Mandatory Financial Disclaimer & Regulatory Compliance](#-mandatory-financial-disclaimer--regulatory-compliance)
 
 ---
 
@@ -51,10 +53,13 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 **AlphaSector** solves this structural problem by providing an institutional-grade, autonomous equity research terminal. Built on top of the official **Sectors Financial API v2**, AlphaSector bridges raw financial telemetry with rigorous decision-making:
 
 - **Autonomous Multi-Step Agent Orchestrator**: Coordinates a 5-phase Directed Acyclic Graph (DAG) that decomposes natural language queries, dispatches parallel asynchronous tool executions, and generates structured Indonesian equity dossiers.
+- **Anthropic Model Context Protocol (MCP Engine)**: Full JSON-RPC 2.0 client implementation over SSE Streamable HTTP (`/api/mcp/`), dynamic 66-tool catalog discovery, live ping latency diagnostics, and specialized forensic tools (`fetch-filings`, `fetch-shareholders-composition`, `fetch-suspensions`, `fetch-mining-company-performance`).
 - **Deterministic Quantitative Engine**: Bypasses LLM calculation hallucinations completely. Computes the complete **9-criteria Piotroski F-Score**, sample variance **P/E Historical Standard Deviation Bands**, and Benjamin Graham Fair Value using deterministic Python mathematics.
+- **Trade Ideas Radar & 1-Click Screening**: 4 institutional-grade screening presets (`ESG Leaders IDX`, `Revenue Growth Titans`, `Large Single-Shareholder`, `Efficient Operators`) triggerable directly in `/screener` and the AlphaAgent research room.
 - **Smart Money & Bandarmology Radar**: Tracks top institutional brokerage accumulation vs. distribution, net foreign flow trends, and institutional buyer concentration ratios in real time.
 - **Multimodal Financial Vision Perception**: Integrates Google Gemini 2.5 Flash Vision to parse user-uploaded candlestick charts, RTI broker summaries, and balance sheet scans directly into the agent reasoning context.
 - **1-Click Institutional Notion Sync**: Automatically structures valuation tables, catalysts, risks, and health scores into Wall Street-grade Notion investment memorandums.
+- **Institutional Account Security & BYOK Architecture**: PBKDF2-HMAC-SHA256 password management (`/settings/password`), multi-tenant session & cache isolation, quota tracking, and an intelligent fresh login setup tooltip.
 - **Dark Obsidian Financial Interface**: A high-craft Next.js 15 terminal UI engineered with Tailwind CSS v4, live thinking traces, side-by-side battle matrixes, and split-screen artifact drawers.
 
 ---
@@ -74,7 +79,7 @@ The Indonesian Capital Market (Bursa Efek Indonesia / IDX) hosts over **900 publ
 | Track 01 Criterion | AlphaSector Implementation Evidence | Codebase Reference |
 |---|---|---|
 | **Custom Multi-Step Reasoning** | 5-phase execution DAG: Multimodal Perception $\to$ Intent Arbitration $\to$ DAG Planning $\to$ Parallel Tool Fetching $\to$ Quant Math $\to$ Structured Bahasa Indonesia Synthesis. | `backend/app/agent/orchestrator.py`<br>`backend/app/agent/planner.py` |
-| **Custom Tool-Use Pipeline** | High-concurrency async tool dispatcher running Sectors API v2 endpoints via `asyncio.gather`, capturing latencies, HTTP statuses, and credit metrics. | `backend/app/agent/tools.py` |
+| **Dual-Protocol Tool Pipeline** | Dual-engine dispatcher combining high-concurrency **REST API v2** (`asyncio.gather`) with **Anthropic MCP JSON-RPC 2.0** (`sectors-mcp.supertype.ai`) for deep forensic tools, with live UI protocol switching. | `backend/app/agent/tools.py`<br>`backend/app/sectors/mcp_client.py` |
 | **Data Routing & Synthesis** | Dynamically routes queries across company financials, subsector metrics, broker flows, foreign flows, and top movers based on intent classification. | `backend/app/agent/comparator.py`<br>`backend/app/api/sectors.py` |
 | **Memory & State Management** | Persistent multi-turn research rooms, primary ticker bindings, contextual follow-up reasoning, and user authentication state. | `backend/app/api/chat.py`<br>`backend/app/db/database.py` |
 | **Deterministic Math Rigor** | Full 9-point Piotroski F-Score calculation and historical P/E standard deviation bands executed purely in Python—never hallucinated by an LLM. | `backend/app/agent/financial_engine.py` |
@@ -128,6 +133,49 @@ flowchart TD
 
 ---
 
+## 🌐 Anthropic Model Context Protocol (MCP Engine) & Dual-Protocol Pipeline
+
+AlphaSector bridges two communication paradigms to optimize both high-concurrency valuation batching and deep institutional forensic discovery:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   ALPHASECTOR DUAL-PROTOCOL DATA PIPELINE              │
+└────────────────────────────────────────────────────────────────────────┘
+  [PATH A] HIGH-CONCURRENCY REST API v2 (Default Engine)
+      • High-throughput async dispatch via asyncio.gather
+      • Sub-400ms parallel fetching for Peer Battles & Piotroski Calculations
+      • Two-Tier L1/L2 Cache with 24-hour TTL
+
+  [PATH B] ANTHROPIC MCP PROTOCOL (JSON-RPC 2.0 / SSE Streamable HTTP)
+      • Direct connection to sectors-mcp.supertype.ai
+      • Dynamic 66-Tool Discovery & Parameter Schema Inspection (/mcp-tools)
+      • Forensic Specialized Tools:
+          ├── fetch-filings                 : Executive insider buying/selling
+          ├── fetch-shareholders-composition: Pension vs Foreign fund telemetry
+          ├── fetch-suspensions             : BEI suspension radar & UMA notices
+          ├── fetch-mining-performance      : JORC/KCMI proven reserves & strip ratio
+          └── fetch-mining-licenses         : ESDM Ditjen Minerba IUP/WIUP concessions
+      • UI Protocol Switcher: Toggle between [REST] and [MCP] in AlphaAgent chat
+```
+
+### 1. Architectural Distinction: Why Dual-Protocol?
+* **High-Speed REST**: Standard valuation ratios, daily stock movements, and financial statements are fetched via high-concurrency asynchronous HTTP calls. This keeps multi-ticker peer battles (`/battle`) and screener computations fast (sub-second).
+* **Deep Forensic MCP**: Certain institutional data—such as commissioner stock purchases, monthly pension fund shifts, suspension PDF disclosures, and Ditjen Minerba mining licenses—are exposed natively through the **Sectors Model Context Protocol (MCP)** server. AlphaSector incorporates a full **JSON-RPC 2.0 client** (`backend/app/sectors/mcp_client.py`) that parses Server-Sent Events (SSE) and executes dynamic tool calls.
+
+### 2. Interactive Protocol Switcher in UI
+Analysts can switch between **REST API v2** and **Sectors MCP** in real time directly from the chat input dock (`ChatInputBar.tsx`):
+- Selecting **Sectors MCP** marks outgoing queries with `protocol: 'mcp'`.
+- The agent dispatcher runs the query through the MCP client, appending `[MCP]` tags to the **Live Thinking Trace Accordion** and execution logs.
+- Direct quick-link in the toggle dropdown opens the `/mcp-tools` discovery dashboard.
+
+### 3. Dedicated MCP Tool Catalog & Ping Diagnostics (`/mcp-tools`)
+AlphaSector includes a built-in diagnostics cockpit at `/mcp-tools`:
+- **Real-Time Ping Health**: Sends JSON-RPC 2.0 `tools/list` pings to measure round-trip latency (typically 300–450ms) and confirm server readiness.
+- **Dynamic 66-Tool Explorer**: Searches and filters all tools exposed by the Sectors MCP server across Fundamental, Valuation, Forensic, and Mining categories.
+- **Schema Inspector**: Inspects required arguments, parameter types, and tool documentation directly in the UI.
+
+---
+
 ## 🧭 Completed Feature Navigation Index
 
 AlphaSector provides a cohesive suite of specialized equity research tools accessible from the top navigation bar:
@@ -136,12 +184,14 @@ AlphaSector provides a cohesive suite of specialized equity research tools acces
 |---|---|---|---|
 | `/` | **Landing & Command Center** | Hero overview, real-time backend health check badge, core architecture showcase, and 1-click demo login. | `frontend/app/page.tsx` |
 | `/alpha-agent` | **Autonomous Agent Workspace** | Conversational equity research with **Live Thinking Trace accordion**, multimodal chart upload, trade ideas radar, and slide-out artifact panel. | `frontend/app/alpha-agent/page.tsx` |
+| `/mcp-tools` | **Sectors MCP Tool Catalog** | Interactive 66-tool discovery explorer, real-time JSON-RPC 2.0 ping health checker, parameter inspector, and live latency diagnostics. | `frontend/app/mcp-tools/page.tsx` |
 | `/news` | **Market News & Sentiments** | Real-time IDX curated financial news powered by Sectors API v2, 2-hour exchange-hours cache, smart filtering, and 1-click **Analisis AI** to AlphaAgent. | `frontend/app/news/page.tsx` |
 | `/battle` | **Peer Battle Terminal** | Head-to-head multi-emiten showdown with **PeerBattleMatrix**, Graham number fair values, best-in-class highlights, and Big 4 Banks presets. | `frontend/app/battle/page.tsx` |
 | `/screener` | **Screener Pro & Battle Dock** | Natural language (NLP) and SQL screening across 900+ tickers with the floating **ScreenerBattleDock** to dispatch screened stocks into battle or Alpha Agent. | `frontend/app/screener/page.tsx` |
 | `/company/[symbol]` | **Company 360° Profile** | Fundamental deep dive featuring the **9-Criteria Piotroski F-Score Card**, **Historical P/E SD Band Range**, revenue segments, and 1-click Notion sync. | `frontend/app/company/[symbol]/page.tsx` |
 | `/smart-money` | **Smart Money & Broker Flow** | Top Institutional Brokers leaderboard, accumulating vs distributing broker flow breakdown, buyer concentration meter, and net foreign flow charts. | `frontend/app/smart-money/page.tsx` |
 | `/settings` | **BYOK & Credit Manager** | Bring Your Own Key (BYOK) manager for Sectors API, live connection testing, and real-time 50 demo credit usage tracker. | `frontend/app/settings/page.tsx` |
+| `/settings/password` | **Account Security & Password** | Institutional account credential management with PBKDF2-HMAC-SHA256 verification and client-side password policy checklist. | `frontend/app/settings/password/page.tsx` |
 
 ---
 
@@ -221,22 +271,20 @@ npm run dev
 
 ### Step 4: Zero-Friction Instant Demo Login
 
-Hackathon judges can bypass registration entirely using the pre-seeded demo account:
+Hackathon judges can bypass registration entirely using the pre-seeded demo or dedicated testing accounts:
 
-| Credential Field | Value | Notes |
-|---|---|---|
-| **Email** | `demo@alphasector.id` | Pre-seeded with institutional `pro_analyst` privileges |
-| **Password** | `alphasector123` | Pre-hashed with PBKDF2-HMAC-SHA256 |
-| **Quota Allocation** | `50 Credits` | Auto-replenished demo quota |
-| **1-Click Button** | *"Masuk Instan dengan Akun Demo"* | Available on every AuthGate modal |
+| Credential Type | Email | Password | Role / Access | Notes |
+|---|---|---|---|---|
+| **1-Click Instant Demo** | `demo@alphasector.id` | `alphasector123` | `pro_analyst` (50 Credits) | Instant bypass button available on all AuthGate modals |
+| **Dedicated Test Account** | `test@alphasector.com` | `meong123` | `pro_analyst` (50 Credits) | Pre-seeded evaluation account for custom manual testing |
 
 > **CORS Dynamic Port Tolerance**: The FastAPI backend employs dynamic regex matching (`r"https?://(localhost|127\.0\.0\.1)(:\d+)?"`), ensuring that if port 3000 is occupied and Next.js launches on `3001` or `3002`, CORS requests will **never fail**.
 
 ---
 
-## 🧪 Judge Usability & Zero-Friction Hardening (5 Curated Scenarios)
+## 🧪 Judge Usability & Zero-Friction Hardening (8 Curated Scenarios)
 
-To guarantee an effortless evaluation experience, the following five curated scenarios demonstrate the full depth of AlphaSector's analytical pipeline.
+To guarantee an effortless evaluation experience, the following eight curated scenarios demonstrate the full depth of AlphaSector's analytical pipeline.
 
 ---
 
@@ -274,14 +322,14 @@ To guarantee an effortless evaluation experience, the following five curated sce
 
 ---
 
-### Scenario 3: Natural Language Market Screening in `/screener`
-* **Target Route**: `/screener`
-* **User Intent**: Discover high-growth companies with accelerating earnings.
-* **Exact NLP Query**:
-  ```text
-  Cari emiten dengan pertumbuhan revenue tertinggi di 2024 dibanding 2023
-  ```
-  *(Or click preset chips: **"Revenue Growth Titans"** or **"ESG Leaders IDX"**)*.
+### Scenario 3: Natural Language Market Screening & 1-Click Radar Presets in `/screener`
+* **Target Route**: `/screener` *(also accessible on the `/alpha-agent` empty-state screen)*
+* **User Intent**: Discover high-growth or high-governance companies with 1-click execution.
+* **1-Click Screener Radar Presets**:
+  1. **ESG Leaders IDX**: `"Screening top emiten dengan ESG score terbaik di Indonesia"`
+  2. **Revenue Growth Titans**: `"Cari emiten dengan pertumbuhan revenue tertinggi di 2024 dibanding 2023"`
+  3. **Large Single-Shareholder**: `"Cari saham yang kepemilikan single shareholder minimal 70 persen"`
+  4. **Efficient Operators**: `"Cari perusahaan dengan laba bersih per karyawan paling efisien di sektornya"`
 * **Expected Output**:
   - Real-time filtered emiten list with market caps, price changes, and growth percentages.
   - Interactive multi-select checkboxes on each row.
@@ -328,6 +376,36 @@ To guarantee an effortless evaluation experience, the following five curated sce
   - **Dedicated Room Execution**: Initiates a dedicated research room without falling back to past chat sessions.
   - **Multi-Dimensional AI Impact Assessment**: Produces structured findings on sentiment impact, fundamental business implications, revenue/earnings transmissibility, and investor strategic actions.
   - **Shared Bursa Cache Efficiency**: Responses are served with 2-hour multi-user cache efficiency strictly optimized during IDX trading hours (08:30 – 16:30 WIB), maximizing credit savings across hackathon evaluators.
+
+---
+
+### Scenario 7: Sectors MCP Protocol Live Inspection & Dual-Protocol Agent Switching
+* **Target Route**: `/mcp-tools` & `/alpha-agent`
+* **User Intent**: Audit the live Anthropic Model Context Protocol server connection and verify dynamic tool execution.
+* **Action**:
+  1. Navigate to `/mcp-tools` and click **"Test Koneksi Ping"** $\to$ observe live JSON-RPC 2.0 response with round-trip latency (`~350ms`) and dynamic 66-tool catalog.
+  2. Filter by category or search: e.g. `fetch-filings`, `fetch-suspensions`, or `fetch-mining-licenses`.
+  3. Navigate to `/alpha-agent` and click the protocol badge in the chat input bar to switch from `[REST]` to `[Sectors MCP]`.
+  4. Submit query: `"Cek transaksi orang dalam (insider filings) dan pemegang saham institusi BBRI"`.
+* **Expected Output**:
+  - The live thinking trace tags dispatched steps with `[MCP]`.
+  - Tools `fetch-filings` and `fetch-shareholders-composition` are dispatched via JSON-RPC 2.0 over SSE.
+  - Generates structured forensic breakdown of insider trading transactions and institutional fund distribution.
+
+---
+
+### Scenario 8: Institutional Account Security, BYOK & Zero-Leak Multi-Tenant Isolation
+* **Target Route**: `/settings`, `/settings/password`, and user session switcher
+* **User Intent**: Verify multi-tenant data privacy, BYOK custom key injection, and secure PBKDF2 password updates.
+* **Action**:
+  1. Log in with `test@alphasector.com` / `meong123`.
+  2. Notice the floating **Koneksi Sectors API** guidance tooltip (`ApiKeySetupTooltip`) pointing directly to the Settings icon on navbar for fresh logins without a custom API key.
+  3. Navigate to `/settings/password` to test the password change workflow. Observe real-time dynamic requirement badges (minimum 6 characters, password match, differing from old password).
+  4. Navigate to `/settings` to inspect the 50-credit demo quota meter and input a BYOK custom Sectors API key.
+  5. Log out and switch to another account (or guest).
+* **Expected Output**:
+  - Screener state, search queries, active chat rooms, and draft buffers are immediately purged (`clearScreenerCache()` and session sanitization).
+  - No cross-tenant data contamination or leaked research rooms between different analyst profiles.
 
 ---
 
@@ -452,9 +530,9 @@ Notion Page Block Hierarchy:
 
 ---
 
-## 🛡 Resilience, Caching & Fallback Architecture
+## 🛡 Resilience, Multi-Tenant Session Isolation & Security Architecture
 
-To ensure zero downtime and prevent API credit exhaustion during hackathon judging:
+To ensure zero downtime, absolute data isolation, and prevent API credit exhaustion during hackathon judging:
 
 1. **Two-Tier Database Caching (`backend/app/sectors/cache.py`)**:
    - **L1 Memory Cache**: Python dictionary lookup with sub-millisecond response times.
@@ -467,7 +545,16 @@ To ensure zero downtime and prevent API credit exhaustion during hackathon judgi
    - Rotates across multiple Google Gemini keys with automatic fallback from `gemini-2.5-flash` to `gemini-1.5-flash`.
 4. **Deterministic Offline Synthesis Fallback (`synthesizer.py:318`)**:
    - If external LLMs are unreachable, `_synthesize_fallback()` deterministically extracts cached Sectors data, Piotroski metrics, and P/E bands into structured Indonesian text, ensuring the application never crashes.
-5. **Mock Mode (`USE_MOCK_DATA=true`)**:
+5. **Zero-Leak Multi-Tenant Cache & Session Isolation**:
+   - `useChatSessions.ts` & `useScreener.ts` strictly partition state per user ID.
+   - When a user logs out or switches accounts, `clearScreenerCache()`, localStorage chat drafts, and in-flight research rooms are immediately purged. This eliminates cross-tenant data leakage or lingering screener results between different evaluators.
+6. **Institutional PBKDF2-HMAC-SHA256 Security & BYOK Key Isolation**:
+   - All user passwords are encrypted using PBKDF2 with unique salts.
+   - The dedicated password change portal (`/settings/password`) enforces strict security policies with real-time feedback (minimum 6 characters, password match verification, disallowing identical current/new password).
+   - BYOK custom API keys are saved per-user and injected via request headers, bypassing shared server quota limits.
+7. **Fresh Login Onboarding Guidance Tooltip**:
+   - Newly authenticated analysts are non-intrusively guided to configure their personal Sectors API key via `ApiKeySetupTooltip.tsx`, preserving seamless evaluation flow while highlighting BYOK readiness.
+8. **Mock Mode (`USE_MOCK_DATA=true`)**:
    - Allows judges to evaluate the full end-to-end platform with curated offline emiten datasets consuming **0 API credits**.
 
 ---

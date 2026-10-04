@@ -167,6 +167,16 @@ def init_db():
                 ON CONFLICT (email) DO NOTHING
             """, ("demo@alphasector.id", "Demo Institutional Analyst", demo_pwd_hash, "pro_analyst"))
             conn.commit()
+
+        cursor.execute("SELECT id FROM users WHERE email = %s", ("test@alphasector.com",))
+        if not cursor.fetchone():
+            test_pwd_hash = hash_password("meong123")
+            cursor.execute("""
+                INSERT INTO users (email, full_name, hashed_password, role)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (email) DO NOTHING
+            """, ("test@alphasector.com", "Testing User", test_pwd_hash, "pro_analyst"))
+            conn.commit()
         conn.commit()
         conn.close()
     else:
@@ -253,6 +263,15 @@ def init_db():
                 INSERT OR IGNORE INTO users (email, full_name, hashed_password, role, demo_credits)
                 VALUES (?, ?, ?, ?, 50)
             """, ("demo@alphasector.id", "Demo Institutional Analyst", demo_pwd_hash, "pro_analyst"))
+            conn.commit()
+
+        cursor.execute("SELECT id FROM users WHERE email = ?", ("test@alphasector.com",))
+        if not cursor.fetchone():
+            test_pwd_hash = hash_password("meong123")
+            cursor.execute("""
+                INSERT OR IGNORE INTO users (email, full_name, hashed_password, role, demo_credits)
+                VALUES (?, ?, ?, ?, 50)
+            """, ("test@alphasector.com", "Testing User", test_pwd_hash, "pro_analyst"))
             conn.commit()
         conn.commit()
         conn.close()
